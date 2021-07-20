@@ -78,9 +78,6 @@ const SurveyForm = ({
   const { uiSchema, schema } = createSurveyFormSchema(userAppsData, appUsageFreqType);
   const initialFormData = createInitialFormData(userAppsData);
 
-  // console.log(initialFormData);
-  // console.log(userAppsData);
-
   useEffect(() => {
     setErrorModalVisible(submitSurveyRS === RequestStates.FAILURE);
   }, [errorModalVisible, setErrorModalVisible, submitSurveyRS]);
