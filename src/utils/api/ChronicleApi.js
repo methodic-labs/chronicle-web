@@ -5,14 +5,16 @@ import { Types } from 'lattice';
 import { AuthUtils } from 'lattice-auth';
 
 import {
+  getAppSettingsUrl,
   getDeleteParticipantPath,
   getDeleteStudyUrl,
   getEnrollmentStatusUrl,
   getParticipantUserAppsUrl,
   getQuestionnaireUrl,
   getSubmitQuestionnaireUrl,
-  getSubmitTudDataUrl,
+  getSubmitTudDataUrl
 } from '../AppUtils';
+import { CHRONICLE_CORE, DATA_COLLECTION, QUESTIONNAIRES } from '../constants/AppModules';
 
 const { DeleteTypes } = Types;
 
@@ -45,7 +47,7 @@ function getParticipantAppsUsageData(date :string, participantId :string, studyI
     return axios({
       method: 'get',
       params: { date },
-      url,
+      url: encodeURI(url),
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
   });
@@ -81,7 +83,7 @@ function updateAppsUsageAssociationData(
     return axios({
       method: 'post',
       data: requestBody,
-      url,
+      url: encodeURI(url),
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
   });
@@ -98,7 +100,7 @@ function deleteStudyParticipant(orgId :UUID = CAFE_ORG_ID, participantId :string
 
     return axios({
       method: 'delete',
-      url,
+      url: encodeURI(url),
       headers: { Authorization: `Bearer ${authToken}` },
       params: { type: DeleteTypes.HARD }
     }).then((result) => resolve(result))
@@ -146,7 +148,7 @@ function submitQuestionnaire(
 
     return axios({
       method: 'post',
-      url,
+      url: encodeURI(url),
       data: questionAnswerMapping
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
@@ -166,7 +168,7 @@ function submitTudData(organizationId :UUID, studyId :UUID, participantId :strin
     return axios({
       data: requestBody,
       method: 'post',
-      url,
+      url: encodeURI(url),
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
   });
@@ -198,7 +200,25 @@ function verifyTudLink(organizationId :UUID, studyId :UUID, participantId :strin
 
     return axios({
       method: 'get',
-      url
+      url: encodeURI(url)
+    }).then((result) => resolve(result))
+      .catch((error) => reject(error));
+  });
+}
+
+function getAppSettings(organizationId :UUID, appName :string) {
+  return new Promise<*>((resolve, reject) => {
+    const chronicleApps = new Set([CHRONICLE_CORE, DATA_COLLECTION, QUESTIONNAIRES]);
+    if (!chronicleApps.has(appName)) {
+      return reject(new Error(`${appName} is not a valid chronicle app`));
+    }
+    const url = getAppSettingsUrl(organizationId);
+    if (!url) return reject(new Error('invalid url'));
+
+    return axios({
+      method: 'get',
+      url,
+      params: { appName }
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
   });
@@ -207,6 +227,7 @@ function verifyTudLink(organizationId :UUID, studyId :UUID, participantId :strin
 export {
   deleteStudy,
   deleteStudyParticipant,
+  getAppSettings,
   getParticipantAppsUsageData,
   getQuestionnaire,
   submitQuestionnaire,
