@@ -72,7 +72,7 @@ const LOG = new Logger('PermissionsSagas');
 const DEFAULT_USER_PRINCIPAL_ID = 'auth0|5ae9026c04eb0b243f1d2bb6';
 
 const createAclData = (aclKey :Array<UUID>) :AclData => {
-  const permissions = [PermissionTypes.READ, PermissionTypes.WRITE];
+  const permissions = [PermissionTypes.OWNER, PermissionTypes.READ, PermissionTypes.WRITE];
 
   const principal :Principal = new PrincipalBuilder()
     .setId(DEFAULT_USER_PRINCIPAL_ID)
