@@ -4,6 +4,7 @@
 
 import React, { useEffect } from 'react';
 
+import _isFunction from 'lodash/isFunction';
 import { Map } from 'immutable';
 import { AuthActions, AuthUtils } from 'lattice-auth';
 import {
@@ -33,7 +34,10 @@ import OpenLatticeIcon from '../../assets/images/ol_icon.png';
 import StudiesContainer from '../studies/StudiesContainer';
 import StudyDetailsContainer from '../study/StudyDetailsContainer';
 import * as Routes from '../../core/router/Routes';
+import { GOOGLE_TRACKING_ID } from '../../core/tracking/google/GoogleAnalytics';
 import { APP_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
+
+declare var gtag :?Function;
 
 const { isNonEmptyString } = LangUtils;
 
@@ -53,11 +57,9 @@ const AppContainer = () => {
 
   const logout = () => {
     dispatch(AuthActions.logout());
-
-    // TODO: tracking
-    // if (isFunction(gtag)) {
-    //   gtag('config', GOOGLE_TRACKING_ID, { user_id: undefined, send_page_view: false });
-    // }
+    if (_isFunction(gtag)) {
+      gtag('config', GOOGLE_TRACKING_ID, { user_id: undefined, send_page_view: false });
+    }
   };
 
   const renderAppContent = () => {
