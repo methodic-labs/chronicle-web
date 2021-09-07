@@ -73,6 +73,7 @@ const {
   SECONDARY_MEDIA_NAME,
   SLEEP_ARRANGEMENT,
   SLEEP_PATTERN,
+  TODAY_WAKEUP_TIME,
   TYPICAL_DAY_FLAG,
   WAKE_UP_COUNT,
   WAVE_ID,
@@ -450,6 +451,23 @@ function exportRawDataToCsvFile(
     csvMetadata.Non_Typical_Reason = getAnswerString(questionAnswerId, answersMap, NON_TYPICAL_DAY_REASON);
 
     const nightTimeData = {};
+
+    const yesterdayWakeupTime = DateTime
+      .fromISO(answersMap.getIn([questionAnswerId.get(DAY_START_TIME), 0]))
+      .minus({ days: 1 });
+    const yesterdayBedtime = DateTime
+      .fromISO(answersMap.getIn([questionAnswerId.get(DAY_END_TIME), 0]))
+      .minus({ days: 1 });
+    const todayWakeUpTime = DateTime
+      .fromISO(answersMap.getIn([questionAnswerId.get(TODAY_WAKEUP_TIME), 0]));
+    const dayTimeHours = yesterdayBedtime.diff(yesterdayWakeupTime, 'hours').toObject().hours;
+    const sleepHours = todayWakeUpTime.diff(yesterdayBedtime, 'hours').toObject().hours;
+
+    nightTimeData.Wakeup_Yesterday = yesterdayWakeupTime.toLocaleString(DateTime.TIME_24_SIMPLE);
+    nightTimeData.Bedtime_Yesterday = yesterdayBedtime.toLocaleString(DateTime.TIME_24_SIMPLE);
+    nightTimeData.Wakeup_Today = todayWakeUpTime.toLocaleString(DateTime.TIME_24_SIMPLE);
+    nightTimeData.Daytime_Hours = dayTimeHours;
+    nightTimeData.Sleep_Hours = sleepHours;
     nightTimeData.Typical_Sleep_Pattern = getAnswerString(questionAnswerId, answersMap, SLEEP_PATTERN);
     nightTimeData.Non_Typical_Sleep_Pattern = getAnswerString(questionAnswerId, answersMap, NON_TYPICAL_SLEEP_PATTERN);
     nightTimeData.Sleeping_Arrangement = getAnswerString(questionAnswerId, answersMap, SLEEP_ARRANGEMENT);
