@@ -7,6 +7,10 @@ export default [
     code: LanguageCodes.ENGLISH,
   },
   {
+    language: 'German',
+    code: LanguageCodes.GERMAN
+  },
+  {
     language: 'Swedish',
     code: LanguageCodes.SWEDISH
   },
