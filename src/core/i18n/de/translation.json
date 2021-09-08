@@ -1,5 +1,5 @@
 {
-  "intro_text": "Vielen Dank, dass Sie sich die Zeit nehmen, um diesen Fragebogen auszufüllen! Zuerst werden wir Sie bitten, alles zu beschreiben, was Ihr Kind gestern gemacht hat und zwar von dem Moment an, als ihr Kind gestern morgen aufgewacht ist bis zu dem Moment, als Ihr Kind gestern Nacht schlafengegangen ist. Dann werden wir danach fragen, wie Ihr Kind letzte Nacht geschlafen hat. Bitte beantworten Sie die Fragen so gut Sie können. Am Ende der Umfrage werden Sie die Möglichkeit haben, Veränderungen vorzunehmen, wenn Sie möchten.",
+  "intro_text": "Vielen Dank, dass Sie sich die Zeit nehmen, um diesen Fragebogen auszufüllen! Zuerst werden wir Sie bitten, alles zu beschreiben, was Ihr Kind gestern gemacht hat und zwar von dem Moment an, als ihr Kind gestern morgen aufgewacht ist bis zu dem Moment, als Ihr Kind gestern Nacht schlafen gegangen ist. Dann werden wir danach fragen, wie Ihr Kind letzte Nacht geschlafen hat. Bitte beantworten Sie die Fragen so gut Sie können. Am Ende der Umfrage werden Sie die Möglichkeit haben, Veränderungen vorzunehmen, wenn Sie möchten.",
   "choose_format": "Um zu beginnen, wählen Sie bitte aus, welches Uhrzeitenformat Sie bevorzugen.",
   "clock_formats": [
     "12-Stunden-Format",
@@ -136,8 +136,8 @@
   "other": "Sonstiges:",
   "error_required": "Dies ist ein Pflichtfeld.",
   "error_min_items": "Bitte wählen Sie mindestens eine Antwortoption.",
-  "error_invalid_end": "Die Zubettgehzeit sollte nach {{time}} sein.",
-  "error_invalid_bedtime": "Die Endzeit sollte nach {{time}} sein.",
+  "error_invalid_end": "Die Endzeit sollte nach {{time}} sein.",
+  "error_invalid_bedtime": "Die Zubettgehzeit sollte nach {{time}} sein.",
   "error_end_past_bedtime": "Die letzte Aktivität des Tages sollte um {{time}} enden, da Sie angegeben haben, dass Ihr Kind dann zu Bett ging.",
   "summary_title": "Hier ist eine Zusammenfassung darüber, wie Ihr Kind seinen Tag verbracht hat. Bitte stellen Sie sicher, dass diese Information korrekt ist, bevor Sie den Fragebogen absenden.",
   "button_edit": "Bearbeiten",
