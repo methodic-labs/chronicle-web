@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ActionModal, Colors } from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
@@ -29,7 +29,12 @@ const ChangeEnrollment = ({
   requestState
 } :Props) => {
 
-  let action = enrollmentStatus === ENROLLED ? 'pause' : 'resume';
+  const [action, setAction] = useState('pause');
+
+  useEffect(() => {
+    setAction(enrollmentStatus === ENROLLED ? 'pause' : 'resume');
+  }, [isVisible]);
+
   const completedAction = enrollmentStatus === ENROLLED ? 'resumed' : 'paused';
 
   const requestStateComponents = {
@@ -60,7 +65,7 @@ const ChangeEnrollment = ({
     )
   };
 
-  action = action.charAt(0).toUpperCase() + action.substr(1);
+  const title = `${action.charAt(0).toUpperCase()}${action.substr(1)} Android Data Collection`;
   return (
     <ActionModal
         isVisible={isVisible}
@@ -72,7 +77,7 @@ const ChangeEnrollment = ({
         shouldCloseOnOutsideClick={false}
         textPrimary="Yes"
         textSecondary="No"
-        textTitle={`${action} Enrollment`} />
+        textTitle={title} />
   );
 };
 

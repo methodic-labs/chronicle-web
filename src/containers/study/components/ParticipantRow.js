@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { useContext } from 'react';
 
 import styled from 'styled-components';
 import {
@@ -16,8 +16,10 @@ import { Colors, IconButton } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 
+import ParticipantsTableDispatch from './ParticipantsTableDispatch';
+
 import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
-import ParticipantActionTypes from '../../../utils/constants/ParticipantActionTypes';
+import ParticipantsTableActions from '../constants/ParticipantsTableActions';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 
 const { formatDateTime } = DateTimeUtils;
@@ -30,13 +32,16 @@ const {
   STATUS,
 } = PROPERTY_TYPE_FQNS;
 const { NEUTRAL, PURPLE } = Colors;
+
 const { ENROLLED } = EnrollmentStatuses;
+
 const {
-  DELETE,
-  DOWNLOAD,
-  LINK,
-  TOGGLE_ENROLLMENT
-} = ParticipantActionTypes;
+  SET_PARTICIPANT_EKID,
+  TOGGLE_DELETE_MODAL,
+  TOGGLE_DOWNLOAD_MODAL,
+  TOGGLE_ENROLLMENT_MODAL,
+  TOGGLE_INFO_MODAL,
+} = ParticipantsTableActions;
 
 const StyledCell = styled.td`
   padding: 10px 5px;
@@ -77,8 +82,7 @@ type IconProps = {
   enrollmentStatus :string;
   hasDeletePermission :Boolean;
   icon :any;
-  onClickIcon :(SyntheticEvent<HTMLElement>) => void;
-  participantEKId :UUID;
+  participantEntityKeyId :UUID;
 };
 
 const ActionIcon = (props :IconProps) => {
@@ -87,9 +91,10 @@ const ActionIcon = (props :IconProps) => {
     enrollmentStatus,
     hasDeletePermission,
     icon,
-    onClickIcon,
-    participantEKId,
+    participantEntityKeyId,
   } = props;
+
+  const dispatch = useContext(ParticipantsTableDispatch);
 
   let iconColor = NEUTRAL.N800;
   if (icon === faToggleOn && enrollmentStatus === ENROLLED) {
@@ -100,12 +105,15 @@ const ActionIcon = (props :IconProps) => {
     iconColor = NEUTRAL.N300;
   }
 
+  const handleClick = () => {
+    dispatch({ type: SET_PARTICIPANT_EKID, participantEntityKeyId });
+    dispatch({ type: action, isModalOpen: true });
+  };
+
   return (
     <IconButton
-        data-action-id={action}
-        data-key-id={participantEKId}
-        disabled={action === DELETE && !hasDeletePermission}
-        onClick={onClickIcon}>
+        disabled={action === TOGGLE_DELETE_MODAL && !hasDeletePermission}
+        onClick={handleClick}>
       <StyledFontAwesomeIcon
           color={iconColor}
           icon={icon} />
@@ -116,13 +124,12 @@ const ActionIcon = (props :IconProps) => {
 type Props = {
   data :Object;
   hasDeletePermission :Boolean;
-  onClickIcon :(SyntheticEvent<HTMLElement>) => void;
 };
 
 const ParticipantRow = (props :Props) => {
-  const { data, hasDeletePermission, onClickIcon } = props;
+  const { data, hasDeletePermission } = props;
 
-  const participantEKId = getIn(data, ['id', 0]);
+  const participantEntityKeyId = getIn(data, ['id', 0]);
   const participantId = getIn(data, [PERSON_ID, 0]);
   const enrollmentStatus = getIn(data, [STATUS, 0]);
   const firstDataDate = formatDateTime(getIn(data, [DATETIME_START_FQN, 0]), DateTime.DATETIME_SHORT);
@@ -131,10 +138,10 @@ const ParticipantRow = (props :Props) => {
 
   const toggleIcon = enrollmentStatus === ENROLLED ? faToggleOn : faToggleOff;
   const actionsData = [
-    { action: LINK, icon: faLink },
-    { action: DOWNLOAD, icon: faCloudDownload },
-    { action: DELETE, icon: faTrashAlt },
-    { action: TOGGLE_ENROLLMENT, icon: toggleIcon },
+    { action: TOGGLE_INFO_MODAL, icon: faLink },
+    { action: TOGGLE_DOWNLOAD_MODAL, icon: faCloudDownload },
+    { action: TOGGLE_DELETE_MODAL, icon: faTrashAlt },
+    { action: TOGGLE_ENROLLMENT_MODAL, icon: toggleIcon },
   ];
 
   return (
@@ -174,8 +181,7 @@ const ParticipantRow = (props :Props) => {
                     hasDeletePermission={hasDeletePermission}
                     icon={actionItem.icon}
                     key={actionItem.action}
-                    onClickIcon={onClickIcon}
-                    participantEKId={participantEKId} />
+                    participantEntityKeyId={participantEntityKeyId} />
               ))
             }
           </ActionIconsWrapper>
