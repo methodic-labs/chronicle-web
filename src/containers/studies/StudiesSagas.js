@@ -80,6 +80,8 @@ import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames
 import { submitDataGraph, submitPartialReplace } from '../../core/sagas/data/DataActions';
 import { submitDataGraphWorker, submitPartialReplaceWorker } from '../../core/sagas/data/DataSagas';
 import { APP_REDUX_CONSTANTS, STUDIES_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
+import { getTudSubmissionDates } from '../tud/TimeUseDiaryActions';
+import { getTudSubmissionDatesWorker } from '../tud/TimeUseDiarySagas';
 
 const { createAssociations, getEntitySetData, updateEntityData } = DataApiActions;
 const { createAssociationsWorker, getEntitySetDataWorker, updateEntityDataWorker } = DataApiSagas;
@@ -459,6 +461,13 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
       getParticipantsMetadata({ participantEKIDs, participantsESID })
     );
     const metadata :Map = response.data || Map();
+
+    // get time use diary submissions
+    response = yield call(
+      getTudSubmissionDatesWorker,
+      getTudSubmissionDates(participantEKIDs)
+    );
+    if (response.error) throw response.error;
 
     // construct participant entities
     const participants = studyNeighbors.reduce((result, neighbor) => {

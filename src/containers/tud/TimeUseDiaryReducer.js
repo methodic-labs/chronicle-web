@@ -8,11 +8,13 @@ import {
   DOWNLOAD_ALL_TUD_DATA,
   DOWNLOAD_DAILY_TUD_DATA,
   GET_SUBMISSIONS_BY_DATE,
+  GET_TUD_SUBMISSION_DATES,
   SUBMIT_TUD_DATA,
   VERIFY_TUD_LINK,
   downloadAllTudData,
   downloadDailyTudData,
   getSubmissionsByDate,
+  getTudSubmissionDates,
   submitTudData,
   verifyTudLink,
 } from './TimeUseDiaryActions';
@@ -20,15 +22,17 @@ import {
 import { RESET_REQUEST_STATE } from '../../core/redux/ReduxActions';
 import { TUD_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 
-const { SUBMISSIONS_BY_DATE } = TUD_REDUX_CONSTANTS;
+const { SUBMISSIONS_BY_DATE, SUBMISSION_DATES } = TUD_REDUX_CONSTANTS;
 
 const { REQUEST_STATE } = ReduxConstants;
 
 const INITIAL_STATE = fromJS({
   [DOWNLOAD_ALL_TUD_DATA]: { [REQUEST_STATE]: RequestStates.STANDBY },
   [GET_SUBMISSIONS_BY_DATE]: { [REQUEST_STATE]: RequestStates.STANDBY },
+  [GET_TUD_SUBMISSION_DATES]: { [REQUEST_STATE]: RequestStates.STANDBY },
   [SUBMIT_TUD_DATA]: { [REQUEST_STATE]: RequestStates.STANDBY },
   [SUBMISSIONS_BY_DATE]: Map(),
+  [SUBMISSION_DATES]: Map() // { participantEKID -> OrderdSet()}
 });
 
 export default function timeUseDiaryReducer(state :Map = INITIAL_STATE, action :Object) {
@@ -94,6 +98,21 @@ export default function timeUseDiaryReducer(state :Map = INITIAL_STATE, action :
           .setIn([DOWNLOAD_ALL_TUD_DATA, REQUEST_STATE], RequestStates.SUCCESS),
         FINALLY: () => state
           .deleteIn([DOWNLOAD_ALL_TUD_DATA, action.id])
+      });
+    }
+
+    case getTudSubmissionDates.case(action.type): {
+      return getTudSubmissionDates.reducer(state, action, {
+        REQUEST: () => state
+          .setIn([GET_TUD_SUBMISSION_DATES, REQUEST_STATE], RequestStates.PENDING)
+          .setIn([GET_TUD_SUBMISSION_DATES, action.id], action),
+        FAILURE: () => state
+          .setIn([GET_TUD_SUBMISSION_DATES, REQUEST_STATE], RequestStates.FAILURE),
+        SUCCESS: () => state
+          .set(SUBMISSION_DATES, action.value)
+          .setIn([GET_TUD_SUBMISSION_DATES, REQUEST_STATE], RequestStates.SUCCESS),
+        FINALLY: () => state
+          .deleteIn([GET_TUD_SUBMISSION_DATES, action.id])
       });
     }
 
