@@ -1,45 +1,81 @@
 // @flow
 
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
+import HeaderNames, { COLUMN_FIELDS } from './tableColumns';
 
 const {
-  DATETIME_START_FQN,
-  DATETIME_END_FQN,
-  EVENT_COUNT,
-  PERSON_ID
-} = PROPERTY_TYPE_FQNS;
+  PARTICIPANT_ID,
+  FIRST_ANDROID_DATA,
+  LAST_ANDROID_DATA,
+  ANDROID_DATA_DURATION,
+  FIRST_TUD_SUBMISSION,
+  LAST_TUD_SUBMISSION,
+  TUD_SUBMISSION_DURATION
+} = COLUMN_FIELDS;
+
 const TABLE_HEADERS = [
   {
-    key: PERSON_ID,
-    label: 'Participant ID',
+    key: PARTICIPANT_ID,
+    label: HeaderNames[PARTICIPANT_ID],
     cellStyle: {
-      width: '20%',
-      fontWeight: 600
+      width: '13%',
+      fontWeight: 500,
+      textAlign: 'center'
     }
   },
   {
-    key: DATETIME_START_FQN,
-    label: 'First Data Received',
+    key: FIRST_ANDROID_DATA,
+    label: HeaderNames[FIRST_ANDROID_DATA],
     cellStyle: {
-      width: '22%',
-      fontWeight: 600
+      width: '13%',
+      fontWeight: 500,
+      textAlign: 'center'
     }
   },
   {
-    key: DATETIME_END_FQN,
-    label: 'Last Data Received',
+    key: LAST_ANDROID_DATA,
+    label: HeaderNames[LAST_ANDROID_DATA],
     cellStyle: {
-      width: '22%',
-      fontWeight: 600
+      width: '13%',
+      fontWeight: 500,
+      textAlign: 'center'
     }
   },
   {
-    key: EVENT_COUNT,
-    label: 'Days collected',
+    key: ANDROID_DATA_DURATION,
+    label: HeaderNames[ANDROID_DATA_DURATION],
+    sortable: false,
     cellStyle: {
-      width: '18%',
-      textAlign: 'center',
-      fontWeight: 600
+      width: '13%',
+      fontWeight: 500,
+      textAlign: 'center'
+    }
+  },
+  {
+    key: FIRST_TUD_SUBMISSION,
+    label: HeaderNames[FIRST_TUD_SUBMISSION],
+    cellStyle: {
+      width: '13%',
+      fontWeight: 500,
+      textAlign: 'center'
+    }
+  },
+  {
+    key: LAST_TUD_SUBMISSION,
+    label: HeaderNames[LAST_TUD_SUBMISSION],
+    cellStyle: {
+      width: '13%',
+      fontWeight: 500,
+      textAlign: 'center'
+    }
+  },
+  {
+    key: TUD_SUBMISSION_DURATION,
+    label: HeaderNames[TUD_SUBMISSION_DURATION],
+    sortable: false,
+    cellStyle: {
+      width: '13%',
+      fontWeight: 500,
+      textAlign: 'center'
     }
   },
   {
@@ -47,8 +83,8 @@ const TABLE_HEADERS = [
     label: 'Actions',
     sortable: false,
     cellStyle: {
-      textAlign: 'center',
-      fontWeight: 600
+      fontWeight: 500,
+      textAlign: 'center'
     }
   },
 ];

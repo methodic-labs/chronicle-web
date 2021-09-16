@@ -1,34 +1,44 @@
 // @flow
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import styled from 'styled-components';
 import {
   faCloudDownload,
+  faEllipsisV,
   faLink,
   faToggleOff,
   faToggleOn,
-  faTrashAlt
+  faTrashAlt,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getIn } from 'immutable';
-import { Colors, IconButton } from 'lattice-ui-kit';
+import {
+  Colors,
+  IconButton,
+  Menu,
+  MenuItem
+} from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 
 import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
 import ParticipantActionTypes from '../../../utils/constants/ParticipantActionTypes';
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
+import { COLUMN_FIELDS } from '../constants/tableColumns';
 
 const { formatDateTime } = DateTimeUtils;
 
 const {
-  DATETIME_START_FQN,
-  DATETIME_END_FQN,
-  EVENT_COUNT,
-  PERSON_ID,
-  STATUS,
-} = PROPERTY_TYPE_FQNS;
+  ANDROID_DATA_DURATION,
+  ENROLLMENT_STATUS,
+  FIRST_ANDROID_DATA,
+  FIRST_TUD_SUBMISSION,
+  LAST_ANDROID_DATA,
+  LAST_TUD_SUBMISSION,
+  PARTICIPANT_ID,
+  TUD_SUBMISSION_DURATION,
+} = COLUMN_FIELDS;
+
 const { NEUTRAL, PURPLE } = Colors;
 const { ENROLLED } = EnrollmentStatuses;
 const {
@@ -39,7 +49,7 @@ const {
 } = ParticipantActionTypes;
 
 const StyledCell = styled.td`
-  padding: 10px 5px;
+  padding: 10px;
   word-wrap: break-word;
 `;
 
@@ -122,67 +132,103 @@ type Props = {
 const ParticipantRow = (props :Props) => {
   const { data, hasDeletePermission, onClickIcon } = props;
 
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOnClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleOnClose = () => {
+    setAnchorEl(null);
+  };
+
+  // todo: handle when menu items are selected
+  // pause/resume only available if data collection
+  // columns to display:
+      // only data collection
+      // only survey
+      // all columns
+      // prop: isSurveyModuleInstalled
+      // prop: isDataCollectionModuleInstalled
+
   const participantEKId = getIn(data, ['id', 0]);
-  const participantId = getIn(data, [PERSON_ID, 0]);
-  const enrollmentStatus = getIn(data, [STATUS, 0]);
-  const firstDataDate = formatDateTime(getIn(data, [DATETIME_START_FQN, 0]), DateTime.DATETIME_SHORT);
-  const lastDataDate = formatDateTime(getIn(data, [DATETIME_END_FQN, 0]), DateTime.DATETIME_SHORT);
-  const numDays = getIn(data, [EVENT_COUNT, 0]);
+  const participantId = getIn(data, [PARTICIPANT_ID, 0]);
+  const enrollmentStatus = getIn(data, [ENROLLMENT_STATUS, 0]);
+  const firstAndroidData = formatDateTime(getIn(data, [FIRST_ANDROID_DATA, 0]), DateTime.DATETIME_SHORT);
+  const lastAndroidData = formatDateTime(getIn(data, [LAST_ANDROID_DATA, 0]), DateTime.DATETIME_SHORT);
+  const androidDataDuration = getIn(data, [ANDROID_DATA_DURATION, 0]);
+  const firstTudSubmission = formatDateTime(getIn(data, [FIRST_TUD_SUBMISSION, 0]), DateTime.DATETIME_SHORT);
+  const lastTudSubmission = formatDateTime(getIn(data, [LAST_TUD_SUBMISSION, 0]), DateTime.DATETIME_SHORT);
+  const tudSubmissionDuration = getIn(data, [TUD_SUBMISSION_DURATION, 0]);
 
   const toggleIcon = enrollmentStatus === ENROLLED ? faToggleOn : faToggleOff;
   const actionsData = [
-    { action: LINK, icon: faLink },
+    { action: LINK, icon: faEllipsisV },
     { action: DOWNLOAD, icon: faCloudDownload },
     { action: DELETE, icon: faTrashAlt },
     { action: TOGGLE_ENROLLMENT, icon: toggleIcon },
   ];
+  const pauseOrResume = enrollmentStatus === ENROLLED ? 'Pause Enrollment' : 'Resume Enrollment';
 
+  /* eslint-disable react/no-array-index-key */
   return (
     <>
       <RowWrapper onClick={() => {}}>
+        {
+          [participantId,
+            firstAndroidData,
+            lastAndroidData,
+            androidDataDuration,
+            firstTudSubmission,
+            lastTudSubmission,
+            tudSubmissionDuration
+          ].map((item, index) => (
+            <StyledCell key={index}>
+              <CellContent>
+                { item }
+              </CellContent>
+            </StyledCell>
+          ))
+        }
         <StyledCell>
           <CellContent>
-            { participantId }
+            <IconButton
+                aria-controls="table_actions_menu"
+                aria-haspopup="true"
+                onClick={handleOnClick}>
+              <StyledFontAwesomeIcon
+                  color={NEUTRAL.N800}
+                  icon={faEllipsisV} />
+            </IconButton>
+            <Menu
+                id="table_actions_menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleOnClose}>
+              <MenuItem>
+                Participant Info
+              </MenuItem>
+              <MenuItem
+                  disabled={!hasDeletePermission}>
+                Delete
+              </MenuItem>
+              <MenuItem>
+                Download Data
+              </MenuItem>
+              <MenuItem>
+                { pauseOrResume }
+              </MenuItem>
+              <MenuItem>
+                TUD Submission Dates
+              </MenuItem>
+            </Menu>
           </CellContent>
-        </StyledCell>
-
-        <StyledCell>
-          <CellContent>
-            { firstDataDate }
-          </CellContent>
-        </StyledCell>
-
-        <StyledCell>
-          <CellContent>
-            { lastDataDate }
-          </CellContent>
-        </StyledCell>
-
-        <StyledCell>
-          <CellContent centerContent>
-            { numDays }
-          </CellContent>
-        </StyledCell>
-
-        <StyledCell>
-          <ActionIconsWrapper>
-            {
-              actionsData.map((actionItem) => (
-                <ActionIcon
-                    action={actionItem.action}
-                    enrollmentStatus={enrollmentStatus}
-                    hasDeletePermission={hasDeletePermission}
-                    icon={actionItem.icon}
-                    key={actionItem.action}
-                    onClickIcon={onClickIcon}
-                    participantEKId={participantEKId} />
-              ))
-            }
-          </ActionIconsWrapper>
         </StyledCell>
       </RowWrapper>
     </>
   );
 };
+/* eslint-enable */
 
 export default ParticipantRow;

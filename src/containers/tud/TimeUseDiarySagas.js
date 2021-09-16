@@ -45,6 +45,7 @@ import {
 import * as AppModules from '../../utils/constants/AppModules';
 import * as ChronicleApi from '../../utils/api/ChronicleApi';
 import {
+  getSelectedOrgId,
   selectESIDByCollection,
   selectEntitySetsByModule,
 } from '../../core/edm/EDMUtils';
@@ -85,7 +86,9 @@ const {
   VARIABLE_FQN,
 } = PROPERTY_TYPE_FQNS;
 
-function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<*> {
+function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<WorkerResponse> {
+  let workerResponse = {};
+
   try {
     yield put(getTudSubmissionDates.request(action.id));
 
@@ -94,9 +97,10 @@ function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<*> {
     const appModules :Map<string, List> = yield select(
       (state) => state.getIn(['app', APP_MODULES_ORG_LIST_MAP]), Map()
     );
-    if (!appModules.has(AppModules.QUESTIONNAIRES)) {
+    const selectedOrgId = yield select(getSelectedOrgId());
+    if (!appModules.get(AppModules.QUESTIONNAIRES, List()).has(selectedOrgId)) {
       yield put(getTudSubmissionDates.success(action.id, Map()));
-      return;
+      return { data: {} };
     }
     // entity set ids
     const participantsESID = yield select(selectESIDByCollection(PARTICIPANTS, AppModules.CHRONICLE_CORE));
@@ -131,18 +135,20 @@ function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<*> {
         });
       });
     });
+    workerResponse = { data };
 
     yield put(getTudSubmissionDates.success(action.id, data));
   }
 
   catch (error) {
-    LOG.error(action.type, error);
+    workerResponse = { error };
     yield put(getTudSubmissionDates.failure(action.id));
   }
 
   finally {
     yield put(getTudSubmissionDates.finally(action.id));
   }
+  return workerResponse;
 }
 
 function* verifyTudLinkWorker(action :SequenceAction) :Saga<*> {

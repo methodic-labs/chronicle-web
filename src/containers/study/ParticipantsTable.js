@@ -30,7 +30,6 @@ import {
 } from '../studies/StudiesActions';
 
 const { OPENLATTICE_ID_FQN } = Constants;
-
 const { PERSON_ID, STATUS, STUDY_ID } = PROPERTY_TYPE_FQNS;
 
 const {
@@ -124,13 +123,17 @@ const ParticipantsTable = (props :Props) => {
     }
   };
 
+  // const HeadCell = styled.td`
+  //   color: red
+  // `;
+
   const components = {
     Row: ({ data: rowData } :any) => (
       <ParticipantRow
           data={rowData}
           hasDeletePermission={hasDeletePermission}
           onClickIcon={onClickIcon} />
-    )
+    ),
   };
 
   return (

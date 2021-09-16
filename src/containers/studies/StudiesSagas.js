@@ -11,6 +11,7 @@ import {
 import {
   List,
   Map,
+  OrderedSet,
   Set,
   fromJS,
   get,
@@ -28,6 +29,7 @@ import {
   SearchApiSagas,
 } from 'lattice-sagas';
 import { DataUtils, Logger } from 'lattice-utils';
+import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
 import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
@@ -80,6 +82,7 @@ import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames
 import { submitDataGraph, submitPartialReplace } from '../../core/sagas/data/DataActions';
 import { submitDataGraphWorker, submitPartialReplaceWorker } from '../../core/sagas/data/DataSagas';
 import { APP_REDUX_CONSTANTS, STUDIES_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
+import { COLUMN_FIELDS } from '../study/constants/tableColumns';
 import { getTudSubmissionDates } from '../tud/TimeUseDiaryActions';
 import { getTudSubmissionDatesWorker } from '../tud/TimeUseDiarySagas';
 
@@ -104,8 +107,18 @@ const { getEntityKeyId, getPropertyValue } = DataUtils;
 const { OPENLATTICE_ID_FQN } = Constants;
 
 const {
+  ANDROID_DATA_DURATION,
+  ENROLLMENT_STATUS,
+  FIRST_ANDROID_DATA,
+  FIRST_TUD_SUBMISSION,
+  LAST_ANDROID_DATA,
+  LAST_TUD_SUBMISSION,
+  PARTICIPANT_ID,
+  TUD_SUBMISSION_DURATION,
+} = COLUMN_FIELDS;
+
+const {
   DATETIME_END_FQN,
-  DATETIME_START_FQN,
   DATE_ENROLLED,
   DATE_LOGGED,
   DELETE_FQN,
@@ -468,6 +481,7 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
       getTudSubmissionDates(participantEKIDs)
     );
     if (response.error) throw response.error;
+    const tudSubmissionDates :Map<UUID, OrderedSet<DateTime>> = response.data;
 
     // construct participant entities
     const participants = studyNeighbors.reduce((result, neighbor) => {
@@ -476,16 +490,17 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
       // metadata
       const datesLogged = metadata.getIn([participantEKID, DATE_LOGGED], List());
       const count :number = datesLogged.count();
-      const countValue = count === 0 ? '---' : count;
 
       const participant = {
-        ...get(neighbor, 'neighborDetails'),
-        [DATE_ENROLLED.toString()]: metadata.getIn([participantEKID, DATE_ENROLLED]),
-        [DATETIME_START_FQN.toString()]: getMinDateFromMetadata(metadata, participantEKID),
-        [DATETIME_END_FQN.toString()]: metadata.getIn([participantEKID, DATETIME_END_FQN]),
-        [EVENT_COUNT.toString()]: [countValue],
+        [PARTICIPANT_ID]: getIn(neighbor, ['neighborDetails', PERSON_ID]),
+        [FIRST_ANDROID_DATA]: getMinDateFromMetadata(metadata, participantEKID),
+        [LAST_ANDROID_DATA]: metadata.getIn([participantEKID, DATETIME_END_FQN]),
+        [ANDROID_DATA_DURATION]: [`${count} days`],
+        [FIRST_TUD_SUBMISSION]: [tudSubmissionDates.get(participantEKID, OrderedSet()).first()],
+        [LAST_TUD_SUBMISSION]: [tudSubmissionDates.get(participantEKID, OrderedSet()).last()],
+        [TUD_SUBMISSION_DURATION]: [`${tudSubmissionDates.get(participantEKID, OrderedSet()).size} days`],
         [PARTICIPATED_IN_EKID]: getIn(neighbor, ['associationDetails', OPENLATTICE_ID_FQN]),
-        [STATUS.toString()]: getIn(neighbor, ['associationDetails', STATUS], [ENROLLED]),
+        [ENROLLMENT_STATUS]: getIn(neighbor, ['associationDetails', STATUS], [ENROLLED]),
         id: [participantEKID], // needed by LUK table
       };
 
