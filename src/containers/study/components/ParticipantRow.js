@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import styled from 'styled-components';
 import {
@@ -22,8 +22,10 @@ import {
 import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 
+import ParticipantsTableDispatch from './ParticipantsTableDispatch';
+
 import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
-import ParticipantActionTypes from '../../../utils/constants/ParticipantActionTypes';
+import ParticipantsTableActions from '../constants/ParticipantsTableActions';
 import { COLUMN_FIELDS } from '../constants/tableColumns';
 
 const { formatDateTime } = DateTimeUtils;
@@ -40,13 +42,16 @@ const {
 } = COLUMN_FIELDS;
 
 const { NEUTRAL, PURPLE } = Colors;
+
 const { ENROLLED } = EnrollmentStatuses;
+
 const {
-  DELETE,
-  DOWNLOAD,
-  LINK,
-  TOGGLE_ENROLLMENT
-} = ParticipantActionTypes;
+  SET_PARTICIPANT_EKID,
+  TOGGLE_DELETE_MODAL,
+  TOGGLE_DOWNLOAD_MODAL,
+  TOGGLE_ENROLLMENT_MODAL,
+  TOGGLE_INFO_MODAL,
+} = ParticipantsTableActions;
 
 const StyledCell = styled.td`
   padding: 10px;
@@ -87,8 +92,7 @@ type IconProps = {
   enrollmentStatus :string;
   hasDeletePermission :Boolean;
   icon :any;
-  onClickIcon :(SyntheticEvent<HTMLElement>) => void;
-  participantEKId :UUID;
+  participantEntityKeyId :UUID;
 };
 
 const ActionIcon = (props :IconProps) => {
@@ -97,9 +101,10 @@ const ActionIcon = (props :IconProps) => {
     enrollmentStatus,
     hasDeletePermission,
     icon,
-    onClickIcon,
-    participantEKId,
+    participantEntityKeyId,
   } = props;
+
+  const dispatch = useContext(ParticipantsTableDispatch);
 
   let iconColor = NEUTRAL.N800;
   if (icon === faToggleOn && enrollmentStatus === ENROLLED) {
@@ -110,12 +115,15 @@ const ActionIcon = (props :IconProps) => {
     iconColor = NEUTRAL.N300;
   }
 
+  const handleClick = () => {
+    dispatch({ type: SET_PARTICIPANT_EKID, participantEntityKeyId });
+    dispatch({ type: action, isModalOpen: true });
+  };
+
   return (
     <IconButton
-        data-action-id={action}
-        data-key-id={participantEKId}
-        disabled={action === DELETE && !hasDeletePermission}
-        onClick={onClickIcon}>
+        disabled={action === TOGGLE_DELETE_MODAL && !hasDeletePermission}
+        onClick={handleClick}>
       <StyledFontAwesomeIcon
           color={iconColor}
           icon={icon} />
@@ -126,11 +134,10 @@ const ActionIcon = (props :IconProps) => {
 type Props = {
   data :Object;
   hasDeletePermission :Boolean;
-  onClickIcon :(SyntheticEvent<HTMLElement>) => void;
 };
 
 const ParticipantRow = (props :Props) => {
-  const { data, hasDeletePermission, onClickIcon } = props;
+  const { data, hasDeletePermission } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
 
