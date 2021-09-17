@@ -127,7 +127,7 @@ function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<WorkerRespon
         neighbors.forEach((neighbor) => {
           if (neighbor.getIn(['neighborDetails', ID_FQN, 0]) === TIME_USE_DIARY) {
             const dateTime = neighbor.getIn(['associationDetails', DATETIME_START_FQN, 0]);
-            mutator.update(participantEKID, OrderedSet(), (dates) => dates.add(dateTime));
+            mutator.update(participantEKID, OrderedSet(), (dates) => dates.add(DateTime.fromISO(dateTime)));
           }
         });
       });

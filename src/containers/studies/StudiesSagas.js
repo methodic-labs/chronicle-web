@@ -487,6 +487,8 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
       const androidDataDuration :number = androidDataDates.count();
       const tudSubmissionsDuration :number = tudSubmissionDates
         .get(participantEKID, OrderedSet())
+        .map((date) => date.toLocaleString(DateTime.DATE_SHORT))
+        .toSet()
         .size;
 
       const androidDataDurationLabel = androidDataDuration === 1 ? 'day' : 'days';
