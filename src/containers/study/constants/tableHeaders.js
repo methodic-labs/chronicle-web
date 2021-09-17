@@ -111,7 +111,7 @@ export default function getHeaders(orgHasSurveyModule :Boolean, orgHasDataCollec
   const numColumns = data.length;
   const lastIndex = numColumns - 1;
 
-  // last column will occupy 5% width, and other columns will share remanining width equally
+  // "actions" column will occupy 5% width, and other columns will share remanining width equally
   const defaultColumnWidth = 95.0 / (numColumns - 1);
 
   return data.map<ColumnType>((column :ColumnType, index) => {
