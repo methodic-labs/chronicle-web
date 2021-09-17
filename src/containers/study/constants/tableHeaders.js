@@ -1,92 +1,129 @@
 // @flow
 
-import HeaderNames, { COLUMN_FIELDS } from './tableColumns';
+import { COLUMN_FIELDS, HEADER_NAMES } from './tableColumns';
 
 const {
-  PARTICIPANT_ID,
-  FIRST_ANDROID_DATA,
-  LAST_ANDROID_DATA,
   ANDROID_DATA_DURATION,
+  ENROLLMENT_STATUS,
+  FIRST_ANDROID_DATA,
   FIRST_TUD_SUBMISSION,
+  LAST_ANDROID_DATA,
   LAST_TUD_SUBMISSION,
-  TUD_SUBMISSION_DURATION
+  PARTICIPANT_ID,
+  TUD_SUBMISSION_DURATION,
 } = COLUMN_FIELDS;
 
-const TABLE_HEADERS = [
-  {
-    key: PARTICIPANT_ID,
-    label: HeaderNames[PARTICIPANT_ID],
-    cellStyle: {
-      width: '13%',
-      fontWeight: 500,
-      textAlign: 'center'
-    }
-  },
-  {
-    key: FIRST_ANDROID_DATA,
-    label: HeaderNames[FIRST_ANDROID_DATA],
-    cellStyle: {
-      width: '13%',
-      fontWeight: 500,
-      textAlign: 'center'
-    }
-  },
-  {
-    key: LAST_ANDROID_DATA,
-    label: HeaderNames[LAST_ANDROID_DATA],
-    cellStyle: {
-      width: '13%',
-      fontWeight: 500,
-      textAlign: 'center'
-    }
-  },
-  {
-    key: ANDROID_DATA_DURATION,
-    label: HeaderNames[ANDROID_DATA_DURATION],
-    sortable: false,
-    cellStyle: {
-      width: '13%',
-      fontWeight: 500,
-      textAlign: 'center'
-    }
-  },
+const TUD_COLUMNS = [
   {
     key: FIRST_TUD_SUBMISSION,
-    label: HeaderNames[FIRST_TUD_SUBMISSION],
+    label: HEADER_NAMES[FIRST_TUD_SUBMISSION],
     cellStyle: {
-      width: '13%',
       fontWeight: 500,
-      textAlign: 'center'
     }
   },
   {
     key: LAST_TUD_SUBMISSION,
-    label: HeaderNames[LAST_TUD_SUBMISSION],
+    label: HEADER_NAMES[LAST_TUD_SUBMISSION],
     cellStyle: {
-      width: '13%',
       fontWeight: 500,
-      textAlign: 'center'
     }
   },
   {
     key: TUD_SUBMISSION_DURATION,
-    label: HeaderNames[TUD_SUBMISSION_DURATION],
-    sortable: false,
-    cellStyle: {
-      width: '13%',
-      fontWeight: 500,
-      textAlign: 'center'
-    }
-  },
-  {
-    key: 'actions',
-    label: 'Actions',
+    label: HEADER_NAMES[TUD_SUBMISSION_DURATION],
     sortable: false,
     cellStyle: {
       fontWeight: 500,
-      textAlign: 'center'
     }
   },
 ];
 
-export default TABLE_HEADERS;
+const ANDROID_COLUMNS = [
+  {
+    key: FIRST_ANDROID_DATA,
+    label: HEADER_NAMES[FIRST_ANDROID_DATA],
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+  {
+    key: LAST_ANDROID_DATA,
+    label: HEADER_NAMES[LAST_ANDROID_DATA],
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+  {
+    key: ANDROID_DATA_DURATION,
+    label: HEADER_NAMES[ANDROID_DATA_DURATION],
+    sortable: false,
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+];
+
+const PARTICIPANT_ID_COLUMN = {
+  key: PARTICIPANT_ID,
+  label: HEADER_NAMES[PARTICIPANT_ID],
+  cellStyle: {
+    fontWeight: 500,
+  }
+};
+
+const ACTIONS_COLUMN = {
+  key: 'actions',
+  label: '',
+  sortable: false,
+  cellStyle: {
+    fontWeight: 500,
+  }
+};
+
+const STATUS_COLUMN = {
+  key: ENROLLMENT_STATUS,
+  label: HEADER_NAMES[ENROLLMENT_STATUS],
+  sortable: false,
+  cellStyle: {
+    fontWeight: 500,
+  }
+};
+
+type ColumnType = {
+  key :string;
+  label :string;
+  sortable ?:boolean;
+  cellStyle :{
+    fontWeight :number;
+    width ?:string
+  }
+};
+
+export default function getHeaders(orgHasSurveyModule :Boolean, orgHasDataCollectionModule :Boolean) {
+  let data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+  if (orgHasSurveyModule && !orgHasDataCollectionModule) {
+    data = [PARTICIPANT_ID_COLUMN, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+  }
+  if (orgHasDataCollectionModule && !orgHasSurveyModule) {
+    data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+  }
+
+  const numColumns = data.length;
+  const lastIndex = numColumns - 1;
+
+  // last column will occupy 5% width, and other columns will share remanining width equally
+  const defaultColumnWidth = 95.0 / (numColumns - 1);
+
+  return data.map<ColumnType>((column :ColumnType, index) => {
+    if (index === lastIndex) {
+      return column;
+    }
+    return {
+      ...column,
+      cellStyle: {
+        ...column.cellStyle,
+        width: `${defaultColumnWidth}%`
+      }
+    };
+  });
+}

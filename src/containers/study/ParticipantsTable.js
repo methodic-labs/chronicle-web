@@ -7,7 +7,7 @@ import { Map } from 'immutable';
 import { Table } from 'lattice-ui-kit';
 
 import ParticipantRow from './components/ParticipantRow';
-import TABLE_HEADERS from './constants/tableHeaders';
+import getHeaders from './constants/tableHeaders';
 
 const TableWrapper = styled.div`
   overflow-x: scroll;
@@ -19,19 +19,26 @@ const TableWrapper = styled.div`
 
 type Props = {
   hasDeletePermission :Boolean;
+  orgHasDataCollectionModule :Boolean;
+  orgHasSurveyModule :Boolean;
   participants :Map<UUID, Map>;
 };
 
 const ParticipantsTable = (props :Props) => {
-  const { hasDeletePermission, participants } = props;
+  const {
+    hasDeletePermission,
+    orgHasDataCollectionModule,
+    orgHasSurveyModule,
+    participants,
+  } = props;
 
-  // const HeadCell = styled.td`
-  //   color: red
-  // `;
+  const tableHeaders = getHeaders(orgHasSurveyModule, orgHasDataCollectionModule);
 
   const components = {
     Row: ({ data: rowData } :any) => (
       <ParticipantRow
+          orgHasSurveyModule={orgHasSurveyModule}
+          orgHasDataCollectionModule={orgHasDataCollectionModule}
           data={rowData}
           hasDeletePermission={hasDeletePermission} />
     )
@@ -42,7 +49,7 @@ const ParticipantsTable = (props :Props) => {
       <Table
           components={components}
           data={participants.valueSeq().toJS()}
-          headers={TABLE_HEADERS}
+          headers={tableHeaders}
           paginated
           rowsPerPageOptions={[5, 20, 50]} />
     </TableWrapper>

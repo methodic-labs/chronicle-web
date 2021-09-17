@@ -22,6 +22,7 @@ import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import DataTypes from './constants/DataTypes';
+import { orgHasSurveyModuleSelector } from '../app/AppSelectors';
 import {
   DOWNLOAD_ALL_TUD_DATA,
   DOWNLOAD_DAILY_TUD_DATA,
@@ -45,7 +46,6 @@ import {
 import * as AppModules from '../../utils/constants/AppModules';
 import * as ChronicleApi from '../../utils/api/ChronicleApi';
 import {
-  getSelectedOrgId,
   selectESIDByCollection,
   selectEntitySetsByModule,
 } from '../../core/edm/EDMUtils';
@@ -63,7 +63,6 @@ import {
   TIME_RANGE
 } from '../../core/edm/constants/EntityTemplateNames';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
-import { APP_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 
 const LOG = new Logger('TimeUseDiarySagas');
 
@@ -73,7 +72,6 @@ const { searchEntityNeighborsWithFilter } = SearchApiActions;
 const { getEntityKeyId, getPropertyValue } = DataUtils;
 
 const { OPENLATTICE_ID_FQN } = Constants;
-const { APP_MODULES_ORG_LIST_MAP } = APP_REDUX_CONSTANTS;
 const TIME_USE_DIARY = 'Time Use Diary';
 
 const {
@@ -93,15 +91,14 @@ function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<WorkerRespon
     yield put(getTudSubmissionDates.request(action.id));
 
     const participantEKIDs :UUID[] = action.value;
+
     // if selected org does not have 'surveys' module installed, return empty
-    const appModules :Map<string, List> = yield select(
-      (state) => state.getIn(['app', APP_MODULES_ORG_LIST_MAP]), Map()
-    );
-    const selectedOrgId = yield select(getSelectedOrgId());
-    if (!appModules.get(AppModules.QUESTIONNAIRES, List()).has(selectedOrgId)) {
+    const orgHasSurveyModule = yield select(orgHasSurveyModuleSelector);
+    if (!orgHasSurveyModule || !participantEKIDs.length) {
       yield put(getTudSubmissionDates.success(action.id, Map()));
-      return { data: {} };
+      return { data: Map() };
     }
+
     // entity set ids
     const participantsESID = yield select(selectESIDByCollection(PARTICIPANTS, AppModules.CHRONICLE_CORE));
     const participatedInESID = yield select(selectESIDByCollection(PARTICIPATED_IN, AppModules.CHRONICLE_CORE));
@@ -142,6 +139,7 @@ function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<WorkerRespon
 
   catch (error) {
     workerResponse = { error };
+    LOG.error(action.type, error);
     yield put(getTudSubmissionDates.failure(action.id));
   }
 

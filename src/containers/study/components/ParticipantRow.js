@@ -1,23 +1,23 @@
 // @flow
 
-import React, { useContext, useState } from 'react';
+import React, {
+  useContext,
+  useMemo,
+  useState
+} from 'react';
 
 import styled from 'styled-components';
-import {
-  faCloudDownload,
-  faEllipsisV,
-  faLink,
-  faToggleOff,
-  faToggleOn,
-  faTrashAlt,
-} from '@fortawesome/pro-regular-svg-icons';
+import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getIn } from 'immutable';
 import {
   Colors,
   IconButton,
+  // $FlowFixMe
   Menu,
-  MenuItem
+  // $FlowFixMe
+  MenuItem,
+  Tag,
 } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
@@ -41,7 +41,7 @@ const {
   TUD_SUBMISSION_DURATION,
 } = COLUMN_FIELDS;
 
-const { NEUTRAL, PURPLE } = Colors;
+const { NEUTRAL } = Colors;
 
 const { ENROLLED } = EnrollmentStatuses;
 
@@ -51,6 +51,7 @@ const {
   TOGGLE_DOWNLOAD_MODAL,
   TOGGLE_ENROLLMENT_MODAL,
   TOGGLE_INFO_MODAL,
+  TOGGLE_TUD_SUBMISSION_HISTORY_MODAL
 } = ParticipantsTableActions;
 
 const StyledCell = styled.td`
@@ -70,7 +71,6 @@ const CellContent = styled.div`
   display: flex;
   font-size: 15px;
   overflow: hidden;
-  padding: 0 5px;
   color: ${NEUTRAL.N800};
   justify-content: ${(props) => (props.centerContent ? 'center' : 'flex-start')};
 `;
@@ -81,84 +81,25 @@ const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-const ActionIconsWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-type IconProps = {
-  action :string;
-  enrollmentStatus :string;
-  hasDeletePermission :Boolean;
-  icon :any;
-  participantEntityKeyId :UUID;
-};
-
-const ActionIcon = (props :IconProps) => {
-  const {
-    action,
-    enrollmentStatus,
-    hasDeletePermission,
-    icon,
-    participantEntityKeyId,
-  } = props;
-
-  const dispatch = useContext(ParticipantsTableDispatch);
-
-  let iconColor = NEUTRAL.N800;
-  if (icon === faToggleOn && enrollmentStatus === ENROLLED) {
-    // eslint-disable-next-line prefer-destructuring
-    iconColor = PURPLE.P300;
-  }
-  if (icon === faTrashAlt && !hasDeletePermission) {
-    iconColor = NEUTRAL.N300;
-  }
-
-  const handleClick = () => {
-    dispatch({ type: SET_PARTICIPANT_EKID, participantEntityKeyId });
-    dispatch({ type: action, isModalOpen: true });
-  };
-
-  return (
-    <IconButton
-        disabled={action === TOGGLE_DELETE_MODAL && !hasDeletePermission}
-        onClick={handleClick}>
-      <StyledFontAwesomeIcon
-          color={iconColor}
-          icon={icon} />
-    </IconButton>
-  );
-};
-
 type Props = {
+  orgHasSurveyModule :Boolean;
+  orgHasDataCollectionModule :Boolean;
   data :Object;
   hasDeletePermission :Boolean;
 };
 
 const ParticipantRow = (props :Props) => {
-  const { data, hasDeletePermission } = props;
+  const {
+    orgHasSurveyModule,
+    data,
+    orgHasDataCollectionModule,
+    hasDeletePermission
+  } = props;
 
+  const dispatch = useContext(ParticipantsTableDispatch);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleOnClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleOnClose = () => {
-    setAnchorEl(null);
-  };
-
-  // todo: handle when menu items are selected
-  // pause/resume only available if data collection
-  // columns to display:
-      // only data collection
-      // only survey
-      // all columns
-      // prop: isSurveyModuleInstalled
-      // prop: isDataCollectionModuleInstalled
-
-  const participantEKId = getIn(data, ['id', 0]);
+  const participantEntityKeyId = getIn(data, ['id', 0]);
   const participantId = getIn(data, [PARTICIPANT_ID, 0]);
   const enrollmentStatus = getIn(data, [ENROLLMENT_STATUS, 0]);
   const firstAndroidData = formatDateTime(getIn(data, [FIRST_ANDROID_DATA, 0]), DateTime.DATETIME_SHORT);
@@ -168,13 +109,43 @@ const ParticipantRow = (props :Props) => {
   const lastTudSubmission = formatDateTime(getIn(data, [LAST_TUD_SUBMISSION, 0]), DateTime.DATETIME_SHORT);
   const tudSubmissionDuration = getIn(data, [TUD_SUBMISSION_DURATION, 0]);
 
-  const toggleIcon = enrollmentStatus === ENROLLED ? faToggleOn : faToggleOff;
-  const actionsData = [
-    { action: LINK, icon: faEllipsisV },
-    { action: DOWNLOAD, icon: faCloudDownload },
-    { action: DELETE, icon: faTrashAlt },
-    { action: TOGGLE_ENROLLMENT, icon: toggleIcon },
-  ];
+  const getRowData = () => {
+    const tudData = [firstTudSubmission, lastTudSubmission, tudSubmissionDuration];
+    const androidData = [firstAndroidData, lastAndroidData, androidDataDuration];
+    if (orgHasDataCollectionModule && orgHasSurveyModule) {
+      return [participantId, ...androidData, ...tudData];
+    }
+    if (orgHasDataCollectionModule) {
+      return [participantId, ...androidData];
+    }
+    if (orgHasSurveyModule) {
+      return [participantId, ...tudData];
+    }
+
+    return [participantId, ...androidData, ...tudData];
+  };
+
+  const rowData = useMemo(() => getRowData(), [participantEntityKeyId]);
+
+  const handleOnClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleOnClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMenuItemClick = (event) => {
+    const { currentTarget } = event;
+    const { dataset } = currentTarget;
+    const { actionId } = dataset;
+
+    setAnchorEl(null);
+
+    dispatch({ type: SET_PARTICIPANT_EKID, participantEntityKeyId });
+    dispatch({ type: actionId, isModalOpen: true });
+  };
+
   const pauseOrResume = enrollmentStatus === ENROLLED ? 'Pause Enrollment' : 'Resume Enrollment';
 
   /* eslint-disable react/no-array-index-key */
@@ -182,14 +153,7 @@ const ParticipantRow = (props :Props) => {
     <>
       <RowWrapper onClick={() => {}}>
         {
-          [participantId,
-            firstAndroidData,
-            lastAndroidData,
-            androidDataDuration,
-            firstTudSubmission,
-            lastTudSubmission,
-            tudSubmissionDuration
-          ].map((item, index) => (
+          rowData.map((item, index) => (
             <StyledCell key={index}>
               <CellContent>
                 { item }
@@ -197,6 +161,13 @@ const ParticipantRow = (props :Props) => {
             </StyledCell>
           ))
         }
+        <StyledCell>
+          <CellContent>
+            <Tag mode={enrollmentStatus === ENROLLED ? 'primary' : 'default'}>
+              { enrollmentStatus }
+            </Tag>
+          </CellContent>
+        </StyledCell>
         <StyledCell>
           <CellContent>
             <IconButton
@@ -213,22 +184,36 @@ const ParticipantRow = (props :Props) => {
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleOnClose}>
-              <MenuItem>
+              <MenuItem
+                  data-action-id={TOGGLE_INFO_MODAL}
+                  onClick={handleMenuItemClick}>
                 Participant Info
               </MenuItem>
               <MenuItem
-                  disabled={!hasDeletePermission}>
+                  data-action-id={TOGGLE_DELETE_MODAL}
+                  disabled={!hasDeletePermission}
+                  onClick={handleMenuItemClick}>
                 Delete
               </MenuItem>
-              <MenuItem>
+              <MenuItem
+                  data-action-id={TOGGLE_DOWNLOAD_MODAL}
+                  onClick={handleMenuItemClick}>
                 Download Data
               </MenuItem>
-              <MenuItem>
+              <MenuItem
+                  data-action-id={TOGGLE_ENROLLMENT_MODAL}
+                  onClick={handleMenuItemClick}>
                 { pauseOrResume }
               </MenuItem>
-              <MenuItem>
-                TUD Submission Dates
-              </MenuItem>
+              {
+                orgHasSurveyModule && (
+                  <MenuItem
+                      data-action-id={TOGGLE_TUD_SUBMISSION_HISTORY_MODAL}
+                      onClick={handleMenuItemClick}>
+                    TUD Submission Dates
+                  </MenuItem>
+                )
+              }
             </Menu>
           </CellContent>
         </StyledCell>

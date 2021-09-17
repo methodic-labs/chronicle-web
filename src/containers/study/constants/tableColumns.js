@@ -21,14 +21,15 @@ const COLUMN_FIELDS = {
   TUD_SUBMISSION_DURATION,
 };
 
-export { COLUMN_FIELDS };
-
-export default {
+const HEADER_NAMES = {
   [PARTICIPANT_ID]: 'Participant Id',
   [FIRST_ANDROID_DATA]: 'First Android Data',
   [LAST_ANDROID_DATA]: 'Last Android Data',
   [ANDROID_DATA_DURATION]: 'Android Data Duration',
   [FIRST_TUD_SUBMISSION]: 'First TUD Submission',
   [LAST_TUD_SUBMISSION]: 'Last TUD Submission',
-  [TUD_SUBMISSION_DURATION]: 'TUD Submission Duration'
+  [TUD_SUBMISSION_DURATION]: 'TUD Submission Duration',
+  [ENROLLMENT_STATUS]: 'Status'
 };
+
+export { COLUMN_FIELDS, HEADER_NAMES };

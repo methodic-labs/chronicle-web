@@ -39,7 +39,8 @@ const PERMISSIONS_REDUX_CONSTANTS = {
 
 const REDUCERS = {
   APPS_DATA: 'appsData',
-  APP: 'app'
+  APP: 'app',
+  TUD: 'tud'
 };
 
 export {
