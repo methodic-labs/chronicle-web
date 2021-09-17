@@ -1,0 +1,10 @@
+// @flow
+
+export default Object.freeze({
+  SET_PARTICIPANT_EKID: 'set_participant_ekid',
+  TOGGLE_ADD_PARTICIPANT_MODAL: 'toggle_add_participant',
+  TOGGLE_DELETE_MODAL: 'toggle_delete',
+  TOGGLE_DOWNLOAD_MODAL: 'toggle_download',
+  TOGGLE_ENROLLMENT_MODAL: 'toggle_enrollment',
+  TOGGLE_INFO_MODAL: 'toggle_info',
+});
