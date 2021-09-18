@@ -7,9 +7,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Modal } from 'lattice-ui-kit';
 
+import DownloadQuestionnaireResponses from './DownloadQuestionnaireResponses';
+
 import ParticipantDataTypes from '../../../utils/constants/ParticipantDataTypes';
 import { getParticipantDataUrl } from '../../../utils/AppUtils';
-import DownloadQuestionnaireResponses from './DownloadQuestionnaireResponses';
 
 const {
   APP_USAGE,
@@ -130,7 +131,7 @@ const DownloadParticipantDataModal = (props :Props) => {
         onClose={handleOnClose}
         textSecondary="Close"
         shoudStretchButtons
-        textTitle="Download Data">
+        textTitle={`Download ${participantId}'s Data`}>
       {renderModalBody()}
     </Modal>
   );
