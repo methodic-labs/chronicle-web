@@ -29,7 +29,8 @@ const APP_REDUX_CONSTANTS = {
 };
 
 const TUD_REDUX_CONSTANTS = {
-  SUBMISSIONS_BY_DATE: 'submissionsByDate'
+  SUBMISSIONS_BY_DATE: 'submissionsByDate',
+  SUBMISSION_DATES: 'submissionDates'
 };
 
 const PERMISSIONS_REDUX_CONSTANTS = {
@@ -38,7 +39,8 @@ const PERMISSIONS_REDUX_CONSTANTS = {
 
 const REDUCERS = {
   APPS_DATA: 'appsData',
-  APP: 'app'
+  APP: 'app',
+  TUD: 'tud'
 };
 
 export {

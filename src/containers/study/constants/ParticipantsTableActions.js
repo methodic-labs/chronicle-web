@@ -7,4 +7,5 @@ export default Object.freeze({
   TOGGLE_DOWNLOAD_MODAL: 'toggle_download',
   TOGGLE_ENROLLMENT_MODAL: 'toggle_enrollment',
   TOGGLE_INFO_MODAL: 'toggle_info',
+  TOGGLE_TUD_SUBMISSION_HISTORY_MODAL: 'toggle_tud_dates_modal'
 });

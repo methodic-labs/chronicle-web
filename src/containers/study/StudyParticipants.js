@@ -30,10 +30,16 @@ import ParticipantInfoModal from './components/ParticipantInfoModal';
 import ParticipantsTable from './ParticipantsTable';
 import ParticipantsTableActions from './constants/ParticipantsTableActions';
 import ParticipantsTableDispatch from './components/ParticipantsTableDispatch';
+import TudSubmissionHistory from './components/TudSubmissionHistory';
+import { COLUMN_FIELDS } from './constants/tableColumns';
 
-import { getSelectedOrgId } from '../../core/edm/EDMUtils';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { resetRequestState } from '../../core/redux/ReduxActions';
+import {
+  currentOrgIdSelector,
+  orgHasDataCollectionModuleSelector,
+  orgHasSurveyModuleSelector
+} from '../app/AppSelectors';
 import {
   ADD_PARTICIPANT,
   CHANGE_ENROLLMENT_STATUS,
@@ -44,7 +50,9 @@ import {
 
 const { getEntityKeyId } = DataUtils;
 
-const { PERSON_ID, STATUS, STUDY_ID } = PROPERTY_TYPE_FQNS;
+const { PERSON_ID, STUDY_ID } = PROPERTY_TYPE_FQNS;
+
+const { ENROLLMENT_STATUS } = COLUMN_FIELDS;
 
 const {
   SET_PARTICIPANT_EKID,
@@ -53,6 +61,7 @@ const {
   TOGGLE_DOWNLOAD_MODAL,
   TOGGLE_ENROLLMENT_MODAL,
   TOGGLE_INFO_MODAL,
+  TOGGLE_TUD_SUBMISSION_HISTORY_MODAL,
 } = ParticipantsTableActions;
 
 const AddParticipantsButton = styled(Button)`
@@ -66,6 +75,7 @@ const initialState = {
   isDownloadModalOpen: false,
   isEnrollmentModalOpen: false,
   isInfoModalOpen: false,
+  isTudSubmissionHistoryModalOpen: false,
   participantEntityKeyId: null
 };
 
@@ -107,6 +117,12 @@ const reducer = (state :Object, action :Object) => {
         isEnrollmentModalOpen: action.isModalOpen
       };
 
+    case TOGGLE_TUD_SUBMISSION_HISTORY_MODAL:
+      return {
+        ...state,
+        isTudSubmissionHistoryModalOpen: action.isModalOpen
+      };
+
     default:
       return state;
   }
@@ -129,6 +145,7 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
     isDownloadModalOpen,
     isEnrollmentModalOpen,
     isInfoModalOpen,
+    isTudSubmissionHistoryModalOpen,
     participantEntityKeyId,
   } = state;
 
@@ -137,7 +154,11 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
 
   const [filteredParticipants, setFilteredParticipants] = useState(Map());
 
-  const selectedOrgId :UUID = useSelector(getSelectedOrgId());
+  // selectors
+  const orgHasSurveyModule = useSelector(orgHasSurveyModuleSelector);
+  const orgHasDataCollectionModule = useSelector(orgHasDataCollectionModuleSelector);
+  const selectedOrgId :UUID = useSelector(currentOrgIdSelector);
+
   const changeEnrollmentStatusRS :?RequestState = useRequestState(['studies', CHANGE_ENROLLMENT_STATUS]);
   const deleteParticipantRS :?RequestState = useRequestState(['studies', DELETE_STUDY_PARTICIPANT]);
 
@@ -177,7 +198,7 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
 
   const handleOnChangeEnrollment = () => {
     storeDispatch(changeEnrollmentStatus({
-      enrollmentStatus: participants.getIn([participantEntityKeyId, STATUS, 0]),
+      enrollmentStatus: participants.getIn([participantEntityKeyId, ENROLLMENT_STATUS, 0]),
       participantEntityKeyId,
       studyId,
     }));
@@ -215,6 +236,8 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
             && (
               <ParticipantsTable
                   hasDeletePermission={hasDeletePermission}
+                  orgHasDataCollectionModule={orgHasDataCollectionModule}
+                  orgHasSurveyModule={orgHasSurveyModule}
                   participants={filteredParticipants} />
             )
           }
@@ -234,7 +257,7 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
                   participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])}
                   studyId={studyId} />
               <ChangeEnrollmentModal
-                  enrollmentStatus={participants.getIn([participantEntityKeyId, STATUS, 0])}
+                  enrollmentStatus={participants.getIn([participantEntityKeyId, ENROLLMENT_STATUS, 0])}
                   handleOnChangeEnrollment={handleOnChangeEnrollment}
                   handleOnClose={() => dispatch({ type: TOGGLE_ENROLLMENT_MODAL, isModalOpen: false })}
                   isVisible={isEnrollmentModalOpen}
@@ -246,6 +269,11 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
                   isVisible={isDeleteModalOpen}
                   participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])}
                   requestState={deleteParticipantRS} />
+              <TudSubmissionHistory
+                  handleOnClose={() => dispatch({ type: TOGGLE_TUD_SUBMISSION_HISTORY_MODAL, isModalOpen: false })}
+                  isVisible={isTudSubmissionHistoryModalOpen}
+                  participantEntityKeyId={participantEntityKeyId}
+                  participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])} />
             </>
           )
         }

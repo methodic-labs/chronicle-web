@@ -1,56 +1,129 @@
 // @flow
 
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
+import { COLUMN_FIELDS, HEADER_NAMES } from './tableColumns';
 
 const {
-  DATETIME_START_FQN,
-  DATETIME_END_FQN,
-  EVENT_COUNT,
-  PERSON_ID
-} = PROPERTY_TYPE_FQNS;
-const TABLE_HEADERS = [
+  ANDROID_DATA_DURATION,
+  ENROLLMENT_STATUS,
+  FIRST_ANDROID_DATA,
+  FIRST_TUD_SUBMISSION,
+  LAST_ANDROID_DATA,
+  LAST_TUD_SUBMISSION,
+  PARTICIPANT_ID,
+  TUD_SUBMISSION_DURATION,
+} = COLUMN_FIELDS;
+
+const TUD_COLUMNS = [
   {
-    key: PERSON_ID,
-    label: 'Participant ID',
+    key: FIRST_TUD_SUBMISSION,
+    label: HEADER_NAMES[FIRST_TUD_SUBMISSION],
     cellStyle: {
-      width: '20%',
-      fontWeight: 600
+      fontWeight: 500,
     }
   },
   {
-    key: DATETIME_START_FQN,
-    label: 'First Data Received',
+    key: LAST_TUD_SUBMISSION,
+    label: HEADER_NAMES[LAST_TUD_SUBMISSION],
     cellStyle: {
-      width: '22%',
-      fontWeight: 600
+      fontWeight: 500,
     }
   },
   {
-    key: DATETIME_END_FQN,
-    label: 'Last Data Received',
-    cellStyle: {
-      width: '22%',
-      fontWeight: 600
-    }
-  },
-  {
-    key: EVENT_COUNT,
-    label: 'Days collected',
-    cellStyle: {
-      width: '18%',
-      textAlign: 'center',
-      fontWeight: 600
-    }
-  },
-  {
-    key: 'actions',
-    label: 'Actions',
+    key: TUD_SUBMISSION_DURATION,
+    label: HEADER_NAMES[TUD_SUBMISSION_DURATION],
     sortable: false,
     cellStyle: {
-      textAlign: 'center',
-      fontWeight: 600
+      fontWeight: 500,
     }
   },
 ];
 
-export default TABLE_HEADERS;
+const ANDROID_COLUMNS = [
+  {
+    key: FIRST_ANDROID_DATA,
+    label: HEADER_NAMES[FIRST_ANDROID_DATA],
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+  {
+    key: LAST_ANDROID_DATA,
+    label: HEADER_NAMES[LAST_ANDROID_DATA],
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+  {
+    key: ANDROID_DATA_DURATION,
+    label: HEADER_NAMES[ANDROID_DATA_DURATION],
+    sortable: false,
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+];
+
+const PARTICIPANT_ID_COLUMN = {
+  key: PARTICIPANT_ID,
+  label: HEADER_NAMES[PARTICIPANT_ID],
+  cellStyle: {
+    fontWeight: 500,
+  }
+};
+
+const ACTIONS_COLUMN = {
+  key: 'actions',
+  label: '',
+  sortable: false,
+  cellStyle: {
+    fontWeight: 500,
+  }
+};
+
+const STATUS_COLUMN = {
+  key: ENROLLMENT_STATUS,
+  label: HEADER_NAMES[ENROLLMENT_STATUS],
+  sortable: false,
+  cellStyle: {
+    fontWeight: 500,
+  }
+};
+
+type ColumnType = {
+  key :string;
+  label :string;
+  sortable ?:boolean;
+  cellStyle :{
+    fontWeight :number;
+    width ?:string
+  }
+};
+
+export default function getHeaders(orgHasSurveyModule :Boolean, orgHasDataCollectionModule :Boolean) {
+  let data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+  if (orgHasSurveyModule && !orgHasDataCollectionModule) {
+    data = [PARTICIPANT_ID_COLUMN, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+  }
+  if (orgHasDataCollectionModule && !orgHasSurveyModule) {
+    data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+  }
+
+  const numColumns = data.length;
+  const lastIndex = numColumns - 1;
+
+  // "actions" column will occupy 5% width, and other columns will share remanining width equally
+  const defaultColumnWidth = 95.0 / (numColumns - 1);
+
+  return data.map<ColumnType>((column :ColumnType, index) => {
+    if (index === lastIndex) {
+      return column;
+    }
+    return {
+      ...column,
+      cellStyle: {
+        ...column.cellStyle,
+        width: `${defaultColumnWidth}%`
+      }
+    };
+  });
+}
