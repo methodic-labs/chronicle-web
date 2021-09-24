@@ -11,6 +11,7 @@ import {
 import {
   List,
   Map,
+  OrderedSet,
   Set,
   fromJS,
   get,
@@ -28,6 +29,7 @@ import {
   SearchApiSagas,
 } from 'lattice-sagas';
 import { DataUtils, Logger } from 'lattice-utils';
+import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
 import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
@@ -80,6 +82,9 @@ import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames
 import { submitDataGraph, submitPartialReplace } from '../../core/sagas/data/DataActions';
 import { submitDataGraphWorker, submitPartialReplaceWorker } from '../../core/sagas/data/DataSagas';
 import { APP_REDUX_CONSTANTS, STUDIES_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
+import { COLUMN_FIELDS } from '../study/constants/tableColumns';
+import { getTudSubmissionDates } from '../tud/TimeUseDiaryActions';
+import { getTudSubmissionDatesWorker } from '../tud/TimeUseDiarySagas';
 
 const { createAssociations, getEntitySetData, updateEntityData } = DataApiActions;
 const { createAssociationsWorker, getEntitySetDataWorker, updateEntityDataWorker } = DataApiSagas;
@@ -102,13 +107,22 @@ const { getEntityKeyId, getPropertyValue } = DataUtils;
 const { OPENLATTICE_ID_FQN } = Constants;
 
 const {
+  ANDROID_DATA_DURATION,
+  ENROLLMENT_STATUS,
+  FIRST_ANDROID_DATA,
+  FIRST_TUD_SUBMISSION,
+  LAST_ANDROID_DATA,
+  LAST_TUD_SUBMISSION,
+  PARTICIPANT_ID,
+  TUD_SUBMISSION_DURATION,
+} = COLUMN_FIELDS;
+
+const {
   DATETIME_END_FQN,
-  DATETIME_START_FQN,
   DATE_ENROLLED,
   DATE_LOGGED,
   DELETE_FQN,
   DESCRIPTION_FQN,
-  EVENT_COUNT,
   ID_FQN,
   NOTIFICATION_ENABLED,
   PERSON_ID,
@@ -257,12 +271,10 @@ function* changeEnrollmentStatusWorker(action :SequenceAction) :Generator<*, *, 
     } = value;
 
     const newEnrollmentStatus = enrollmentStatus === ENROLLED ? NOT_ENROLLED : ENROLLED;
-    const enrollmentDate = enrollmentStatus === ENROLLED ? null : new Date().toISOString();
 
     // get entity set ids and property types
     const participatedInESID = yield select(selectESIDByCollection(PARTICIPATED_IN, AppModules.CHRONICLE_CORE));
     const statusPTID = yield select(selectPropertyTypeId(STATUS));
-    const datePTID = yield select(selectPropertyTypeId(DATE_ENROLLED));
 
     const participatedInEKID = yield select(
       (state) => state.getIn(['studies', 'participants', studyId, participantEntityKeyId, PARTICIPATED_IN_EKID, 0])
@@ -272,7 +284,6 @@ function* changeEnrollmentStatusWorker(action :SequenceAction) :Generator<*, *, 
       entities: {
         [participatedInEKID]: {
           [statusPTID]: [newEnrollmentStatus],
-          [datePTID]: [enrollmentDate]
         }
       },
       entitySetId: participatedInESID,
@@ -283,7 +294,6 @@ function* changeEnrollmentStatusWorker(action :SequenceAction) :Generator<*, *, 
 
     yield put(changeEnrollmentStatus.success(action.id, {
       newEnrollmentStatus,
-      enrollmentDate,
       participantEntityKeyId,
       studyId,
     }));
@@ -460,23 +470,41 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
     );
     const metadata :Map = response.data || Map();
 
+    // get time use diary submissions
+    response = yield call(
+      getTudSubmissionDatesWorker,
+      getTudSubmissionDates(participantEKIDs)
+    );
+    if (response.error) throw response.error;
+    const tudSubmissionDates :Map<UUID, OrderedSet<DateTime>> = response.data;
+
     // construct participant entities
     const participants = studyNeighbors.reduce((result, neighbor) => {
       const participantEKID = get(neighbor, 'neighborId');
 
       // metadata
-      const datesLogged = metadata.getIn([participantEKID, DATE_LOGGED], List());
-      const count :number = datesLogged.count();
-      const countValue = count === 0 ? '---' : count;
+      const androidDataDates = metadata.getIn([participantEKID, DATE_LOGGED], List());
+      const androidDataDuration :number = androidDataDates.count();
+      const tudSubmissionsDuration :number = tudSubmissionDates
+        .get(participantEKID, OrderedSet())
+        .map((date) => date.toLocaleString(DateTime.DATE_SHORT))
+        .toSet()
+        .size;
+
+      const androidDataDurationLabel = androidDataDuration === 1 ? 'day' : 'days';
+      const tudSubmissionDurationLabel = tudSubmissionsDuration === 1 ? 'day' : 'days';
 
       const participant = {
         ...get(neighbor, 'neighborDetails'),
-        [DATE_ENROLLED.toString()]: metadata.getIn([participantEKID, DATE_ENROLLED]),
-        [DATETIME_START_FQN.toString()]: getMinDateFromMetadata(metadata, participantEKID),
-        [DATETIME_END_FQN.toString()]: metadata.getIn([participantEKID, DATETIME_END_FQN]),
-        [EVENT_COUNT.toString()]: [countValue],
+        [PARTICIPANT_ID]: getIn(neighbor, ['neighborDetails', PERSON_ID]),
+        [FIRST_ANDROID_DATA]: getMinDateFromMetadata(metadata, participantEKID),
+        [LAST_ANDROID_DATA]: metadata.getIn([participantEKID, DATETIME_END_FQN]),
+        [ANDROID_DATA_DURATION]: [`${androidDataDuration} ${androidDataDurationLabel}`],
+        [FIRST_TUD_SUBMISSION]: [tudSubmissionDates.get(participantEKID, OrderedSet()).first()],
+        [LAST_TUD_SUBMISSION]: [tudSubmissionDates.get(participantEKID, OrderedSet()).last()],
+        [TUD_SUBMISSION_DURATION]: [`${tudSubmissionsDuration} ${tudSubmissionDurationLabel}`],
         [PARTICIPATED_IN_EKID]: getIn(neighbor, ['associationDetails', OPENLATTICE_ID_FQN]),
-        [STATUS.toString()]: getIn(neighbor, ['associationDetails', STATUS], [ENROLLED]),
+        [ENROLLMENT_STATUS]: getIn(neighbor, ['associationDetails', STATUS], [ENROLLED]),
         id: [participantEKID], // needed by LUK table
       };
 
@@ -784,15 +812,25 @@ function* addStudyParticipantWorker(action :SequenceAction) :Generator<*, *, *> 
     );
     entityData = processEntityData(formData, entitySetIds, propertyTypeIds.map((id, fqn) => fqn));
 
-    let participantEntityData = fromJS(getIn(entityData, [entitySetIds.get(PARTICIPANTS), 0]));
-    participantEntityData = participantEntityData
-      .set(STATUS, [ENROLLED])
-      .set(EVENT_COUNT, ['---'])
-      .set(PARTICIPATED_IN_EKID, [participatedInEKID])
-      .set('id', [participantEntityKeyId]);
+    entityData = getIn(entityData, [entitySetIds.get(PARTICIPANTS), 0]);
+
+    const newParticipant = {
+      ...entityData,
+      [PARTICIPANT_ID]: get(entityData, PERSON_ID),
+      [OPENLATTICE_ID_FQN]: [participantEntityKeyId],
+      [FIRST_ANDROID_DATA]: ['---'],
+      [LAST_ANDROID_DATA]: ['---'],
+      [ANDROID_DATA_DURATION]: ['0 days'],
+      [FIRST_TUD_SUBMISSION]: ['---'],
+      [LAST_TUD_SUBMISSION]: ['---'],
+      [TUD_SUBMISSION_DURATION]: ['0 days'],
+      [PARTICIPATED_IN_EKID]: [participatedInEKID],
+      [ENROLLMENT_STATUS]: [ENROLLED],
+      id: [participantEntityKeyId]
+    };
 
     yield put(addStudyParticipant.success(action.id, {
-      participantEntityData,
+      newParticipant,
       participantEntityKeyId,
       studyId
     }));

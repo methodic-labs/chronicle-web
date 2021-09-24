@@ -22,6 +22,7 @@ import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import DataTypes from './constants/DataTypes';
+import { orgHasSurveyModuleSelector } from '../app/AppSelectors';
 import {
   DOWNLOAD_ALL_TUD_DATA,
   DOWNLOAD_DAILY_TUD_DATA,
@@ -31,6 +32,7 @@ import {
   downloadAllTudData,
   downloadDailyTudData,
   getSubmissionsByDate,
+  getTudSubmissionDates,
   submitTudData,
   verifyTudLink,
 } from './TimeUseDiaryActions';
@@ -51,11 +53,13 @@ import {
   ADDRESSES,
   ANSWER,
   PARTICIPANTS,
+  PARTICIPATED_IN,
   QUESTION,
   REGISTERED_FOR,
   RESPONDS_WITH,
   SUBMISSION,
   SUMMARY_SET,
+  SURVEY,
   TIME_RANGE
 } from '../../core/edm/constants/EntityTemplateNames';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
@@ -68,6 +72,7 @@ const { searchEntityNeighborsWithFilter } = SearchApiActions;
 const { getEntityKeyId, getPropertyValue } = DataUtils;
 
 const { OPENLATTICE_ID_FQN } = Constants;
+const TIME_USE_DIARY = 'Time Use Diary';
 
 const {
   DATETIME_END_FQN,
@@ -78,6 +83,71 @@ const {
   VALUES_FQN,
   VARIABLE_FQN,
 } = PROPERTY_TYPE_FQNS;
+
+function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<WorkerResponse> {
+  let workerResponse = {};
+
+  try {
+    yield put(getTudSubmissionDates.request(action.id));
+
+    const participantEKIDs :UUID[] = action.value;
+
+    // if selected org does not have 'surveys' module installed, return empty
+    const orgHasSurveyModule = yield select(orgHasSurveyModuleSelector);
+    if (!orgHasSurveyModule || !participantEKIDs.length) {
+      yield put(getTudSubmissionDates.success(action.id, Map()));
+      return { data: Map() };
+    }
+
+    // entity set ids
+    const participantsESID = yield select(selectESIDByCollection(PARTICIPANTS, AppModules.CHRONICLE_CORE));
+    const participatedInESID = yield select(selectESIDByCollection(PARTICIPATED_IN, AppModules.CHRONICLE_CORE));
+
+    const surveyESID = yield select(selectESIDByCollection(SURVEY, AppModules.QUESTIONNAIRES));
+
+    // search
+    const searchFilter = {
+      destinationEntitySetIds: [surveyESID],
+      edgeEntitySetIds: [participatedInESID],
+      entityKeyIds: participantEKIDs,
+      sourceEntitySetIds: [participantsESID]
+    };
+    const response = yield call(
+      searchEntityNeighborsWithFilterWorker,
+      searchEntityNeighborsWithFilter({
+        entitySetId: participantsESID,
+        filter: searchFilter
+      })
+    );
+    if (response.error) throw response.error;
+
+    const data :Map<UUID, OrderedSet> = Map().withMutations((mutator) => {
+      fromJS(response.data).forEach((neighbors :List, participantEKID :UUID) => {
+
+        neighbors.forEach((neighbor) => {
+          if (neighbor.getIn(['neighborDetails', ID_FQN, 0]) === TIME_USE_DIARY) {
+            const dateTime = neighbor.getIn(['associationDetails', DATETIME_START_FQN, 0]);
+            mutator.update(participantEKID, OrderedSet(), (dates) => dates.add(DateTime.fromISO(dateTime)));
+          }
+        });
+      });
+    });
+    workerResponse = { data };
+
+    yield put(getTudSubmissionDates.success(action.id, data));
+  }
+
+  catch (error) {
+    workerResponse = { error };
+    LOG.error(action.type, error);
+    yield put(getTudSubmissionDates.failure(action.id));
+  }
+
+  finally {
+    yield put(getTudSubmissionDates.finally(action.id));
+  }
+  return workerResponse;
+}
 
 function* verifyTudLinkWorker(action :SequenceAction) :Saga<*> {
   try {
@@ -518,6 +588,7 @@ export {
   downloadAllTudDataWatcher,
   downloadDailyTudDataWatcher,
   getSubmissionsByDateWatcher,
+  getTudSubmissionDatesWorker,
   submitTudDataWatcher,
   verifyTudLinkWatcher,
 };

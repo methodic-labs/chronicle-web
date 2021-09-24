@@ -41,12 +41,11 @@ import {
   updateStudy,
 } from './StudiesActions';
 
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { RESET_REQUEST_STATE } from '../../core/redux/ReduxActions';
 import { STUDIES_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
+import { COLUMN_FIELDS } from '../study/constants/tableColumns';
 
 const { REQUEST_STATE } = ReduxConstants;
-const { DATE_ENROLLED, STATUS } = PROPERTY_TYPE_FQNS;
 
 const {
   NOTIFICATIONS_EKID,
@@ -56,6 +55,8 @@ const {
   TIMEOUT,
   TIME_USE_DIARY_STUDIES
 } = STUDIES_REDUX_CONSTANTS;
+
+const { ENROLLMENT_STATUS } = COLUMN_FIELDS;
 
 const INITIAL_STATE :Map<*, *> = fromJS({
   [ADD_PARTICIPANT]: { [REQUEST_STATE]: RequestStates.STANDBY },
@@ -183,11 +184,11 @@ export default function studiesReducer(state :Map<*, *> = INITIAL_STATE, action 
         REQUEST: () => state.setIn([ADD_PARTICIPANT, REQUEST_STATE], RequestStates.PENDING),
         FAILURE: () => state.setIn([ADD_PARTICIPANT, REQUEST_STATE], RequestStates.FAILURE),
         SUCCESS: () => {
-          const { participantEntityData, participantEntityKeyId, studyId } = seqAction.value;
+          const { newParticipant, participantEntityKeyId, studyId } = seqAction.value;
 
           return state
             .setIn([ADD_PARTICIPANT, REQUEST_STATE], RequestStates.SUCCESS)
-            .setIn(['participants', studyId, participantEntityKeyId], participantEntityData);
+            .setIn(['participants', studyId, participantEntityKeyId], fromJS(newParticipant));
         }
       });
     }
@@ -250,14 +251,12 @@ export default function studiesReducer(state :Map<*, *> = INITIAL_STATE, action 
         FAILURE: () => state.setIn([CHANGE_ENROLLMENT_STATUS, REQUEST_STATE], RequestStates.FAILURE),
         SUCCESS: () => {
           const {
-            enrollmentDate,
             newEnrollmentStatus,
             participantEntityKeyId,
             studyId
           } = seqAction.value;
           return state
-            .setIn(['participants', studyId, participantEntityKeyId, STATUS], [newEnrollmentStatus])
-            .setIn(['participants', studyId, participantEntityKeyId, DATE_ENROLLED], [enrollmentDate])
+            .setIn(['participants', studyId, participantEntityKeyId, ENROLLMENT_STATUS], [newEnrollmentStatus])
             .setIn([CHANGE_ENROLLMENT_STATUS, REQUEST_STATE], RequestStates.SUCCESS);
         }
       });
