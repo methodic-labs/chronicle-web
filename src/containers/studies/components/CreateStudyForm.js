@@ -8,7 +8,7 @@ import { Map } from 'immutable';
 import { Form } from 'lattice-fabricate';
 import { useDispatch } from 'react-redux';
 
-import { dataSchema, uiSchema } from './CreateStudySchemas';
+import { createSchema, createUiSchema } from './CreateStudySchemas';
 
 import { createFormDataFromStudyEntity } from '../../../utils/FormUtils';
 import { createStudy, updateStudy } from '../StudiesActions';
@@ -22,7 +22,10 @@ const CreateStudyForm = (props:Props, ref) => {
 
   const dispatch = useDispatch();
 
-  const initialFormData = study ? createFormDataFromStudyEntity(dataSchema, notificationsEnabled, study) : {};
+  const schema = createSchema();
+  const uiSchema = createUiSchema();
+
+  const initialFormData = study ? createFormDataFromStudyEntity(schema, notificationsEnabled, study) : {};
 
   const handleSubmit = ({ formData } :Object) => {
     if (study) {
@@ -40,7 +43,7 @@ const CreateStudyForm = (props:Props, ref) => {
         noPadding
         onSubmit={handleSubmit}
         ref={ref}
-        schema={dataSchema}
+        schema={schema}
         uiSchema={uiSchema} />
   );
 };
