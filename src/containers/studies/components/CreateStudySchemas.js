@@ -21,7 +21,7 @@ const {
   NOTIFICATION_ENABLED
 } = PROPERTY_TYPE_FQNS;
 
-const dataSchema = {
+const createSchema = () => ({
   properties: {
     [getPageSectionKey(1, 1)]: {
       properties: {
@@ -70,9 +70,9 @@ const dataSchema = {
   },
   type: 'object',
   title: ''
-};
+});
 
-const uiSchema = {
+const createUiSchema = () => ({
   [getPageSectionKey(1, 1)]: {
     classNames: 'column-span-12 grid-container',
     [getEntityAddressKey(0, STUDIES, FULL_NAME_FQN)]: {
@@ -101,6 +101,6 @@ const uiSchema = {
       classNames: 'column-span-12'
     }
   },
-};
+});
 
-export { dataSchema, uiSchema };
+export { createSchema, createUiSchema };
