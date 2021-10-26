@@ -1,14 +1,8 @@
 // @flow
 
-import React from 'react';
-
 import {
-  // $FlowFixMe
-  Box,
-  Modal,
-  ModalFooter,
-  Spinner,
-  Typography
+// $FlowFixMe
+Box, Modal, ModalFooter, Spinner, Typography
 } from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';

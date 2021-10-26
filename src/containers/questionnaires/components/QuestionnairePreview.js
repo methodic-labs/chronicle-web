@@ -1,7 +1,5 @@
 // @flow
 
-import React from 'react';
-
 import styled from 'styled-components';
 import { Form } from 'lattice-fabricate';
 import { Button, Modal } from 'lattice-ui-kit';

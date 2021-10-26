@@ -1,7 +1,5 @@
 // @flow
 
-import React from 'react';
-
 import styled from 'styled-components';
 import { ActionModal } from 'lattice-ui-kit';
 import { ReduxConstants } from 'lattice-utils';

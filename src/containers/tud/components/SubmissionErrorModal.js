@@ -1,8 +1,5 @@
 // @flow
 
-import React from 'react';
-
-// $FlowFixMe
 import { Box, Modal, Typography } from 'lattice-ui-kit';
 import TranslationKeys from '../constants/TranslationKeys';
 

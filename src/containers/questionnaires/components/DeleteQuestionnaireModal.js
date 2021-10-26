@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import styled from 'styled-components';
 import { ActionModal } from 'lattice-ui-kit';

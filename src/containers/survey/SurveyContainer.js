@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import qs from 'qs';
 import styled from 'styled-components';
