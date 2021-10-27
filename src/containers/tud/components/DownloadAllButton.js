@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { List } from 'immutable';
 // $FlowFixMe

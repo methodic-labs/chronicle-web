@@ -1,10 +1,6 @@
 // @flow
 
-import React, {
-  useContext,
-  useMemo,
-  useState
-} from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 import styled from 'styled-components';
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
@@ -195,11 +191,15 @@ const ParticipantRow = (props :Props) => {
                   onClick={handleMenuItemClick}>
                 Delete
               </MenuItem>
-              <MenuItem
-                  data-action-id={TOGGLE_DOWNLOAD_MODAL}
-                  onClick={handleMenuItemClick}>
-                Download Data
-              </MenuItem>
+              {
+                orgHasDataCollectionModule && (
+                  <MenuItem
+                      data-action-id={TOGGLE_DOWNLOAD_MODAL}
+                      onClick={handleMenuItemClick}>
+                    Download Data
+                  </MenuItem>
+                )
+              }
               <MenuItem
                   data-action-id={TOGGLE_ENROLLMENT_MODAL}
                   onClick={handleMenuItemClick}>

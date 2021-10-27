@@ -1,7 +1,7 @@
 // @flow
 
-import React from 'react';
+import { createContext } from 'react';
 
-const ParticipantsTableDispatch :any = React.createContext(null);
+const ParticipantsTableDispatch :any = createContext(null);
 
 export default ParticipantsTableDispatch;

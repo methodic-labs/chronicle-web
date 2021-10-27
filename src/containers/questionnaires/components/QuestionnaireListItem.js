@@ -1,7 +1,5 @@
 // @flow
 
-import React from 'react';
-
 import styled from 'styled-components';
 import { faToggleOn } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,7 +16,7 @@ const Description = styled.div`
   h3 {
     color: ${NEUTRAL.N800};
     font-weight: 500;
-    margin: 0 0 5px 0;
+    margin: 0 0 5px;
     padding: 0;
   }
 

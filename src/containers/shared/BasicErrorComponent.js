@@ -1,6 +1,6 @@
 // @flow
 
-import * as React from 'react';
+import type { Node } from 'react';
 
 import styled from 'styled-components';
 
@@ -10,7 +10,7 @@ const Error = styled.div`
 `;
 
 type Props = {
-  children ?:React.Node;
+  children ?:Node;
   message ?:string;
 };
 const BasicErrorComponent = ({ children, message } :Props) => (
