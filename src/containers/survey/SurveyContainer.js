@@ -49,7 +49,7 @@ const SurveyTitle = styled.h4`
 const SurveyDate = styled.h5`
   font-size: 16px;
   font-weight: 400;
-  margin: 5px 0 20px 0;
+  margin: 5px 0 20px;
 `;
 
 const SurveyContainer = () => {

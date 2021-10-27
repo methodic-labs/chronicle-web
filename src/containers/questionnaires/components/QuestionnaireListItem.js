@@ -16,7 +16,7 @@ const Description = styled.div`
   h3 {
     color: ${NEUTRAL.N800};
     font-weight: 500;
-    margin: 0 0 5px 0;
+    margin: 0 0 5px;
     padding: 0;
   }
 

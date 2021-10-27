@@ -44,7 +44,7 @@ const Description = styled.h6`
   font-size: 16px;
   font-weight: 400;
   padding: 0;
-  margin: 5px 0 20px 0;
+  margin: 5px 0 20px;
 `;
 
 const QuestionnaireContainer = () => {

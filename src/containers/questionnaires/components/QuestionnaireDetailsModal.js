@@ -46,7 +46,7 @@ const SectionPane = styled.div`
     color: ${NEUTRALS[1]};
     font-size: 14px;
     font-weight: normal;
-    margin: 16px 0 0 0;
+    margin: 16px 0 0;
   }
 
   p {
