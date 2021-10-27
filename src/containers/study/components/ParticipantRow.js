@@ -191,11 +191,15 @@ const ParticipantRow = (props :Props) => {
                   onClick={handleMenuItemClick}>
                 Delete
               </MenuItem>
-              <MenuItem
-                  data-action-id={TOGGLE_DOWNLOAD_MODAL}
-                  onClick={handleMenuItemClick}>
-                Download Data
-              </MenuItem>
+              {
+                orgHasDataCollectionModule && (
+                  <MenuItem
+                      data-action-id={TOGGLE_DOWNLOAD_MODAL}
+                      onClick={handleMenuItemClick}>
+                    Download Data
+                  </MenuItem>
+                )
+              }
               <MenuItem
                   data-action-id={TOGGLE_ENROLLMENT_MODAL}
                   onClick={handleMenuItemClick}>
