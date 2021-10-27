@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 import { Map } from 'immutable';
 import { ActionModal } from 'lattice-ui-kit';

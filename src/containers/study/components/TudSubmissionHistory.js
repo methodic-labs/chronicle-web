@@ -1,7 +1,5 @@
 // @flow
 
-import React from 'react';
-
 import { OrderedSet } from 'immutable';
 import {
   // $FlowFixMe

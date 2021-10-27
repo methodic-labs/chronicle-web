@@ -1,7 +1,5 @@
 // @flow
 
-import React from 'react';
-
 import styled from 'styled-components';
 import { faPencilAlt } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

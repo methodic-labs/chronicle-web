@@ -1,9 +1,7 @@
 // @flow
 
-import React from 'react';
-
 import {
-  // $FlowFixMe
+// $FlowFixMe
   Box,
   Modal,
   ModalFooter,
