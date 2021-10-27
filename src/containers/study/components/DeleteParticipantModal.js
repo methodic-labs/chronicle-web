@@ -2,7 +2,11 @@
 
 import {
 // $FlowFixMe
-Box, Modal, ModalFooter, Spinner, Typography
+  Box,
+  Modal,
+  ModalFooter,
+  Spinner,
+  Typography
 } from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
