@@ -1,6 +1,5 @@
 // @flow
 
-import React from 'react';
 import { DateTime } from 'luxon';
 
 import { ReduxUtils } from 'lattice-utils';

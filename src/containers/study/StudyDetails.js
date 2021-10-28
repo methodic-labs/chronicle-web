@@ -2,7 +2,7 @@
  * @flow
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styled from 'styled-components';
 import { faBell, faBellSlash } from '@fortawesome/pro-solid-svg-icons';

@@ -1,7 +1,5 @@
 // @flow
 
-import React from 'react';
-
 import { Typography } from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
 

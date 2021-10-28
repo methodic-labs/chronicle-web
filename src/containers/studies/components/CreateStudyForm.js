@@ -2,7 +2,7 @@
  * @flow
  */
 
-import React from 'react';
+import { memo, forwardRef } from 'react';
 
 import { Map } from 'immutable';
 import { Form } from 'lattice-fabricate';
@@ -49,6 +49,6 @@ const CreateStudyForm = (props:Props, ref) => {
 };
 
 // $FlowFixMe
-export default React.memo<Props, typeof Form>(
-  React.forwardRef(CreateStudyForm)
+export default memo<Props, typeof Form>(
+  forwardRef(CreateStudyForm)
 );

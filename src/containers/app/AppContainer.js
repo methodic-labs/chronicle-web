@@ -2,7 +2,7 @@
  * @flow
  */
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import _isFunction from 'lodash/isFunction';
 import { Map } from 'immutable';

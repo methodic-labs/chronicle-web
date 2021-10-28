@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import { memo } from 'react';
 
 import styled from 'styled-components';
 import { Map } from 'immutable';
@@ -56,4 +56,4 @@ const ParticipantsTable = (props :Props) => {
   );
 };
 
-export default React.memo<Props>(ParticipantsTable);
+export default memo<Props>(ParticipantsTable);

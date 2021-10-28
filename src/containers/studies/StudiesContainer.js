@@ -2,7 +2,7 @@
  * @flow
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { Constants } from 'lattice';
 import {

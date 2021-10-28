@@ -4,8 +4,8 @@
 
 import './core/i18n';
 
-import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
+import { Suspense } from 'react';
 
 import LatticeAuth from 'lattice-auth';
 import { ConnectedRouter } from 'connected-react-router/immutable';
@@ -47,7 +47,7 @@ const NormalizeCSS = createGlobalStyle`
 const GlobalStyle = createGlobalStyle`
   @supports (font-variation-settings: normal) {
     html {
-      font-family: 'Inter var', sans-serif;
+      font-family: "Inter var", sans-serif;
     }
   }
 
@@ -55,7 +55,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     background-color: ${NEUTRALS[7]};
     color: ${NEUTRAL.N900};
-    font-family: 'Inter', sans-serif;
+    font-family: Inter, sans-serif;
     line-height: 1.5;
     height: 100%;
     width: 100%;
