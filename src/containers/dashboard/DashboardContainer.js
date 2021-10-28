@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { faUniversity } from '@fortawesome/pro-light-svg-icons';
+import { faBook, faUniversity, faUsers } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   AppContainerWrapper,
@@ -48,7 +48,7 @@ const DashboardContainer = () => (
           <Grid item xs={12} sm={4}>
             <Card>
               <StyledHeader borderless padding="1em" vertical={false}>
-                <StyledAvatar backgroundColor={PURPLE.P300}>
+                <StyledAvatar backgroundColor={PURPLE.P200}>
                   <FontAwesomeIcon icon={faUniversity} fixedWidth />
                 </StyledAvatar>
                 <Typography
@@ -59,15 +59,20 @@ const DashboardContainer = () => (
                 </Typography>
               </StyledHeader>
               <StyledContent>
-                <Typography align="center" variant="h2" component="p">{(Math.floor(Math.random() * 100)).toLocaleString()}</Typography>
+                <Typography
+                    align="center"
+                    variant="h2"
+                    component="p">
+                  {(Math.floor(Math.random() * 100) + 100).toLocaleString()}
+                </Typography>
               </StyledContent>
             </Card>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Card>
               <StyledHeader borderless padding="1em" vertical={false}>
-                <StyledAvatar backgroundColor={BLUE.B300}>
-                  <FontAwesomeIcon icon={faUniversity} fixedWidth />
+                <StyledAvatar backgroundColor={BLUE.B200}>
+                  <FontAwesomeIcon icon={faBook} fixedWidth />
                 </StyledAvatar>
                 <Typography
                     color="textSecondary"
@@ -77,15 +82,20 @@ const DashboardContainer = () => (
                 </Typography>
               </StyledHeader>
               <StyledContent>
-                <Typography align="center" variant="h2" component="p">{(Math.floor(Math.random() * 300)).toLocaleString()}</Typography>
+                <Typography
+                    align="center"
+                    variant="h2"
+                    component="p">
+                  {(Math.floor(Math.random() * 200) + 200).toLocaleString()}
+                </Typography>
               </StyledContent>
             </Card>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Card>
               <StyledHeader borderless padding="1em" vertical={false}>
-                <StyledAvatar backgroundColor={TEAL.T300}>
-                  <FontAwesomeIcon icon={faUniversity} fixedWidth />
+                <StyledAvatar backgroundColor={TEAL.T200}>
+                  <FontAwesomeIcon icon={faUsers} fixedWidth />
                 </StyledAvatar>
                 <Typography
                     color="textSecondary"
@@ -95,7 +105,12 @@ const DashboardContainer = () => (
                 </Typography>
               </StyledHeader>
               <StyledContent>
-                <Typography align="center" variant="h2" component="p">{(Math.floor(Math.random() * 10000)).toLocaleString()}</Typography>
+                <Typography
+                    align="center"
+                    variant="h2"
+                    component="p">
+                  {(Math.floor(Math.random() * 10000) + 2000).toLocaleString()}
+                </Typography>
               </StyledContent>
             </Card>
           </Grid>
