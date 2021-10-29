@@ -2,7 +2,7 @@
  * @flow
  */
 
-import React, { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import styled from 'styled-components';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';

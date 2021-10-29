@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import { forwardRef } from 'react';
 
 import { Map } from 'immutable';
 import { Constants } from 'lattice';
@@ -49,4 +49,4 @@ const AddParticipantForm = (props :Props, ref) => {
 };
 
 // $FlowFixMe
-export default React.forwardRef(AddParticipantForm);
+export default forwardRef(AddParticipantForm);

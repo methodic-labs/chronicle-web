@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import qs from 'qs';
 import styled from 'styled-components';
@@ -44,7 +44,7 @@ const Description = styled.h6`
   font-size: 16px;
   font-weight: 400;
   padding: 0;
-  margin: 5px 0 20px 0;
+  margin: 5px 0 20px;
 `;
 
 const QuestionnaireContainer = () => {

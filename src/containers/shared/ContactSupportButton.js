@@ -1,6 +1,5 @@
 // @flow
 
-import React from 'react';
 import { faQuestionCircle } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Colors } from 'lattice-ui-kit';

@@ -1,7 +1,5 @@
 module.exports = {
   plugins: [
-    '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-proposal-object-rest-spread',
     '@babel/plugin-transform-runtime',
     'babel-plugin-styled-components',
     ['babel-plugin-transform-imports', {
@@ -34,7 +32,7 @@ module.exports = {
   ],
   presets: [
     ['@babel/preset-env', {
-      corejs: '3.12',
+      corejs: '3.19',
       useBuiltIns: 'entry',
     }],
     ['@babel/preset-react', {
