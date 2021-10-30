@@ -25,7 +25,7 @@ const StyledHeader = styled(CardHeader)`
 
 const StyledAvatar = styled(Avatar)`
   margin-right: 16px;
-  background-color: ${({ backgroundColor }) => (backgroundColor || NEUTRAL.N400)};
+  background-color: ${({ $backgroundColor }) => ($backgroundColor || NEUTRAL.N400)};
 `;
 
 const StyledContent = styled(CardContent)`
@@ -39,7 +39,7 @@ const SummaryStats = () => (
       <Grid item xs={12} sm={4}>
         <Card>
           <StyledHeader borderless padding="1em" vertical={false}>
-            <StyledAvatar backgroundColor={PURPLE.P200}>
+            <StyledAvatar $backgroundColor={PURPLE.P200}>
               <FontAwesomeIcon icon={faUniversity} fixedWidth />
             </StyledAvatar>
             <Typography
@@ -62,7 +62,7 @@ const SummaryStats = () => (
       <Grid item xs={12} sm={4}>
         <Card>
           <StyledHeader borderless padding="1em" vertical={false}>
-            <StyledAvatar backgroundColor={BLUE.B200}>
+            <StyledAvatar $backgroundColor={BLUE.B200}>
               <FontAwesomeIcon icon={faBook} fixedWidth />
             </StyledAvatar>
             <Typography
@@ -85,7 +85,7 @@ const SummaryStats = () => (
       <Grid item xs={12} sm={4}>
         <Card>
           <StyledHeader borderless padding="1em" vertical={false}>
-            <StyledAvatar backgroundColor={TEAL.T200}>
+            <StyledAvatar $backgroundColor={TEAL.T200}>
               <FontAwesomeIcon icon={faUsers} fixedWidth />
             </StyledAvatar>
             <Typography
