@@ -34,7 +34,6 @@ const StyledContent = styled(CardContent)`
 
 const SummaryStats = () => (
   <Box>
-    <Typography variant="h1">Global Dashboard</Typography>
     <Grid container spacing={2}>
       <Grid item xs={12} sm={4}>
         <Card>

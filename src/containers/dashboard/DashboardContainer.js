@@ -3,6 +3,8 @@ import {
   AppContainerWrapper,
   AppContentWrapper,
   AppHeaderWrapper,
+  CardStack,
+  Typography,
 } from 'lattice-ui-kit';
 
 import SummaryLinePlot from './components/SummaryLinePlot';
@@ -14,8 +16,11 @@ const DashboardContainer = () => (
   <AppContainerWrapper>
     <AppHeaderWrapper appIcon={OpenLatticeIcon} appTitle="Chronicle" />
     <AppContentWrapper>
-      <SummaryStats />
-      <SummaryLinePlot />
+      <CardStack>
+        <Typography variant="h1">Global Dashboard</Typography>
+        <SummaryStats />
+        <SummaryLinePlot />
+      </CardStack>
     </AppContentWrapper>
   </AppContainerWrapper>
 );
