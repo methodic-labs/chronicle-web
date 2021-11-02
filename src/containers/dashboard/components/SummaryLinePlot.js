@@ -1,73 +1,84 @@
 import styled from 'styled-components';
 import { ResponsiveLine } from '@nivo/line';
-import { Card } from 'lattice-ui-kit';
+import { Card, Colors } from 'lattice-ui-kit';
+
+import SummaryLineTooltip from './SummaryLineTooltip';
+
+import mockLineData from '../utils/mockLineData';
+
+const {
+  TEAL,
+  BLUE,
+  PURPLE
+} = Colors;
 
 const StyledCard = styled(Card)`
   height: 400px;
 `;
 
-const data = [
+const newData = [
   {
-    id: 'fake corp. A',
-    data: [
-      { x: '2018-01-01', y: 7 },
-      { x: '2018-01-02', y: 5 },
-      { x: '2018-01-03', y: 11 },
-      { x: '2018-01-04', y: 9 },
-      { x: '2018-01-05', y: 12 },
-      { x: '2018-01-06', y: 16 },
-      { x: '2018-01-07', y: 13 },
-      { x: '2018-01-08', y: 13 },
-    ],
+    id: 'Organizations',
+    data: mockLineData(30, 100, 200),
   },
   {
-    id: 'fake corp. B',
-    data: [
-      { x: '2018-01-04', y: 14 },
-      { x: '2018-01-05', y: 14 },
-      { x: '2018-01-06', y: 15 },
-      { x: '2018-01-07', y: 11 },
-      { x: '2018-01-08', y: 10 },
-      { x: '2018-01-09', y: 12 },
-      { x: '2018-01-10', y: 9 },
-      { x: '2018-01-11', y: 7 },
-    ],
+    id: 'Studies',
+    data: mockLineData(30, 200, 400),
+  },
+  {
+    id: 'Participants',
+    data: mockLineData(30, 2000, 12000),
   },
 ];
 
 const SummaryLinePlot = () => (
   <StyledCard>
     <ResponsiveLine
-        // axisBottom={{
-        //   format: '%b %d',
-        //   tickValues: 'every 2 days',
-        //   legend: 'time scale',
-        //   legendOffset: -12,
-        // }}
+        axisBottom={{
+          format: '%m/%d',
+          tickValues: 'every 3 days',
+        }}
         axisLeft={{
           orient: 'left',
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
           legend: 'Count',
-          legendOffset: -40,
+          legendOffset: -50,
           legendPosition: 'middle'
         }}
+        colors={[
+          PURPLE.P200,
+          BLUE.B200,
+          TEAL.T200,
+        ]}
+        data={newData}
+        enablePoints={false}
+        enableGridX={false}
+        // enableSlices="x"
+        legends={[{
+          anchor: 'bottom',
+          direction: 'row',
+          itemHeight: 16,
+          itemWidth: 90,
+          itemsSpacing: 5,
+          translateY: 50
+        }]}
+        margin={{
+          top: 32,
+          right: 32,
+          bottom: 72,
+          left: 80
+        }}
+        tooltip={SummaryLineTooltip}
+        useMesh
+        xFormat="time:%m/%d"
         xScale={{
           type: 'time',
           format: '%Y-%m-%d',
           useUTC: false,
           precision: 'day',
-        }}
-        data={data}
-        margin={{
-          top: 50,
-          right: 110,
-          bottom: 50,
-          left: 60
-        }}
-        xFormat="time:%Y-%m-%d"
-        yFormat=" >-.2f" />
+        }} />
   </StyledCard>
 );
 
