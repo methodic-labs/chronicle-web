@@ -8,7 +8,7 @@ type LineDatePoint = {
   y :number;
 };
 
-function mockLineData(days :number, min :number, max :number) {
+function generateLineData(days :number, min :number, max :number) {
   const step = Math.floor((max - min) / days);
   const elements = range(days)
     .map<LineDatePoint>((e, i) => ({
@@ -19,4 +19,4 @@ function mockLineData(days :number, min :number, max :number) {
   return elements;
 }
 
-export default mockLineData;
+export default generateLineData;

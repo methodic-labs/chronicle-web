@@ -4,7 +4,7 @@ import { Card, Colors } from 'lattice-ui-kit';
 
 import SummaryLineTooltip from './SummaryLineTooltip';
 
-import mockLineData from '../utils/mockLineData';
+import generateLineData from '../utils/generateLineData';
 
 const {
   TEAL,
@@ -19,15 +19,15 @@ const StyledCard = styled(Card)`
 const newData = [
   {
     id: 'Organizations',
-    data: mockLineData(30, 100, 200),
+    data: generateLineData(30, 100, 200),
   },
   {
     id: 'Studies',
-    data: mockLineData(30, 200, 400),
+    data: generateLineData(30, 200, 400),
   },
   {
     id: 'Participants',
-    data: mockLineData(30, 2000, 12000),
+    data: generateLineData(30, 2000, 12000),
   },
 ];
 
