@@ -115,6 +115,7 @@ const AppContainer = () => {
         <AppNavigationWrapper>
           <NavLink to={Routes.STUDIES} />
           <NavLink to={Routes.STUDIES}> Studies </NavLink>
+          { AuthUtils.isAdmin() && <NavLink to={Routes.DASHBOARD}>Dashboard</NavLink>}
         </AppNavigationWrapper>
       </AppHeaderWrapper>
       <AppContentWrapper>
