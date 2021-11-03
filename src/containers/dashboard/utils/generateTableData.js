@@ -1,6 +1,6 @@
+// @flow
 import padStart from 'lodash/padStart';
 import random from 'lodash/random';
-// @flow
 import range from 'lodash/range';
 import { DateTime } from 'luxon';
 import { v4 as uuid } from 'uuid';
