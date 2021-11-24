@@ -24,8 +24,6 @@ import { Route, Switch } from 'react-router';
 import { createGlobalStyle } from 'styled-components';
 
 import AppContainer from './containers/app/AppContainer';
-import Auth0AdminRoute from './core/router/Auth0AdminRoute';
-import DashboardContainer from './containers/dashboard/DashboardContainer';
 import QuestionnaireContainer from './containers/questionnaire/QuestionnaireContainer';
 import SurveyContainer from './containers/survey/SurveyContainer';
 import TimeUseDiaryContainer from './containers/tud/TimeUseDiaryContainer';
@@ -112,7 +110,6 @@ if (APP_ROOT_NODE) {
                     <Route path={Routes.SURVEY} component={SurveyContainer} />
                     <Route path={Routes.QUESTIONNAIRE} component={QuestionnaireContainer} />
                     <Route path={Routes.TUD} component={TimeUseDiaryContainer} />
-                    <Auth0AdminRoute path={Routes.DASHBOARD} component={DashboardContainer} />
                     <AuthRoute redirectToLogin path={Routes.ROOT} component={AppContainer} />
                   </Switch>
                 </ConnectedRouter>

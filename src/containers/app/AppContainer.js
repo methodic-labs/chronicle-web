@@ -28,8 +28,10 @@ import type { RequestState } from 'redux-reqseq';
 
 import { INITIALIZE_APPLICATION, initializeApplication, switchOrganization } from './AppActions';
 
+import Auth0AdminRoute from '../../core/router/Auth0AdminRoute';
 import BasicErrorComponent from '../shared/BasicErrorComponent';
 import ContactSupportButton from '../shared/ContactSupportButton';
+import DashboardContainer from '../dashboard/DashboardContainer';
 import OpenLatticeIcon from '../../assets/images/ol_icon.png';
 import StudiesContainer from '../studies/StudiesContainer';
 import StudyDetailsContainer from '../study/StudyDetailsContainer';
@@ -68,6 +70,7 @@ const AppContainer = () => {
         <Switch>
           <Route path={Routes.STUDY} component={StudyDetailsContainer} />
           <Route path={Routes.STUDIES} component={StudiesContainer} />
+          <Auth0AdminRoute path={Routes.DASHBOARD} component={DashboardContainer} />
           <Redirect to={Routes.STUDIES} />
         </Switch>
       );
