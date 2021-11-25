@@ -38,9 +38,10 @@ const PERMISSIONS_REDUX_CONSTANTS = {
 };
 
 const REDUCERS = {
-  APPS_DATA: 'appsData',
   APP: 'app',
-  TUD: 'tud'
+  APPS_DATA: 'appsData',
+  DASHBOARD: 'dashboard',
+  TUD: 'tud',
 };
 
 export {
