@@ -514,7 +514,7 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
     }, {});
 
     yield put(getStudyParticipants.success(action.id, {
-      participants: fromJS(participants).filter((participant) => participant.getIn([STATUS, 0]) !== DELETE),
+      participants: fromJS(participants).filter((participant) => participant.getIn([ENROLLMENT_STATUS, 0]) !== DELETE),
       studyId,
     }));
   }
