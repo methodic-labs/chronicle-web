@@ -79,5 +79,9 @@ export default function* sagas() :Generator<*, *, *> {
     fork(TimeUseDiarySagas.verifyTudLinkWatcher),
 
     fork(DashboardSagas.getAllStudiesTableDataWatcher),
+    fork(DashboardSagas.getOrgStudiesTableDataWatcher),
+    fork(DashboardSagas.getOrgStudiesWatcher),
+    fork(DashboardSagas.getStudyParticipantsCountWatcher),
+
   ]);
 }
