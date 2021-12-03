@@ -1,3 +1,4 @@
+// @flow
 import styled from 'styled-components';
 import {
   Card,
@@ -7,10 +8,7 @@ import {
   Typography,
 } from 'lattice-ui-kit';
 
-import StudiesTableRow from './StudiesTableRow';
 import { STUDIES_TABLE_HEADERS } from './constants';
-
-import generateTableData from '../utils/generateTableData';
 
 const { NEUTRAL } = Colors;
 
@@ -30,7 +28,6 @@ const StyledTableCard = styled(Card)`
     ::after {
       content: "";
       position: absolute;
-      z-index: 1;
       bottom: 1px;
       left: 1px;
       pointer-events: none;
@@ -71,18 +68,17 @@ const StyledTableCard = styled(Card)`
   }
 `;
 
-const components = {
-  Row: StudiesTableRow
+type StudiesTableProps = {
+  data :Object[];
 };
 
-const StudiesTable = () => (
+const StudiesTable = ({ data } :StudiesTableProps) => (
   <StyledTableCard>
     <CardSegment padding="16px" borderless>
       <Typography variant="h2">Studies</Typography>
     </CardSegment>
     <Table
-        // components={components}
-        data={generateTableData(25)}
+        data={data}
         headers={STUDIES_TABLE_HEADERS} />
   </StyledTableCard>
 );
