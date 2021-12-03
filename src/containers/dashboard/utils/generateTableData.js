@@ -13,6 +13,7 @@ function generateTableData(numRows :number) :any[] {
       return {
         organization: `Organization ${padStart(i.toString(), 3, '0')}`,
         studyId: uuid(),
+        studyName: `Study ${padStart(i.toString(), 3, '0')}`,
         dateLaunched: DateTime
           .local().minus({ days: numRows - i }).toISO(),
         activeParticipants,
