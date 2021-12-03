@@ -13,9 +13,10 @@ import type { Saga } from '@redux-saga/core';
 import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
+import { getOrgStudiesTableDataWorker } from './getOrgStudiesTableDataSaga';
+
 import selectOrganizations from '../selectors/selectOrganizations';
 import { GET_ALL_STUDIES_TABLE_DATA, getAllStudiesTableData, getOrgStudiesTableData } from '../actions';
-import { getOrgStudiesTableDataWorker } from '.';
 
 const LOG = new Logger('DashboardSagas');
 

@@ -13,6 +13,9 @@ import type { Saga } from '@redux-saga/core';
 import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
+import { getOrgStudiesWorker } from './getOrgStudiesSaga';
+import { getStudyParticipantsCountWorker } from './getStudyParticipantsCountSaga';
+
 import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
 import selectOrganization from '../selectors/selectOrganization';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
@@ -23,7 +26,6 @@ import {
   getOrgStudiesTableData,
   getStudyParticipantsCount,
 } from '../actions';
-import { getOrgStudiesWorker, getStudyParticipantsCountWorker } from '.';
 
 const { getEntityKeyId, getPropertyValue } = DataUtils;
 
