@@ -49,6 +49,9 @@ const StyledTableCard = styled(Card)`
 
     tr > :first-child {
       padding-left: 16px;
+    }
+
+    tr > :nth-child(-n+2) {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -78,7 +81,7 @@ const StudiesTable = () => (
       <Typography variant="h2">Studies</Typography>
     </CardSegment>
     <Table
-        components={components}
+        // components={components}
         data={generateTableData(25)}
         headers={STUDIES_TABLE_HEADERS} />
   </StyledTableCard>
