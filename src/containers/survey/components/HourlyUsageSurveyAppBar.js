@@ -25,7 +25,7 @@ const HourlyUsageSurveyAppBar = ({ date, step } :Props) => {
     }
   }, [step, date]);
   return (
-    <Box>
+    <Box mb="50px">
       <AppBar>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
