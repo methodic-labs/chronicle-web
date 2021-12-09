@@ -12,8 +12,10 @@ const SURVEY :string = '/survey';
 const QUESTIONNAIRE :string = '/questionnaire';
 const TUD :string = '/time-use-diary';
 const TUD_DASHBOARD :string = `${STUDIES}/${ID_PARAM}${TUD}`;
+const DASHBOARD :string = '/dashboard';
 
 export {
+  DASHBOARD,
   ID_PARAM,
   LOGIN,
   PARTICIPANTS,

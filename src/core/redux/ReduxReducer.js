@@ -7,6 +7,7 @@ import { AuthReducer } from 'lattice-auth';
 import { combineReducers } from 'redux-immutable';
 
 import appReducer from '../../containers/app/AppReducer';
+import dashboardReducer from '../../containers/dashboard/reducers';
 import edmReducer from '../edm/EDMReducer';
 import permissionsReducer from '../permissions/PermissionsReducer';
 import questionnareReducer from '../../containers/questionnaire/QuestionnaireReducer';
@@ -20,11 +21,12 @@ export default function reduxReducer(routerHistory :any) {
     app: appReducer,
     appsData: surveyReducer,
     auth: AuthReducer,
+    dashboard: dashboardReducer,
     edm: edmReducer,
     permissions: permissionsReducer,
     questionnaire: questionnareReducer,
     router: connectRouter(routerHistory),
     studies: studiesReducer,
-    tud: timeUseDiaryReducer
+    tud: timeUseDiaryReducer,
   });
 }
