@@ -43,6 +43,7 @@ const PERMISSIONS_REDUX_CONSTANTS = {
 
 const DASHBOARD_REDUX_CONSTANTS = {
   STUDIES_TABLE: 'studiesTable',
+  SUMMARY_STATS: 'summaryStats',
 };
 
 const REDUCERS = {
