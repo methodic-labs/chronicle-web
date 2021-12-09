@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {
   Card,
   CardHeader,
-  // $FlowFixMe
   Skeleton,
   Typography,
 } from 'lattice-ui-kit';
@@ -37,6 +36,7 @@ const StatCard = ({
         <Typography
             color="textSecondary"
             component="h2"
+            noWrap
             variant="body2">
           {title}
         </Typography>
