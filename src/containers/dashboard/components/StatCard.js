@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {
   Card,
   CardHeader,
+  // $FlowFixMe
   Skeleton,
   Typography,
 } from 'lattice-ui-kit';
