@@ -6,12 +6,12 @@ import {
 
 import AllStudiesContainer from './AllStudiesContainer';
 import SummaryLinePlot from './components/SummaryLinePlot';
-import SummaryStats from './components/SummaryStats';
+import SummaryStatsContainer from './SummaryStatsContainer';
 
 const DashboardContainer = () => (
   <CardStack>
     <Typography variant="h1">Global Dashboard</Typography>
-    <SummaryStats />
+    <SummaryStatsContainer />
     <SummaryLinePlot />
     <AllStudiesContainer />
   </CardStack>
