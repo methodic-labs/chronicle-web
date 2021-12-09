@@ -1,16 +1,19 @@
+// @flow
 import styled from 'styled-components';
 import { faBook, faUniversity, faUsers } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Map } from 'immutable';
 import {
+  // $FlowFixMe
   Avatar,
+  // $FlowFixMe
   Box,
-  Card,
-  CardContent,
-  CardHeader,
   Colors,
+  // $FlowFixMe
   Grid,
-  Typography,
 } from 'lattice-ui-kit';
+
+import StatCard from './StatCard';
 
 const {
   NEUTRAL,
@@ -19,90 +22,60 @@ const {
   PURPLE
 } = Colors;
 
-const StyledHeader = styled(CardHeader)`
-  align-items: center;
-`;
-
 const StyledAvatar = styled(Avatar)`
   margin-right: 16px;
   background-color: ${({ $backgroundColor }) => ($backgroundColor || NEUTRAL.N400)};
 `;
 
-const StyledContent = styled(CardContent)`
-  padding: 0 16px 16px !important;
-`;
+const OrganizationAvatar = () => (
+  <StyledAvatar $backgroundColor={PURPLE.P200}>
+    <FontAwesomeIcon icon={faUniversity} fixedWidth />
+  </StyledAvatar>
+);
 
-const SummaryStats = () => (
+const StudiesAvatar = () => (
+  <StyledAvatar $backgroundColor={BLUE.B200}>
+    <FontAwesomeIcon icon={faBook} fixedWidth />
+  </StyledAvatar>
+);
+
+const ParticipantsAvatar = () => (
+  <StyledAvatar $backgroundColor={TEAL.T200}>
+    <FontAwesomeIcon icon={faUsers} fixedWidth />
+  </StyledAvatar>
+);
+
+type SummaryStatsProps = {
+  data :Map;
+  loading :boolean;
+};
+
+const SummaryStats = ({
+  data,
+  loading
+} :SummaryStatsProps) => (
   <Box>
     <Grid container spacing={2}>
       <Grid item xs={12} sm={4}>
-        <Card>
-          <StyledHeader borderless padding="1em" vertical={false}>
-            <StyledAvatar $backgroundColor={PURPLE.P200}>
-              <FontAwesomeIcon icon={faUniversity} fixedWidth />
-            </StyledAvatar>
-            <Typography
-                color="textSecondary"
-                component="h2"
-                variant="body2">
-              Organizations
-            </Typography>
-          </StyledHeader>
-          <StyledContent>
-            <Typography
-                align="center"
-                variant="h2"
-                component="p">
-              {(Math.floor(Math.random() * 100) + 100).toLocaleString()}
-            </Typography>
-          </StyledContent>
-        </Card>
+        <StatCard
+            avatar={<OrganizationAvatar />}
+            loading={loading}
+            title="Organizations"
+            value={data.get('organizations')} />
       </Grid>
       <Grid item xs={12} sm={4}>
-        <Card>
-          <StyledHeader borderless padding="1em" vertical={false}>
-            <StyledAvatar $backgroundColor={BLUE.B200}>
-              <FontAwesomeIcon icon={faBook} fixedWidth />
-            </StyledAvatar>
-            <Typography
-                color="textSecondary"
-                component="h2"
-                variant="body2">
-              Studies
-            </Typography>
-          </StyledHeader>
-          <StyledContent>
-            <Typography
-                align="center"
-                variant="h2"
-                component="p">
-              {(Math.floor(Math.random() * 200) + 200).toLocaleString()}
-            </Typography>
-          </StyledContent>
-        </Card>
+        <StatCard
+            avatar={<StudiesAvatar />}
+            loading={loading}
+            title="Studies"
+            value={data.get('studies')} />
       </Grid>
       <Grid item xs={12} sm={4}>
-        <Card>
-          <StyledHeader borderless padding="1em" vertical={false}>
-            <StyledAvatar $backgroundColor={TEAL.T200}>
-              <FontAwesomeIcon icon={faUsers} fixedWidth />
-            </StyledAvatar>
-            <Typography
-                color="textSecondary"
-                component="h2"
-                variant="body2">
-              Participants
-            </Typography>
-          </StyledHeader>
-          <StyledContent>
-            <Typography
-                align="center"
-                variant="h2"
-                component="p">
-              {(Math.floor(Math.random() * 10000) + 2000).toLocaleString()}
-            </Typography>
-          </StyledContent>
-        </Card>
+        <StatCard
+            avatar={<ParticipantsAvatar />}
+            loading={loading}
+            title="Participants"
+            value={data.get('participants')} />
       </Grid>
     </Grid>
   </Box>
