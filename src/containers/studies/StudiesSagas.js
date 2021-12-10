@@ -56,7 +56,7 @@ import {
   getTimeUseDiaryStudies,
   updateStudy,
 } from './StudiesActions';
-import { constructEntityFromFormData, getMinDateFromMetadata } from './utils';
+import { constructEntityFromFormData } from './utils';
 
 import EnrollmentStatuses from '../../utils/constants/EnrollmentStatus';
 import * as AppModules from '../../utils/constants/AppModules';
@@ -119,6 +119,7 @@ const {
 
 const {
   DATETIME_END_FQN,
+  DATETIME_START_FQN,
   DATE_ENROLLED,
   DATE_LOGGED,
   DELETE_FQN,
@@ -483,6 +484,14 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
       const participantEKID = get(neighbor, 'neighborId');
 
       // metadata
+      const androidFirstDataValues = metadata
+        .getIn([participantEKID, DATETIME_START_FQN], List())
+        .map((date) => DateTime.fromISO(date));
+
+      const androidLastDataValues = metadata
+        .getIn([participantEKID, DATETIME_END_FQN], List())
+        .map((date) => DateTime.fromISO(date));
+
       const androidDataDates = metadata.getIn([participantEKID, DATE_LOGGED], List());
       const androidDataDuration :number = androidDataDates.count();
       const tudSubmissionsDuration :number = tudSubmissionDates
@@ -497,8 +506,8 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
       const participant = {
         ...get(neighbor, 'neighborDetails'),
         [PARTICIPANT_ID]: getIn(neighbor, ['neighborDetails', PERSON_ID]),
-        [FIRST_ANDROID_DATA]: getMinDateFromMetadata(metadata, participantEKID),
-        [LAST_ANDROID_DATA]: metadata.getIn([participantEKID, DATETIME_END_FQN]),
+        [FIRST_ANDROID_DATA]: [androidFirstDataValues.max()],
+        [LAST_ANDROID_DATA]: [androidLastDataValues.min()],
         [ANDROID_DATA_DURATION]: [`${androidDataDuration} ${androidDataDurationLabel}`],
         [FIRST_TUD_SUBMISSION]: [tudSubmissionDates.get(participantEKID, OrderedSet()).first()],
         [LAST_TUD_SUBMISSION]: [tudSubmissionDates.get(participantEKID, OrderedSet()).last()],
@@ -514,7 +523,7 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
     }, {});
 
     yield put(getStudyParticipants.success(action.id, {
-      participants: fromJS(participants).filter((participant) => participant.getIn([STATUS, 0]) !== DELETE),
+      participants: fromJS(participants).filter((participant) => participant.getIn([ENROLLMENT_STATUS, 0]) !== DELETE),
       studyId,
     }));
   }

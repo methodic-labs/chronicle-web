@@ -22,8 +22,8 @@ const selectPropertyTypeId = (propertyTypeFQN :FQN) => (state :Map) => {
   return state.getIn(['edm', 'propertyTypeIds', propertyTypeFQN]);
 };
 
-const selectESIDByCollection = (template :string, moduleName :string) => (state :Map) => {
-  const selectedOrgId = state.getIn(['app', SELECTED_ORG_ID]);
+const selectESIDByCollection = (template :string, moduleName :string, orgId ?:UUID) => (state :Map) => {
+  const selectedOrgId = orgId || state.getIn(['app', SELECTED_ORG_ID]);
 
   return state.getIn(['app', ENTITY_SET_IDS_BY_ORG_ID, moduleName, selectedOrgId, template]);
 };

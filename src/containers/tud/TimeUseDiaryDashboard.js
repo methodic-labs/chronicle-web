@@ -152,7 +152,7 @@ const TimeUseDiaryDashboard = ({ participants } :Props) => {
                             downloadAllDataRS={downloadAllDataRS} />
                         <div>
                           {
-                            submissionsByDate.entrySeq().sort().map(([key, entities]) => (
+                            submissionsByDate.entrySeq().map(([key, entities]) => (
                               <SummaryListComponent
                                   date={key}
                                   downloadRS={downloadStates.get(key, Map())}

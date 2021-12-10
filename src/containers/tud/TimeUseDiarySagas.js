@@ -22,7 +22,6 @@ import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import DataTypes from './constants/DataTypes';
-import { orgHasSurveyModuleSelector } from '../app/AppSelectors';
 import {
   DOWNLOAD_ALL_TUD_DATA,
   DOWNLOAD_DAILY_TUD_DATA,
@@ -63,6 +62,7 @@ import {
   TIME_RANGE
 } from '../../core/edm/constants/EntityTemplateNames';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
+import { orgHasSurveyModuleSelector } from '../app/AppSelectors';
 
 const LOG = new Logger('TimeUseDiarySagas');
 
@@ -261,8 +261,6 @@ function* getSubmissionsByDateWorker(action :SequenceAction) :Saga<*> {
           // $FlowFixMe
             && date.diff(adjustedEndDate, 'hours').toObject().hours < 0) {
 
-            const dateStr = date.toLocaleString(DateTime.DATE_SHORT);
-
             const neighborDetails = neighbor.get('neighborDetails');
             const entity = fromJS({
               [OPENLATTICE_ID_FQN]: getPropertyValue(neighborDetails, OPENLATTICE_ID_FQN),
@@ -270,11 +268,12 @@ function* getSubmissionsByDateWorker(action :SequenceAction) :Saga<*> {
               [ID_FQN.toString()]: [participantEKID],
               [DATE_TIME_FQN.toString()]: getPropertyValue(neighborDetails, DATE_TIME_FQN)
             });
-            mutator.update(dateStr, List(), (list) => list.push(entity));
+            mutator.update(date, List(), (list) => list.push(entity));
           }
         });
       });
-    });
+    }).sortBy((value :List, key :DateTime) => key)
+      .mapEntries(([key :DateTime, value :List]) => [key.toLocaleString(DateTime.DATE_SHORT), value]);
 
     yield put(getSubmissionsByDate.success(action.id, submissionsByDate));
 

@@ -8,6 +8,7 @@ import { AuthSagas } from 'lattice-auth';
 import * as DataSagas from './data/DataSagas';
 
 import * as AppSagas from '../../containers/app/AppSagas';
+import * as DashboardSagas from '../../containers/dashboard/sagas';
 import * as EDMSagas from '../edm/EDMSagas';
 import * as PermissionsSagas from '../permissions/PermissionsSagas';
 import * as QuestionnaireSagas from '../../containers/questionnaire/QuestionnaireSagas';
@@ -76,5 +77,13 @@ export default function* sagas() :Generator<*, *, *> {
     fork(TimeUseDiarySagas.getSubmissionsByDateWatcher),
     fork(TimeUseDiarySagas.submitTudDataWatcher),
     fork(TimeUseDiarySagas.verifyTudLinkWatcher),
+
+    fork(DashboardSagas.countAllParticipantsWatcher),
+    fork(DashboardSagas.countAllStudiesWatcher),
+    fork(DashboardSagas.getAllStudiesTableDataWatcher),
+    fork(DashboardSagas.getOrgStudiesTableDataWatcher),
+    fork(DashboardSagas.getOrgStudiesWatcher),
+    fork(DashboardSagas.getStudyParticipantsCountWatcher),
+    fork(DashboardSagas.getSummaryStatsWatcher),
   ]);
 }

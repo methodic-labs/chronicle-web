@@ -134,10 +134,6 @@ module.exports = (env) => {
         'core-js/library/fn/array/includes': path.resolve(NODE, 'core-js-pure/features/array/includes'),
       },
       extensions: ['.js', '.css'],
-      modules: [
-        SOURCE,
-        NODE,
-      ],
     },
   };
 };
