@@ -102,7 +102,7 @@
     "flow-bin": "~0.131.0",
     "html-webpack-plugin": "~5.5.0",
     "import-sort-style-openlattice": "~0.1.0",
-    "jest": "~27.3.1",
+    "jest": "~27.4.4",
     "jest-styled-components": "~7.0.5",
     "match-all": "~1.2.6",
     "npm-run-all": "~4.1.0",
