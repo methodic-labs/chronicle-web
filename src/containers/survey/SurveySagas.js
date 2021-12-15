@@ -6,7 +6,12 @@ import {
   takeEvery,
   takeLatest
 } from '@redux-saga/core/effects';
-import { fromJS } from 'immutable';
+import {
+  List,
+  Map,
+  fromJS,
+  getIn
+} from 'immutable';
 import { Constants } from 'lattice';
 import { Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
@@ -89,11 +94,40 @@ function* getChronicleUserAppsWorker(action :SequenceAction) :Generator<*, *, *>
     const response = yield call(ChronicleApi.getParticipantAppsUsageData, date, participantId, studyId, organizationId);
     if (response.error) throw response.error;
 
+    /*
+    {
+     fullname: {
+      [title_fqn]: blah blah,
+      entities: [{
+        [association ekid]: {
+          [date_time_fqn]: 'blah blah'
+        }
+      }]
+    }
+    }
+    */
+
     let appsData;
     if (appUsageFreqType === AppUsageFreqTypes.HOURLY) {
-      appsData = fromJS(response.data)
-        .map((item) => item.get('entityDetails'))
-        .groupBy((item) => item.getIn([FULL_NAME_FQN, 0]));
+      appsData = Map().withMutations((mutator :Map) => {
+        response.data.forEach((entry) => {
+          const { entityDetails, associationDetails } = entry;
+          const fullName = getIn(entityDetails, [FULL_NAME_FQN, 0]);
+          const title = getIn(entityDetails, [TITLE_FQN, 0]);
+          const associationEKID = getIn(associationDetails, [OPENLATTICE_ID_FQN, 0]);
+          const dateTime = getIn(associationDetails, [DATE_TIME_FQN, 0]);
+
+          const entity = {
+            [associationEKID]: {
+              [DATE_TIME_FQN]: dateTime
+            }
+          };
+
+          mutator
+            .setIn([fullName, TITLE_FQN], title)
+            .updateIn([fullName, 'entities'], List(), (current) => current.push(fromJS(entity)));
+        });
+      });
     }
     else {
       // mapping from association EKID -> associationDetails & entityDetails
@@ -106,6 +140,8 @@ function* getChronicleUserAppsWorker(action :SequenceAction) :Generator<*, *, *>
           [getMinimumDate(entity.getIn(['associationDetails', DATE_TIME_FQN]))]))
         .sortBy((entity) => DateTime.fromISO(entity.getIn(['associationDetails', DATE_TIME_FQN, 0])));
     }
+
+    console.log(appsData);
 
     yield put(getChronicleAppsData.success(action.id, appsData));
   }
