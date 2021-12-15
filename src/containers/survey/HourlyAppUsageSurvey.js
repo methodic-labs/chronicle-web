@@ -99,6 +99,20 @@ const HourlyAppUsageSurvey = (props :Props) => {
 
   const buttonText = step === 0 ? 'Next' : 'Submit';
 
+  const getInstructionText = () => {
+    switch (step) {
+      case 1:
+        return 'Select the apps that were used ONLY by your child';
+
+      case 2:
+        return 'Select the apps that were used by both your child and others';
+      case 3:
+        return 'Select the time(s) when  your  child  was the  primary user (at least 90%  of the time)';
+      default:
+        return 'For the remaining times, select the times your child used the app at all';
+    }
+  };
+
   return (
     <HourlySurveyDispatch.Provider value={dispatch}>
       <AppContainerWrapper>
@@ -113,24 +127,32 @@ const HourlyAppUsageSurvey = (props :Props) => {
                 isFailure(submitSurveyRS) && <BasicErrorComponent />
               }
               {
-                step === 0 && <HourlySurveyInstructions />
-              }
-              {
-                step === 1 && <SelectAppsByUser childOnly appsData={data} selected={state.childOnlyApps} />
-              }
-              {
-                step === 2 && (
-                  <SelectAppsByUser childOnly={false} appsData={sharedAppsData} selected={state.sharedApps} />
-                )
+                step === 0 ? <HourlySurveyInstructions />
+                  : (
+                    <Box>
+                      <Box mb="20px" fontWeight={500}>
+                        {getInstructionText()}
+                      </Box>
+                      {
+                        step === 1 && <SelectAppsByUser childOnly appsData={data} selected={state.childOnlyApps} />
+                      }
+                      {
+                        step === 2 && (
+                          <SelectAppsByUser childOnly={false} appsData={sharedAppsData} selected={state.sharedApps} />
+                        )
+                      }
+
+                      {
+                        step === 3 && <SelectAppUsageTimeSlots />
+                      }
+
+                      {
+                        step === 4 && <SelectAppUsageTimeSlots />
+                      }
+                    </Box>
+                  )
               }
 
-              {
-                step === 3 && <SelectAppUsageTimeSlots />
-              }
-
-              {
-                step === 4 && <SelectAppUsageTimeSlots />
-              }
               <Box textAlign="center" mt="20px">
                 <Button color="primary" onClick={() => dispatch({ type: 'next_step' })}>
                   {buttonText}
