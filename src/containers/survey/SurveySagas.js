@@ -141,8 +141,6 @@ function* getChronicleUserAppsWorker(action :SequenceAction) :Generator<*, *, *>
         .sortBy((entity) => DateTime.fromISO(entity.getIn(['associationDetails', DATE_TIME_FQN, 0])));
     }
 
-    console.log(appsData);
-
     yield put(getChronicleAppsData.success(action.id, appsData));
   }
 
