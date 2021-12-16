@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import { List, Map, Set } from 'immutable';
 import { Constants } from 'lattice';
 import {
-  // $FlowFixMe
   Box,
   Colors,
   Spinner,
@@ -219,7 +218,7 @@ const StudyDetailsContainer = () => {
                 render={() => <QuestionnairesContainer study={study} />} />
           )
         }
-        <Redirect to={Routes.STUDY} />
+        <Route render={() => <Redirect to={Routes.STUDY} />} />
 
       </Switch>
     </>

@@ -80,7 +80,7 @@ const AppContainer = () => {
                   <DashboardContainer />
                 </Auth0AdminRoute>
               )} />
-          <Redirect to={Routes.STUDIES} />
+          <Route render={() => <Redirect to={Routes.STUDIES} />} />
         </Switch>
       );
     }
