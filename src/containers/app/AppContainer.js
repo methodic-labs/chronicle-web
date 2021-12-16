@@ -73,7 +73,13 @@ const AppContainer = () => {
           <Route path={Routes.STUDIES}>
             <StudiesContainer />
           </Route>
-          <Auth0AdminRoute path={Routes.DASHBOARD} component={DashboardContainer} />
+          <Route
+              path={Routes.DASHBOARD}
+              render={() => (
+                <Auth0AdminRoute>
+                  <DashboardContainer />
+                </Auth0AdminRoute>
+              )} />
           <Redirect to={Routes.STUDIES} />
         </Switch>
       );
