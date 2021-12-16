@@ -20,7 +20,6 @@ import {
   Redirect,
   Route,
   Switch,
-  withRouter,
 } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
@@ -68,8 +67,12 @@ const AppContainer = () => {
     if (initializeApplicationRS === RequestStates.SUCCESS) {
       return (
         <Switch>
-          <Route path={Routes.STUDY} component={StudyDetailsContainer} />
-          <Route path={Routes.STUDIES} component={StudiesContainer} />
+          <Route path={Routes.STUDY}>
+            <StudyDetailsContainer />
+          </Route>
+          <Route path={Routes.STUDIES}>
+            <StudiesContainer />
+          </Route>
           <Auth0AdminRoute path={Routes.DASHBOARD} component={DashboardContainer} />
           <Redirect to={Routes.STUDIES} />
         </Switch>
@@ -130,4 +133,4 @@ const AppContainer = () => {
 };
 
 // $FlowFixMe
-export default withRouter(AppContainer);
+export default AppContainer;
