@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { List, Map, Set } from 'immutable';
 import { Constants } from 'lattice';
 import {
+  // $FlowFixMe
   Box,
   Colors,
   Spinner,
