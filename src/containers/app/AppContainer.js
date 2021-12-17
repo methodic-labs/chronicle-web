@@ -17,11 +17,11 @@ import {
 import { LangUtils, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  NavLink,
   Redirect,
   Route,
   Switch,
-} from 'react-router';
-import { NavLink } from 'react-router-dom';
+} from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
