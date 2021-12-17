@@ -23,7 +23,7 @@ import {
   Switch,
   useRouteMatch,
 } from 'react-router-dom';
-import type { Match } from 'react-router';
+import type { Match } from 'react-router-dom';
 import type { RequestState } from 'redux-reqseq';
 
 import StudyDetails from './StudyDetails';
