@@ -1,17 +1,15 @@
 // @flow
-import { useContext } from 'react';
 
 import { List, Map, Set } from 'immutable';
 import {
-  // $FlowFixMe
   Box,
-  Button
 } from 'lattice-ui-kit';
 
 import HourlySurveyInstructions from './HourlySurveyInstructions';
 import SelectAppUsageTimeSlots from './SelectAppUsageTimeSlots';
 import SelectAppsByUser from './SelectAppsByUser';
-import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
+import SurveyButtons from './SurveyButtons';
+import { ACTIONS } from './HourlySurveyDispatch';
 
 type Props = {
   data :Map;
@@ -32,8 +30,6 @@ const HourlySurvey = (props :Props) => {
   } = state;
 
   const isFinalStep = step === 4;
-
-  const dispatch = useContext(HourlySurveyDispatch);
 
   const getInstructionText = () => {
     switch (step) {
@@ -63,14 +59,6 @@ const HourlySurvey = (props :Props) => {
     return filtered;
   };
 
-  const handleOnSubmit = () => {
-    if (!isFinalStep) {
-      dispatch({ type: ACTIONS.NEXT_STEP });
-      return;
-    }
-    dispatch({ type: ACTIONS.SHOW_CONFIRM_MODAL });
-  };
-
   const sharedAppsData = data.filterNot((val, key) => childOnlyApps.has(key));
   const childAppsOptions = data.filter((val, key) => sharedApps.has(key));
 
@@ -79,7 +67,15 @@ const HourlySurvey = (props :Props) => {
   const buttonText = step === 0 ? 'Begin Survey' : 'Submit';
 
   if (step === 0) {
-    return <HourlySurveyInstructions noApps={data.isEmpty()} />;
+    return (
+      <HourlySurveyInstructions
+          noApps={data.isEmpty()}
+          step={step}
+          isFinalStep={isFinalStep}
+          isSubmitting={isSubmitting}
+          nextButtonText={buttonText}
+          isNextButtonDisabled={data.isEmpty()} />
+    );
   }
 
   return (
@@ -113,16 +109,12 @@ const HourlySurvey = (props :Props) => {
               selected={otherChildHourlySelections} />
         )
       }
-      <Box display="flex" justifyContent="space-between" mt={4}>
-        <Button
-            disabled={step === 0 || isSubmitting}
-            onClick={() => dispatch({ type: ACTIONS.PREV_STEP })}>
-          Back
-        </Button>
-        <Button disabled={data.isEmpty()} color="primary" onClick={handleOnSubmit} isLoading={isSubmitting}>
-          {buttonText}
-        </Button>
-      </Box>
+      <SurveyButtons
+          step={step}
+          isFinalStep={isFinalStep}
+          isSubmitting={isSubmitting}
+          nextButtonText={buttonText}
+          isNextButtonDisabled={data.isEmpty()} />
     </Box>
   );
 };

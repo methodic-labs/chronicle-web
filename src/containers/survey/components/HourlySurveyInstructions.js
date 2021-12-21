@@ -1,10 +1,26 @@
 // @flow
 import { Box } from 'lattice-ui-kit';
 
+import SurveyButtons from './SurveyButtons';
+
 type Props = {
   noApps :boolean;
+  isFinalStep :boolean;
+  isNextButtonDisabled :boolean;
+  isSubmitting :boolean;
+  nextButtonText :string;
+  step :number;
 }
-const HourlySurveyInstructions = ({ noApps } :Props) => {
+const HourlySurveyInstructions = (props :Props) => {
+  const {
+    isFinalStep,
+    isNextButtonDisabled,
+    isSubmitting,
+    nextButtonText,
+    step,
+    noApps
+  } = props;
+
   if (noApps) {
     return (
       <Box textAlign="center">
@@ -22,6 +38,12 @@ const HourlySurveyInstructions = ({ noApps } :Props) => {
       <Box>
         For instructions at each step please click on 3 dots to the top-right of the app.
       </Box>
+      <SurveyButtons
+          step={step}
+          isFinalStep={isFinalStep}
+          isSubmitting={isSubmitting}
+          nextButtonText={nextButtonText}
+          isNextButtonDisabled={isNextButtonDisabled} />
     </Box>
   );
 };
