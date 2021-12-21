@@ -78,14 +78,15 @@ const HourlySurvey = (props :Props) => {
 
   const buttonText = step === 0 ? 'Begin Survey' : 'Submit';
 
+  if (step === 0) {
+    return <HourlySurveyInstructions noApps={data.isEmpty()} />;
+  }
+
   return (
     <Box>
       <Box mb="20px" fontWeight={500}>
         {getInstructionText()}
       </Box>
-      {
-        step === 0 && <HourlySurveyInstructions />
-      }
       {
         step === 1 && <SelectAppsByUser childOnly appsData={data} selected={childOnlyApps} />
       }
@@ -118,7 +119,7 @@ const HourlySurvey = (props :Props) => {
             onClick={() => dispatch({ type: ACTIONS.PREV_STEP })}>
           Back
         </Button>
-        <Button color="primary" onClick={handleOnSubmit} isLoading={isSubmitting}>
+        <Button disabled={data.isEmpty()} color="primary" onClick={handleOnSubmit} isLoading={isSubmitting}>
           {buttonText}
         </Button>
       </Box>
