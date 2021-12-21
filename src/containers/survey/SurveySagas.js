@@ -23,7 +23,7 @@ import {
   getChronicleAppsData,
   submitSurvey,
 } from './SurveyActions';
-import { createSubmissionData, getAppNameFromUserAppsEntity, getMinimumDate } from './utils';
+import { getAppNameFromUserAppsEntity, getMinimumDate } from './utils';
 
 import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
 import * as ChronicleApi from '../../utils/api/ChronicleApi';
@@ -45,13 +45,11 @@ function* submitSurveyWorker(action :SequenceAction) :Generator<*, *, *> {
 
     const { value } = action;
     const {
-      formData,
+      submissionData,
       organizationId,
       participantId,
       studyId,
     } = value;
-
-    const submissionData = createSubmissionData(formData);
 
     const response = yield call(
       ChronicleApi.updateAppsUsageAssociationData, organizationId, studyId, participantId, submissionData

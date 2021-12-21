@@ -11,13 +11,14 @@ import {
   Menu,
   MenuItem,
   Toolbar,
-  Typography,
 } from 'lattice-ui-kit';
 
 type Props = {
   step :number;
   date :string
 }
+
+// TODO: overlay  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_overlay_text
 
 const HourlyUsageSurveyAppBar = ({ date, step } :Props) => {
   const [title, setTitle] = useState('');

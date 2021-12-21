@@ -7,12 +7,10 @@ import {
 import { Constants } from 'lattice';
 import { DateTime } from 'luxon';
 
-import AppUsageFreqTypes from '../../../utils/constants/AppUsageFreqTypes';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
-import type { AppUsageFreqType } from '../../../utils/constants/AppUsageFreqTypes';
 
 const { OPENLATTICE_ID_FQN } = Constants;
-const { DATE_TIME_FQN, TITLE_FQN, USER_FQN } = PROPERTY_TYPE_FQNS;
+const { TITLE_FQN, USER_FQN } = PROPERTY_TYPE_FQNS;
 
 const getAppNameFromUserAppsEntity = (entity :Map) => {
   const titleFQNValues :List = entity.getIn(['entityDetails', 'ol.title'], List());
@@ -23,15 +21,10 @@ const getAppNameFromUserAppsEntity = (entity :Map) => {
   return titleFQNValues.first();
 };
 
-const getAppUsageDate = (appData :Map) => {
-  const date = appData.getIn(['associationDetails', DATE_TIME_FQN, 0]);
-  return DateTime.fromISO(date).toLocaleString(DateTime.TIME_SIMPLE);
-};
-
-const createSurveyFormSchema = (userApps :Map, appUsageFreqType :AppUsageFreqType) => {
+const createSurveyFormSchema = (userApps :Map) => {
   const schemaProperties :Object = userApps.map((app) => ({
     title: app.getIn(['entityDetails', TITLE_FQN, 0]),
-    description: appUsageFreqType === AppUsageFreqTypes.HOURLY ? getAppUsageDate(app) : 'Select all that apply',
+    description: 'Select all that apply',
     type: 'array',
     uniqueItems: true,
     minItems: 1,

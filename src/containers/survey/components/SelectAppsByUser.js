@@ -6,10 +6,10 @@ import { Map } from 'immutable';
 import {
   Checkbox,
   ChoiceGroup,
-  Grid
+  Grid,
 } from 'lattice-ui-kit';
 
-import HourlySurveyDispatch from './HourlySurveyDispatch';
+import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 
@@ -27,7 +27,7 @@ const SelectAppsByUser = (props :Props) => {
   const dispatch = useContext(HourlySurveyDispatch);
 
   const handleOnChange = (appName :string) => {
-    dispatch({ type: 'assign_user', childOnly, appName });
+    dispatch({ type: ACTIONS.ASSIGN_USER, childOnly, appName });
   };
 
   return (
@@ -41,7 +41,7 @@ const SelectAppsByUser = (props :Props) => {
                   onChange={() => handleOnChange(key)}
                   id={key}
                   mode="button"
-                  label={entries.first().getIn([TITLE_FQN, 0])} />
+                  label={entries.get(TITLE_FQN)} />
             </ChoiceGroup>
           </Grid>
         ))

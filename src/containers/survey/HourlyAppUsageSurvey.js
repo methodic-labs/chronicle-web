@@ -1,40 +1,44 @@
 // @flow
 import { useEffect, useReducer } from 'react';
 
-import { Map } from 'immutable';
+import { Map, Set, fromJS } from 'immutable';
 import {
   AppContainerWrapper,
   AppContentWrapper,
-  Box,
-  Button,
   Card,
   CardSegment,
 } from 'lattice-ui-kit';
 import { ReduxUtils } from 'lattice-utils';
-import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
 import type { RequestState } from 'redux-reqseq';
 
-import HourlySurveyDispatch from './components/HourlySurveyDispatch';
-import HourlySurveyInstructions from './components/HourlySurveyInstructions';
+import ConfirmSurveySubmissionModal from './components/ConfirmSurveySubmissionModal';
+import HourlySurvey from './components/HourlySurvey';
 import HourlyUsageSurveyAppBar from './components/HourlyUsageSurveyAppBar';
-import SelectAppUsageTimeSlots from './components/SelectAppUsageTimeSlots';
-import SelectAppsByUser from './components/SelectAppsByUser';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
+import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch';
+import { submitSurvey } from './SurveyActions';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
+import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 
-const { isFailure, isSuccess } = ReduxUtils;
+const { isFailure, isSuccess, isPending } = ReduxUtils;
+
+const { USER_FQN } = PROPERTY_TYPE_FQNS;
 
 const initialState = {
-  childOnlyApps: new Set(),
-  sharedApps: new Set(),
-  step: 0
+  childOnlyApps: Set().asMutable(),
+  sharedApps: Set().asMutable(),
+  childHourlySelections: Map().asMutable(),
+  otherChildHourlySelections: Map().asMutable(),
+  isConfirmModalVisible: false,
+  isSubmissionConfirmed: false,
+  step: 0,
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'assign_user': {
+    case ACTIONS.ASSIGN_USER: {
       const { childOnly, appName } = action;
 
       const { childOnlyApps, sharedApps } = state;
@@ -59,10 +63,66 @@ const reducer = (state, action) => {
         sharedApps: selected
       };
     }
-    case 'next_step': {
+    case ACTIONS.OTHER_CHILD_SELECT_TIME: {
+      const { appName, id } = action;
+      const { otherChildHourlySelections } = state;
+
+      if (otherChildHourlySelections.get(appName, Set()).has(id)) {
+        otherChildHourlySelections.update(appName, Set(), (current) => current.delete(id));
+      }
+      else {
+        otherChildHourlySelections.update(appName, Set(), (current) => current.add(id));
+      }
+      return {
+        ...state,
+        otherChildHourlySelections
+      };
+    }
+
+    case ACTIONS.CHILD_SELECT_TIME: {
+      const { appName, id } = action;
+      const { childHourlySelections } = state;
+
+      if (childHourlySelections.get(appName, Set()).has(id)) {
+        childHourlySelections.update(appName, Set(), (current) => current.delete(id));
+      }
+      else {
+        childHourlySelections.update(appName, Set(), (current) => current.add(id));
+      }
+      return {
+        ...state,
+        childHourlySelections
+      };
+    }
+    case ACTIONS.NEXT_STEP: {
       return {
         ...state,
         step: state.step + 1
+      };
+    }
+    case ACTIONS.PREV_STEP: {
+      return {
+        ...state,
+        step: state.step - 1
+      };
+    }
+    case ACTIONS.CONFIRM_SUBMIT: {
+      return {
+        ...state,
+        isSubmissionConfirmed: true,
+        isConfirmModalVisible: false
+      };
+    }
+    case ACTIONS.CANCEL_SUBMIT: {
+      return {
+        ...state,
+        isConfirmModalVisible: false
+      };
+    }
+    case ACTIONS.SHOW_CONFIRM_MODAL: {
+      return {
+        ...state,
+        isConfirmModalVisible: true
       };
     }
     default:
@@ -74,7 +134,6 @@ type Props = {
   data :Map;
   date :string;
   submitSurveyRS :?RequestState;
-  getUserAppsRS :?RequestState;
   participantId :string;
   organizationId :UUID;
   studyId :UUID ;
@@ -87,31 +146,60 @@ const HourlyAppUsageSurvey = (props :Props) => {
     studyId,
     organizationId,
     participantId,
-    getUserAppsRS,
     submitSurveyRS,
   } = props;
 
+  const storeDispatch = useDispatch();
+
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const sharedAppsData = data.filterNot((val, key) => state.childOnlyApps.has(key));
+  const {
+    step,
+    childOnlyApps,
+    isConfirmModalVisible,
+    childHourlySelections,
+    otherChildHourlySelections,
+    isSubmissionConfirmed
+  } = state;
 
-  const { step } = state;
+  const createSubmissionData = () => {
 
-  const buttonText = step === 0 ? 'Next' : 'Submit';
+    const childOnlyIds = childOnlyApps
+      .map((app) => data.getIn([app, 'entities']).map((entity) => entity.keySeq())).flatten();
 
-  const getInstructionText = () => {
-    switch (step) {
-      case 1:
-        return 'Select the apps that were used ONLY by your child';
+    const otherIds = childHourlySelections.valueSeq()
+      .concat(otherChildHourlySelections.valueSeq()).toSet().flatten();
 
-      case 2:
-        return 'Select the apps that were used by both your child and others';
-      case 3:
-        return 'Select the time(s) when  your  child  was the  primary user (at least 90%  of the time)';
-      default:
-        return 'For the remaining times, select the times your child used the app at all';
-    }
+    return childOnlyIds.concat(otherIds)
+      .toMap()
+      .mapEntries((entry) => [entry[0], fromJS({ [USER_FQN.toString()]: ['Target child'] })])
+      .toJS();
   };
+
+  useEffect(() => {
+    if (isSubmissionConfirmed) {
+      storeDispatch(submitSurvey({
+        submissionData: createSubmissionData(),
+        organizationId,
+        participantId,
+        studyId
+      }));
+    }
+  }, [isSubmissionConfirmed]);
+
+  const hasSubmitted = isSuccess(submitSurveyRS) || isFailure(submitSurveyRS);
+
+  const isSubmitting = isPending(submitSurveyRS);
+
+  const SubmissionCompleted = () => (
+    <>
+      {
+        isSuccess(submitSurveyRS)
+          ? <SubmissionSuccessful />
+          : <BasicErrorComponent />
+      }
+    </>
+  );
 
   return (
     <HourlySurveyDispatch.Provider value={dispatch}>
@@ -121,47 +209,17 @@ const HourlyAppUsageSurvey = (props :Props) => {
           <Card>
             <CardSegment noBleed>
               {
-                isSuccess(submitSurveyRS) && <SubmissionSuccessful />
+                hasSubmitted
+                  ? <SubmissionCompleted />
+                  : <HourlySurvey data={data} state={state} isSubmitting={isSubmitting} />
               }
-              {
-                isFailure(submitSurveyRS) && <BasicErrorComponent />
-              }
-              {
-                step === 0 ? <HourlySurveyInstructions />
-                  : (
-                    <Box>
-                      <Box mb="20px" fontWeight={500}>
-                        {getInstructionText()}
-                      </Box>
-                      {
-                        step === 1 && <SelectAppsByUser childOnly appsData={data} selected={state.childOnlyApps} />
-                      }
-                      {
-                        step === 2 && (
-                          <SelectAppsByUser childOnly={false} appsData={sharedAppsData} selected={state.sharedApps} />
-                        )
-                      }
-
-                      {
-                        step === 3 && <SelectAppUsageTimeSlots />
-                      }
-
-                      {
-                        step === 4 && <SelectAppUsageTimeSlots />
-                      }
-                    </Box>
-                  )
-              }
-
-              <Box textAlign="center" mt="20px">
-                <Button color="primary" onClick={() => dispatch({ type: 'next_step' })}>
-                  {buttonText}
-                </Button>
-              </Box>
             </CardSegment>
           </Card>
         </AppContentWrapper>
       </AppContainerWrapper>
+      {
+        isConfirmModalVisible && <ConfirmSurveySubmissionModal />
+      }
     </HourlySurveyDispatch.Provider>
   );
 };
