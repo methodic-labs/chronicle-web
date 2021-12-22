@@ -1,5 +1,5 @@
 // @flow
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,16 +13,18 @@ import {
   Toolbar,
 } from 'lattice-ui-kit';
 
+import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
+
 type Props = {
   step :number;
   date :string
 }
 
-// TODO: overlay  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_overlay_text
-
 const HourlyUsageSurveyAppBar = ({ date, step } :Props) => {
   const [title, setTitle] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const dispatch = useContext(HourlySurveyDispatch);
 
   useEffect(() => {
     if (step === 0) {
@@ -42,7 +44,8 @@ const HourlyUsageSurveyAppBar = ({ date, step } :Props) => {
   };
 
   const handleOnClickMenuItem = () => {
-
+    dispatch({ type: ACTIONS.TOGGLE_INSTRUCTIONS_MODAL, visible: true });
+    handleOnCloseMenu();
   };
 
   return (

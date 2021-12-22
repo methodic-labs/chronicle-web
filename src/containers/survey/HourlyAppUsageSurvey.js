@@ -15,6 +15,7 @@ import type { RequestState } from 'redux-reqseq';
 import ConfirmSurveySubmissionModal from './components/ConfirmSurveySubmissionModal';
 import HourlySurvey from './components/HourlySurvey';
 import HourlyUsageSurveyAppBar from './components/HourlyUsageSurveyAppBar';
+import InstructionsModal from './components/InstructionsModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch';
 import { submitSurvey } from './SurveyActions';
@@ -27,12 +28,13 @@ const { isFailure, isSuccess, isPending } = ReduxUtils;
 const { USER_FQN } = PROPERTY_TYPE_FQNS;
 
 const initialState = {
-  childOnlyApps: Set().asMutable(),
-  sharedApps: Set().asMutable(),
   childHourlySelections: Map().asMutable(),
-  otherChildHourlySelections: Map().asMutable(),
+  childOnlyApps: Set().asMutable(),
   isConfirmModalVisible: false,
+  isInstructionsModalVisible: false,
   isSubmissionConfirmed: false,
+  otherChildHourlySelections: Map().asMutable(),
+  sharedApps: Set().asMutable(),
   step: 0,
 };
 
@@ -76,6 +78,14 @@ const reducer = (state, action) => {
       return {
         ...state,
         otherChildHourlySelections
+      };
+    }
+
+    case ACTIONS.TOGGLE_INSTRUCTIONS_MODAL: {
+      const { visible } = action;
+      return {
+        ...state,
+        isInstructionsModalVisible: visible
       };
     }
 
@@ -159,7 +169,8 @@ const HourlyAppUsageSurvey = (props :Props) => {
     isConfirmModalVisible,
     childHourlySelections,
     otherChildHourlySelections,
-    isSubmissionConfirmed
+    isSubmissionConfirmed,
+    isInstructionsModalVisible
   } = state;
 
   const createSubmissionData = () => {
@@ -219,6 +230,9 @@ const HourlyAppUsageSurvey = (props :Props) => {
       </AppContainerWrapper>
       {
         isConfirmModalVisible && <ConfirmSurveySubmissionModal />
+      }
+      {
+        isInstructionsModalVisible && <InstructionsModal step={step} />
       }
     </HourlySurveyDispatch.Provider>
   );
