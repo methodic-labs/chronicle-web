@@ -16,9 +16,14 @@ import {
 } from 'lattice-ui-kit';
 import { DataUtils, ReduxUtils, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router';
-import { NavLink } from 'react-router-dom';
-import type { Match } from 'react-router';
+import {
+  NavLink,
+  Redirect,
+  Route,
+  Switch,
+  useRouteMatch,
+} from 'react-router-dom';
+import type { Match } from 'react-router-dom';
 import type { RequestState } from 'redux-reqseq';
 
 import StudyDetails from './StudyDetails';
@@ -67,10 +72,6 @@ const { getEntityKeyId } = DataUtils;
 
 const { media } = StyleUtils;
 
-type Props = {
-  match :Match;
-};
-
 const TabLink = styled(NavLink)`
   border-bottom: 2px solid transparent;
   color: ${NEUTRAL.N600};
@@ -105,12 +106,10 @@ const TabLink = styled(NavLink)`
   `}
 `;
 
-const StudyDetailsContainer = (props :Props) => {
-  const {
-    match,
-  } = props;
+const StudyDetailsContainer = () => {
   const dispatch = useDispatch();
 
+  const match :Match = useRouteMatch();
   const studyId :UUID = getIdFromMatch(match) || '';
 
   const study = useSelector((state) => state.getIn([STUDIES, STUDIES, studyId], Map()));
@@ -220,7 +219,7 @@ const StudyDetailsContainer = (props :Props) => {
                 render={() => <QuestionnairesContainer study={study} />} />
           )
         }
-        <Redirect to={Routes.STUDY} />
+        <Route render={() => <Redirect to={Routes.STUDY} />} />
 
       </Switch>
     </>

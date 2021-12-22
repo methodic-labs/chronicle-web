@@ -17,19 +17,20 @@ import {
 import { LangUtils, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  NavLink,
   Redirect,
   Route,
   Switch,
-  withRouter,
-} from 'react-router';
-import { NavLink } from 'react-router-dom';
+} from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
 import { INITIALIZE_APPLICATION, initializeApplication, switchOrganization } from './AppActions';
 
+import Auth0AdminRoute from '../../core/router/Auth0AdminRoute';
 import BasicErrorComponent from '../shared/BasicErrorComponent';
 import ContactSupportButton from '../shared/ContactSupportButton';
+import DashboardContainer from '../dashboard/DashboardContainer';
 import OpenLatticeIcon from '../../assets/images/ol_icon.png';
 import StudiesContainer from '../studies/StudiesContainer';
 import StudyDetailsContainer from '../study/StudyDetailsContainer';
@@ -66,9 +67,20 @@ const AppContainer = () => {
     if (initializeApplicationRS === RequestStates.SUCCESS) {
       return (
         <Switch>
-          <Route path={Routes.STUDY} component={StudyDetailsContainer} />
-          <Route path={Routes.STUDIES} component={StudiesContainer} />
-          <Redirect to={Routes.STUDIES} />
+          <Route path={Routes.STUDY}>
+            <StudyDetailsContainer />
+          </Route>
+          <Route path={Routes.STUDIES}>
+            <StudiesContainer />
+          </Route>
+          <Route
+              path={Routes.DASHBOARD}
+              render={() => (
+                <Auth0AdminRoute>
+                  <DashboardContainer />
+                </Auth0AdminRoute>
+              )} />
+          <Route render={() => <Redirect to={Routes.STUDIES} />} />
         </Switch>
       );
     }
@@ -115,6 +127,7 @@ const AppContainer = () => {
         <AppNavigationWrapper>
           <NavLink to={Routes.STUDIES} />
           <NavLink to={Routes.STUDIES}> Studies </NavLink>
+          { AuthUtils.isAdmin() && <NavLink to={Routes.DASHBOARD}>Dashboard</NavLink>}
         </AppNavigationWrapper>
       </AppHeaderWrapper>
       <AppContentWrapper>
@@ -126,4 +139,4 @@ const AppContainer = () => {
 };
 
 // $FlowFixMe
-export default withRouter(AppContainer);
+export default AppContainer;

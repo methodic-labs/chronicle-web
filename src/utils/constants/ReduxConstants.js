@@ -1,4 +1,8 @@
 // @flow
+import { ReduxConstants } from 'lattice-utils';
+import { RequestStates } from 'redux-reqseq';
+
+const { REQUEST_STATE } = ReduxConstants;
 
 const STUDIES_REDUX_CONSTANTS = {
   NOTIFICATIONS_EKID: 'notificationsEKID',
@@ -37,14 +41,24 @@ const PERMISSIONS_REDUX_CONSTANTS = {
   HAS_DELETE_PERMISSION: 'hasDeletePermission'
 };
 
-const REDUCERS = {
-  APPS_DATA: 'appsData',
-  APP: 'app',
-  TUD: 'tud'
+const DASHBOARD_REDUX_CONSTANTS = {
+  STUDIES_TABLE: 'studiesTable',
+  SUMMARY_STATS: 'summaryStats',
 };
 
+const REDUCERS = {
+  APP: 'app',
+  APPS_DATA: 'appsData',
+  DASHBOARD: 'dashboard',
+  TUD: 'tud',
+};
+
+const RS_INITIAL_STATE = { [REQUEST_STATE]: RequestStates.STANDBY };
+
 export {
+  RS_INITIAL_STATE,
   APP_REDUX_CONSTANTS,
+  DASHBOARD_REDUX_CONSTANTS,
   PERMISSIONS_REDUX_CONSTANTS,
   QUESTIONNAIRE_REDUX_CONSTANTS,
   REDUCERS,
