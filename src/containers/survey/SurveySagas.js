@@ -117,7 +117,7 @@ function* getChronicleUserAppsWorker(action :SequenceAction) :Generator<*, *, *>
 
           const entity = {
             [associationEKID]: {
-              [DATE_TIME_FQN]: dateTime
+              [DATE_TIME_FQN.toString()]: dateTime
             }
           };
 

@@ -1,10 +1,8 @@
 // @flow
 import { useContext } from 'react';
 
-import {
-  Box,
-  Button
-} from 'lattice-ui-kit';
+// $FlowFixMe
+import { Box, Button } from 'lattice-ui-kit';
 
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 

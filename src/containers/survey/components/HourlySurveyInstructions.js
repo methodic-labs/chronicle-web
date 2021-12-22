@@ -1,4 +1,6 @@
 // @flow
+
+// $FlowFixMe
 import { Box } from 'lattice-ui-kit';
 
 import SurveyButtons from './SurveyButtons';

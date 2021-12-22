@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import qs from 'qs';
 import { Map } from 'immutable';
+// $FlowFixMe
 import { Box, Spinner } from 'lattice-ui-kit';
 import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { DateTime } from 'luxon';

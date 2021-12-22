@@ -1,6 +1,7 @@
 // @flow
 import { useContext } from 'react';
 
+// $FlowFixMe
 import { Box, Modal } from 'lattice-ui-kit';
 
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';

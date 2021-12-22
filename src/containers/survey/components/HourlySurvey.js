@@ -1,9 +1,8 @@
 // @flow
 
 import { List, Map, Set } from 'immutable';
-import {
-  Box,
-} from 'lattice-ui-kit';
+// $FlowFixMe
+import { Box } from 'lattice-ui-kit';
 
 import HourlySurveyInstructions from './HourlySurveyInstructions';
 import SelectAppUsageTimeSlots from './SelectAppUsageTimeSlots';

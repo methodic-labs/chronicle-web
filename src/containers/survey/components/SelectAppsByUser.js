@@ -6,6 +6,7 @@ import { Map } from 'immutable';
 import {
   Checkbox,
   ChoiceGroup,
+  // $FlowFixMe
   Grid,
 } from 'lattice-ui-kit';
 

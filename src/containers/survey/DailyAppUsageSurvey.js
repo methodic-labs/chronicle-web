@@ -5,6 +5,7 @@ import {
   AppContainerWrapper,
   AppContentWrapper,
   AppHeaderWrapper,
+  // $FlowFixMe
   Box,
   Spinner
 } from 'lattice-ui-kit';

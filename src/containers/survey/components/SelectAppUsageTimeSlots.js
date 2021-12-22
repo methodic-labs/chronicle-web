@@ -3,11 +3,13 @@ import { useContext } from 'react';
 
 import { Map, Set } from 'immutable';
 import {
+  // $FlowFixMe
   Box,
   Card,
   CardHeader,
   CardSegment,
   Checkbox,
+  // $FlowFixMe
   Grid
 } from 'lattice-ui-kit';
 import { DateTime } from 'luxon';

@@ -2,6 +2,7 @@
 import { useContext } from 'react';
 
 import {
+  // $FlowFixMe
   Box,
   Modal
 } from 'lattice-ui-kit';
