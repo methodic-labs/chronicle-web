@@ -47,8 +47,14 @@ const PROPERTY_TYPE_FQNS = {
   VARIABLE_FQN: FQN.of('ol.variable'),
 };
 
+const ENTITY_TYPE_FQNS = {
+  STUDY_FQN: FQN.of('ol.study'),
+  PARTICIPANTS_FQN: FQN.of('general.person')
+};
+
 /* eslint-disable import/prefer-default-export */
 export {
+  ENTITY_TYPE_FQNS,
   PROPERTY_TYPE_FQNS,
 };
 /* eslint-enable */

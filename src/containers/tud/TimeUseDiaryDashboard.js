@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { List, Map } from 'immutable';
 import {
@@ -152,7 +152,7 @@ const TimeUseDiaryDashboard = ({ participants } :Props) => {
                             downloadAllDataRS={downloadAllDataRS} />
                         <div>
                           {
-                            submissionsByDate.entrySeq().sort().map(([key, entities]) => (
+                            submissionsByDate.entrySeq().map(([key, entities]) => (
                               <SummaryListComponent
                                   date={key}
                                   downloadRS={downloadStates.get(key, Map())}

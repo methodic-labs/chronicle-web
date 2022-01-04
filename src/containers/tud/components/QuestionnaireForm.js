@@ -1,7 +1,5 @@
 // @flow
 
-import React from 'react';
-
 import styled from 'styled-components';
 import { getIn, merge, setIn } from 'immutable';
 import { DataProcessingUtils, Form } from 'lattice-fabricate';

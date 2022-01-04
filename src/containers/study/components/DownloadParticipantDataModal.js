@@ -2,7 +2,7 @@
  * @flow
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import styled from 'styled-components';
 import { Button, Modal } from 'lattice-ui-kit';
@@ -24,7 +24,7 @@ const ButtonGrid = styled.div`
   align-items: center;
   justify-content: space-between;
   padding-top: 30px;
-  padding-bottom: '30px';
+  padding-bottom: 30px;
   grid-template-columns: 1fr;
   grid-gap: 10px;
 `;

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import qs from 'qs';
 import styled from 'styled-components';
@@ -14,7 +14,7 @@ import {
 import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
@@ -49,7 +49,7 @@ const SurveyTitle = styled.h4`
 const SurveyDate = styled.h5`
   font-size: 16px;
   font-weight: 400;
-  margin: 5px 0 20px 0;
+  margin: 5px 0 20px;
 `;
 
 const SurveyContainer = () => {
