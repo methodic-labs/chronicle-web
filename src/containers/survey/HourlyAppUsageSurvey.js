@@ -173,21 +173,21 @@ const HourlyAppUsageSurvey = (props :Props) => {
     isInstructionsModalVisible
   } = state;
 
-  const createSubmissionData = () => {
-
-    const childOnlyIds = childOnlyApps
-      .map((app) => data.getIn([app, 'entities']).map((entity) => entity.keySeq())).flatten();
-
-    const otherIds = childHourlySelections.valueSeq()
-      .concat(otherChildHourlySelections.valueSeq()).toSet().flatten();
-
-    return childOnlyIds.concat(otherIds)
-      .toMap()
-      .mapEntries((entry) => [entry[0], fromJS({ [USER_FQN.toString()]: ['Target child'] })])
-      .toJS();
-  };
-
   useEffect(() => {
+    const createSubmissionData = () => {
+
+      const childOnlyIds = childOnlyApps
+        .map((app) => data.getIn([app, 'entities']).map((entity) => entity.keySeq())).flatten();
+
+      const otherIds = childHourlySelections.valueSeq()
+        .concat(otherChildHourlySelections.valueSeq()).toSet().flatten();
+
+      return childOnlyIds.concat(otherIds)
+        .toMap()
+        .mapEntries((entry) => [entry[0], fromJS({ [USER_FQN.toString()]: ['Target child'] })])
+        .toJS();
+    };
+
     if (isSubmissionConfirmed) {
       storeDispatch(submitSurvey({
         submissionData: createSubmissionData(),
@@ -196,7 +196,17 @@ const HourlyAppUsageSurvey = (props :Props) => {
         studyId
       }));
     }
-  }, [isSubmissionConfirmed]);
+  }, [
+    isSubmissionConfirmed,
+    childHourlySelections,
+    childOnlyApps,
+    data,
+    organizationId,
+    otherChildHourlySelections,
+    participantId,
+    storeDispatch,
+    studyId
+  ]);
 
   const hasSubmitted = isSuccess(submitSurveyRS) || isFailure(submitSurveyRS);
 
