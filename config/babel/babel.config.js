@@ -32,7 +32,7 @@ module.exports = {
   ],
   presets: [
     ['@babel/preset-env', {
-      corejs: '3.19',
+      corejs: '3.20',
       useBuiltIns: 'entry',
     }],
     ['@babel/preset-react', {
