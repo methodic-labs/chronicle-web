@@ -1,7 +1,17 @@
 // @flow
 
-import { call, put, takeEvery } from '@redux-saga/core/effects';
-import { fromJS } from 'immutable';
+import {
+  call,
+  put,
+  takeEvery,
+  takeLatest
+} from '@redux-saga/core/effects';
+import {
+  List,
+  Map,
+  fromJS,
+  getIn
+} from 'immutable';
 import { Constants } from 'lattice';
 import { Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
@@ -13,15 +23,16 @@ import {
   getChronicleAppsData,
   submitSurvey,
 } from './SurveyActions';
-import { createSubmissionData, getAppNameFromUserAppsEntity, getMinimumDate } from './utils';
+import { getAppNameFromUserAppsEntity, getMinimumDate } from './utils';
 
+import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
 import * as ChronicleApi from '../../utils/api/ChronicleApi';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 
 const { OPENLATTICE_ID_FQN } = Constants;
 const LOG = new Logger('SurveySagas');
 
-const { DATE_TIME_FQN, TITLE_FQN } = PROPERTY_TYPE_FQNS;
+const { DATE_TIME_FQN, TITLE_FQN, FULL_NAME_FQN } = PROPERTY_TYPE_FQNS;
 
 /*
  *
@@ -34,13 +45,11 @@ function* submitSurveyWorker(action :SequenceAction) :Generator<*, *, *> {
 
     const { value } = action;
     const {
-      formData,
+      submissionData,
       organizationId,
       participantId,
       studyId,
     } = value;
-
-    const submissionData = createSubmissionData(formData);
 
     const response = yield call(
       ChronicleApi.updateAppsUsageAssociationData, organizationId, studyId, participantId, submissionData
@@ -76,21 +85,59 @@ function* getChronicleUserAppsWorker(action :SequenceAction) :Generator<*, *, *>
       date,
       participantId,
       studyId,
-      organizationId
+      organizationId,
+      appUsageFreqType
     } = value;
 
     const response = yield call(ChronicleApi.getParticipantAppsUsageData, date, participantId, studyId, organizationId);
     if (response.error) throw response.error;
 
-    // mapping from association EKID -> associationDetails & entityDetails
-    const appsData = fromJS(response.data)
-      .toMap()
-      .mapKeys((index, entity) => entity.getIn(['associationDetails', OPENLATTICE_ID_FQN, 0]))
-      .map((entity, id) => entity.set('id', id))
-      .map((entity) => entity.setIn(['entityDetails', TITLE_FQN, 0], getAppNameFromUserAppsEntity(entity)))
-      .map((entity) => entity.setIn(['associationDetails', DATE_TIME_FQN],
-        [getMinimumDate(entity.getIn(['associationDetails', DATE_TIME_FQN]))]))
-      .sortBy((entity) => DateTime.fromISO(entity.getIn(['associationDetails', DATE_TIME_FQN, 0])));
+    /*
+    {
+     fullname: {
+      [title_fqn]: blah blah,
+      entities: [{
+        [association ekid]: {
+          [date_time_fqn]: 'blah blah'
+        }
+      }]
+    }
+    }
+    */
+
+    let appsData;
+    if (appUsageFreqType === AppUsageFreqTypes.HOURLY) {
+      appsData = Map().withMutations((mutator :Map) => {
+        response.data.forEach((entry) => {
+          const { entityDetails, associationDetails } = entry;
+          const fullName = getIn(entityDetails, [FULL_NAME_FQN, 0]);
+          const title = getIn(entityDetails, [TITLE_FQN, 0]);
+          const associationEKID = getIn(associationDetails, [OPENLATTICE_ID_FQN, 0]);
+          const dateTime = getIn(associationDetails, [DATE_TIME_FQN, 0]);
+
+          const entity = {
+            [associationEKID]: {
+              [DATE_TIME_FQN.toString()]: dateTime
+            }
+          };
+
+          mutator
+            .setIn([fullName, TITLE_FQN], title)
+            .updateIn([fullName, 'entities'], List(), (current) => current.push(fromJS(entity)));
+        });
+      });
+    }
+    else {
+      // mapping from association EKID -> associationDetails & entityDetails
+      appsData = fromJS(response.data)
+        .toMap()
+        .mapKeys((index, entity) => entity.getIn(['associationDetails', OPENLATTICE_ID_FQN, 0]))
+        .map((entity, id) => entity.set('id', id))
+        .map((entity) => entity.setIn(['entityDetails', TITLE_FQN, 0], getAppNameFromUserAppsEntity(entity)))
+        .map((entity) => entity.setIn(['associationDetails', DATE_TIME_FQN],
+          [getMinimumDate(entity.getIn(['associationDetails', DATE_TIME_FQN]))]))
+        .sortBy((entity) => DateTime.fromISO(entity.getIn(['associationDetails', DATE_TIME_FQN, 0])));
+    }
 
     yield put(getChronicleAppsData.success(action.id, appsData));
   }
@@ -105,7 +152,7 @@ function* getChronicleUserAppsWorker(action :SequenceAction) :Generator<*, *, *>
 }
 
 function* getChronicleUserAppsWatcher() :Generator<*, *, *> {
-  yield takeEvery(GET_CHRONICLE_APPS_DATA, getChronicleUserAppsWorker);
+  yield takeLatest(GET_CHRONICLE_APPS_DATA, getChronicleUserAppsWorker);
 }
 
 export {

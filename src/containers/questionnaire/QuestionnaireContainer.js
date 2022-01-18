@@ -13,7 +13,7 @@ import {
 } from 'lattice-ui-kit';
 import { ReduxConstants } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
 
 import QuestionnaireForm from './components/QuestionnaireForm';
