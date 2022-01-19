@@ -17,6 +17,7 @@ import {
   CSRF_TOKEN,
   DATA,
   FILE_TYPE,
+  MESSAGE,
   QUESTIONNAIRE,
   SETTINGS,
   STATUS,
@@ -146,6 +147,16 @@ const getQuestionnaireUrl = (orgId :UUID, studyId :UUID, questionnaireEKID :UUID
   return `${getBaseUrl()}/${BASE}/${orgId}/${studyId}/${QUESTIONNAIRE}/${questionnaireEKID}`;
 };
 
+const getSendMessageUrl = (orgId :UUID) => {
+
+  if (!isValidUUID(orgId)) {
+    LOG.error('orgId must be a valiud UUID', orgId);
+    return null;
+  }
+
+  return `${getBaseUrl()}/${BASE}/${orgId}/${MESSAGE}`;
+};
+
 const getSubmitQuestionnaireUrl = (orgId :UUID, studyId :UUID, participantId :string) => {
   if (!isValidUUID(studyId)) {
     LOG.error('studyId must be a valiud UUID', studyId);
@@ -264,6 +275,7 @@ export {
   getParticipantDataUrl,
   getParticipantUserAppsUrl,
   getQuestionnaireUrl,
+  getSendMessageUrl,
   getSubmitQuestionnaireUrl,
   getSubmitTudDataUrl,
   processAppConfigs,
