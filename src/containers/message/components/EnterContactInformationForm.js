@@ -3,10 +3,12 @@ import styled from 'styled-components';
 import { Map } from 'immutable';
 import {
   Colors,
+  // $FlowFixMe
   Grid,
   Input,
   Typography
 } from 'lattice-ui-kit';
+// $FlowFixMe
 import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js';
 
 const { NEUTRAL } = Colors;

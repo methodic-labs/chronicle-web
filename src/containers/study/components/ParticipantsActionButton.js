@@ -9,7 +9,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Map } from 'immutable';
 import {
   IconButton,
+  // $FlowFixMe
   Menu,
+  // $FlowFixMe
   MenuItem,
 } from 'lattice-ui-kit';
 
