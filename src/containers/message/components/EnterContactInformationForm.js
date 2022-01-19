@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Map } from 'immutable';
 import {
   Colors,
-  // $FlowFixMe
   Grid,
   Input,
   Typography
