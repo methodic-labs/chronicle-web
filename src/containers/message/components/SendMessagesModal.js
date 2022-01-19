@@ -51,6 +51,10 @@ const MessageBody = styled(Card)`
   background-color: ${NEUTRAL.N50};
 `;
 
+const StyledFooter = styled(ModalFooter)`
+  padding: 30px 0;
+`;
+
 const SendMessagesModal = ({
   isVisible,
   onClose,
@@ -121,7 +125,7 @@ const SendMessagesModal = ({
                   participants={participants}
                   targetParticipants={targetParticipants} />
             </ModalBody>
-            <ModalFooter
+            <StyledFooter
                 isDisabledPrimary={targetParticipants.isEmpty()}
                 onClickPrimary={stepNext}
                 textPrimary="Next: Enter Contact Information for Participants" />
@@ -137,7 +141,7 @@ const SendMessagesModal = ({
                   targetParticipants={targetParticipants}
                   setTargetParticipants={setTargetParticipants} />
             </ModalBody>
-            <ModalFooter
+            <StyledFooter
                 isDisabledPrimary={contactIsEmptyOrError}
                 onClickPrimary={stepNext}
                 onClickSecondary={stepBack}
@@ -164,7 +168,7 @@ const SendMessagesModal = ({
                 </Typography>
               </MessageBody>
             </ModalBody>
-            <ModalFooter
+            <StyledFooter
                 onClickPrimary={onSubmit}
                 onClickSecondary={stepBack}
                 textPrimary="Send Messages"
@@ -193,7 +197,7 @@ const SendMessagesModal = ({
                 messageFailure && <Typography gutterBottom>Failed to Send Messages</Typography>
               }
             </ModalBody>
-            <ModalFooter
+            <StyledFooter
                 onClickPrimary={onClose}
                 textPrimary="Close" />
           </>
