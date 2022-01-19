@@ -21,7 +21,7 @@ const StyledIcon = styled(FontAwesomeIcon)`
 
 const ContactSupportButton = () => (
   <ButtonWrapper
-      href="https://support.openlattice.com/servicedesk/customer/portal/1"
+      href="https://openlattice.atlassian.net/servicedesk/customer/portals"
       startIcon={<StyledIcon color={NEUTRAL.N900} fixedWidth icon={faQuestionCircle} />}
       target="_blank"
       variant="outlined">
