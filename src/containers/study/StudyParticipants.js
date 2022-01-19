@@ -4,17 +4,12 @@
 
 import { useEffect, useReducer, useState } from 'react';
 
-import styled from 'styled-components';
-import { faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Map } from 'immutable';
 import {
-  // $FlowFixMe
   Box,
   Button,
   Card,
   CardSegment,
-  // $FlowFixMe
   Grid,
   SearchInput,
 } from 'lattice-ui-kit';
@@ -27,6 +22,7 @@ import ChangeEnrollmentModal from './components/ChangeEnrollmentModal';
 import DeleteParticipantModal from './components/DeleteParticipantModal';
 import DownloadParticipantDataModal from './components/DownloadParticipantDataModal';
 import ParticipantInfoModal from './components/ParticipantInfoModal';
+import ParticipantsActionButton from './components/ParticipantsActionButton';
 import ParticipantsTable from './ParticipantsTable';
 import ParticipantsTableActions from './constants/ParticipantsTableActions';
 import ParticipantsTableDispatch from './components/ParticipantsTableDispatch';
@@ -63,11 +59,6 @@ const {
   TOGGLE_INFO_MODAL,
   TOGGLE_TUD_SUBMISSION_HISTORY_MODAL,
 } = ParticipantsTableActions;
-
-const AddParticipantsButton = styled(Button)`
-  align-self: flex-start;
-  margin-bottom: 5px;
-`;
 
 const initialState = {
   isAddParticipantModalOpen: false,
@@ -209,17 +200,11 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
       <Card>
         <CardSegment vertical>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={9}>
+            <Grid item xs={11}>
               <SearchInput placeholder="Filter participants" onChange={handleOnChange} />
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <AddParticipantsButton
-                  fullWidth
-                  onClick={() => dispatch({ type: TOGGLE_ADD_PARTICIPANT_MODAL, isModalOpen: true })}
-                  color="primary"
-                  startIcon={<FontAwesomeIcon icon={faPlus} />}>
-                Add Participant
-              </AddParticipantsButton>
+            <Grid item alignItems="center" xs={1}>
+              <ParticipantsActionButton study={study} participants={participants} />
             </Grid>
           </Grid>
           {
