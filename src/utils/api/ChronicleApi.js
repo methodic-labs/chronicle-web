@@ -11,6 +11,7 @@ import {
   getEnrollmentStatusUrl,
   getParticipantUserAppsUrl,
   getQuestionnaireUrl,
+  getSendMessageUrl,
   getSubmitQuestionnaireUrl,
   getSubmitTudDataUrl
 } from '../AppUtils';
@@ -139,6 +140,37 @@ function getQuestionnaire(orgId :UUID = CAFE_ORG_ID, studyId :UUID, questionnair
   });
 }
 
+/*
+ * 'POST chronicle/<orgId>/message'
+ *
+ * Submit messageDetailsList to send bulk message with phone, url, type, studyId, partipantId, and dateTime
+ * data: [
+     {
+         "phoneNumber": "<phone>",
+         "url": "<link>",
+         "messageType": "ENROLLMENT", // ENROLLMENT OR TUD
+         "studyId": <UUID>,
+         "participantId": "<participantId>",
+         "dateTime": "2021-11-15T12:54:43.505-08:00"
+     }
+     ]
+   }
+ */
+
+function sendMessage(orgId :UUID = CAFE_ORG_ID, messageDetailsList :Object[]) {
+  return new Promise<*>((resolve, reject) => {
+    const url = getSendMessageUrl(orgId);
+    if (!url) return reject(new Error('Invalid url'));
+
+    return axios({
+      method: 'post',
+      url,
+      data: messageDetailsList
+    }).then((result) => resolve(result))
+      .catch((error) => reject(error));
+  });
+}
+
 function submitQuestionnaire(
   orgId :UUID = CAFE_ORG_ID, studyId :UUID, participantId :UUID, questionAnswerMapping :Object
 ) {
@@ -230,6 +262,7 @@ export {
   getAppSettings,
   getParticipantAppsUsageData,
   getQuestionnaire,
+  sendMessage,
   submitQuestionnaire,
   submitTudData,
   updateAppsUsageAssociationData,
