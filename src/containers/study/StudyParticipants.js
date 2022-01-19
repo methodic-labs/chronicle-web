@@ -6,11 +6,9 @@ import { useEffect, useReducer, useState } from 'react';
 
 import { Map } from 'immutable';
 import {
-  // $FlowFixMe
   Box,
   Card,
   CardSegment,
-  // $FlowFixMe
   Grid,
   SearchInput,
 } from 'lattice-ui-kit';
