@@ -4,12 +4,9 @@ import { Table } from 'lattice-ui-kit';
 
 import ParticipantRow from './ParticipantRow';
 
-import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
-import { COLUMN_FIELDS } from '../../study/constants/tableColumns';
 
 const { PERSON_ID } = PROPERTY_TYPE_FQNS;
-const { ENROLLMENT_STATUS } = COLUMN_FIELDS;
 
 const HEADERS = [
   {
@@ -35,8 +32,9 @@ const ParticipantSelectionTable = ({
 }) => {
 
   const participantOptions = participants
-    .valueSeq().filter((participant) => (participant.getIn([ENROLLMENT_STATUS, 0]) !== EnrollmentStatuses.ENROLLED))
-    .map((participant) => ({ id: participant.getIn([PERSON_ID, 0], '') })).toJS();
+    .valueSeq()
+    .map((participant) => ({ id: participant.getIn([PERSON_ID, 0], '') }))
+    .toJS();
 
   const components = {
     Row: ({ data: rowData } :any) => (
