@@ -41,5 +41,6 @@ function* sendMessageWatcher() :Saga<*> {
 }
 
 export {
-  sendMessageWatcher
+  sendMessageWatcher,
+  sendMessageWorker
 };
