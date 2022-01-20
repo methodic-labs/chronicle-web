@@ -5,6 +5,9 @@ import {
   Colors,
   Grid,
   Input,
+  List,
+  ListItem,
+  ListItemText,
   Typography
 } from 'lattice-ui-kit';
 // $FlowFixMe
@@ -12,16 +15,7 @@ import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js';
 
 const { NEUTRAL } = Colors;
 
-const List = styled.ul`
-  list-style-type: none;
-  padding: 0;
-`;
-
-const ListItem = styled.li`
-  padding-bottom: 15px;
-`;
-
-const GridItem = styled(Grid)`
+const GridItem = styled(Grid).attrs({ item: true })`
   background-color: ${NEUTRAL.N00};
   border-bottom: 1px solid ${NEUTRAL.N100};
   margin-top: 15px;
@@ -49,10 +43,10 @@ const EnterContactInformationForm = ({
   return (
     <>
       <Grid container justify="center">
-        <GridItem item xs={6}>
+        <GridItem xs={6}>
           <Typography>Participant ID</Typography>
         </GridItem>
-        <GridItem item xs={6}>
+        <GridItem xs={6}>
           <Typography>Phone Number</Typography>
         </GridItem>
       </Grid>
@@ -61,10 +55,10 @@ const EnterContactInformationForm = ({
           targetParticipants.entrySeq().map(([id, contact]) => (
             <ListItem key={id}>
               <Grid container justify="center">
-                <Grid item xs={6}>
-                  <Typography>{id}</Typography>
+                <Grid xs={6}>
+                  <ListItemText>{id}</ListItemText>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid xs={6}>
                   <Input
                       error={contact.get('error', false)}
                       name={id}
