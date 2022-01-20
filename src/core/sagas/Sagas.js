@@ -69,7 +69,7 @@ export default function* sagas() :Generator<*, *, *> {
     fork(QuestionnaireSagas.getStudyQuestionnairesWatcher),
     fork(QuestionnaireSagas.submitQuestionnaireWatcher),
 
-    // permissions
+    // messages
     fork(MessageSagas.sendMessageWatcher),
 
     // permissions
