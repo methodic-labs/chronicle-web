@@ -1,6 +1,5 @@
 import { faCopy } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// @flow
 import {
   Button,
   Card,
@@ -12,7 +11,7 @@ import copyToClipboard from '../../utils/copyToClipboard';
 
 const EnrollmentLink = () => {
   const enrollmentLinkQueryParams = window.location.hash.split('?')[1];
-  const enrollmentLink = `http://openlattice.com/login?${enrollmentLinkQueryParams}`;
+  const enrollmentLink = `http://openlattice.com/chronicle/login?${enrollmentLinkQueryParams}`;
   return (
     <>
       <Card>
