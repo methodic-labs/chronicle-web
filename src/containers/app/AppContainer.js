@@ -31,7 +31,6 @@ import Auth0AdminRoute from '../../core/router/Auth0AdminRoute';
 import BasicErrorComponent from '../shared/BasicErrorComponent';
 import ContactSupportButton from '../shared/ContactSupportButton';
 import DashboardContainer from '../dashboard/DashboardContainer';
-import EnrollmentLink from '../enrollment/EnrollmentLink';
 import OpenLatticeIcon from '../../assets/images/ol_icon.png';
 import StudiesContainer from '../studies/StudiesContainer';
 import StudyDetailsContainer from '../study/StudyDetailsContainer';
@@ -81,9 +80,6 @@ const AppContainer = () => {
                   <DashboardContainer />
                 </Auth0AdminRoute>
               )} />
-          <Route path={Routes.ENROLLMENT_LINK}>
-            <EnrollmentLink />
-          </Route>
           <Route render={() => <Redirect to={Routes.STUDIES} />} />
         </Switch>
       );

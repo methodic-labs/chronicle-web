@@ -14,7 +14,6 @@ import {
   LatticeLuxonUtils,
   MuiPickersUtilsProvider,
   StylesProvider,
-  // $FlowFixMe
   ThemeProvider,
   lightTheme,
 } from 'lattice-ui-kit';
@@ -24,6 +23,7 @@ import { Route, Switch } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 
 import AppContainer from './containers/app/AppContainer';
+import EnrollmentLink from './containers/enrollment/EnrollmentLink';
 import QuestionnaireContainer from './containers/questionnaire/QuestionnaireContainer';
 import SurveyContainer from './containers/survey/SurveyContainer';
 import TimeUseDiaryContainer from './containers/tud/TimeUseDiaryContainer';
@@ -110,6 +110,7 @@ if (APP_ROOT_NODE) {
                     <Route path={Routes.SURVEY} component={SurveyContainer} />
                     <Route path={Routes.QUESTIONNAIRE} component={QuestionnaireContainer} />
                     <Route path={Routes.TUD} component={TimeUseDiaryContainer} />
+                    <Route path={Routes.ENROLLMENT_LINK} component={EnrollmentLink} />
                     <AuthRoute redirectToLogin path={Routes.ROOT} component={AppContainer} />
                   </Switch>
                 </ConnectedRouter>
