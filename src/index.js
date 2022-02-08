@@ -38,7 +38,6 @@ const { AuthRoute, AuthUtils } = LatticeAuth;
 const { NEUTRALS, NEUTRAL } = Colors;
 
 /* eslint-disable */
-// TODO: move into core/styles
 const NormalizeCSS = createGlobalStyle`
   ${normalize()}
 `;
