@@ -31,10 +31,10 @@ import Auth0AdminRoute from '../../core/router/Auth0AdminRoute';
 import BasicErrorComponent from '../shared/BasicErrorComponent';
 import ContactSupportButton from '../shared/ContactSupportButton';
 import DashboardContainer from '../dashboard/DashboardContainer';
-import OpenLatticeIcon from '../../assets/images/ol_icon.png';
 import StudiesContainer from '../studies/StudiesContainer';
 import StudyDetailsContainer from '../study/StudyDetailsContainer';
 import * as Routes from '../../core/router/Routes';
+import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import { GOOGLE_TRACKING_ID } from '../../core/tracking/google/GoogleAnalytics';
 import { APP_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 
@@ -114,7 +114,7 @@ const AppContainer = () => {
   return (
     <AppContainerWrapper>
       <AppHeaderWrapper
-          appIcon={OpenLatticeIcon}
+          appIcon={OpenLatticeIconSVG}
           appTitle="Chronicle"
           logout={logout}
           organizationsSelect={{

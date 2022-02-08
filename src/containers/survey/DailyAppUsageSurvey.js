@@ -18,7 +18,7 @@ import SubmissionSuccessful from './components/SubmissionSuccessful';
 import SurveyForm from './components/SurveyForm';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
-import OpenLatticeIcon from '../../assets/images/ol_icon.png';
+import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 
 const { isPending } = ReduxUtils;
 
@@ -53,7 +53,7 @@ const SurveyContainer = (props :Props) => {
 
   return (
     <AppContainerWrapper>
-      <AppHeaderWrapper appIcon={OpenLatticeIcon} appTitle="Chronicle" />
+      <AppHeaderWrapper appIcon={OpenLatticeIconSVG} appTitle="Chronicle" />
       <AppContentWrapper>
         {
           getUserAppsRS === RequestStates.FAILURE && <BasicErrorComponent />

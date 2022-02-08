@@ -25,7 +25,7 @@ import {
 } from './QuestionnaireActions';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
-import OpenLatticeIcon from '../../assets/images/ol_icon.png';
+import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { QUESTIONNAIRE_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 
@@ -79,7 +79,7 @@ const QuestionnaireContainer = () => {
 
   return (
     <AppContainerWrapper>
-      <AppHeaderWrapper appIcon={OpenLatticeIcon} appTitle="Chronicle" />
+      <AppHeaderWrapper appIcon={OpenLatticeIconSVG} appTitle="Chronicle" />
       <AppContentWrapper>
         {
           requestStates[GET_QUESTIONNAIRE] === RequestStates.PENDING && (
