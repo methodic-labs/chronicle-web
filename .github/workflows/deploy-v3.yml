@@ -1,4 +1,4 @@
-name: deploy-production
+name: deploy-v3
 
 on:
   push:
