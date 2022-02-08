@@ -109,7 +109,7 @@ if (APP_ROOT_NODE) {
                     <Route path={Routes.SURVEY} component={SurveyContainer} />
                     <Route path={Routes.QUESTIONNAIRE} component={QuestionnaireContainer} />
                     <Route path={Routes.TUD} component={TimeUseDiaryContainer} />
-                    <AuthRoute redirectToLogin path={Routes.ROOT} component={AppContainer} />
+                    <AuthRoute path={Routes.ROOT} component={AppContainer} />
                   </Switch>
                 </ConnectedRouter>
                 <NormalizeCSS />
