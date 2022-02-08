@@ -3,7 +3,7 @@ name: deploy-production
 on:
   push:
     branches:
-      - master
+      - feature/chronicle-v3
 
 jobs:
   deploy:
