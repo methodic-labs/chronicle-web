@@ -5,10 +5,12 @@ on:
     branches:
       - develop
       - master
+      - feature/chronicle-v3
   pull_request:
     branches:
       - develop
       - master
+      - feature/chronicle-v3
 
 jobs:
   build:

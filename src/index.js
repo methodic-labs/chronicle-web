@@ -111,7 +111,7 @@ if (APP_ROOT_NODE) {
                     <Route path={Routes.QUESTIONNAIRE} component={QuestionnaireContainer} />
                     <Route path={Routes.TUD} component={TimeUseDiaryContainer} />
                     <Route path={Routes.ENROLLMENT_LINK} component={EnrollmentLink} />
-                    <AuthRoute redirectToLogin path={Routes.ROOT} component={AppContainer} />
+                    <AuthRoute path={Routes.ROOT} component={AppContainer} />
                   </Switch>
                 </ConnectedRouter>
                 <NormalizeCSS />
