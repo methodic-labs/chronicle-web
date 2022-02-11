@@ -12,7 +12,7 @@ const EnrollmentLink = () => (
       </CardHeader>
       <CardSegment>
         You have tried to open the Chronicle enrollment link in a web browser. Please install the
-        Chronicle mobile application and try opening the link again.
+        Chronicle mobile application and open the link on your device.
       </CardSegment>
     </Card>
   </>
