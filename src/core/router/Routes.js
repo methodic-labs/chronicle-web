@@ -13,11 +13,9 @@ const QUESTIONNAIRE :string = '/questionnaire';
 const TUD :string = '/time-use-diary';
 const TUD_DASHBOARD :string = `${STUDIES}/${ID_PARAM}${TUD}`;
 const DASHBOARD :string = '/dashboard';
-const ENROLLMENT_LINK :string = `${LOGIN}/enrollment`;
 
 export {
   DASHBOARD,
-  ENROLLMENT_LINK,
   ID_PARAM,
   LOGIN,
   PARTICIPANTS,

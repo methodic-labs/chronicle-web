@@ -131,9 +131,6 @@ else {
                       <Route path={Routes.SURVEY} component={SurveyContainer} />
                       <Route path={Routes.QUESTIONNAIRE} component={QuestionnaireContainer} />
                       <Route path={Routes.TUD} component={TimeUseDiaryContainer} />
-                      <Route path={Routes.ENROLLMENT_LINK}>
-                        <EnrollmentLink queryString={window.location.search} />
-                      </Route>
                       <AuthRoute path={Routes.ROOT} component={AppContainer} />
                     </Switch>
                   </ConnectedRouter>
