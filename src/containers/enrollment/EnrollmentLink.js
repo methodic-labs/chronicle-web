@@ -1,3 +1,4 @@
+// @flow
 import { faCopy } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -9,9 +10,12 @@ import {
 
 import copyToClipboard from '../../utils/copyToClipboard';
 
-const EnrollmentLink = () => {
-  const enrollmentLinkQueryParams = window.location.hash.split('?')[1];
-  const enrollmentLink = `http://openlattice.com/chronicle/login?${enrollmentLinkQueryParams}`;
+type Props = {
+  queryString :string;
+};
+
+const EnrollmentLink = ({ queryString } :Props) => {
+  const enrollmentLink = `http://openlattice.com/chronicle/login?${queryString}`;
   return (
     <>
       <Card>
@@ -19,8 +23,8 @@ const EnrollmentLink = () => {
           Page Not Found
         </CardHeader>
         <CardSegment>
-          You have tried to open a mobile link in a web browser. Please install the Chronicle mobile application
-          and open the link on a mobile device.
+          You have tried to open the Chronicle enrollment link in a web browser. Please install the
+          Chronicle mobile application and try opening the link again.
         </CardSegment>
         <CardSegment>
           {enrollmentLink}
