@@ -78,7 +78,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 /* eslint-enable */
 
-if (window.location.pathname === '/chronicle/login/enrollment') {
+if (window.location.pathname === '/chronicle/login') {
   /*
    * The goal here is to render the enrollment link error page if the pathname matches.
    * The enrollment link will always be in the format of
