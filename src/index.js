@@ -78,14 +78,20 @@ const GlobalStyle = createGlobalStyle`
 `;
 /* eslint-enable */
 
-if (window.location.pathname === '/chronicle/login') {
-  /*
-   * The goal here is to render the enrollment link error page if the pathname matches.
-   * The enrollment link will always be in the format of
-   * openlattice.com/chronicle/login/enrollment?organizationId=*&studyId=*&participantId=*.
-   * When LatticeAuth.configure is called, a # is appended to the URL, so we don't want to call that method
-   * when rendering the EnrollmentLink error page.
-   */
+// NOTE - the goal is to render an error page for when someone visits the enrollment link in the browser. the
+// original enrollment link points to a path where the app does not exist, i.e. openlattice.com/chronicle/login
+// so we need to redirect to where the app does exist, i.e. openlattice.com/chronicle. cloudflare handles the
+// redirect and adds an additional query param "enroll" so that we can identify this here.
+let enroll = false;
+try {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('enroll')) {
+    enroll = true;
+  }
+}
+catch (e) { /* */ }
+
+if (enroll) {
   const APP_ROOT_NODE = document.getElementById('app');
   if (APP_ROOT_NODE) {
     ReactDOM.render(
