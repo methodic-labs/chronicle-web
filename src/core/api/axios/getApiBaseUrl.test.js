@@ -7,6 +7,8 @@ import {
   CANDIDATE,
   CANDIDATE_API,
   CHRONICLE,
+  ORGANIZATION,
+  ORGANIZATION_API,
   STUDY,
   STUDY_API,
   V3,
@@ -15,8 +17,9 @@ import { INVALID_PARAMS } from '../../../common/constants/testing';
 
 /* eslint-disable key-spacing */
 const API_TO_PATH_MAP = OrderedMap({
-  [CANDIDATE_API]: `${CHRONICLE}/${V3}/${CANDIDATE}`,
-  [STUDY_API]    : `${CHRONICLE}/${V3}/${STUDY}`,
+  [CANDIDATE_API]   : `${CHRONICLE}/${V3}/${CANDIDATE}`,
+  [ORGANIZATION_API]: `${CHRONICLE}/${V3}/${ORGANIZATION}`,
+  [STUDY_API]       : `${CHRONICLE}/${V3}/${STUDY}`,
 });
 /* eslint-enable */
 

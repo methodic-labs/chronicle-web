@@ -10,6 +10,8 @@ import {
   CANDIDATE_API,
   CHRONICLE,
   ERR_INVALID_API,
+  ORGANIZATION,
+  ORGANIZATION_API,
   STUDY,
   STUDY_API,
   V3,
@@ -20,8 +22,9 @@ const { isNonEmptyString } = LangUtils;
 
 /* eslint-disable key-spacing */
 const API_TO_PATH_MAP :Map<string, string> = OrderedMap({
-  [CANDIDATE_API]: `${CHRONICLE}/${V3}/${CANDIDATE}`,
-  [STUDY_API]    : `${CHRONICLE}/${V3}/${STUDY}`,
+  [CANDIDATE_API]   : `${CHRONICLE}/${V3}/${CANDIDATE}`,
+  [ORGANIZATION_API]: `${CHRONICLE}/${V3}/${ORGANIZATION}`,
+  [STUDY_API]       : `${CHRONICLE}/${V3}/${STUDY}`,
 });
 /* eslint-enable */
 
