@@ -30,6 +30,7 @@ import TimeUseDiaryContainer from './containers/tud/TimeUseDiaryContainer';
 import initializeReduxStore from './core/redux/ReduxStore';
 import initializeRouterHistory from './core/router/RouterHistory';
 import * as Routes from './core/router/Routes';
+import { configure } from './core/config/Configuration';
 
 // injected by Webpack.DefinePlugin
 declare var __AUTH0_CLIENT_ID__ :string;
@@ -112,6 +113,11 @@ else {
     auth0ClientId: __AUTH0_CLIENT_ID__,
     auth0Domain: __AUTH0_DOMAIN__,
     authToken: AuthUtils.getAuthToken(),
+  });
+
+  configure({
+    authToken: AuthUtils.getAuthToken(),
+    csrfToken: AuthUtils.getCSRFToken(),
   });
 
   /*

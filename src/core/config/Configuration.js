@@ -12,7 +12,7 @@ declare var __ENV_PROD__ :boolean;
 
 type Config = {
   authToken ?:?string;
-  baseUrl :string;
+  baseUrl ?:string;
   csrfToken ?:?string;
 };
 
@@ -23,6 +23,23 @@ const ENV_URLS :Map<string, string> = fromJS({
   STAGING: 'https://api.staging.getmethodic.com',
   PRODUCTION: 'https://api.getmethodic.com',
 });
+
+function getDefaultBaseUrl() :string {
+
+  let baseUrl :string = '';
+
+  if (window && window.location && window.location.hostname) {
+    const hostname :string = window.location.hostname;
+    if (hostname === 'localhost') {
+      baseUrl = 'localhost';
+    }
+    else if (hostname.endsWith('getmethodic.com')) {
+      baseUrl = hostname.startsWith('staging') ? 'staging' : 'production';
+    }
+  }
+
+  return baseUrl;
+}
 
 let configuration :Map<string, string> = fromJS({
   authToken: '',
@@ -48,29 +65,32 @@ function setAuthToken(config :Config) :void {
 
 function setBaseUrl(config :Config) :void {
 
-  if (isNonEmptyString(config.baseUrl)) {
-    if (config.baseUrl === 'localhost' || config.baseUrl === ENV_URLS.get('LOCAL')) {
+  const { baseUrl = getDefaultBaseUrl() } = config;
+
+  if (isNonEmptyString(baseUrl)) {
+    if (baseUrl === 'localhost' || baseUrl === ENV_URLS.get('LOCAL')) {
       configuration = configuration.set('baseUrl', ENV_URLS.get('LOCAL'));
     }
-    else if (config.baseUrl === 'staging' || config.baseUrl === ENV_URLS.get('STAGING')) {
+    else if (baseUrl === 'staging' || baseUrl === ENV_URLS.get('STAGING')) {
       configuration = configuration.set('baseUrl', ENV_URLS.get('STAGING'));
     }
-    else if (config.baseUrl === 'production' || config.baseUrl === ENV_URLS.get('PRODUCTION')) {
+    else if (baseUrl === 'production' || baseUrl === ENV_URLS.get('PRODUCTION')) {
       configuration = configuration.set('baseUrl', ENV_URLS.get('PRODUCTION'));
     }
     // mild url validation to at least check the protocol and domain
-    else if (config.baseUrl.startsWith('https://') && config.baseUrl.endsWith('getmethodic.com')) {
-      configuration = configuration.set('baseUrl', config.baseUrl);
+    else if (baseUrl.startsWith('https://') && baseUrl.endsWith('getmethodic.com')) {
+      configuration = configuration.set('baseUrl', baseUrl);
     }
     else {
       const errorMsg = 'invalid parameter - baseUrl must be a valid URL';
-      LOG.error(errorMsg, config.baseUrl);
+      LOG.error(errorMsg, baseUrl);
       throw new Error(errorMsg);
     }
   }
-  else {
+  // baseUrl is optional, so null and undefined are allowed
+  else if (baseUrl !== null && baseUrl !== undefined) {
     const errorMsg = 'invalid parameter - baseUrl must be a non-empty string';
-    LOG.error(errorMsg, config.baseUrl);
+    LOG.error(errorMsg, baseUrl);
     throw new Error(errorMsg);
   }
 }
