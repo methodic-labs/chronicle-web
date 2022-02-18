@@ -5,7 +5,7 @@ import { Types } from 'lattice';
 import { AuthUtils } from 'lattice-auth';
 
 import {
-  getAppSettingsUrl,
+  getStudySettingsUrl,
   getDeleteParticipantPath,
   getDeleteStudyUrl,
   getEnrollmentStatusUrl,
@@ -206,9 +206,9 @@ function verifyTudLink(organizationId :UUID, studyId :UUID, participantId :strin
   });
 }
 
-function getDataCollectionSettings(organizationId :UUID) {
+function getStudySettings(organizationId :UUID) {
   return new Promise<*>((resolve, reject) => {
-    const url = getAppSettingsUrl(organizationId);
+    const url = getStudySettingsUrl(organizationId);
     if (!url) return reject(new Error('invalid url'));
 
     return axios({
@@ -222,7 +222,7 @@ function getDataCollectionSettings(organizationId :UUID) {
 export {
   deleteStudy,
   deleteStudyParticipant,
-  getDataCollectionSettings,
+  getStudySettings,
   getParticipantAppsUsageData,
   getQuestionnaire,
   submitQuestionnaire,

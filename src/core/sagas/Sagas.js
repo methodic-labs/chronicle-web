@@ -28,7 +28,7 @@ export default function* sagas() :Generator<*, *, *> {
     fork(AuthSagas.watchLogout),
 
     // AppSagas
-    fork(AppSagas.getDataCollectionSettingsWatcher),
+    fork(AppSagas.getStudySettingsWatcher),
     fork(AppSagas.getConfigsWatcher),
     fork(AppSagas.initializeApplicationWatcher),
     fork(AppSagas.switchOrganizationWatcher),

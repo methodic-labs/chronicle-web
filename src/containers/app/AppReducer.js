@@ -9,10 +9,10 @@ import { RequestStates } from 'redux-reqseq';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
-  GET_DATA_COLLECTION_SETTINGS,
+  GET_STUDY_SETTINGS,
   GET_CONFIGS,
   INITIALIZE_APPLICATION,
-  getDataCollectionSettings,
+  getStudySettings,
   getConfigs,
   initializeApplication,
 } from './AppActions';
@@ -30,7 +30,7 @@ const {
 } = APP_REDUX_CONSTANTS;
 
 const INITIAL_STATE :Map<*, *> = fromJS({
-  [GET_DATA_COLLECTION_SETTINGS]: { [REQUEST_STATE]: RequestStates.STANDBY },
+  [GET_STUDY_SETTINGS]: { [REQUEST_STATE]: RequestStates.STANDBY },
   [GET_CONFIGS]: { [REQUEST_STATE]: RequestStates.STANDBY },
   [INITIALIZE_APPLICATION]: { [REQUEST_STATE]: RequestStates.STANDBY },
 
@@ -91,20 +91,20 @@ export default function appReducer(state :Map<*, *> = INITIAL_STATE, action :Obj
       });
     }
 
-    case getDataCollectionSettings.case(action.type): {
-      return getDataCollectionSettings.reducer(state, action, {
+    case getStudySettings.case(action.type): {
+      return getStudySettings.reducer(state, action, {
         REQUEST: () => state
-          .setIn([GET_DATA_COLLECTION_SETTINGS, REQUEST_STATE], RequestStates.PENDING)
-          .setIn([GET_DATA_COLLECTION_SETTINGS, action.id], action),
-        FAILURE: () => state.setIn([GET_DATA_COLLECTION_SETTINGS, REQUEST_STATE], RequestStates.FAILURE),
+          .setIn([GET_STUDY_SETTINGS, REQUEST_STATE], RequestStates.PENDING)
+          .setIn([GET_STUDY_SETTINGS, action.id], action),
+        FAILURE: () => state.setIn([GET_STUDY_SETTINGS, REQUEST_STATE], RequestStates.FAILURE),
         SUCCESS: () => {
           const { appName, organizationId, settings } = action.value;
 
           return state
-            .setIn([GET_DATA_COLLECTION_SETTINGS, REQUEST_STATE], RequestStates.SUCCESS)
+            .setIn([GET_STUDY_SETTINGS, REQUEST_STATE], RequestStates.SUCCESS)
             .setIn([SETTINGS, appName, organizationId], fromJS(settings));
         },
-        FINALLY: () => state.deleteIn([GET_DATA_COLLECTION_SETTINGS, action.id])
+        FINALLY: () => state.deleteIn([GET_STUDY_SETTINGS, action.id])
       });
     }
 

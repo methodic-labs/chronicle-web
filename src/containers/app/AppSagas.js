@@ -16,11 +16,11 @@ import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
-  GET_DATA_COLLECTION_SETTINGS,
+  GET_STUDY_SETTINGS,
   GET_CONFIGS,
   INITIALIZE_APPLICATION,
   SWITCH_ORGANIZATION,
-  getDataCollectionSettings,
+  getStudySettings,
   getConfigs,
   initializeApplication,
   switchOrganization
@@ -168,31 +168,31 @@ function* switchOrganizationWatcher() :Saga<*> {
   yield takeEvery(SWITCH_ORGANIZATION, switchOrganizationWorker);
 }
 
-function* getDataCollectionSettingsWorker(action :SequenceAction) :Generator<*, *, *> {
+function* getStudySettingsWorker(action :SequenceAction) :Generator<*, *, *> {
   try {
-    yield put(getDataCollectionSettings.request(action.id));
+    yield put(getStudySettings.request(action.id));
 
     const { organizationId } = action.value;
 
-    const response = yield call(ChronicleApi.getDataCollectionSettings, organizationId);
+    const response = yield call(ChronicleApi.getStudySettings, organizationId);
 
-    yield put(getDataCollectionSettings.success(action.id, { organizationId, settings: response.data }));
+    yield put(getStudySettings.success(action.id, { organizationId, settings: response.data }));
   }
   catch (error) {
     LOG.error(action.type, error);
-    yield put(getDataCollectionSettings.failure(action.id));
+    yield put(getStudySettings.failure(action.id));
   }
   finally {
-    yield put(getDataCollectionSettings.finally(action.id));
+    yield put(getStudySettings.finally(action.id));
   }
 }
 
-function* getDataCollectionSettingsWatcher() :Generator<*, *, *> {
-  yield takeEvery(GET_DATA_COLLECTION_SETTINGS, getDataCollectionSettingsWorker);
+function* getStudySettingsWatcher() :Generator<*, *, *> {
+  yield takeEvery(GET_STUDY_SETTINGS, getStudySettingsWorker);
 }
 
 export {
-  getDataCollectionSettingsWatcher,
+  getStudySettingsWatcher,
   getConfigsWatcher,
   initializeApplicationWatcher,
   initializeApplicationWorker,

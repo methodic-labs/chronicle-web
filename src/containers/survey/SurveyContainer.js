@@ -20,7 +20,7 @@ import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
 import Settings from '../../utils/constants/AppSettings';
 import * as AppModules from '../../utils/constants/AppModules';
 import { APP_REDUX_CONSTANTS, REDUCERS } from '../../utils/constants/ReduxConstants';
-import { GET_DATA_COLLECTION_SETTINGS, getDataCollectionSettings } from '../app/AppActions';
+import { GET_STUDY_SETTINGS, getStudySettings } from '../app/AppActions';
 import type { AppUsageFreqType } from '../../utils/constants/AppUsageFreqTypes';
 
 const { SETTINGS } = APP_REDUX_CONSTANTS;
@@ -46,7 +46,7 @@ const SurveyContainer = () => {
   const userAppsData = useSelector((state) => state.getIn([REDUCERS.APPS_DATA, 'appsData'], Map()));
 
   const getUserAppsRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, GET_APP_USAGE_SURVEY_DATA]);
-  const getDataCollectionSettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_DATA_COLLECTION_SETTINGS]);
+  const getDataCollectionSettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_STUDY_SETTINGS]);
   const submitSurveyRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, SUBMIT_SURVEY]);
 
   const appUsageFreqType :AppUsageFreqType = settings.getIn(
@@ -54,7 +54,7 @@ const SurveyContainer = () => {
   ) || AppUsageFreqTypes.DAILY;
 
   useEffect(() => {
-    dispatch(getDataCollectionSettings({
+    dispatch(getStudySettings({
       organizationId
     }));
   }, [organizationId, dispatch]);

@@ -246,7 +246,7 @@ const getEnrollmentStatusUrl = (organizationId :UUID, studyId :UUID, participant
   return `${getBaseUrl()}/${BASE}/${organizationId}/${studyId}/${participantId}/${STATUS}`;
 };
 
-const getAppSettingsUrl = (organizationId :UUID) => {
+const getStudySettingsUrl = (organizationId :UUID) => {
   if (!isValidUUID(organizationId)) {
     LOG.error('invalid orgId: ', organizationId);
     return null;
@@ -256,7 +256,7 @@ const getAppSettingsUrl = (organizationId :UUID) => {
 };
 
 export {
-  getAppSettingsUrl,
+  getStudySettingsUrl,
   getBaseUrl,
   getDeleteParticipantPath,
   getDeleteStudyUrl,
