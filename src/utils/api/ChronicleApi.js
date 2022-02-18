@@ -3,18 +3,18 @@
 import axios from 'axios';
 import { Types } from 'lattice';
 import { AuthUtils } from 'lattice-auth';
+import { DateTime } from 'luxon';
 
 import {
-  getStudySettingsUrl,
+  getAppUsageDataUrl,
   getDeleteParticipantPath,
   getDeleteStudyUrl,
   getEnrollmentStatusUrl,
-  getParticipantUserAppsUrl,
   getQuestionnaireUrl,
+  getStudySettingsUrl,
   getSubmitQuestionnaireUrl,
   getSubmitTudDataUrl
 } from '../AppUtils';
-import { CHRONICLE_CORE, DATA_COLLECTION, QUESTIONNAIRES } from '../constants/AppModules';
 
 const { DeleteTypes } = Types;
 
@@ -39,14 +39,21 @@ const CAFE_ORG_ID :UUID = '7349c446-2acc-4d14-b2a9-a13be39cff93';
         }
       ]
  */
-function getParticipantAppsUsageData(date :string, participantId :string, studyId :UUID, orgId :UUID = CAFE_ORG_ID) {
+function getAppUsageSurveyData(date :string, participantId :string, studyId :UUID) {
   return new Promise<*>((resolve, reject) => {
-    const url = getParticipantUserAppsUrl(participantId, studyId, orgId);
+    const url = getAppUsageDataUrl(participantId, studyId);
     if (!url) return reject(new Error('Invalid Url'));
+
+    // expect date to match MM-dd-yyyy format
+    const startDate = DateTime.fromFormat(date, 'MM-dd-yyyy');
+    if (!startDate.isValid) return reject(Error(`Invalid date: ${date}`));
 
     return axios({
       method: 'get',
-      params: { date },
+      params: {
+        startDateTime: startDate.toISO(),
+        endDateTime: startDate.endOf('day').toISO()
+      },
       url: encodeURI(url),
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
@@ -72,12 +79,10 @@ function getParticipantAppsUsageData(date :string, participantId :string, studyI
     }
  */
 
-function updateAppsUsageAssociationData(
-  organizationId :UUID = CAFE_ORG_ID, studyId :UUID, participantId :string, requestBody :Object
-) {
+function submitAppUsageSurvey(studyId :UUID, participantId :string, requestBody :Object) {
   return new Promise<*>((resolve, reject) => {
 
-    const url = getParticipantUserAppsUrl(participantId, studyId, organizationId);
+    const url = getAppUsageDataUrl(participantId, studyId);
     if (!url) return reject(new Error('Invalid Url'));
 
     return axios({
@@ -223,10 +228,10 @@ export {
   deleteStudy,
   deleteStudyParticipant,
   getStudySettings,
-  getParticipantAppsUsageData,
+  getAppUsageSurveyData,
   getQuestionnaire,
   submitQuestionnaire,
   submitTudData,
-  updateAppsUsageAssociationData,
+  submitAppUsageSurvey,
   verifyTudLink,
 };

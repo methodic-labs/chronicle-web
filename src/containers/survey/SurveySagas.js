@@ -46,13 +46,12 @@ function* submitSurveyWorker(action :SequenceAction) :Generator<*, *, *> {
     const { value } = action;
     const {
       submissionData,
-      organizationId,
       participantId,
       studyId,
     } = value;
 
     const response = yield call(
-      ChronicleApi.updateAppsUsageAssociationData, organizationId, studyId, participantId, submissionData
+      ChronicleApi.submitAppUsageSurvey, studyId, participantId, submissionData
     );
     if (response.error) throw response.error;
 
@@ -85,11 +84,12 @@ function* getAppUsageSurveyDataWorker(action :SequenceAction) :Generator<*, *, *
       date,
       participantId,
       studyId,
-      organizationId,
       appUsageFreqType
     } = value;
 
-    const response = yield call(ChronicleApi.getParticipantAppsUsageData, date, participantId, studyId, organizationId);
+    const response = yield call(
+      ChronicleApi.getAppUsageSurveyData, date, participantId, studyId
+    );
     if (response.error) throw response.error;
 
     /*
