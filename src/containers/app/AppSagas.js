@@ -172,11 +172,11 @@ function* getDataCollectionSettingsWorker(action :SequenceAction) :Generator<*, 
   try {
     yield put(getDataCollectionSettings.request(action.id));
 
-    const { organizationId, appName } = action.value;
+    const { organizationId } = action.value;
 
-    const response = yield call(ChronicleApi.getDataCollectionSettings, organizationId, appName);
+    const response = yield call(ChronicleApi.getDataCollectionSettings, organizationId);
 
-    yield put(getDataCollectionSettings.success(action.id, { organizationId, appName, settings: response.data }));
+    yield put(getDataCollectionSettings.success(action.id, { organizationId, settings: response.data }));
   }
   catch (error) {
     LOG.error(action.type, error);

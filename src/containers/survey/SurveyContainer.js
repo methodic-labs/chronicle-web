@@ -46,7 +46,7 @@ const SurveyContainer = () => {
   const userAppsData = useSelector((state) => state.getIn([REDUCERS.APPS_DATA, 'appsData'], Map()));
 
   const getUserAppsRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, GET_APP_USAGE_SURVEY_DATA]);
-  const getAppSettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_DATA_COLLECTION_SETTINGS]);
+  const getDataCollectionSettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_DATA_COLLECTION_SETTINGS]);
   const submitSurveyRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, SUBMIT_SURVEY]);
 
   const appUsageFreqType :AppUsageFreqType = settings.getIn(
@@ -55,7 +55,6 @@ const SurveyContainer = () => {
 
   useEffect(() => {
     dispatch(getDataCollectionSettings({
-      appName: AppModules.DATA_COLLECTION,
       organizationId
     }));
   }, [organizationId, dispatch]);
@@ -71,7 +70,7 @@ const SurveyContainer = () => {
     }));
   }, [date, participantId, organizationId, studyId, appUsageFreqType, dispatch]);
 
-  if (isPending(getAppSettingsRS) || isStandby(getAppSettingsRS) || isPending(getUserAppsRS)) {
+  if (isPending(getDataCollectionSettingsRS) || isStandby(getDataCollectionSettingsRS) || isPending(getUserAppsRS)) {
     return (
       <Box mt="60px" textAlign="center">
         <Spinner size="2x" />
