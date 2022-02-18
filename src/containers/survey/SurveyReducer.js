@@ -6,9 +6,9 @@ import { RequestStates } from 'redux-reqseq';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
-  GET_CHRONICLE_APPS_DATA,
+  GET_APP_USAGE_SURVEY_DATA,
   SUBMIT_SURVEY,
-  getChronicleAppsData,
+  getAppUsageSurveyData,
   submitSurvey,
 } from './SurveyActions';
 
@@ -17,7 +17,7 @@ import { RESET_REQUEST_STATE } from '../../core/redux/ReduxActions';
 const { REQUEST_STATE } = ReduxConstants;
 
 const INITIAL_STATE :Map = fromJS({
-  [GET_CHRONICLE_APPS_DATA]: { [REQUEST_STATE]: RequestStates.STANDBY },
+  [GET_APP_USAGE_SURVEY_DATA]: { [REQUEST_STATE]: RequestStates.STANDBY },
   [SUBMIT_SURVEY]: { [REQUEST_STATE]: RequestStates.STANDBY },
   appsData: Map()
 });
@@ -32,14 +32,14 @@ export default function surveyReducer(state :Map = INITIAL_STATE, action :Object
       return state;
     }
 
-    case getChronicleAppsData.case(action.type): {
+    case getAppUsageSurveyData.case(action.type): {
       const seqAction :SequenceAction = action;
-      return getChronicleAppsData.reducer(state, action, {
-        REQUEST: () => state.setIn([GET_CHRONICLE_APPS_DATA, REQUEST_STATE], RequestStates.PENDING),
-        FAILURE: () => state.setIn([GET_CHRONICLE_APPS_DATA, REQUEST_STATE], RequestStates.FAILURE),
+      return getAppUsageSurveyData.reducer(state, action, {
+        REQUEST: () => state.setIn([GET_APP_USAGE_SURVEY_DATA, REQUEST_STATE], RequestStates.PENDING),
+        FAILURE: () => state.setIn([GET_APP_USAGE_SURVEY_DATA, REQUEST_STATE], RequestStates.FAILURE),
         SUCCESS: () => state
           .set('appsData', fromJS(seqAction.value))
-          .setIn([GET_CHRONICLE_APPS_DATA, REQUEST_STATE], RequestStates.SUCCESS)
+          .setIn([GET_APP_USAGE_SURVEY_DATA, REQUEST_STATE], RequestStates.SUCCESS)
       });
     }
 

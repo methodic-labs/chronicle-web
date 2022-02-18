@@ -14,13 +14,13 @@ import type { RequestState } from 'redux-reqseq';
 
 import DailyAppUsageSurvey from './DailyAppUsageSurvey';
 import HourlyAppUsageSurvey from './HourlyAppUsageSurvey';
-import { GET_CHRONICLE_APPS_DATA, SUBMIT_SURVEY, getChronicleAppsData } from './SurveyActions';
+import { GET_APP_USAGE_SURVEY_DATA, SUBMIT_SURVEY, getAppUsageSurveyData } from './SurveyActions';
 
 import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
 import Settings from '../../utils/constants/AppSettings';
 import * as AppModules from '../../utils/constants/AppModules';
 import { APP_REDUX_CONSTANTS, REDUCERS } from '../../utils/constants/ReduxConstants';
-import { GET_APP_SETTINGS, getAppSettings } from '../app/AppActions';
+import { GET_DATA_COLLECTION_SETTINGS, getDataCollectionSettings } from '../app/AppActions';
 import type { AppUsageFreqType } from '../../utils/constants/AppUsageFreqTypes';
 
 const { SETTINGS } = APP_REDUX_CONSTANTS;
@@ -45,8 +45,8 @@ const SurveyContainer = () => {
   const settings = useSelector((state) => state.getIn([REDUCERS.APP, SETTINGS], Map()));
   const userAppsData = useSelector((state) => state.getIn([REDUCERS.APPS_DATA, 'appsData'], Map()));
 
-  const getUserAppsRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, GET_CHRONICLE_APPS_DATA]);
-  const getAppSettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_APP_SETTINGS]);
+  const getUserAppsRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, GET_APP_USAGE_SURVEY_DATA]);
+  const getAppSettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_DATA_COLLECTION_SETTINGS]);
   const submitSurveyRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, SUBMIT_SURVEY]);
 
   const appUsageFreqType :AppUsageFreqType = settings.getIn(
@@ -54,7 +54,7 @@ const SurveyContainer = () => {
   ) || AppUsageFreqTypes.DAILY;
 
   useEffect(() => {
-    dispatch(getAppSettings({
+    dispatch(getDataCollectionSettings({
       appName: AppModules.DATA_COLLECTION,
       organizationId
     }));
@@ -62,7 +62,7 @@ const SurveyContainer = () => {
 
   // get apps
   useEffect(() => {
-    dispatch(getChronicleAppsData({
+    dispatch(getAppUsageSurveyData({
       date,
       participantId,
       organizationId,

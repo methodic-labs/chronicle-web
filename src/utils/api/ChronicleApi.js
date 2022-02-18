@@ -206,7 +206,7 @@ function verifyTudLink(organizationId :UUID, studyId :UUID, participantId :strin
   });
 }
 
-function getAppSettings(organizationId :UUID, appName :string) {
+function getDataCollectionSettings(organizationId :UUID, appName :string) {
   return new Promise<*>((resolve, reject) => {
     const chronicleApps = new Set([CHRONICLE_CORE, DATA_COLLECTION, QUESTIONNAIRES]);
     if (!chronicleApps.has(appName)) {
@@ -227,7 +227,7 @@ function getAppSettings(organizationId :UUID, appName :string) {
 export {
   deleteStudy,
   deleteStudyParticipant,
-  getAppSettings,
+  getDataCollectionSettings,
   getParticipantAppsUsageData,
   getQuestionnaire,
   submitQuestionnaire,

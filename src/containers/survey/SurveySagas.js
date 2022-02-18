@@ -18,9 +18,9 @@ import { DateTime } from 'luxon';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
-  GET_CHRONICLE_APPS_DATA,
+  GET_APP_USAGE_SURVEY_DATA,
   SUBMIT_SURVEY,
-  getChronicleAppsData,
+  getAppUsageSurveyData,
   submitSurvey,
 } from './SurveyActions';
 import { getAppNameFromUserAppsEntity, getMinimumDate } from './utils';
@@ -76,9 +76,9 @@ function* submitSurveyWatcher() :Generator<*, *, *> {
  * SurveyActions.getChronicleApps()
  *
  */
-function* getChronicleUserAppsWorker(action :SequenceAction) :Generator<*, *, *> {
+function* getAppUsageDataSurveyWorker(action :SequenceAction) :Generator<*, *, *> {
   try {
-    yield put(getChronicleAppsData.request(action.id));
+    yield put(getAppUsageSurveyData.request(action.id));
 
     const { value } = action;
     const {
@@ -139,23 +139,23 @@ function* getChronicleUserAppsWorker(action :SequenceAction) :Generator<*, *, *>
         .sortBy((entity) => DateTime.fromISO(entity.getIn(['associationDetails', DATE_TIME_FQN, 0])));
     }
 
-    yield put(getChronicleAppsData.success(action.id, appsData));
+    yield put(getAppUsageSurveyData.success(action.id, appsData));
   }
 
   catch (error) {
     LOG.error(action.type, error);
-    yield put(getChronicleAppsData.failure(action.id));
+    yield put(getAppUsageSurveyData.failure(action.id));
   }
   finally {
-    yield put(getChronicleAppsData.finally(action.id));
+    yield put(getAppUsageSurveyData.finally(action.id));
   }
 }
 
-function* getChronicleUserAppsWatcher() :Generator<*, *, *> {
-  yield takeLatest(GET_CHRONICLE_APPS_DATA, getChronicleUserAppsWorker);
+function* getAppUsageDataSurveyWatcher() :Generator<*, *, *> {
+  yield takeLatest(GET_APP_USAGE_SURVEY_DATA, getAppUsageDataSurveyWorker);
 }
 
 export {
-  getChronicleUserAppsWatcher,
+  getAppUsageDataSurveyWatcher,
   submitSurveyWatcher
 };

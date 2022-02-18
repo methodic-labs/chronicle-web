@@ -9,10 +9,10 @@ import { RequestStates } from 'redux-reqseq';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
-  GET_APP_SETTINGS,
+  GET_DATA_COLLECTION_SETTINGS,
   GET_CONFIGS,
   INITIALIZE_APPLICATION,
-  getAppSettings,
+  getDataCollectionSettings,
   getConfigs,
   initializeApplication,
 } from './AppActions';
@@ -30,7 +30,7 @@ const {
 } = APP_REDUX_CONSTANTS;
 
 const INITIAL_STATE :Map<*, *> = fromJS({
-  [GET_APP_SETTINGS]: { [REQUEST_STATE]: RequestStates.STANDBY },
+  [GET_DATA_COLLECTION_SETTINGS]: { [REQUEST_STATE]: RequestStates.STANDBY },
   [GET_CONFIGS]: { [REQUEST_STATE]: RequestStates.STANDBY },
   [INITIALIZE_APPLICATION]: { [REQUEST_STATE]: RequestStates.STANDBY },
 
@@ -91,20 +91,20 @@ export default function appReducer(state :Map<*, *> = INITIAL_STATE, action :Obj
       });
     }
 
-    case getAppSettings.case(action.type): {
-      return getAppSettings.reducer(state, action, {
+    case getDataCollectionSettings.case(action.type): {
+      return getDataCollectionSettings.reducer(state, action, {
         REQUEST: () => state
-          .setIn([GET_APP_SETTINGS, REQUEST_STATE], RequestStates.PENDING)
-          .setIn([GET_APP_SETTINGS, action.id], action),
-        FAILURE: () => state.setIn([GET_APP_SETTINGS, REQUEST_STATE], RequestStates.FAILURE),
+          .setIn([GET_DATA_COLLECTION_SETTINGS, REQUEST_STATE], RequestStates.PENDING)
+          .setIn([GET_DATA_COLLECTION_SETTINGS, action.id], action),
+        FAILURE: () => state.setIn([GET_DATA_COLLECTION_SETTINGS, REQUEST_STATE], RequestStates.FAILURE),
         SUCCESS: () => {
           const { appName, organizationId, settings } = action.value;
 
           return state
-            .setIn([GET_APP_SETTINGS, REQUEST_STATE], RequestStates.SUCCESS)
+            .setIn([GET_DATA_COLLECTION_SETTINGS, REQUEST_STATE], RequestStates.SUCCESS)
             .setIn([SETTINGS, appName, organizationId], fromJS(settings));
         },
-        FINALLY: () => state.deleteIn([GET_APP_SETTINGS, action.id])
+        FINALLY: () => state.deleteIn([GET_DATA_COLLECTION_SETTINGS, action.id])
       });
     }
 

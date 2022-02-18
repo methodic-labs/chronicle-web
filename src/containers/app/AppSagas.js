@@ -16,11 +16,11 @@ import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
-  GET_APP_SETTINGS,
+  GET_DATA_COLLECTION_SETTINGS,
   GET_CONFIGS,
   INITIALIZE_APPLICATION,
   SWITCH_ORGANIZATION,
-  getAppSettings,
+  getDataCollectionSettings,
   getConfigs,
   initializeApplication,
   switchOrganization
@@ -168,31 +168,31 @@ function* switchOrganizationWatcher() :Saga<*> {
   yield takeEvery(SWITCH_ORGANIZATION, switchOrganizationWorker);
 }
 
-function* getAppSettingsWorker(action :SequenceAction) :Generator<*, *, *> {
+function* getDataCollectionSettingsWorker(action :SequenceAction) :Generator<*, *, *> {
   try {
-    yield put(getAppSettings.request(action.id));
+    yield put(getDataCollectionSettings.request(action.id));
 
     const { organizationId, appName } = action.value;
 
-    const response = yield call(ChronicleApi.getAppSettings, organizationId, appName);
+    const response = yield call(ChronicleApi.getDataCollectionSettings, organizationId, appName);
 
-    yield put(getAppSettings.success(action.id, { organizationId, appName, settings: response.data }));
+    yield put(getDataCollectionSettings.success(action.id, { organizationId, appName, settings: response.data }));
   }
   catch (error) {
     LOG.error(action.type, error);
-    yield put(getAppSettings.failure(action.id));
+    yield put(getDataCollectionSettings.failure(action.id));
   }
   finally {
-    yield put(getAppSettings.finally(action.id));
+    yield put(getDataCollectionSettings.finally(action.id));
   }
 }
 
-function* getAppSettingsWatcher() :Generator<*, *, *> {
-  yield takeEvery(GET_APP_SETTINGS, getAppSettingsWorker);
+function* getDataCollectionSettingsWatcher() :Generator<*, *, *> {
+  yield takeEvery(GET_DATA_COLLECTION_SETTINGS, getDataCollectionSettingsWorker);
 }
 
 export {
-  getAppSettingsWatcher,
+  getDataCollectionSettingsWatcher,
   getConfigsWatcher,
   initializeApplicationWatcher,
   initializeApplicationWorker,
