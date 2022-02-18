@@ -172,11 +172,11 @@ function* getStudySettingsWorker(action :SequenceAction) :Generator<*, *, *> {
   try {
     yield put(getStudySettings.request(action.id));
 
-    const { organizationId } = action.value;
+    const { studyId } = action.value;
 
-    const response = yield call(ChronicleApi.getStudySettings, organizationId);
+    const response = yield call(ChronicleApi.getStudySettings, studyId);
 
-    yield put(getStudySettings.success(action.id, { organizationId, settings: response.data }));
+    yield put(getStudySettings.success(action.id, { studyId, settings: response.data }));
   }
   catch (error) {
     LOG.error(action.type, error);

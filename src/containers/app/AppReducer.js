@@ -98,11 +98,11 @@ export default function appReducer(state :Map<*, *> = INITIAL_STATE, action :Obj
           .setIn([GET_STUDY_SETTINGS, action.id], action),
         FAILURE: () => state.setIn([GET_STUDY_SETTINGS, REQUEST_STATE], RequestStates.FAILURE),
         SUCCESS: () => {
-          const { appName, organizationId, settings } = action.value;
+          const { studyId, settings } = action.value;
 
           return state
             .setIn([GET_STUDY_SETTINGS, REQUEST_STATE], RequestStates.SUCCESS)
-            .setIn([SETTINGS, appName, organizationId], fromJS(settings));
+            .setIn([SETTINGS, studyId], fromJS(settings));
         },
         FINALLY: () => state.deleteIn([GET_STUDY_SETTINGS, action.id])
       });

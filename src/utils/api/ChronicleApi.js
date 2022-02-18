@@ -206,9 +206,9 @@ function verifyTudLink(organizationId :UUID, studyId :UUID, participantId :strin
   });
 }
 
-function getStudySettings(organizationId :UUID) {
+function getStudySettings(studyId :UUID) {
   return new Promise<*>((resolve, reject) => {
-    const url = getStudySettingsUrl(organizationId);
+    const url = getStudySettingsUrl(studyId);
     if (!url) return reject(new Error('invalid url'));
 
     return axios({

@@ -20,6 +20,7 @@ import {
   QUESTIONNAIRE,
   SETTINGS,
   STATUS,
+  STUDY,
   TIME_USE_DIARY,
 } from './constants/UrlConstants';
 import type { ParticipantDataType } from './constants/ParticipantDataTypes';
@@ -246,13 +247,13 @@ const getEnrollmentStatusUrl = (organizationId :UUID, studyId :UUID, participant
   return `${getBaseUrl()}/${BASE}/${organizationId}/${studyId}/${participantId}/${STATUS}`;
 };
 
-const getStudySettingsUrl = (organizationId :UUID) => {
-  if (!isValidUUID(organizationId)) {
-    LOG.error('invalid orgId: ', organizationId);
+const getStudySettingsUrl = (studyId :UUID) => {
+  if (!isValidUUID(studyId)) {
+    LOG.error('invalid orgId: ', studyId);
     return null;
   }
 
-  return `${getBaseUrl()}/${BASE}/${organizationId}/${SETTINGS}`;
+  return `${getBaseUrl()}/${BASE}/${STUDY}/${studyId}/${SETTINGS}`;
 };
 
 export {

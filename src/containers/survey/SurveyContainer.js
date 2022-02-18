@@ -18,7 +18,6 @@ import { GET_APP_USAGE_SURVEY_DATA, SUBMIT_SURVEY, getAppUsageSurveyData } from 
 
 import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
 import Settings from '../../utils/constants/AppSettings';
-import * as AppModules from '../../utils/constants/AppModules';
 import { APP_REDUX_CONSTANTS, REDUCERS } from '../../utils/constants/ReduxConstants';
 import { GET_STUDY_SETTINGS, getStudySettings } from '../app/AppActions';
 import type { AppUsageFreqType } from '../../utils/constants/AppUsageFreqTypes';
@@ -46,18 +45,18 @@ const SurveyContainer = () => {
   const userAppsData = useSelector((state) => state.getIn([REDUCERS.APPS_DATA, 'appsData'], Map()));
 
   const getUserAppsRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, GET_APP_USAGE_SURVEY_DATA]);
-  const getDataCollectionSettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_STUDY_SETTINGS]);
+  const getStudySettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_STUDY_SETTINGS]);
   const submitSurveyRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, SUBMIT_SURVEY]);
 
   const appUsageFreqType :AppUsageFreqType = settings.getIn(
-    [AppModules.DATA_COLLECTION, organizationId, Settings.APP_USAGE_FREQUENCY]
+    [studyId, Settings.APP_USAGE_FREQUENCY]
   ) || AppUsageFreqTypes.DAILY;
 
   useEffect(() => {
     dispatch(getStudySettings({
-      organizationId
+      studyId
     }));
-  }, [organizationId, dispatch]);
+  }, [studyId, dispatch]);
 
   // get apps
   useEffect(() => {
@@ -70,7 +69,7 @@ const SurveyContainer = () => {
     }));
   }, [date, participantId, organizationId, studyId, appUsageFreqType, dispatch]);
 
-  if (isPending(getDataCollectionSettingsRS) || isStandby(getDataCollectionSettingsRS) || isPending(getUserAppsRS)) {
+  if (isPending(getStudySettingsRS) || isStandby(getStudySettingsRS) || isPending(getUserAppsRS)) {
     return (
       <Box mt="60px" textAlign="center">
         <Spinner size="2x" />

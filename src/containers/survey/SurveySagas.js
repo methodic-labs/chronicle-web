@@ -76,7 +76,7 @@ function* submitSurveyWatcher() :Generator<*, *, *> {
  * SurveyActions.getChronicleApps()
  *
  */
-function* getAppUsageDataSurveyWorker(action :SequenceAction) :Generator<*, *, *> {
+function* getAppUsageSurveyDataWorker(action :SequenceAction) :Generator<*, *, *> {
   try {
     yield put(getAppUsageSurveyData.request(action.id));
 
@@ -151,11 +151,11 @@ function* getAppUsageDataSurveyWorker(action :SequenceAction) :Generator<*, *, *
   }
 }
 
-function* getAppUsageDataSurveyWatcher() :Generator<*, *, *> {
-  yield takeLatest(GET_APP_USAGE_SURVEY_DATA, getAppUsageDataSurveyWorker);
+function* getAppUsageSurveyDataWatcher() :Generator<*, *, *> {
+  yield takeLatest(GET_APP_USAGE_SURVEY_DATA, getAppUsageSurveyDataWorker);
 }
 
 export {
-  getAppUsageDataSurveyWatcher,
+  getAppUsageSurveyDataWatcher,
   submitSurveyWatcher
 };
