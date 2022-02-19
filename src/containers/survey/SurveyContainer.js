@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 
 import qs from 'qs';
 import { Map } from 'immutable';
-// $FlowFixMe
 import { Box, Spinner } from 'lattice-ui-kit';
 import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { DateTime } from 'luxon';
@@ -20,7 +19,6 @@ import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
 import Settings from '../../utils/constants/AppSettings';
 import * as AppModules from '../../utils/constants/AppModules';
 import { APP_REDUX_CONSTANTS, REDUCERS } from '../../utils/constants/ReduxConstants';
-import { GET_APP_SETTINGS, getAppSettings } from '../app/AppActions';
 import type { AppUsageFreqType } from '../../utils/constants/AppUsageFreqTypes';
 
 const { SETTINGS } = APP_REDUX_CONSTANTS;
@@ -46,7 +44,7 @@ const SurveyContainer = () => {
   const userAppsData = useSelector((state) => state.getIn([REDUCERS.APPS_DATA, 'appsData'], Map()));
 
   const getUserAppsRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, GET_CHRONICLE_APPS_DATA]);
-  const getAppSettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_APP_SETTINGS]);
+  const getAppSettingsRS :?RequestState = useRequestState([REDUCERS.APP, 'GET_APP_SETTINGS']);
   const submitSurveyRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, SUBMIT_SURVEY]);
 
   const appUsageFreqType :AppUsageFreqType = settings.getIn(
@@ -54,10 +52,10 @@ const SurveyContainer = () => {
   ) || AppUsageFreqTypes.DAILY;
 
   useEffect(() => {
-    dispatch(getAppSettings({
-      appName: AppModules.DATA_COLLECTION,
-      organizationId
-    }));
+    // dispatch(getAppSettings({
+    //   appName: AppModules.DATA_COLLECTION,
+    //   organizationId
+    // }));
   }, [organizationId, dispatch]);
 
   // get apps

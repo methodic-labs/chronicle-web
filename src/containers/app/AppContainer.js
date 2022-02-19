@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 
 import _isFunction from 'lodash/isFunction';
 import { Map } from 'immutable';
-import { AuthActions, AuthUtils } from 'lattice-auth';
 import {
   AppContainerWrapper,
   AppContentWrapper,
@@ -25,7 +24,7 @@ import {
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
-import { INITIALIZE_APPLICATION, initializeApplication, switchOrganization } from './AppActions';
+import { INITIALIZE_APPLICATION, initializeApplication, switchOrganization } from './actions';
 
 import Auth0AdminRoute from '../../core/router/Auth0AdminRoute';
 import BasicErrorComponent from '../shared/BasicErrorComponent';
@@ -35,29 +34,29 @@ import StudiesContainer from '../studies/StudiesContainer';
 import StudyDetailsContainer from '../study/StudyDetailsContainer';
 import * as Routes from '../../core/router/Routes';
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
+import { logout } from '../../core/auth/actions';
+import { getUserInfo, isAdmin } from '../../core/auth/utils';
+import { selectOrganizations, selectSelectedOrgId } from '../../core/redux/selectors';
 import { GOOGLE_TRACKING_ID } from '../../core/tracking/google/GoogleAnalytics';
-import { APP_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 
 declare var gtag :?Function;
 
 const { isNonEmptyString } = LangUtils;
-
-const { ORGS, SELECTED_ORG_ID } = APP_REDUX_CONSTANTS;
 
 const AppContainer = () => {
   const dispatch = useDispatch();
 
   const initializeApplicationRS :?RequestState = useRequestState(['app', INITIALIZE_APPLICATION]);
 
-  const organizations :Map = useSelector((state) => state.getIn(['app', ORGS], Map()));
-  const selectedOrgId :string = useSelector((state) => state.getIn(['app', SELECTED_ORG_ID]));
+  const organizations :Map = useSelector(selectOrganizations());
+  const selectedOrgId :string = useSelector(selectSelectedOrgId()) || organizations.keySeq().first();
 
   useEffect(() => {
     dispatch(initializeApplication());
   }, [dispatch]);
 
-  const logout = () => {
-    dispatch(AuthActions.logout());
+  const onLogout = () => {
+    dispatch(logout());
     if (_isFunction(gtag)) {
       gtag('config', GOOGLE_TRACKING_ID, { user_id: undefined, send_page_view: false });
     }
@@ -96,7 +95,7 @@ const AppContainer = () => {
     );
   };
 
-  const userInfo = AuthUtils.getUserInfo() || {};
+  const userInfo = getUserInfo() || {};
   let user = null;
   if (isNonEmptyString(userInfo.name)) {
     user = userInfo.name;
@@ -116,7 +115,7 @@ const AppContainer = () => {
       <AppHeaderWrapper
           appIcon={OpenLatticeIconSVG}
           appTitle="Chronicle"
-          logout={logout}
+          logout={onLogout}
           organizationsSelect={{
             isLoading: initializeApplicationRS === RequestStates.PENDING,
             onChange: handleSwitchOrganization,
@@ -127,7 +126,7 @@ const AppContainer = () => {
         <AppNavigationWrapper>
           <NavLink to={Routes.STUDIES} />
           <NavLink to={Routes.STUDIES}> Studies </NavLink>
-          { AuthUtils.isAdmin() && <NavLink to={Routes.DASHBOARD}>Dashboard</NavLink>}
+          { isAdmin() && <NavLink to={Routes.DASHBOARD}>Dashboard</NavLink>}
         </AppNavigationWrapper>
       </AppHeaderWrapper>
       <AppContentWrapper>
