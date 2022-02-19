@@ -2,8 +2,8 @@
  * @flow
  */
 const ID_PARAM :':id' = ':id';
-const ROOT :string = '/';
-const LOGIN :string = '/login';
+const ROOT :'/' = '/';
+const LOGIN :'/login' = '/login';
 const STUDIES :string = '/studies';
 const STUDY :string = `${STUDIES}/${ID_PARAM}`;
 const PARTICIPANTS :string = `${STUDIES}/${ID_PARAM}/participants`;

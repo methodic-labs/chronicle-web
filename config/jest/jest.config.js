@@ -20,8 +20,8 @@ module.exports = {
     __VERSION__: PACKAGE.version,
   },
   moduleNameMapper: {
-    '\\.(png)$': '<rootDir>/config/jest/__mocks__/fileMock.js',
     '\\.(css|less)$': '<rootDir>/config/jest/__mocks__/styleMock.js',
+    '\\.(png|svg)$': '<rootDir>/config/jest/__mocks__/fileMock.js',
     'core-js/library/fn/array/fill': '<rootDir>/node_modules/core-js-pure/features/array/fill',
     'core-js/library/fn/array/includes': '<rootDir>/node_modules/core-js-pure/features/array/includes',
   },
@@ -33,6 +33,7 @@ module.exports = {
   setupFiles: [
     '<rootDir>/config/jest/enzyme.config.js',
   ],
+  setupFilesAfterEnv: ['<rootDir>/config/jest/jest.setup.js'],
   testEnvironment: '<rootDir>/config/jest/jsdom.config.js',
   testURL: 'http://localhost',
   transform: {

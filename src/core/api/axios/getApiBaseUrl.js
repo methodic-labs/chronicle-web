@@ -25,6 +25,8 @@ const API_TO_PATH_MAP :Map<string, string> = OrderedMap({
   [CANDIDATE_API]   : `${CHRONICLE}/${V3}/${CANDIDATE}`,
   [ORGANIZATION_API]: `${CHRONICLE}/${V3}/${ORGANIZATION}`,
   [STUDY_API]       : `${CHRONICLE}/${V3}/${STUDY}`,
+  // TODO - DELETE ME
+  UserApi           : `${CHRONICLE}/${V3}/user`,
 });
 /* eslint-enable */
 
