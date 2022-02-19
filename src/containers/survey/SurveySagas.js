@@ -10,9 +10,7 @@ import {
   List,
   Map,
   fromJS,
-  getIn
 } from 'immutable';
-import { Constants } from 'lattice';
 import { Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import type { SequenceAction } from 'redux-reqseq';
@@ -23,16 +21,11 @@ import {
   getAppUsageSurveyData,
   submitSurvey,
 } from './SurveyActions';
-import { getAppNameFromUserAppsEntity, getMinimumDate } from './utils';
 
 import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
 import * as ChronicleApi from '../../utils/api/ChronicleApi';
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 
-const { OPENLATTICE_ID_FQN } = Constants;
 const LOG = new Logger('SurveySagas');
-
-const { DATE_TIME_FQN, TITLE_FQN, FULL_NAME_FQN } = PROPERTY_TYPE_FQNS;
 
 /*
  *
@@ -92,54 +85,84 @@ function* getAppUsageSurveyDataWorker(action :SequenceAction) :Generator<*, *, *
     );
     if (response.error) throw response.error;
 
-    /*
+    const convertTo12hourFormat = (dateStr :string) => {
+      const tokens = dateStr.split(' ');
+      return `${tokens[0].split(':')[0]}${tokens[1].toLowerCase()}`;
+    };
+
+    // returns 9am - 10am
+    const getTimeRange = (dateTime :DateTime) => {
+      const start = dateTime.startOf('hour').toLocaleString(DateTime.TIME_SIMPLE);
+      const end = dateTime.plus({ hours: 1 }).startOf('hour').toLocaleString(DateTime.TIME_SIMPLE);
+
+      return `${convertTo12hourFormat(start)} - ${convertTo12hourFormat(end)}`;
+    };
+
+    // val appPackageName: String,
+    // var appLabel: String?,
+    // val timestamp: OffsetDateTime,
+    // val users: List<String> = listOf(),
+    // val timezone: String,
+
+    /**
     {
-     fullname: {
-      [title_fqn]: blah blah,
-      entities: [{
-        [association ekid]: {
-          [date_time_fqn]: 'blah blah'
+      com.facebook.katana: {
+        appLabel: 'Facebook',
+        timestamps: {
+          '10am - 11am': [
+              {
+                timestamp: 2021-11-16T10:15:37.668+00:00,
+                timezone: ''
+              },
+              {
+                timestamp: 2021-11-16T10:15:37.668+00:00,
+                timezone: ''
+              }
+          ]
         }
-      }]
-    }
+      }
     }
     */
 
-    let appsData;
+    let data;
     if (appUsageFreqType === AppUsageFreqTypes.HOURLY) {
-      appsData = Map().withMutations((mutator :Map) => {
-        response.data.forEach((entry) => {
-          const { entityDetails, associationDetails } = entry;
-          const fullName = getIn(entityDetails, [FULL_NAME_FQN, 0]);
-          const title = getIn(entityDetails, [TITLE_FQN, 0]);
-          const associationEKID = getIn(associationDetails, [OPENLATTICE_ID_FQN, 0]);
-          const dateTime = getIn(associationDetails, [DATE_TIME_FQN, 0]);
+      data = fromJS(response.data).groupBy((entity) => entity.get('appPackageName'))
+        .toMap().withMutations((mutator :Map) => {
+          mutator.forEach((entities :List, key :string) => {
+            const appLabel = entities.first().get('appLabel');
+            mutator.setIn([key, 'appLabel'], appLabel);
+            const timestamps = entities.map((entity) => {
+              const { timestamp, timezone } = entity;
+              const dateTime = DateTime.fromISO(timestamp, { zone: timezone });
+              const time = getTimeRange(dateTime);
+              return Map({
+                time,
+                timestamp,
+                timezone
+              });
+            }).groupBy((entity) => entity.get('time'));
 
-          const entity = {
-            [associationEKID]: {
-              [DATE_TIME_FQN.toString()]: dateTime
-            }
-          };
-
-          mutator
-            .setIn([fullName, TITLE_FQN], title)
-            .updateIn([fullName, 'entities'], List(), (current) => current.push(fromJS(entity)));
+            mutator.setIn([key, 'timestamps'], timestamps);
+          });
         });
-      });
     }
     else {
       // mapping from association EKID -> associationDetails & entityDetails
-      appsData = fromJS(response.data)
-        .toMap()
-        .mapKeys((index, entity) => entity.getIn(['associationDetails', OPENLATTICE_ID_FQN, 0]))
-        .map((entity, id) => entity.set('id', id))
-        .map((entity) => entity.setIn(['entityDetails', TITLE_FQN, 0], getAppNameFromUserAppsEntity(entity)))
-        .map((entity) => entity.setIn(['associationDetails', DATE_TIME_FQN],
-          [getMinimumDate(entity.getIn(['associationDetails', DATE_TIME_FQN]))]))
-        .sortBy((entity) => DateTime.fromISO(entity.getIn(['associationDetails', DATE_TIME_FQN, 0])));
+      /**
+        {
+          com.facebook.katana: [
+            {
+              appPackageName: 'com.facebook.katana',
+              appLabel: 'Facebook',
+              timezone: '',
+            }
+          ]
+        }
+      */
+      data = fromJS(response.data).groupBy((entity) => entity.get('appPackageName'));
     }
 
-    yield put(getAppUsageSurveyData.success(action.id, appsData));
+    yield put(getAppUsageSurveyData.success(action.id, data));
   }
 
   catch (error) {

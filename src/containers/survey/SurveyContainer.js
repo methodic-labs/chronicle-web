@@ -63,11 +63,10 @@ const SurveyContainer = () => {
     dispatch(getAppUsageSurveyData({
       date,
       participantId,
-      organizationId,
       studyId,
       appUsageFreqType
     }));
-  }, [date, participantId, organizationId, studyId, appUsageFreqType, dispatch]);
+  }, [date, participantId, studyId, appUsageFreqType, dispatch]);
 
   if (isPending(getStudySettingsRS) || isStandby(getStudySettingsRS) || isPending(getUserAppsRS)) {
     return (
