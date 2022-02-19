@@ -76,6 +76,9 @@ const SurveyContainer = () => {
     );
   }
 
+  console.log(appUsageFreqType);
+  console.log(userAppsData);
+
   if (appUsageFreqType === AppUsageFreqTypes.HOURLY) {
     return (
       <HourlyAppUsageSurvey

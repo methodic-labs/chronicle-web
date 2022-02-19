@@ -44,15 +44,15 @@ function getAppUsageSurveyData(date :string, participantId :string, studyId :UUI
     const url = getAppUsageDataUrl(participantId, studyId);
     if (!url) return reject(new Error('Invalid Url'));
 
-    // expect date to match MM-dd-yyyy format
-    const startDate = DateTime.fromFormat(date, 'MM-dd-yyyy');
+    // expect date to match yyyy-MM-dd format
+    const startDate = DateTime.fromFormat(date, 'yyyy-MM-dd');
     if (!startDate.isValid) return reject(Error(`Invalid date: ${date}`));
 
     return axios({
       method: 'get',
       params: {
-        startDateTime: startDate.toISO(),
-        endDateTime: startDate.endOf('day').toISO()
+        startDate: startDate.toISO(),
+        endDate: startDate.endOf('day').toISO()
       },
       url: encodeURI(url),
     }).then((result) => resolve(result))

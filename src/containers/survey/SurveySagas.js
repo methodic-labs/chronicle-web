@@ -108,7 +108,7 @@ function* getAppUsageSurveyDataWorker(action :SequenceAction) :Generator<*, *, *
     {
       com.facebook.katana: {
         appLabel: 'Facebook',
-        timestamps: {
+        data: {
           '10am - 11am': [
               {
                 timestamp: 2021-11-16T10:15:37.668+00:00,
@@ -118,33 +118,29 @@ function* getAppUsageSurveyDataWorker(action :SequenceAction) :Generator<*, *, *
                 timestamp: 2021-11-16T10:15:37.668+00:00,
                 timezone: ''
               }
-          ]
+            ]
+          }
         }
       }
     }
     */
 
     let data;
-    if (appUsageFreqType === AppUsageFreqTypes.HOURLY) {
-      data = fromJS(response.data).groupBy((entity) => entity.get('appPackageName'))
-        .toMap().withMutations((mutator :Map) => {
-          mutator.forEach((entities :List, key :string) => {
-            const appLabel = entities.first().get('appLabel');
-            mutator.setIn([key, 'appLabel'], appLabel);
-            const timestamps = entities.map((entity) => {
-              const { timestamp, timezone } = entity;
-              const dateTime = DateTime.fromISO(timestamp, { zone: timezone });
-              const time = getTimeRange(dateTime);
-              return Map({
-                time,
-                timestamp,
-                timezone
-              });
-            }).groupBy((entity) => entity.get('time'));
 
-            mutator.setIn([key, 'timestamps'], timestamps);
-          });
+    if (appUsageFreqType === AppUsageFreqTypes.HOURLY) {
+      data = Map().withMutations((mutator) => {
+        fromJS(response.data).forEach((usage) => {
+          const appPackageName = usage.get('appPackageName');
+          const appLabel = usage.get('appLabel');
+          mutator.setIn([appPackageName, 'appLabel'], appLabel);
+
+          const timestamp = usage.get('timestamp');
+          const timezone = usage.get('timezone');
+          const dateTime = DateTime.fromISO(timestamp, { zone: timezone });
+          const timeRange = getTimeRange(dateTime);
+          mutator.updateIn([appPackageName, 'data', timeRange], List(), (list) => list.push(usage));
         });
+      });
     }
     else {
       // mapping from association EKID -> associationDetails & entityDetails
