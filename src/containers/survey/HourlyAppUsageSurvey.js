@@ -28,12 +28,12 @@ const { isFailure, isSuccess, isPending } = ReduxUtils;
 const { USER_FQN } = PROPERTY_TYPE_FQNS;
 
 const initialState = {
-  childHourlySelections: Map().asMutable(),
   childOnlyApps: Set().asMutable(),
+  initialTimeRangeSelections: Map().asMutable(),
   isConfirmModalVisible: false,
   isInstructionsModalVisible: false,
   isSubmissionConfirmed: false,
-  otherChildHourlySelections: Map().asMutable(),
+  remainingTimeRangeSelections: Map().asMutable(),
   sharedApps: Set().asMutable(),
   step: 0,
 };
@@ -65,21 +65,6 @@ const reducer = (state, action) => {
         sharedApps: selected
       };
     }
-    case ACTIONS.OTHER_CHILD_SELECT_TIME: {
-      const { appName, id } = action;
-      const { otherChildHourlySelections } = state;
-
-      if (otherChildHourlySelections.get(appName, Set()).has(id)) {
-        otherChildHourlySelections.update(appName, Set(), (current) => current.delete(id));
-      }
-      else {
-        otherChildHourlySelections.update(appName, Set(), (current) => current.add(id));
-      }
-      return {
-        ...state,
-        otherChildHourlySelections
-      };
-    }
 
     case ACTIONS.TOGGLE_INSTRUCTIONS_MODAL: {
       const { visible } = action;
@@ -89,19 +74,27 @@ const reducer = (state, action) => {
       };
     }
 
-    case ACTIONS.CHILD_SELECT_TIME: {
-      const { appName, id } = action;
-      const { childHourlySelections } = state;
+    case ACTIONS.SELECT_TIME_RANGE: {
+      const { appName, timeRange, initial } = action;
+      const { initialTimeRangeSelections, remainingTimeRangeSelections } = state;
 
-      if (childHourlySelections.get(appName, Set()).has(id)) {
-        childHourlySelections.update(appName, Set(), (current) => current.delete(id));
-      }
-      else {
-        childHourlySelections.update(appName, Set(), (current) => current.add(id));
+      const updatedValue = initial ? initialTimeRangeSelections : remainingTimeRangeSelections;
+
+      updatedValue.update(
+        appName,
+        Set(),
+        (current) => (current.has(timeRange) ? current.delete(timeRange) : current.add(timeRange))
+      );
+
+      if (initial) {
+        return {
+          ...state,
+          initialTimeRangeSelections: updatedValue
+        };
       }
       return {
         ...state,
-        childHourlySelections
+        remainingTimeRangeOptions: updatedValue
       };
     }
     case ACTIONS.NEXT_STEP: {
@@ -168,7 +161,7 @@ const HourlyAppUsageSurvey = (props :Props) => {
     childOnlyApps,
     isConfirmModalVisible,
     childHourlySelections,
-    otherChildHourlySelections,
+    remainingTimeRangeSelections,
     isSubmissionConfirmed,
     isInstructionsModalVisible
   } = state;
@@ -180,7 +173,7 @@ const HourlyAppUsageSurvey = (props :Props) => {
         .map((app) => data.getIn([app, 'entities']).map((entity) => entity.keySeq())).flatten();
 
       const otherIds = childHourlySelections.valueSeq()
-        .concat(otherChildHourlySelections.valueSeq()).toSet().flatten();
+        .concat(remainingTimeRangeSelections.valueSeq()).toSet().flatten();
 
       return childOnlyIds.concat(otherIds)
         .toMap()
@@ -202,7 +195,7 @@ const HourlyAppUsageSurvey = (props :Props) => {
     childOnlyApps,
     data,
     organizationId,
-    otherChildHourlySelections,
+    remainingTimeRangeSelections,
     participantId,
     storeDispatch,
     studyId

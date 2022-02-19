@@ -23,8 +23,8 @@ const HourlySurvey = (props :Props) => {
   const {
     childOnlyApps,
     sharedApps,
-    childHourlySelections,
-    otherChildHourlySelections,
+    initialTimeRangeSelections,
+    remainingTimeRangeSelections,
     step
   } = state;
 
@@ -44,24 +44,10 @@ const HourlySurvey = (props :Props) => {
     }
   };
 
-  const getChildApppsOtherOptions = () => {
-    const filtered = data.filter((val, key) => sharedApps.has(key)).asMutable();
-
-    filtered.forEach((val, appName) => {
-      const entities :List = val.get('entities');
-
-      const target = entities
-        .filterNot((entity) => childHourlySelections.get(appName, Set()).has(entity.keySeq().first()));
-
-      filtered.setIn([appName, 'entities'], target);
-    });
-    return filtered;
-  };
-
   const sharedAppsData = data.filterNot((val, key) => childOnlyApps.has(key));
-  const childAppsOptions = data.filter((val, key) => sharedApps.has(key));
+  const timeRangeOptions = data.filter((val, key) => sharedApps.has(key));
 
-  const childAppsOtherOptions = getChildApppsOtherOptions();
+  // const childAppsOtherOptions = getChildApppsOtherOptions();
 
   const buttonText = step === 0 ? 'Begin Survey' : 'Submit';
 
@@ -94,18 +80,22 @@ const HourlySurvey = (props :Props) => {
       {
         step === 3 && (
           <SelectAppUsageTimeSlots
-              onChangeAction={ACTIONS.CHILD_SELECT_TIME}
-              appsData={childAppsOptions}
-              selected={childHourlySelections} />
+              data={data}
+              initial
+              initialSelections={Map()}
+              options={timeRangeOptions}
+              selected={initialTimeRangeSelections} />
         )
       }
 
       {
         step === 4 && (
           <SelectAppUsageTimeSlots
-              onChangeAction={ACTIONS.OTHER_CHILD_SELECT_TIME}
-              appsData={childAppsOtherOptions}
-              selected={otherChildHourlySelections} />
+              data={data}
+              initial={false}
+              initialSelections={initialTimeRangeSelections}
+              options={timeRangeOptions}
+              selected={remainingTimeRangeSelections} />
         )
       }
       <SurveyButtons

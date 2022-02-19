@@ -98,12 +98,6 @@ function* getAppUsageSurveyDataWorker(action :SequenceAction) :Generator<*, *, *
       return `${convertTo12hourFormat(start)} - ${convertTo12hourFormat(end)}`;
     };
 
-    // val appPackageName: String,
-    // var appLabel: String?,
-    // val timestamp: OffsetDateTime,
-    // val users: List<String> = listOf(),
-    // val timezone: String,
-
     /**
     {
       com.facebook.katana: {
