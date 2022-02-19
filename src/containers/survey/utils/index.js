@@ -3,15 +3,12 @@ import {
   List,
   Map,
   Set,
-  get
 } from 'immutable';
-import { Constants } from 'lattice';
 import { DateTime } from 'luxon';
 
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 
-const { OPENLATTICE_ID_FQN } = Constants;
-const { TITLE_FQN, USER_FQN } = PROPERTY_TYPE_FQNS;
+const { USER_FQN } = PROPERTY_TYPE_FQNS;
 
 const getAppNameFromUserAppsEntity = (entity :Map) => {
   const titleFQNValues :List = entity.getIn(['entityDetails', 'ol.title'], List());
@@ -23,12 +20,11 @@ const getAppNameFromUserAppsEntity = (entity :Map) => {
 };
 
 const createSurveyFormSchema = (userApps :Map) => {
-  const schemaProperties :Object = userApps.map((app) => ({
-    title: app.getIn(['entityDetails', TITLE_FQN, 0]),
+  const schemaProperties :Object = userApps.map((mappedValues) => ({
+    title: mappedValues.first().get('appLabel'),
     description: 'Select all that apply',
     type: 'array',
     uniqueItems: true,
-    minItems: 1,
     items: {
       type: 'string',
       enum: ['Parent alone', 'Child alone', 'Parent and child together', 'Other family member']
@@ -74,27 +70,25 @@ const createInitialFormData = (userApps :Map) => userApps
   .map((app) => app.getIn(['associationDetails', USER_FQN], List()))
   .toJS();
 
-const createSubmissionData = (formData :Object) => {
-  const entities = Object.entries(formData).map(([entityKeyId, selectedUsers]) => ({
-    [OPENLATTICE_ID_FQN]: entityKeyId,
-    [USER_FQN.toString()]: selectedUsers
-  }));
-
-  /* eslint-disable no-param-reassign */
-  return entities.reduce((result, entity) => {
-    const entityKeyId = get(entity, OPENLATTICE_ID_FQN);
-    delete entity[OPENLATTICE_ID_FQN];
-    result[entityKeyId] = entity;
-    return result;
-  }, {});
-  /* eslint-enable */
+const createSubmissionData = (formData :Object, userApps :Map) => {
+  const unknown = "I don't know";
+  return List().withMutations((mutator) => {
+    userApps
+      .filter((mappedValues, appName) => appName in formData && formData[appName][0] !== unknown)
+      .forEach((usages, appName) => {
+        usages.forEach((usage) => {
+          const updated = usage.set('users', List(formData[appName]));
+          mutator.push(updated);
+        });
+      });
+  }).toJS();
 };
 
 const createHourlySurveySubmissionData = (data :Map, selectedApps :Set, timeRangeSelections :Map) => {
   const user = 'Target Child';
 
   return List().withMutations((mutator) => {
-    data.asMutable().filter((v, k) => selectedApps.has(k)).valueSeq().forEach((mappedValues) => {
+    data.filter((v, k) => selectedApps.has(k)).valueSeq().forEach((mappedValues) => {
       mappedValues.get('data').valueSeq().forEach((usages) => {
         usages.forEach((usage) => {
           const updated = usage.set('users', List([user]));
@@ -111,7 +105,7 @@ const createHourlySurveySubmissionData = (data :Map, selectedApps :Set, timeRang
         });
       });
     });
-  });
+  }).toJS();
 };
 
 const getMinimumDate = (dates :List) => dates

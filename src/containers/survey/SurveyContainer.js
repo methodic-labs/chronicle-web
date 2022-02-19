@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 
 import qs from 'qs';
 import { Map } from 'immutable';
-// $FlowFixMe
 import { Box, Spinner } from 'lattice-ui-kit';
 import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { DateTime } from 'luxon';
@@ -34,17 +33,16 @@ const SurveyContainer = () => {
 
   const {
     date = DateTime.local().toISODate(),
-    organizationId,
     participantId,
     studyId
     // $FlowFixMe
-  } :{ date :string, organizationId :UUID, participantId :string, studyId :UUID } = queryParams;
+  } :{ date :string, participantId :string, studyId :UUID } = queryParams;
 
   // selectors
   const settings = useSelector((state) => state.getIn([REDUCERS.APP, SETTINGS], Map()));
   const userAppsData = useSelector((state) => state.getIn([REDUCERS.APPS_DATA, 'appsData'], Map()));
 
-  const getUserAppsRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, GET_APP_USAGE_SURVEY_DATA]);
+  const getappUsageSurveyDataRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, GET_APP_USAGE_SURVEY_DATA]);
   const getStudySettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_STUDY_SETTINGS]);
   const submitSurveyRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, SUBMIT_SURVEY]);
 
@@ -68,7 +66,7 @@ const SurveyContainer = () => {
     }));
   }, [date, participantId, studyId, appUsageFreqType, dispatch]);
 
-  if (isPending(getStudySettingsRS) || isStandby(getStudySettingsRS) || isPending(getUserAppsRS)) {
+  if (isPending(getStudySettingsRS) || isStandby(getStudySettingsRS) || isPending(getappUsageSurveyDataRS)) {
     return (
       <Box mt="60px" textAlign="center">
         <Spinner size="2x" />
@@ -81,8 +79,7 @@ const SurveyContainer = () => {
       <HourlyAppUsageSurvey
           data={userAppsData}
           date={date}
-          getUserAppsRS={getUserAppsRS}
-          organizationId={organizationId}
+          getappUsageSurveyDataRS={getappUsageSurveyDataRS}
           participantId={participantId}
           studyId={studyId}
           submitSurveyRS={submitSurveyRS} />
@@ -93,8 +90,7 @@ const SurveyContainer = () => {
     <DailyAppUsageSurvey
         data={userAppsData}
         date={date}
-        getUserAppsRS={getUserAppsRS}
-        organizationId={organizationId}
+        getappUsageSurveyDataRS={getappUsageSurveyDataRS}
         participantId={participantId}
         studyId={studyId}
         submitSurveyRS={submitSurveyRS} />

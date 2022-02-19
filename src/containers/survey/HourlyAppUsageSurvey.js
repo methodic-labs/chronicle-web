@@ -22,6 +22,7 @@ import InstructionsModal from './components/InstructionsModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch';
 import { submitSurvey } from './SurveyActions';
+import { createHourlySurveySubmissionData } from './utils';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
 
@@ -33,7 +34,7 @@ const initialState = {
   isConfirmModalVisible: false,
   isInstructionsModalVisible: false,
   isSubmissionConfirmed: false,
-  remainingTimeRangeSelections: Map().asMutable(),
+  otherTimeRangeSelections: Map().asMutable(),
   sharedApps: Set().asMutable(),
   step: 0,
 };
@@ -76,9 +77,9 @@ const reducer = (state, action) => {
 
     case ACTIONS.SELECT_TIME_RANGE: {
       const { appName, timeRange, initial } = action;
-      const { initialTimeRangeSelections, remainingTimeRangeSelections } = state;
+      const { initialTimeRangeSelections, otherTimeRangeSelections } = state;
 
-      const updatedValue = initial ? initialTimeRangeSelections : remainingTimeRangeSelections;
+      const updatedValue = initial ? initialTimeRangeSelections : otherTimeRangeSelections;
 
       updatedValue.update(
         appName,
@@ -159,7 +160,7 @@ const HourlyAppUsageSurvey = (props :Props) => {
     childOnlyApps,
     isConfirmModalVisible,
     initialTimeRangeSelections,
-    remainingTimeRangeSelections,
+    otherTimeRangeSelections,
     isSubmissionConfirmed,
     isInstructionsModalVisible
   } = state;
@@ -168,25 +169,29 @@ const HourlyAppUsageSurvey = (props :Props) => {
     if (isSubmissionConfirmed) {
       const timeRangeSelections = initialTimeRangeSelections.mergeWith(
         (oldVal, newVal) => oldVal.concat(newVal),
-        remainingTimeRangeSelections
+        otherTimeRangeSelections
       );
-      storeDispatch(submitSurvey({
+      const submissionData = createHourlySurveySubmissionData(
         data,
+        childOnlyApps,
+        timeRangeSelections
+      );
+
+      storeDispatch(submitSurvey({
         participantId,
-        selectedApps: childOnlyApps,
+        submissionData,
         studyId,
-        timeRangeSelections,
       }));
     }
   }, [
-    isSubmissionConfirmed,
-    initialTimeRangeSelections,
     childOnlyApps,
     data,
-    remainingTimeRangeSelections,
+    initialTimeRangeSelections,
+    isSubmissionConfirmed,
     participantId,
+    otherTimeRangeSelections,
     storeDispatch,
-    studyId
+    studyId,
   ]);
 
   const hasSubmitted = isSuccess(submitSurveyRS) || isFailure(submitSurveyRS);

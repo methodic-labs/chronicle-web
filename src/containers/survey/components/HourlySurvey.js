@@ -24,7 +24,7 @@ const HourlySurvey = (props :Props) => {
     childOnlyApps,
     sharedApps,
     initialTimeRangeSelections,
-    remainingTimeRangeSelections,
+    otherTimeRangeSelections,
     step
   } = state;
 
@@ -95,7 +95,7 @@ const HourlySurvey = (props :Props) => {
               initial={false}
               initialSelections={initialTimeRangeSelections}
               options={timeRangeOptions}
-              selected={remainingTimeRangeSelections} />
+              selected={otherTimeRangeSelections} />
         )
       }
       <SurveyButtons

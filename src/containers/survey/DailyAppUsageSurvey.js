@@ -5,7 +5,6 @@ import {
   AppContainerWrapper,
   AppContentWrapper,
   AppHeaderWrapper,
-  // $FlowFixMe
   Box,
   Spinner
 } from 'lattice-ui-kit';
@@ -26,9 +25,8 @@ type Props = {
   data :Map;
   date :string;
   submitSurveyRS :?RequestState;
-  getUserAppsRS :?RequestState;
+  getappUsageSurveyDataRS :?RequestState;
   participantId :string;
-  organizationId :UUID;
   studyId :UUID ;
 }
 
@@ -37,13 +35,12 @@ const SurveyContainer = (props :Props) => {
     data,
     date,
     studyId,
-    organizationId,
     participantId,
-    getUserAppsRS,
+    getappUsageSurveyDataRS,
     submitSurveyRS,
   } = props;
 
-  if (isPending(getUserAppsRS)) {
+  if (isPending(getappUsageSurveyDataRS)) {
     return (
       <Box mt="60px" textAlign="center">
         <Spinner size="2x" />
@@ -56,10 +53,10 @@ const SurveyContainer = (props :Props) => {
       <AppHeaderWrapper appIcon={OpenLatticeIconSVG} appTitle="Chronicle" />
       <AppContentWrapper>
         {
-          getUserAppsRS === RequestStates.FAILURE && <BasicErrorComponent />
+          getappUsageSurveyDataRS === RequestStates.FAILURE && <BasicErrorComponent />
         }
         {
-          getUserAppsRS === RequestStates.SUCCESS && (
+          getappUsageSurveyDataRS === RequestStates.SUCCESS && (
             <>
               {
                 submitSurveyRS === RequestStates.SUCCESS
@@ -73,7 +70,6 @@ const SurveyContainer = (props :Props) => {
                         { DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL) }
                       </Box>
                       <SurveyForm
-                          organizationId={organizationId}
                           participantId={participantId}
                           studyId={studyId}
                           submitSurveyRS={submitSurveyRS}
