@@ -23,7 +23,6 @@ import {
   SETTINGS,
   STATUS,
   STUDY,
-  SURVEY,
   TIME_USE_DIARY,
 } from './constants/UrlConstants';
 import type { ParticipantDataType } from './constants/ParticipantDataTypes';
@@ -104,7 +103,7 @@ const getAppUsageDataUrl = (participantId :string, studyId :UUID) => {
 
   const baseUrl = getBaseUrl();
 
-  return `${baseUrl}/${BASE}/${SURVEY}/${studyId}/${PARTICIPANT}/${participantId}/${AppUsagePath}`;
+  return `${baseUrl}/${BASE}/${AppUsagePath}/${studyId}/${PARTICIPANT}/${participantId}`;
 };
 
 const getDeleteParticipantPath = (orgId :UUID, participantId :string, studyId :UUID) => {
