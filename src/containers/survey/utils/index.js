@@ -2,7 +2,8 @@
 import {
   List,
   Map,
-  get,
+  Set,
+  get
 } from 'immutable';
 import { Constants } from 'lattice';
 import { DateTime } from 'luxon';
@@ -89,13 +90,38 @@ const createSubmissionData = (formData :Object) => {
   /* eslint-enable */
 };
 
+const createHourlySurveySubmissionData = (data :Map, selectedApps :Set, timeRangeSelections :Map) => {
+  const user = 'Target Child';
+
+  return List().withMutations((mutator) => {
+    data.asMutable().filter((v, k) => selectedApps.has(k)).valueSeq().forEach((mappedValues) => {
+      mappedValues.get('data').valueSeq().forEach((usages) => {
+        usages.forEach((usage) => {
+          const updated = usage.set('users', List([user]));
+          mutator.push(updated);
+        });
+      });
+    });
+
+    timeRangeSelections.forEach((selections, appName) => {
+      selections.forEach((timeRange) => {
+        data.getIn([appName, 'data', timeRange]).forEach((usage) => {
+          const updated = usage.set('users', List([user]));
+          mutator.push(updated);
+        });
+      });
+    });
+  });
+};
+
 const getMinimumDate = (dates :List) => dates
   .map((date) => DateTime.fromISO(date)).filter((date) => date.isValid).min();
 
 export {
-  getMinimumDate,
+  createHourlySurveySubmissionData,
   createInitialFormData,
   createSubmissionData,
   createSurveyFormSchema,
-  getAppNameFromUserAppsEntity
+  getAppNameFromUserAppsEntity,
+  getMinimumDate,
 };

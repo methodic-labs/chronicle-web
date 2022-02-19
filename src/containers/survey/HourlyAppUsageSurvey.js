@@ -1,7 +1,10 @@
 // @flow
 import { useEffect, useReducer } from 'react';
 
-import { Map, Set, fromJS } from 'immutable';
+import {
+  Map,
+  Set,
+} from 'immutable';
 import {
   AppContainerWrapper,
   AppContentWrapper,
@@ -21,11 +24,8 @@ import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch
 import { submitSurvey } from './SurveyActions';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 
 const { isFailure, isSuccess, isPending } = ReduxUtils;
-
-const { USER_FQN } = PROPERTY_TYPE_FQNS;
 
 const initialState = {
   childOnlyApps: Set().asMutable(),
@@ -138,7 +138,6 @@ type Props = {
   date :string;
   submitSurveyRS :?RequestState;
   participantId :string;
-  organizationId :UUID;
   studyId :UUID ;
 };
 
@@ -147,7 +146,6 @@ const HourlyAppUsageSurvey = (props :Props) => {
     data,
     date,
     studyId,
-    organizationId,
     participantId,
     submitSurveyRS,
   } = props;
@@ -160,41 +158,31 @@ const HourlyAppUsageSurvey = (props :Props) => {
     step,
     childOnlyApps,
     isConfirmModalVisible,
-    childHourlySelections,
+    initialTimeRangeSelections,
     remainingTimeRangeSelections,
     isSubmissionConfirmed,
     isInstructionsModalVisible
   } = state;
 
   useEffect(() => {
-    const createSubmissionData = () => {
-
-      const childOnlyIds = childOnlyApps
-        .map((app) => data.getIn([app, 'entities']).map((entity) => entity.keySeq())).flatten();
-
-      const otherIds = childHourlySelections.valueSeq()
-        .concat(remainingTimeRangeSelections.valueSeq()).toSet().flatten();
-
-      return childOnlyIds.concat(otherIds)
-        .toMap()
-        .mapEntries((entry) => [entry[0], fromJS({ [USER_FQN.toString()]: ['Target child'] })])
-        .toJS();
-    };
-
     if (isSubmissionConfirmed) {
+      const timeRangeSelections = initialTimeRangeSelections.mergeWith(
+        (oldVal, newVal) => oldVal.concat(newVal),
+        remainingTimeRangeSelections
+      );
       storeDispatch(submitSurvey({
-        submissionData: createSubmissionData(),
-        organizationId,
+        data,
         participantId,
-        studyId
+        selectedApps: childOnlyApps,
+        studyId,
+        timeRangeSelections,
       }));
     }
   }, [
     isSubmissionConfirmed,
-    childHourlySelections,
+    initialTimeRangeSelections,
     childOnlyApps,
     data,
-    organizationId,
     remainingTimeRangeSelections,
     participantId,
     storeDispatch,

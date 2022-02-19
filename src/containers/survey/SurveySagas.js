@@ -21,6 +21,7 @@ import {
   getAppUsageSurveyData,
   submitSurvey,
 } from './SurveyActions';
+import { createHourlySurveySubmissionData } from './utils';
 
 import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
 import * as ChronicleApi from '../../utils/api/ChronicleApi';
@@ -38,13 +39,17 @@ function* submitSurveyWorker(action :SequenceAction) :Generator<*, *, *> {
 
     const { value } = action;
     const {
-      submissionData,
+      data,
       participantId,
+      selectedApps,
       studyId,
+      timeRangeSelections,
     } = value;
 
+    const submissionData = createHourlySurveySubmissionData(data, selectedApps, timeRangeSelections);
+
     const response = yield call(
-      ChronicleApi.submitAppUsageSurvey, studyId, participantId, submissionData
+      ChronicleApi.submitAppUsageSurvey, studyId, participantId, submissionData.toJS()
     );
     if (response.error) throw response.error;
 
