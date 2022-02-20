@@ -59,7 +59,7 @@ function* getAppUsageSurveyDataWorker(action :SequenceAction) :Saga<WorkerRespon
 
     if (appUsageFreqType === AppUsageFreqTypes.HOURLY) {
       data = Map().withMutations((mutator) => {
-        fromJS(response.data).forEach((usage) => {
+        fromJS(response).forEach((usage) => {
           const appPackageName = usage.get(APP_PACKAGE_NAME);
           const appLabel = usage.get(APP_LABEL);
           mutator.setIn([appPackageName, APP_LABEL], appLabel);
@@ -72,7 +72,7 @@ function* getAppUsageSurveyDataWorker(action :SequenceAction) :Saga<WorkerRespon
       });
     }
     else {
-      data = fromJS(response.data).groupBy((entity) => entity.get(APP_PACKAGE_NAME));
+      data = fromJS(response).groupBy((entity) => entity.get(APP_PACKAGE_NAME));
     }
 
     workerResponse = { data };
