@@ -14,10 +14,10 @@ import {
 import {
   CREATE_STUDY,
   GET_ORG_STUDIES,
-  UPDATE_STUDY,
+  // UPDATE_STUDY,
   createStudy,
   getOrgStudies,
-  updateStudy,
+  // updateStudy,
 } from '../actions';
 
 const INITIAL_STATE :Map = fromJS({

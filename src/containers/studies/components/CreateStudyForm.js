@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { createSchema, createUiSchema } from './CreateStudySchemas';
 
 import { createFormDataFromStudyEntity } from '../../../utils/FormUtils';
-import { createStudy, updateStudy } from '../actions';
+import { createStudy } from '../actions';
 
 type Props = {
   notificationsEnabled :boolean;
