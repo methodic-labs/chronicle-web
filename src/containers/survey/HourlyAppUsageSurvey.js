@@ -138,6 +138,7 @@ type Props = {
   data :Map;
   date :string;
   submitSurveyRS :?RequestState;
+  getappUsageSurveyDataRS :?RequestState;
   participantId :string;
   studyId :UUID ;
 };
@@ -149,6 +150,7 @@ const HourlyAppUsageSurvey = (props :Props) => {
     studyId,
     participantId,
     submitSurveyRS,
+    getappUsageSurveyDataRS,
   } = props;
 
   const storeDispatch = useDispatch();
@@ -218,7 +220,13 @@ const HourlyAppUsageSurvey = (props :Props) => {
               {
                 hasSubmitted
                   ? <SubmissionCompleted />
-                  : <HourlySurvey data={data} state={state} isSubmitting={isSubmitting} />
+                  : (
+                    <HourlySurvey
+                        data={data}
+                        getappUsageSurveyDataRS={getappUsageSurveyDataRS}
+                        isSubmitting={isSubmitting}
+                        state={state} />
+                  )
               }
             </CardSegment>
           </Card>

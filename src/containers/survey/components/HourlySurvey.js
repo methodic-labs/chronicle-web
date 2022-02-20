@@ -1,24 +1,32 @@
 // @flow
 
-import { List, Map, Set } from 'immutable';
-// $FlowFixMe
+import { Map } from 'immutable';
 import { Box } from 'lattice-ui-kit';
+import { ReduxUtils } from 'lattice-utils';
+import type { RequestState } from 'redux-reqseq';
 
 import HourlySurveyInstructions from './HourlySurveyInstructions';
 import SelectAppUsageTimeSlots from './SelectAppUsageTimeSlots';
 import SelectAppsByUser from './SelectAppsByUser';
 import SurveyButtons from './SurveyButtons';
-import { ACTIONS } from './HourlySurveyDispatch';
+
+const { isFailure } = ReduxUtils;
 
 type Props = {
   data :Map;
   isSubmitting :boolean;
   state :Object;
+  getappUsageSurveyDataRS :?RequestState
 };
 
 const HourlySurvey = (props :Props) => {
 
-  const { data, state, isSubmitting } = props;
+  const {
+    data,
+    getappUsageSurveyDataRS,
+    isSubmitting,
+    state,
+  } = props;
 
   const {
     childOnlyApps,
@@ -50,6 +58,14 @@ const HourlySurvey = (props :Props) => {
   // const childAppsOtherOptions = getChildApppsOtherOptions();
 
   const buttonText = step === 0 ? 'Begin Survey' : 'Submit';
+
+  if (isFailure(getappUsageSurveyDataRS)) {
+    return (
+      <Box textAlign="center">
+        Sorry, something went wrong. Please try refreshing the page, or contact support.
+      </Box>
+    );
+  }
 
   if (step === 0) {
     return (
