@@ -6,18 +6,18 @@ import { Map, fromJS } from 'immutable';
 
 import createStudyReducer from './createStudyReducer';
 import getOrgStudiesReducer from './getOrgStudiesReducer';
+import switchOrganizationReducer from './switchOrganizationReducer';
 
 import {
-  STUDIES,
   RS_INITIAL_STATE,
+  STUDIES,
 } from '../../../common/constants';
+import { switchOrganization } from '../../app/actions';
 import {
   CREATE_STUDY,
   GET_ORG_STUDIES,
-  // UPDATE_STUDY,
   createStudy,
   getOrgStudies,
-  // updateStudy,
 } from '../actions';
 
 const INITIAL_STATE :Map = fromJS({
@@ -38,6 +38,10 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case getOrgStudies.case(action.type): {
       return getOrgStudiesReducer(state, action);
+    }
+
+    case switchOrganization.case(action.type): {
+      return switchOrganizationReducer(state, action);
     }
 
     default: {

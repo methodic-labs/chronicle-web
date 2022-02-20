@@ -18,19 +18,21 @@ import type { RequestState } from 'redux-reqseq';
 
 import StudyCard from './components/StudyCard';
 import StudyDetailsModal from './components/StudyDetailsModal';
-import { CREATE_STUDY, GET_STUDIES } from './StudiesActions';
+import { CREATE_STUDY, GET_ORG_STUDIES } from './actions';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
+import { STUDIES } from '../../common/constants';
 import { resetRequestState } from '../../core/redux/ReduxActions';
+import { selectStudies } from '../../core/redux/selectors';
 
 const StudiesContainer = () => {
 
   const dispatch = useDispatch();
   const [createStudyModalVisible, setCreateStudyModalVisible] = useState(false);
 
-  const studies = useSelector((state) => state.getIn(['studies', 'studies']));
+  const getStudiesRS :?RequestState = useRequestState([STUDIES, GET_ORG_STUDIES]);
 
-  const getStudiesRS :?RequestState = useRequestState(['studies', GET_STUDIES]);
+  const studies = useSelector(selectStudies());
 
   const openCreateStudyModal = () => {
     // necessary after a successful or failed CREATE_STUDY action
