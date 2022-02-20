@@ -20,7 +20,7 @@ import SubmissionFailureModal from './SubmissionFailureModal';
 import { resetRequestState } from '../../../core/redux/ReduxActions';
 import { SUBMIT_SURVEY, submitSurvey } from '../SurveyActions';
 import { SURVEY_INSTRUCTION_TEXT } from '../constants';
-import { createInitialFormData, createSubmissionData, createSurveyFormSchema } from '../utils';
+import { createSubmissionData, createSurveyFormSchema } from '../utils';
 
 const { media } = StyleUtils;
 const { NEUTRAL } = Colors;
@@ -50,7 +50,6 @@ const InstructionText = styled.span`
 `;
 
 type Props = {
-  organizationId ?:UUID;
   participantId :string;
   studyId :UUID;
   submitSurveyRS :?RequestState;
@@ -58,7 +57,6 @@ type Props = {
 };
 
 const SurveyForm = ({
-  organizationId,
   participantId,
   studyId,
   submitSurveyRS,
@@ -70,7 +68,6 @@ const SurveyForm = ({
   const [errorModalVisible, setErrorModalVisible] = useState(false);
 
   const { uiSchema, schema } = createSurveyFormSchema(userAppsData);
-  const initialFormData = createInitialFormData(userAppsData);
 
   useEffect(() => {
     setErrorModalVisible(submitSurveyRS === RequestStates.FAILURE);
@@ -78,8 +75,7 @@ const SurveyForm = ({
 
   const handleOnSubmit = ({ formData } :Object) => {
     dispatch(submitSurvey({
-      submissionData: createSubmissionData(formData),
-      organizationId,
+      submissionData: createSubmissionData(formData, userAppsData),
       participantId,
       studyId,
       userAppsData
@@ -108,7 +104,6 @@ const SurveyForm = ({
                   {SURVEY_INSTRUCTION_TEXT}
                 </InstructionText>
                 <Form
-                    formData={initialFormData}
                     isSubmitting={submitSurveyRS === RequestStates.PENDING}
                     onSubmit={handleOnSubmit}
                     schema={schema}
@@ -122,10 +117,6 @@ const SurveyForm = ({
           isVisible={errorModalVisible} />
     </StyledCard>
   );
-};
-
-SurveyForm.defaultProps = {
-  organizationId: undefined
 };
 
 export default SurveyForm;

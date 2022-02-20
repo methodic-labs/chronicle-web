@@ -1,17 +1,19 @@
 // @flow
 
 const AUTHENTICATED :'authenticated' = 'authenticated';
+const BASE :'chronicle/v3' = 'chronicle/v3';
 const CHRONICLE :'chronicle' = 'chronicle';
 const CSRF_TOKEN :'csrfToken' = 'csrfToken';
 const DATA :'data' = 'data';
 const FILE_TYPE :'fileType' = 'fileType';
 const PARTICIPANT :'participant' = 'participant';
 const QUESTIONNAIRE :'questionnaire' = 'questionnaire';
-const TIME_USE_DIARY = 'time-use-diary';
-const BASE :'chronicle/v2' = 'chronicle/v2';
 const SETTINGS :'settings' = 'settings';
-const STUDY :'study' = 'study';
 const STATUS :'status' = 'status';
+const STUDY :'study' = 'study';
+const SURVEY :'survey' = 'survey';
+const TIME_USE_DIARY = 'time-use-diary';
+const APP_USAGE :'app-usage' = 'app-usage';
 
 export {
   AUTHENTICATED,
@@ -25,5 +27,7 @@ export {
   SETTINGS,
   STATUS,
   STUDY,
-  TIME_USE_DIARY
+  APP_USAGE,
+  SURVEY,
+  TIME_USE_DIARY,
 };

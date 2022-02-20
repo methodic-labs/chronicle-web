@@ -2,19 +2,20 @@
 
 import axios from 'axios';
 import { Types } from 'lattice';
+import { AuthUtils } from 'lattice-auth';
+import { DateTime } from 'luxon';
 
 import { getAuthToken } from '../../core/auth/utils';
 import {
-  getAppSettingsUrl,
+  getAppUsageDataUrl,
   getDeleteParticipantPath,
   getDeleteStudyUrl,
   getEnrollmentStatusUrl,
-  getParticipantUserAppsUrl,
   getQuestionnaireUrl,
+  getStudySettingsUrl,
   getSubmitQuestionnaireUrl,
   getSubmitTudDataUrl
 } from '../AppUtils';
-import { CHRONICLE_CORE, DATA_COLLECTION, QUESTIONNAIRES } from '../constants/AppModules';
 
 const { DeleteTypes } = Types;
 
@@ -39,14 +40,21 @@ const CAFE_ORG_ID :UUID = '7349c446-2acc-4d14-b2a9-a13be39cff93';
         }
       ]
  */
-function getParticipantAppsUsageData(date :string, participantId :string, studyId :UUID, orgId :UUID = CAFE_ORG_ID) {
+function getAppUsageSurveyData(date :string, participantId :string, studyId :UUID) {
   return new Promise<*>((resolve, reject) => {
-    const url = getParticipantUserAppsUrl(participantId, studyId, orgId);
+    const url = getAppUsageDataUrl(participantId, studyId);
     if (!url) return reject(new Error('Invalid Url'));
+
+    // expect date to match yyyy-MM-dd format
+    const startDate = DateTime.fromFormat(date, 'yyyy-MM-dd');
+    if (!startDate.isValid) return reject(Error(`Invalid date: ${date}`));
 
     return axios({
       method: 'get',
-      params: { date },
+      params: {
+        startDate: startDate.toISO(),
+        endDate: startDate.endOf('day').toISO()
+      },
       url: encodeURI(url),
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
@@ -72,12 +80,10 @@ function getParticipantAppsUsageData(date :string, participantId :string, studyI
     }
  */
 
-function updateAppsUsageAssociationData(
-  organizationId :UUID = CAFE_ORG_ID, studyId :UUID, participantId :string, requestBody :Object
-) {
+function submitAppUsageSurvey(studyId :UUID, participantId :string, requestBody :Object) {
   return new Promise<*>((resolve, reject) => {
 
-    const url = getParticipantUserAppsUrl(participantId, studyId, organizationId);
+    const url = getAppUsageDataUrl(participantId, studyId);
     if (!url) return reject(new Error('Invalid Url'));
 
     return axios({
@@ -206,19 +212,14 @@ function verifyTudLink(organizationId :UUID, studyId :UUID, participantId :strin
   });
 }
 
-function getAppSettings(organizationId :UUID, appName :string) {
+function getStudySettings(studyId :UUID) {
   return new Promise<*>((resolve, reject) => {
-    const chronicleApps = new Set([CHRONICLE_CORE, DATA_COLLECTION, QUESTIONNAIRES]);
-    if (!chronicleApps.has(appName)) {
-      return reject(new Error(`${appName} is not a valid chronicle app`));
-    }
-    const url = getAppSettingsUrl(organizationId);
+    const url = getStudySettingsUrl(studyId);
     if (!url) return reject(new Error('invalid url'));
 
     return axios({
       method: 'get',
       url,
-      params: { appName }
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
   });
@@ -227,11 +228,11 @@ function getAppSettings(organizationId :UUID, appName :string) {
 export {
   deleteStudy,
   deleteStudyParticipant,
-  getAppSettings,
-  getParticipantAppsUsageData,
+  getStudySettings,
+  getAppUsageSurveyData,
   getQuestionnaire,
   submitQuestionnaire,
   submitTudData,
-  updateAppsUsageAssociationData,
+  submitAppUsageSurvey,
   verifyTudLink,
 };
