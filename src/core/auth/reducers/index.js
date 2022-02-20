@@ -14,9 +14,7 @@ import {
 import {
   AUTH_ATTEMPT,
   AUTH_EXPIRED,
-  AUTH_FAILURE,
   AUTH_SUCCESS,
-  LOGOUT,
 } from '../actions';
 import { getAuthTokenExpiration } from '../utils';
 
@@ -38,8 +36,6 @@ export default function authReducer(state :Map<*, *> = INITIAL_STATE, action :Ob
         .set(IS_AUTHENTICATING, false);
 
     case AUTH_EXPIRED:
-    case AUTH_FAILURE:
-    case LOGOUT:
       return state
         .set(AUTH_TOKEN_EXPIRATION, AUTH_TOKEN_EXPIRED)
         .set(IS_AUTHENTICATING, false);

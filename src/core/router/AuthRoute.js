@@ -93,13 +93,16 @@ class AuthRoute extends Component<Props, State> {
 
     // TODO: AuthRoute needs unit tests
 
-    const { actions, authTokenExpiration } = this.props;
+    const { actions, authTokenExpiration, isAuthenticating } = this.props;
 
     // TODO: need to spend more time thinking about how to handle this case
     if (hasAuthTokenExpired(authTokenExpiration)) {
       // if authTokenExpiration === -1, we've already dispatched AUTH_EXPIRED or LOGOUT
       if (authTokenExpiration !== AUTH_TOKEN_EXPIRED) {
         actions.authExpired();
+      }
+      else if (!isAuthenticating) {
+        actions.authAttempt();
       }
     }
     else {
