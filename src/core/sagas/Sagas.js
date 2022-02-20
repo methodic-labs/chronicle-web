@@ -30,10 +30,6 @@ export default function* sagas() :Generator<*, *, *> {
     // AppSagas
     fork(AppSagas.initializeApplicationWatcher),
     fork(AppSagas.switchOrganizationWatcher),
-    // fork(AppSagas.getAppSettingsWatcher),
-    // fork(AppSagas.getConfigsWatcher),
-    fork(AppSagas.getStudySettingsWatcher),
-    fork(AppSagas.getConfigsWatcher),
 
     // DataSagas
     fork(DataSagas.submitDataGraphWatcher),
@@ -46,8 +42,9 @@ export default function* sagas() :Generator<*, *, *> {
     fork(RoutingSagas.goToRootWatcher),
     fork(RoutingSagas.goToRouteWatcher),
 
-    // studies sagas
+    // StudySagas
     fork(StudySagas.createStudyWatcher),
+    fork(StudySagas.getStudySettingsWatcher),
     // fork(StudiesSagas.addStudyParticipantWatcher),
     // fork(StudiesSagas.changeEnrollmentStatusWatcher),
     // fork(StudiesSagas.createStudyWatcher),

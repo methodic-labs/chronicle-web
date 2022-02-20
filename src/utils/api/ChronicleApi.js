@@ -2,7 +2,6 @@
 
 import axios from 'axios';
 import { Types } from 'lattice';
-import { AuthUtils } from 'lattice-auth';
 import { DateTime } from 'luxon';
 
 import { getAuthToken } from '../../core/auth/utils';

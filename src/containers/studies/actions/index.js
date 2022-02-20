@@ -10,6 +10,9 @@ import type { RequestSequence } from 'redux-reqseq';
 const CREATE_STUDY :'CREATE_STUDY' = 'CREATE_STUDY';
 const createStudy :RequestSequence = newRequestSequence(CREATE_STUDY);
 
+const GET_STUDY_SETTINGS :'GET_STUDY_SETTINGS' = 'GET_STUDY_SETTINGS';
+const getStudySettings :RequestSequence = newRequestSequence(GET_STUDY_SETTINGS);
+
 const GET_ORG_STUDIES :'GET_ORG_STUDIES' = 'GET_ORG_STUDIES';
 const getOrgStudies :RequestSequence = newRequestSequence(GET_ORG_STUDIES);
 
@@ -19,8 +22,10 @@ const updateStudy :RequestSequence = newRequestSequence(UPDATE_STUDY);
 export {
   CREATE_STUDY,
   GET_ORG_STUDIES,
+  GET_STUDY_SETTINGS,
   UPDATE_STUDY,
   createStudy,
   getOrgStudies,
+  getStudySettings,
   updateStudy,
 };
