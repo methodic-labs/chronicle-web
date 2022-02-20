@@ -13,7 +13,7 @@ import * as EDMSagas from '../edm/EDMSagas';
 import * as PermissionsSagas from '../permissions/PermissionsSagas';
 import * as QuestionnaireSagas from '../../containers/questionnaire/QuestionnaireSagas';
 import * as RoutingSagas from '../router/RoutingSagas';
-import * as StudiesSagas from '../../containers/studies/StudiesSagas';
+import * as StudySagas from '../../containers/studies/sagas';
 import * as SurveySagas from '../../containers/survey/SurveySagas';
 import * as TimeUseDiarySagas from '../../containers/tud/TimeUseDiarySagas';
 
@@ -45,14 +45,15 @@ export default function* sagas() :Generator<*, *, *> {
     fork(RoutingSagas.goToRouteWatcher),
 
     // studies sagas
-    fork(StudiesSagas.addStudyParticipantWatcher),
-    fork(StudiesSagas.changeEnrollmentStatusWatcher),
-    fork(StudiesSagas.createStudyWatcher),
-    fork(StudiesSagas.deleteStudyWatcher),
-    fork(StudiesSagas.deleteStudyParticipantWatcher),
-    fork(StudiesSagas.getStudiesWatcher),
-    fork(StudiesSagas.getStudyParticipantsWatcher),
-    fork(StudiesSagas.updateStudyWatcher),
+    fork(StudySagas.createStudyWatcher),
+    // fork(StudiesSagas.addStudyParticipantWatcher),
+    // fork(StudiesSagas.changeEnrollmentStatusWatcher),
+    // fork(StudiesSagas.createStudyWatcher),
+    // fork(StudiesSagas.deleteStudyWatcher),
+    // fork(StudiesSagas.deleteStudyParticipantWatcher),
+    // fork(StudiesSagas.getStudiesWatcher),
+    // fork(StudiesSagas.getStudyParticipantsWatcher),
+    // fork(StudiesSagas.updateStudyWatcher),
 
     // apps usage survey
     fork(SurveySagas.getChronicleUserAppsWatcher),

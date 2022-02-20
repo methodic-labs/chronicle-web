@@ -12,7 +12,7 @@ import type { UUID, UserInfo } from '../types';
 
 const { isNonEmptyObject } = LangUtils;
 
-export default function getOrganizationId() :?UUID {
+export default function getOrgIdFromStorage() :?UUID {
 
   const user :?UserInfo = getUserInfo();
   if (!user) {

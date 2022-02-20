@@ -5,7 +5,6 @@
 import { Component } from 'react';
 
 import styled from 'styled-components';
-import { Map } from 'immutable';
 import {
   Card,
   CardSegment,
@@ -16,17 +15,14 @@ import { bindActionCreators } from 'redux';
 import type { RequestSequence } from 'redux-reqseq';
 
 import * as Routes from '../../../core/router/Routes';
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { goToRoute } from '../../../core/router/RoutingActions';
-
-const { STUDY_DESCRIPTION, FULL_NAME_FQN, STUDY_ID } = PROPERTY_TYPE_FQNS;
 
 const StyledCard = styled(Card)`
   height: 100%;
 `;
 
 type Props = {
-  study :Map<*, *>;
+  study :Object;
   actions:{
     goToRoute :RequestSequence
   };
@@ -45,13 +41,13 @@ class StudyCard extends Component<Props> {
   render() {
     const { study } = this.props;
     return (
-      <StyledCard onClick={this.handleCardClick} data-study-id={study.getIn([STUDY_ID, 0])}>
+      <StyledCard onClick={this.handleCardClick} data-study-id={study.id}>
         <CardSegment vertical>
           <Typography variant="h4" gutterBottom>
-            {study.getIn([FULL_NAME_FQN, 0])}
+            {study.title}
           </Typography>
           <Typography>
-            {study.getIn([STUDY_DESCRIPTION, 0])}
+            {study.description}
           </Typography>
         </CardSegment>
       </StyledCard>

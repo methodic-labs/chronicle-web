@@ -2,7 +2,7 @@
  * @flow
  */
 
-import getOrganizationId from './getOrganizationId';
+import getOrgIdFromStorage from './getOrgIdFromStorage';
 import { genRandomString } from './testing';
 
 import { AUTH0_USER_INFO, ORGANIZATION_ID_MAP } from '../constants';
@@ -18,29 +18,29 @@ const MOCK_ORG_ID_MAP = JSON.stringify({
   [MOCK_USER_ID]: MOCK_ORG_ID
 });
 
-describe('getOrganizationId()', () => {
+describe('getOrgIdFromStorage()', () => {
 
   beforeEach(() => {
     localStorage.clear();
   });
 
   test('should throw if there is no user info in localStorage', () => {
-    expect(() => getOrganizationId()).toThrow();
+    expect(() => getOrgIdFromStorage()).toThrow();
   });
 
   test('should return null if there is no organization id stored for the current user', () => {
     localStorage.setItem(AUTH0_USER_INFO, JSON.stringify({ id: genRandomString() }));
-    expect(getOrganizationId()).toBeNull();
+    expect(getOrgIdFromStorage()).toBeNull();
   });
 
   test('should return null if localStorage parameter has not been set', () => {
     localStorage.setItem(AUTH0_USER_INFO, MOCK_USER_INFO);
-    expect(getOrganizationId()).toBeNull();
+    expect(getOrgIdFromStorage()).toBeNull();
   });
 
   test('should correctly return stored organization id for user', () => {
     localStorage.setItem(AUTH0_USER_INFO, MOCK_USER_INFO);
     localStorage.setItem(ORGANIZATION_ID_MAP, MOCK_ORG_ID_MAP);
-    expect(getOrganizationId()).toEqual(MOCK_ORG_ID);
+    expect(getOrgIdFromStorage()).toEqual(MOCK_ORG_ID);
   });
 });

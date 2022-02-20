@@ -16,11 +16,8 @@ export default function reducer(state :Map, action :SequenceAction) {
       .setIn([GET_ORGANIZATIONS, action.id], action),
     SUCCESS: () => {
       if (state.hasIn([GET_ORGANIZATIONS, action.id])) {
-        const organizations = Map().withMutations((mutableMap) => {
-          action.value.forEach((org) => mutableMap.set(org.id, org));
-        });
         return state
-          .setIn([ORGANIZATIONS], organizations)
+          .setIn([ORGANIZATIONS], action.value)
           .setIn([GET_ORGANIZATIONS, REQUEST_STATE], RequestStates.SUCCESS);
       }
       return state;

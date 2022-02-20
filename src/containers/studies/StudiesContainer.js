@@ -4,15 +4,12 @@
 
 import { useState } from 'react';
 
-import { Constants } from 'lattice';
 import {
-  // $FlowFixMe
   Box,
   Button,
-  // $FlowFixMe
   Grid,
   Spinner,
-  Typography
+  Typography,
 } from 'lattice-ui-kit';
 import { useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,8 +22,6 @@ import { CREATE_STUDY, GET_STUDIES } from './StudiesActions';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
 import { resetRequestState } from '../../core/redux/ReduxActions';
-
-const { OPENLATTICE_ID_FQN } = Constants;
 
 const StudiesContainer = () => {
 
@@ -80,7 +75,7 @@ const StudiesContainer = () => {
             <Grid container spacing={3}>
               {
                 studies.valueSeq().map((study) => (
-                  <Grid item xs={12} sm={6} key={study.getIn([OPENLATTICE_ID_FQN, 0])}>
+                  <Grid item xs={12} sm={6} key={study.id}>
                     <StudyCard study={study} />
                   </Grid>
                 ))
