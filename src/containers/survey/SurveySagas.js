@@ -10,29 +10,22 @@ import {
   List,
   Map,
   fromJS,
-  getIn
 } from 'immutable';
-import { Constants } from 'lattice';
 import { Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
-  GET_CHRONICLE_APPS_DATA,
+  GET_APP_USAGE_SURVEY_DATA,
   SUBMIT_SURVEY,
-  getChronicleAppsData,
+  getAppUsageSurveyData,
   submitSurvey,
 } from './SurveyActions';
-import { getAppNameFromUserAppsEntity, getMinimumDate } from './utils';
 
 import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
 import * as ChronicleApi from '../../utils/api/ChronicleApi';
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 
-const { OPENLATTICE_ID_FQN } = Constants;
 const LOG = new Logger('SurveySagas');
-
-const { DATE_TIME_FQN, TITLE_FQN, FULL_NAME_FQN } = PROPERTY_TYPE_FQNS;
 
 /*
  *
@@ -45,14 +38,13 @@ function* submitSurveyWorker(action :SequenceAction) :Generator<*, *, *> {
 
     const { value } = action;
     const {
-      submissionData,
-      organizationId,
       participantId,
       studyId,
+      submissionData,
     } = value;
 
     const response = yield call(
-      ChronicleApi.updateAppsUsageAssociationData, organizationId, studyId, participantId, submissionData
+      ChronicleApi.submitAppUsageSurvey, studyId, participantId, submissionData
     );
     if (response.error) throw response.error;
 
@@ -76,86 +68,107 @@ function* submitSurveyWatcher() :Generator<*, *, *> {
  * SurveyActions.getChronicleApps()
  *
  */
-function* getChronicleUserAppsWorker(action :SequenceAction) :Generator<*, *, *> {
+function* getAppUsageSurveyDataWorker(action :SequenceAction) :Generator<*, *, *> {
   try {
-    yield put(getChronicleAppsData.request(action.id));
+    yield put(getAppUsageSurveyData.request(action.id));
 
     const { value } = action;
     const {
       date,
       participantId,
       studyId,
-      organizationId,
       appUsageFreqType
     } = value;
 
-    const response = yield call(ChronicleApi.getParticipantAppsUsageData, date, participantId, studyId, organizationId);
+    const response = yield call(
+      ChronicleApi.getAppUsageSurveyData, date, participantId, studyId
+    );
     if (response.error) throw response.error;
 
-    /*
+    const convertTo12hourFormat = (dateStr :string) => {
+      const tokens = dateStr.split(' ');
+      return `${tokens[0].split(':')[0]}${tokens[1].toLowerCase()}`;
+    };
+
+    // returns 9am - 10am
+    const getTimeRange = (dateTime :DateTime) => {
+      const start = dateTime.startOf('hour').toLocaleString(DateTime.TIME_SIMPLE);
+      const end = dateTime.plus({ hours: 1 }).startOf('hour').toLocaleString(DateTime.TIME_SIMPLE);
+
+      return `${convertTo12hourFormat(start)} - ${convertTo12hourFormat(end)}`;
+    };
+
+    /**
     {
-     fullname: {
-      [title_fqn]: blah blah,
-      entities: [{
-        [association ekid]: {
-          [date_time_fqn]: 'blah blah'
+      com.facebook.katana: {
+        appLabel: 'Facebook',
+        data: {
+          '10am - 11am': [
+              {
+                timestamp: 2021-11-16T10:15:37.668+00:00,
+                timezone: ''
+              },
+              {
+                timestamp: 2021-11-16T10:15:37.668+00:00,
+                timezone: ''
+              }
+            ]
+          }
         }
-      }]
-    }
+      }
     }
     */
 
-    let appsData;
+    let data;
+
     if (appUsageFreqType === AppUsageFreqTypes.HOURLY) {
-      appsData = Map().withMutations((mutator :Map) => {
-        response.data.forEach((entry) => {
-          const { entityDetails, associationDetails } = entry;
-          const fullName = getIn(entityDetails, [FULL_NAME_FQN, 0]);
-          const title = getIn(entityDetails, [TITLE_FQN, 0]);
-          const associationEKID = getIn(associationDetails, [OPENLATTICE_ID_FQN, 0]);
-          const dateTime = getIn(associationDetails, [DATE_TIME_FQN, 0]);
+      data = Map().withMutations((mutator) => {
+        fromJS(response.data).forEach((usage) => {
+          const appPackageName = usage.get('appPackageName');
+          const appLabel = usage.get('appLabel');
+          mutator.setIn([appPackageName, 'appLabel'], appLabel);
 
-          const entity = {
-            [associationEKID]: {
-              [DATE_TIME_FQN.toString()]: dateTime
-            }
-          };
-
-          mutator
-            .setIn([fullName, TITLE_FQN], title)
-            .updateIn([fullName, 'entities'], List(), (current) => current.push(fromJS(entity)));
+          const timestamp = usage.get('timestamp');
+          const timezone = usage.get('timezone');
+          const dateTime = DateTime.fromISO(timestamp, { zone: timezone });
+          const timeRange = getTimeRange(dateTime);
+          mutator.updateIn([appPackageName, 'data', timeRange], List(), (list) => list.push(usage));
         });
       });
     }
     else {
       // mapping from association EKID -> associationDetails & entityDetails
-      appsData = fromJS(response.data)
-        .toMap()
-        .mapKeys((index, entity) => entity.getIn(['associationDetails', OPENLATTICE_ID_FQN, 0]))
-        .map((entity, id) => entity.set('id', id))
-        .map((entity) => entity.setIn(['entityDetails', TITLE_FQN, 0], getAppNameFromUserAppsEntity(entity)))
-        .map((entity) => entity.setIn(['associationDetails', DATE_TIME_FQN],
-          [getMinimumDate(entity.getIn(['associationDetails', DATE_TIME_FQN]))]))
-        .sortBy((entity) => DateTime.fromISO(entity.getIn(['associationDetails', DATE_TIME_FQN, 0])));
+      /**
+        {
+          com.facebook.katana: [
+            {
+              appPackageName: 'com.facebook.katana',
+              appLabel: 'Facebook',
+              timezone: '',
+            }
+          ]
+        }
+      */
+      data = fromJS(response.data).groupBy((entity) => entity.get('appPackageName'));
     }
 
-    yield put(getChronicleAppsData.success(action.id, appsData));
+    yield put(getAppUsageSurveyData.success(action.id, data));
   }
 
   catch (error) {
     LOG.error(action.type, error);
-    yield put(getChronicleAppsData.failure(action.id));
+    yield put(getAppUsageSurveyData.failure(action.id));
   }
   finally {
-    yield put(getChronicleAppsData.finally(action.id));
+    yield put(getAppUsageSurveyData.finally(action.id));
   }
 }
 
-function* getChronicleUserAppsWatcher() :Generator<*, *, *> {
-  yield takeLatest(GET_CHRONICLE_APPS_DATA, getChronicleUserAppsWorker);
+function* getAppUsageSurveyDataWatcher() :Generator<*, *, *> {
+  yield takeLatest(GET_APP_USAGE_SURVEY_DATA, getAppUsageSurveyDataWorker);
 }
 
 export {
-  getChronicleUserAppsWatcher,
+  getAppUsageSurveyDataWatcher,
   submitSurveyWatcher
 };

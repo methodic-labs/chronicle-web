@@ -11,14 +11,18 @@ import ENV_URLS from './constants/EnvUrls';
 import EnvTypes from './constants/EnvTypes';
 import ParticipantDataTypes from './constants/ParticipantDataTypes';
 import {
+  APP_USAGE as AppUsagePath,
   AUTHENTICATED,
   BASE,
   CSRF_TOKEN,
   DATA,
   FILE_TYPE,
+  PARTICIPANT,
   QUESTIONNAIRE,
   SETTINGS,
   STATUS,
+  STUDY,
+  SURVEY,
   TIME_USE_DIARY,
 } from './constants/UrlConstants';
 import type { ParticipantDataType } from './constants/ParticipantDataTypes';
@@ -86,16 +90,11 @@ const getParticipantDataUrl = (
   + `&${CSRF_TOKEN}=${csrfToken}`;
 
 };
-
-const getParticipantUserAppsUrl = (participantId :string, studyId :UUID, orgId :UUID) => {
+// SURVEY + STUDY_ID_PATH + PARTICIPANT_PATH + PARTICIPANT_ID_PATH + APP_USAGE_PATH
+const getAppUsageDataUrl = (participantId :string, studyId :UUID) => {
 
   if (!isValidUUID(studyId)) {
     LOG.error('studyId must be a valiud UUID', studyId);
-    return null;
-  }
-
-  if (!isValidUUID(orgId)) {
-    LOG.error('orgId must be a valiud UUID', orgId);
     return null;
   }
 
@@ -106,7 +105,7 @@ const getParticipantUserAppsUrl = (participantId :string, studyId :UUID, orgId :
 
   const baseUrl = getBaseUrl();
 
-  return `${baseUrl}/${BASE}/${orgId}/${studyId}/${participantId}/apps`;
+  return `${baseUrl}/${BASE}/${SURVEY}/${studyId}/${PARTICIPANT}/${participantId}/${AppUsagePath}`;
 };
 
 const getDeleteParticipantPath = (orgId :UUID, participantId :string, studyId :UUID) => {
@@ -247,23 +246,23 @@ const getEnrollmentStatusUrl = (organizationId :UUID, studyId :UUID, participant
   return `${getBaseUrl()}/${BASE}/${organizationId}/${studyId}/${participantId}/${STATUS}`;
 };
 
-const getAppSettingsUrl = (organizationId :UUID) => {
-  if (!isValidUUID(organizationId)) {
-    LOG.error('invalid orgId: ', organizationId);
+const getStudySettingsUrl = (studyId :UUID) => {
+  if (!isValidUUID(studyId)) {
+    LOG.error('invalid orgId: ', studyId);
     return null;
   }
 
-  return `${getBaseUrl()}/${BASE}/${organizationId}/${SETTINGS}`;
+  return `${getBaseUrl()}/${BASE}/${STUDY}/${studyId}/${SETTINGS}`;
 };
 
 export {
-  getAppSettingsUrl,
+  getStudySettingsUrl,
   getBaseUrl,
   getDeleteParticipantPath,
   getDeleteStudyUrl,
   getEnrollmentStatusUrl,
   getParticipantDataUrl,
-  getParticipantUserAppsUrl,
+  getAppUsageDataUrl,
   getQuestionnaireUrl,
   getSubmitQuestionnaireUrl,
   getSubmitTudDataUrl,

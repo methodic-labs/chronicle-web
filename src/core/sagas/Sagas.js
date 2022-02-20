@@ -32,6 +32,8 @@ export default function* sagas() :Generator<*, *, *> {
     fork(AppSagas.switchOrganizationWatcher),
     // fork(AppSagas.getAppSettingsWatcher),
     // fork(AppSagas.getConfigsWatcher),
+    fork(AppSagas.getStudySettingsWatcher),
+    fork(AppSagas.getConfigsWatcher),
 
     // DataSagas
     fork(DataSagas.submitDataGraphWatcher),
@@ -56,7 +58,7 @@ export default function* sagas() :Generator<*, *, *> {
     // fork(StudiesSagas.updateStudyWatcher),
 
     // apps usage survey
-    fork(SurveySagas.getChronicleUserAppsWatcher),
+    fork(SurveySagas.getAppUsageSurveyDataWatcher),
     fork(SurveySagas.submitSurveyWatcher),
 
     // questionnaire

@@ -2,19 +2,14 @@
 
 import { useContext } from 'react';
 
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 import {
   Checkbox,
   ChoiceGroup,
-  // $FlowFixMe
   Grid,
 } from 'lattice-ui-kit';
 
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
-
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
-
-const { TITLE_FQN } = PROPERTY_TYPE_FQNS;
 
 type Props = {
   appsData :Map;
@@ -42,7 +37,7 @@ const SelectAppsByUser = (props :Props) => {
                   onChange={() => handleOnChange(key)}
                   id={key}
                   mode="button"
-                  label={entries.get(TITLE_FQN)} />
+                  label={entries.get('appLabel')} />
             </ChoiceGroup>
           </Grid>
         ))
