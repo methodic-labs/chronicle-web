@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { call, put, take } from '@redux-saga/core/effects';
+import { put, take } from '@redux-saga/core/effects';
 import { push } from 'connected-react-router';
 import type { Saga } from '@redux-saga/core';
 
@@ -14,7 +14,7 @@ export default function* logoutWatcher() :Saga<void> {
 
   while (true) {
     yield take(LOGOUT);
-    yield call(clearAuthInfo);
+    clearAuthInfo();
     yield put(push(ROOT));
   }
 }

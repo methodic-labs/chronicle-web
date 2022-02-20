@@ -99,7 +99,6 @@ class AuthRoute extends Component<Props, State> {
     if (hasAuthTokenExpired(authTokenExpiration)) {
       // if authTokenExpiration === -1, we've already dispatched AUTH_EXPIRED or LOGOUT
       if (authTokenExpiration !== AUTH_TOKEN_EXPIRED) {
-        debugger;
         actions.authExpired();
       }
     }

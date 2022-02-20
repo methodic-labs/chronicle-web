@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import type { Saga } from '@redux-saga/core';
 
 import * as Auth0 from '../Auth0';
-import { syncUser } from '../../api/user';
+import { syncUser } from '../../api/principal';
 import { configure, getConfig } from '../../config/Configuration';
 import { AUTH_ATTEMPT, authFailure, authSuccess } from '../actions';
 import {
