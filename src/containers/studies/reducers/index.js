@@ -14,6 +14,8 @@ import {
   SETTINGS,
   STUDIES,
 } from '../../../common/constants';
+import { RESET_REQUEST_STATES } from '../../../core/redux/actions';
+import { resetRequestStatesReducer } from '../../../core/redux/reducers';
 import { switchOrganization } from '../../app/actions';
 import {
   CREATE_STUDY,
@@ -37,6 +39,10 @@ const INITIAL_STATE :Map = fromJS({
 export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
   switch (action.type) {
+
+    case RESET_REQUEST_STATES: {
+      return resetRequestStatesReducer(state, action);
+    }
 
     case createStudy.case(action.type): {
       return createStudyReducer(state, action);

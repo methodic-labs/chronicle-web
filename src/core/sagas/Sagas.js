@@ -14,7 +14,7 @@ import * as PermissionsSagas from '../permissions/PermissionsSagas';
 import * as QuestionnaireSagas from '../../containers/questionnaire/QuestionnaireSagas';
 import * as RoutingSagas from '../router/RoutingSagas';
 import * as StudySagas from '../../containers/studies/sagas';
-import * as SurveySagas from '../../containers/survey/SurveySagas';
+import * as SurveySagas from '../../containers/survey/sagas';
 import * as TimeUseDiarySagas from '../../containers/tud/TimeUseDiarySagas';
 
 export default function* sagas() :Generator<*, *, *> {
@@ -56,7 +56,7 @@ export default function* sagas() :Generator<*, *, *> {
 
     // apps usage survey
     fork(SurveySagas.getAppUsageSurveyDataWatcher),
-    fork(SurveySagas.submitSurveyWatcher),
+    fork(SurveySagas.submitAppUsageSurveyWatcher),
 
     // questionnaire
     fork(QuestionnaireSagas.changeActiveStatusWatcher),

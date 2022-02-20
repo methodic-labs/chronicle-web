@@ -22,7 +22,7 @@ import { CREATE_STUDY, GET_ORG_STUDIES } from './actions';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
 import { STUDIES } from '../../common/constants';
-import { resetRequestState } from '../../core/redux/ReduxActions';
+import { resetRequestStates } from '../../core/redux/actions';
 import { selectStudies } from '../../core/redux/selectors';
 
 const StudiesContainer = () => {
@@ -36,7 +36,7 @@ const StudiesContainer = () => {
 
   const openCreateStudyModal = () => {
     // necessary after a successful or failed CREATE_STUDY action
-    dispatch(resetRequestState(CREATE_STUDY));
+    dispatch(resetRequestStates([CREATE_STUDY]));
     setCreateStudyModalVisible(true);
   };
 

@@ -25,7 +25,7 @@ type Props = {
   data :Map;
   date :string;
   submitSurveyRS :?RequestState;
-  getappUsageSurveyDataRS :?RequestState;
+  getAppUsageSurveyDataRS :?RequestState;
   participantId :string;
   studyId :UUID ;
 }
@@ -36,11 +36,11 @@ const SurveyContainer = (props :Props) => {
     date,
     studyId,
     participantId,
-    getappUsageSurveyDataRS,
+    getAppUsageSurveyDataRS,
     submitSurveyRS,
   } = props;
 
-  if (isPending(getappUsageSurveyDataRS)) {
+  if (isPending(getAppUsageSurveyDataRS)) {
     return (
       <Box mt="60px" textAlign="center">
         <Spinner size="2x" />
@@ -53,10 +53,10 @@ const SurveyContainer = (props :Props) => {
       <AppHeaderWrapper appIcon={OpenLatticeIconSVG} appTitle="Chronicle" />
       <AppContentWrapper>
         {
-          getappUsageSurveyDataRS === RequestStates.FAILURE && <BasicErrorComponent />
+          getAppUsageSurveyDataRS === RequestStates.FAILURE && <BasicErrorComponent />
         }
         {
-          getappUsageSurveyDataRS === RequestStates.SUCCESS && (
+          getAppUsageSurveyDataRS === RequestStates.SUCCESS && (
             <>
               {
                 submitSurveyRS === RequestStates.SUCCESS
