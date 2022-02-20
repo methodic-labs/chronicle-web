@@ -17,7 +17,6 @@ import {
   PRINCIPAL_API,
   STUDY,
   STUDY_API,
-  SYNC,
   V3,
 } from '../../../common/constants';
 import { getConfig } from '../../config/Configuration';
