@@ -5,7 +5,6 @@
 import merge from 'lodash/merge';
 import set from 'lodash/set';
 import update from 'lodash/update';
-import { AuthUtils } from 'lattice-auth';
 import { LangUtils, Logger, ValidationUtils } from 'lattice-utils';
 
 import ENV_URLS from './constants/EnvUrls';
@@ -27,6 +26,8 @@ import {
   TIME_USE_DIARY,
 } from './constants/UrlConstants';
 import type { ParticipantDataType } from './constants/ParticipantDataTypes';
+
+import { getCSRFToken } from '../core/auth/utils';
 
 const LOG = new Logger('AppUtils');
 
@@ -68,7 +69,7 @@ const getParticipantDataUrl = (
   }
 
   const baseUrl = getBaseUrl();
-  const csrfToken = AuthUtils.getCSRFToken() ?? '';
+  const csrfToken = getCSRFToken() ?? '';
   let dataTypePath;
 
   switch (dataType) {

@@ -3,11 +3,11 @@
  */
 
 import { all, fork } from '@redux-saga/core/effects';
-import { AuthSagas } from 'lattice-auth';
 
 import * as DataSagas from './data/DataSagas';
 
-import * as AppSagas from '../../containers/app/AppSagas';
+import * as AppSagas from '../../containers/app/sagas';
+import * as AuthSagas from '../auth/sagas';
 import * as DashboardSagas from '../../containers/dashboard/sagas';
 import * as EDMSagas from '../edm/EDMSagas';
 import * as PermissionsSagas from '../permissions/PermissionsSagas';
@@ -20,18 +20,20 @@ import * as TimeUseDiarySagas from '../../containers/tud/TimeUseDiarySagas';
 export default function* sagas() :Generator<*, *, *> {
 
   yield all([
-    // "lattice-auth" sagas
-    fork(AuthSagas.watchAuthAttempt),
-    fork(AuthSagas.watchAuthExpired),
-    fork(AuthSagas.watchAuthFailure),
-    fork(AuthSagas.watchAuthSuccess),
-    fork(AuthSagas.watchLogout),
+    // AuthSagas
+    fork(AuthSagas.authAttemptWatcher),
+    fork(AuthSagas.authExpiredWatcher),
+    fork(AuthSagas.authFailureWatcher),
+    fork(AuthSagas.authSuccessWatcher),
+    fork(AuthSagas.logoutWatcher),
 
     // AppSagas
-    fork(AppSagas.getStudySettingsWatcher),
-    fork(AppSagas.getConfigsWatcher),
     fork(AppSagas.initializeApplicationWatcher),
     fork(AppSagas.switchOrganizationWatcher),
+    // fork(AppSagas.getAppSettingsWatcher),
+    // fork(AppSagas.getConfigsWatcher),
+    fork(AppSagas.getStudySettingsWatcher),
+    fork(AppSagas.getConfigsWatcher),
 
     // DataSagas
     fork(DataSagas.submitDataGraphWatcher),

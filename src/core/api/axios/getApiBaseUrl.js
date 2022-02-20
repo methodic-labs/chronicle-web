@@ -9,11 +9,15 @@ import {
   CANDIDATE,
   CANDIDATE_API,
   CHRONICLE,
+  DATASTORE,
   ERR_INVALID_API,
   ORGANIZATION,
   ORGANIZATION_API,
+  PRINCIPAL,
+  PRINCIPAL_API,
   STUDY,
   STUDY_API,
+  SYNC,
   V3,
 } from '../../../common/constants';
 import { getConfig } from '../../config/Configuration';
@@ -24,6 +28,7 @@ const { isNonEmptyString } = LangUtils;
 const API_TO_PATH_MAP :Map<string, string> = OrderedMap({
   [CANDIDATE_API]   : `${CHRONICLE}/${V3}/${CANDIDATE}`,
   [ORGANIZATION_API]: `${CHRONICLE}/${V3}/${ORGANIZATION}`,
+  [PRINCIPAL_API]   : `${DATASTORE}/${PRINCIPAL}`,
   [STUDY_API]       : `${CHRONICLE}/${V3}/${STUDY}`,
 });
 /* eslint-enable */

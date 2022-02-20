@@ -5,6 +5,7 @@ import { Types } from 'lattice';
 import { AuthUtils } from 'lattice-auth';
 import { DateTime } from 'luxon';
 
+import { getAuthToken } from '../../core/auth/utils';
 import {
   getAppUsageDataUrl,
   getDeleteParticipantPath,
@@ -101,7 +102,7 @@ function deleteStudyParticipant(orgId :UUID = CAFE_ORG_ID, participantId :string
     const url = getDeleteParticipantPath(orgId, participantId, studyId);
     if (!url) return reject(new Error('Invalid Url'));
 
-    const authToken = AuthUtils.getAuthToken() ?? '';
+    const authToken = getAuthToken() ?? '';
 
     return axios({
       method: 'delete',
@@ -185,7 +186,7 @@ function deleteStudy(orgId :UUID, studyId :UUID) {
     const url = getDeleteStudyUrl(orgId, studyId);
     if (!url) return reject(new Error('Invalid url'));
 
-    const authToken = AuthUtils.getAuthToken() || '';
+    const authToken = getAuthToken() || '';
 
     return axios({
       headers: { Authorization: `Bearer ${authToken}` },
