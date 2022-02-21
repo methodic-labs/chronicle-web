@@ -112,9 +112,9 @@ describe('Auth0', () => {
             sso: false,
             state: '',
           },
-          clientBaseUrl: 'https://cdn.auth0.com',
+          clientBaseUrl: 'https://cdn.us.auth0.com',
           closable: false,
-          configurationBaseUrl: 'https://cdn.auth0.com',
+          configurationBaseUrl: 'https://cdn.us.auth0.com',
           hashCleanup: false,
           languageDictionary: {
             title: 'Title',
