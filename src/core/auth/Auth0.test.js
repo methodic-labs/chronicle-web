@@ -104,9 +104,6 @@ describe('Auth0', () => {
           allowSignUp: true,
           auth: {
             autoParseHash: false,
-            params: {
-              scope: 'openid email user_id user_metadata app_metadata nickname roles',
-            },
             redirectUrl: '',
             responseType: 'token',
             sso: false,
