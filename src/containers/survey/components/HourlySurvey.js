@@ -16,14 +16,14 @@ type Props = {
   data :Map;
   isSubmitting :boolean;
   state :Object;
-  getappUsageSurveyDataRS :?RequestState
+  getAppUsageSurveyDataRS :?RequestState
 };
 
 const HourlySurvey = (props :Props) => {
 
   const {
     data,
-    getappUsageSurveyDataRS,
+    getAppUsageSurveyDataRS,
     isSubmitting,
     state,
   } = props;
@@ -59,7 +59,7 @@ const HourlySurvey = (props :Props) => {
 
   const buttonText = step === 0 ? 'Begin Survey' : 'Submit';
 
-  if (isFailure(getappUsageSurveyDataRS)) {
+  if (isFailure(getAppUsageSurveyDataRS)) {
     return (
       <Box textAlign="center">
         Sorry, something went wrong. Please try refreshing the page, or contact support.

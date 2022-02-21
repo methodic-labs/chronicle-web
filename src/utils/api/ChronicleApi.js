@@ -2,7 +2,6 @@
 
 import axios from 'axios';
 import { Types } from 'lattice';
-import { AuthUtils } from 'lattice-auth';
 import { DateTime } from 'luxon';
 
 import { getAuthToken } from '../../core/auth/utils';
@@ -10,11 +9,11 @@ import {
   getAppUsageDataUrl,
   getDeleteParticipantPath,
   getDeleteStudyUrl,
-  getEnrollmentStatusUrl,
   getQuestionnaireUrl,
   getStudySettingsUrl,
   getSubmitQuestionnaireUrl,
-  getSubmitTudDataUrl
+  getSubmitTudDataUrl,
+  getVerifyParticipantIdUrl
 } from '../AppUtils';
 
 const { DeleteTypes } = Types;
@@ -198,15 +197,15 @@ function deleteStudy(orgId :UUID, studyId :UUID) {
   });
 }
 
-function verifyTudLink(organizationId :UUID, studyId :UUID, participantId :string) {
+function verifyTudLink(studyId :UUID, participantId :string) {
   return new Promise<*>((resolve, reject) => {
-    const url = getEnrollmentStatusUrl(organizationId, studyId, participantId);
+    const url = getVerifyParticipantIdUrl(studyId, participantId);
 
     if (!url) return reject(new Error('Invalid url'));
 
     return axios({
       method: 'get',
-      url: encodeURI(url)
+      url
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
   });

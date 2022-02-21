@@ -8,7 +8,14 @@ import {
   REQUEST_STATE,
 } from './strings';
 
+import type { AppUsageFreqType } from '../types';
+
 export const RS_INITIAL_STATE = {
   [ERROR]: false,
   [REQUEST_STATE]: RequestStates.STANDBY,
 };
+
+export const AppUsageFreqTypes :{| ...AppUsageFreqType |} = Object.freeze({
+  HOURLY: 'HOURLY',
+  DAILY: 'DAILY'
+});

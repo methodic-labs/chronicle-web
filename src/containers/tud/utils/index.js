@@ -376,12 +376,12 @@ const createSubmitRequestBody = (
         .map(([key, value]) => {
           const stringVal = stringifyValue(value);
           const entity = {
-            [VALUES_FQN.toString()]: translateToEnglish(key, stringVal, language, englishTranslationLookup),
-            [ID_FQN.toString()]: [key],
-            [TITLE_FQN.toString()]: [get(QUESTION_TITLE_LOOKUP, key, key)],
+            response: translateToEnglish(key, stringVal, language, englishTranslationLookup),
+            code: key,
+            question: get(QUESTION_TITLE_LOOKUP, key, key),
             ...(startTime && endTime) && {
-              [DATETIME_START_FQN.toString()]: [startTime],
-              [DATETIME_END_FQN.toString()]: [endTime]
+              startDateTime: startTime,
+              endDateTime: endTime
             }
           };
           return entity;

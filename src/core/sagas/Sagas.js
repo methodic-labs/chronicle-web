@@ -13,8 +13,8 @@ import * as EDMSagas from '../edm/EDMSagas';
 import * as PermissionsSagas from '../permissions/PermissionsSagas';
 import * as QuestionnaireSagas from '../../containers/questionnaire/QuestionnaireSagas';
 import * as RoutingSagas from '../router/RoutingSagas';
-import * as StudiesSagas from '../../containers/studies/StudiesSagas';
-import * as SurveySagas from '../../containers/survey/SurveySagas';
+import * as StudySagas from '../../containers/studies/sagas';
+import * as SurveySagas from '../../containers/survey/sagas';
 import * as TimeUseDiarySagas from '../../containers/tud/TimeUseDiarySagas';
 
 export default function* sagas() :Generator<*, *, *> {
@@ -30,10 +30,6 @@ export default function* sagas() :Generator<*, *, *> {
     // AppSagas
     fork(AppSagas.initializeApplicationWatcher),
     fork(AppSagas.switchOrganizationWatcher),
-    // fork(AppSagas.getAppSettingsWatcher),
-    // fork(AppSagas.getConfigsWatcher),
-    fork(AppSagas.getStudySettingsWatcher),
-    fork(AppSagas.getConfigsWatcher),
 
     // DataSagas
     fork(DataSagas.submitDataGraphWatcher),
@@ -46,19 +42,21 @@ export default function* sagas() :Generator<*, *, *> {
     fork(RoutingSagas.goToRootWatcher),
     fork(RoutingSagas.goToRouteWatcher),
 
-    // studies sagas
-    fork(StudiesSagas.addStudyParticipantWatcher),
-    fork(StudiesSagas.changeEnrollmentStatusWatcher),
-    fork(StudiesSagas.createStudyWatcher),
-    fork(StudiesSagas.deleteStudyWatcher),
-    fork(StudiesSagas.deleteStudyParticipantWatcher),
-    fork(StudiesSagas.getStudiesWatcher),
-    fork(StudiesSagas.getStudyParticipantsWatcher),
-    fork(StudiesSagas.updateStudyWatcher),
+    // StudySagas
+    fork(StudySagas.createStudyWatcher),
+    fork(StudySagas.getStudySettingsWatcher),
+    // fork(StudiesSagas.addStudyParticipantWatcher),
+    // fork(StudiesSagas.changeEnrollmentStatusWatcher),
+    // fork(StudiesSagas.createStudyWatcher),
+    // fork(StudiesSagas.deleteStudyWatcher),
+    // fork(StudiesSagas.deleteStudyParticipantWatcher),
+    // fork(StudiesSagas.getStudiesWatcher),
+    // fork(StudiesSagas.getStudyParticipantsWatcher),
+    // fork(StudiesSagas.updateStudyWatcher),
 
     // apps usage survey
     fork(SurveySagas.getAppUsageSurveyDataWatcher),
-    fork(SurveySagas.submitSurveyWatcher),
+    fork(SurveySagas.submitAppUsageSurveyWatcher),
 
     // questionnaire
     fork(QuestionnaireSagas.changeActiveStatusWatcher),

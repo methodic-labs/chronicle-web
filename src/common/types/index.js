@@ -2,11 +2,13 @@
  * @flow
  */
 
-declare type Auth0NonceState = {
+export type UUID = string;
+
+export type Auth0NonceState = {
   redirectUrl :string;
 };
 
-declare type UserInfo = {
+export type UserInfo = {
   email ?:string;
   familyName ?:string;
   givenName ?:string;
@@ -16,10 +18,7 @@ declare type UserInfo = {
   roles ?:string[];
 };
 
-type UUID = string;
-
-export type {
-  Auth0NonceState,
-  UserInfo,
-  UUID,
-};
+export type AppUsageFreqType = {|
+  DAILY :'DAILY';
+  HOURLY :'HOURLY';
+|};

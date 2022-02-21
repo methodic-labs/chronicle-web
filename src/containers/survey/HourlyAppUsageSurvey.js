@@ -21,7 +21,7 @@ import HourlyUsageSurveyAppBar from './components/HourlyUsageSurveyAppBar';
 import InstructionsModal from './components/InstructionsModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch';
-import { submitSurvey } from './SurveyActions';
+import { submitAppUsageSurvey } from './actions';
 import { createHourlySurveySubmissionData } from './utils';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
@@ -138,7 +138,7 @@ type Props = {
   data :Map;
   date :string;
   submitSurveyRS :?RequestState;
-  getappUsageSurveyDataRS :?RequestState;
+  getAppUsageSurveyDataRS :?RequestState;
   participantId :string;
   studyId :UUID ;
 };
@@ -150,7 +150,7 @@ const HourlyAppUsageSurvey = (props :Props) => {
     studyId,
     participantId,
     submitSurveyRS,
-    getappUsageSurveyDataRS,
+    getAppUsageSurveyDataRS,
   } = props;
 
   const storeDispatch = useDispatch();
@@ -179,9 +179,9 @@ const HourlyAppUsageSurvey = (props :Props) => {
         timeRangeSelections
       );
 
-      storeDispatch(submitSurvey({
+      storeDispatch(submitAppUsageSurvey({
+        data: submissionData,
         participantId,
-        submissionData,
         studyId,
       }));
     }
@@ -223,7 +223,7 @@ const HourlyAppUsageSurvey = (props :Props) => {
                   : (
                     <HourlySurvey
                         data={data}
-                        getappUsageSurveyDataRS={getappUsageSurveyDataRS}
+                        getAppUsageSurveyDataRS={getAppUsageSurveyDataRS}
                         isSubmitting={isSubmitting}
                         state={state} />
                   )

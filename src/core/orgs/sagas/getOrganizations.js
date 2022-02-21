@@ -3,6 +3,7 @@
  */
 
 import { call, put, takeEvery } from '@redux-saga/core/effects';
+import { Map } from 'immutable';
 import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { WorkerResponse } from 'lattice-sagas';
@@ -23,8 +24,11 @@ function* getOrganizationsWorker(action :SequenceAction) :Saga<WorkerResponse> {
   try {
     yield put(getOrganizations.request(id, value));
     const response = yield call(OrganizationApi.getOrganizations);
-    workerResponse = { data: response };
-    yield put(getOrganizations.success(id, response));
+    const organizations = Map().withMutations((mutableMap) => {
+      response.forEach((org) => mutableMap.set(org.id, org));
+    });
+    workerResponse = { data: organizations };
+    yield put(getOrganizations.success(id, organizations));
   }
   catch (error) {
     LOG.error(action.type, error);

@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { createSchema, createUiSchema } from './CreateStudySchemas';
 
 import { createFormDataFromStudyEntity } from '../../../utils/FormUtils';
-import { createStudy, updateStudy } from '../StudiesActions';
+import { createStudy } from '../actions';
 
 type Props = {
   notificationsEnabled :boolean;
@@ -29,10 +29,11 @@ const CreateStudyForm = (props:Props, ref) => {
 
   const handleSubmit = ({ formData } :Object) => {
     if (study) {
-      dispatch(updateStudy({ formData, initialFormData, study }));
+      throw Error('update study not implemented');
+      // dispatch(updateStudy({ formData, initialFormData, study }));
     }
     else {
-      dispatch(createStudy({ formData }));
+      dispatch(createStudy(formData.page1section1));
     }
   };
 

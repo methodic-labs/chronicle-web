@@ -4,15 +4,12 @@
 
 import { useState } from 'react';
 
-import { Constants } from 'lattice';
 import {
-  // $FlowFixMe
   Box,
   Button,
-  // $FlowFixMe
   Grid,
   Spinner,
-  Typography
+  Typography,
 } from 'lattice-ui-kit';
 import { useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,25 +18,25 @@ import type { RequestState } from 'redux-reqseq';
 
 import StudyCard from './components/StudyCard';
 import StudyDetailsModal from './components/StudyDetailsModal';
-import { CREATE_STUDY, GET_STUDIES } from './StudiesActions';
+import { CREATE_STUDY, GET_ORG_STUDIES } from './actions';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
-import { resetRequestState } from '../../core/redux/ReduxActions';
-
-const { OPENLATTICE_ID_FQN } = Constants;
+import { STUDIES } from '../../common/constants';
+import { resetRequestStates } from '../../core/redux/actions';
+import { selectStudies } from '../../core/redux/selectors';
 
 const StudiesContainer = () => {
 
   const dispatch = useDispatch();
   const [createStudyModalVisible, setCreateStudyModalVisible] = useState(false);
 
-  const studies = useSelector((state) => state.getIn(['studies', 'studies']));
+  const getStudiesRS :?RequestState = useRequestState([STUDIES, GET_ORG_STUDIES]);
 
-  const getStudiesRS :?RequestState = useRequestState(['studies', GET_STUDIES]);
+  const studies = useSelector(selectStudies());
 
   const openCreateStudyModal = () => {
     // necessary after a successful or failed CREATE_STUDY action
-    dispatch(resetRequestState(CREATE_STUDY));
+    dispatch(resetRequestStates([CREATE_STUDY]));
     setCreateStudyModalVisible(true);
   };
 
@@ -80,7 +77,7 @@ const StudiesContainer = () => {
             <Grid container spacing={3}>
               {
                 studies.valueSeq().map((study) => (
-                  <Grid item xs={12} sm={6} key={study.getIn([OPENLATTICE_ID_FQN, 0])}>
+                  <Grid item xs={12} sm={6} key={study.id}>
                     <StudyCard study={study} />
                   </Grid>
                 ))

@@ -1,5 +1,6 @@
 // @flow
 
+const APP_USAGE :'app-usage' = 'app-usage';
 const AUTHENTICATED :'authenticated' = 'authenticated';
 const BASE :'chronicle/v3' = 'chronicle/v3';
 const CHRONICLE :'chronicle' = 'chronicle';
@@ -13,9 +14,10 @@ const STATUS :'status' = 'status';
 const STUDY :'study' = 'study';
 const SURVEY :'survey' = 'survey';
 const TIME_USE_DIARY = 'time-use-diary';
-const APP_USAGE :'app-usage' = 'app-usage';
+const VERIFY :'verify' = 'verify';
 
 export {
+  APP_USAGE,
   AUTHENTICATED,
   BASE,
   CHRONICLE,
@@ -27,7 +29,7 @@ export {
   SETTINGS,
   STATUS,
   STUDY,
-  APP_USAGE,
   SURVEY,
   TIME_USE_DIARY,
+  VERIFY,
 };
