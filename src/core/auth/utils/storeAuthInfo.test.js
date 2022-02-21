@@ -41,8 +41,10 @@ const MOCK_AUTH0_PAYLOAD = {
     given_name: 'Hetfield',
     name: 'James Hetfield',
     picture: genRandomString(),
-    roles: ['TEST_ROLE_1', 'TEST_ROLE_2'],
-    user_id: genRandomString(),
+    sub: genRandomString(),
+    'getmethodic.com/metadata': {
+      roles: ['TEST_ROLE_1', 'TEST_ROLE_2'],
+    },
   },
 };
 
@@ -56,7 +58,6 @@ describe('storeAuthInfo()', () => {
     cookies.get.mockClear();
     cookies.remove.mockClear();
     cookies.set.mockClear();
-    // $FlowIgnore
     // $FlowIgnore
     uuid.mockClear();
   });
@@ -88,7 +89,6 @@ describe('storeAuthInfo()', () => {
     });
 
     test(`"${CSRF_COOKIE}" cookie`, () => {
-      // $FlowIgnore
       // $FlowIgnore
       uuid.mockImplementationOnce(() => MOCK_CSRF_TOKEN);
       storeAuthInfo(MOCK_AUTH0_PAYLOAD);
@@ -172,10 +172,10 @@ describe('storeAuthInfo()', () => {
       email: MOCK_AUTH0_PAYLOAD.idTokenPayload.email,
       familyName: MOCK_AUTH0_PAYLOAD.idTokenPayload.family_name,
       givenName: MOCK_AUTH0_PAYLOAD.idTokenPayload.given_name,
-      id: MOCK_AUTH0_PAYLOAD.idTokenPayload.user_id,
+      id: MOCK_AUTH0_PAYLOAD.idTokenPayload.sub,
       name: MOCK_AUTH0_PAYLOAD.idTokenPayload.name,
       picture: MOCK_AUTH0_PAYLOAD.idTokenPayload.picture,
-      roles: MOCK_AUTH0_PAYLOAD.idTokenPayload.roles,
+      roles: MOCK_AUTH0_PAYLOAD.idTokenPayload['getmethodic.com/metadata'].roles,
     };
 
     // $FlowIgnore

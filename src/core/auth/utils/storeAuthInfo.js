@@ -74,10 +74,13 @@ export default function storeAuthInfo(authInfo :?Object) {
     email: authInfo.idTokenPayload.email,
     familyName: authInfo.idTokenPayload.family_name,
     givenName: authInfo.idTokenPayload.given_name,
-    id: authInfo.idTokenPayload.user_id,
+    id: authInfo.idTokenPayload.sub,
     name: authInfo.idTokenPayload.name,
     picture: authInfo.idTokenPayload.picture,
-    roles: authInfo.idTokenPayload.roles,
+    // NOTE - 2022-02-21 - "getmethodic.com/metadata" is a custom claim which is added to the token during login and
+    // is defined in an auth0 action that runs during the login flow
+    // https://auth0.com/docs/get-started/apis/scopes/sample-use-cases-scopes-and-claims#add-custom-claims-to-a-token
+    roles: authInfo.idTokenPayload['getmethodic.com/metadata']?.roles || [],
   };
 
   localStorage.setItem(AUTH0_USER_INFO, JSON.stringify(userInfo));
