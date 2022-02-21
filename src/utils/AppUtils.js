@@ -20,10 +20,10 @@ import {
   PARTICIPANT,
   QUESTIONNAIRE,
   SETTINGS,
-  STATUS,
   STUDY,
   SURVEY,
   TIME_USE_DIARY,
+  VERIFY,
 } from './constants/UrlConstants';
 import type { ParticipantDataType } from './constants/ParticipantDataTypes';
 
@@ -217,7 +217,7 @@ const getSubmitTudDataUrl = (orgId :UUID, studyId :UUID, participantId :string) 
     return null;
   }
 
-  return `${getBaseUrl()}/${BASE}/${orgId}/${studyId}/${participantId}/${TIME_USE_DIARY}`;
+  return `${getBaseUrl()}/${BASE}/${TIME_USE_DIARY}/${orgId}/${studyId}/${participantId}`;
 };
 
 const getDeleteStudyUrl = (orgId :UUID, studyId :UUID) => {
@@ -233,17 +233,13 @@ const getDeleteStudyUrl = (orgId :UUID, studyId :UUID) => {
   return `${getBaseUrl()}/${BASE}/${AUTHENTICATED}/${orgId}/${studyId}`;
 };
 
-const getEnrollmentStatusUrl = (organizationId :UUID, studyId :UUID, participantId :string) => {
-  if (!isValidUUID(organizationId)) {
-    LOG.error('invalid orgId: ', organizationId);
-    return null;
-  }
+const getVerifyParticipantIdUrl = (studyId :UUID, participantId :string) => {
   if (!isValidUUID(studyId)) {
     LOG.error('invalid studyId: ', studyId);
     return null;
   }
 
-  return `${getBaseUrl()}/${BASE}/${organizationId}/${studyId}/${participantId}/${STATUS}`;
+  return `${getBaseUrl()}/${BASE}/${STUDY}/${studyId}/${PARTICIPANT}/${participantId}/${VERIFY}`;
 };
 
 const getStudySettingsUrl = (studyId :UUID) => {
@@ -256,15 +252,15 @@ const getStudySettingsUrl = (studyId :UUID) => {
 };
 
 export {
-  getStudySettingsUrl,
+  getAppUsageDataUrl,
   getBaseUrl,
   getDeleteParticipantPath,
   getDeleteStudyUrl,
-  getEnrollmentStatusUrl,
   getParticipantDataUrl,
-  getAppUsageDataUrl,
   getQuestionnaireUrl,
+  getStudySettingsUrl,
   getSubmitQuestionnaireUrl,
   getSubmitTudDataUrl,
+  getVerifyParticipantIdUrl,
   processAppConfigs,
 };

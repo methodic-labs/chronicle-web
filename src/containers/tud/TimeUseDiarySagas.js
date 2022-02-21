@@ -153,12 +153,12 @@ function* verifyTudLinkWorker(action :SequenceAction) :Saga<*> {
   try {
     yield put(verifyTudLink.request(action.id));
 
-    const { organizationId, participantId, studyId } = action.value;
+    const { participantId, studyId } = action.value;
 
-    const response = yield call(ChronicleApi.verifyTudLink, organizationId, studyId, participantId);
-    const isValidLink = response.data === 'ENROLLED' || response.data === 'NOT_ENROLLED';
+    const response = yield call(ChronicleApi.verifyTudLink, studyId, participantId);
 
-    if (isValidLink) {
+    // response is a boolean
+    if (response.data) {
       yield put(verifyTudLink.success(action.id));
     }
     else {
