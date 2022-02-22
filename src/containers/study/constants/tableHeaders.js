@@ -99,7 +99,7 @@ type ColumnType = {
   }
 };
 
-export default function getHeaders(orgHasSurveyModule :Boolean, orgHasDataCollectionModule :Boolean) {
+export default function getHeaders(orgHasSurveyModule :boolean, orgHasDataCollectionModule :boolean) {
   let data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
   if (orgHasSurveyModule && !orgHasDataCollectionModule) {
     data = [PARTICIPANT_ID_COLUMN, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];

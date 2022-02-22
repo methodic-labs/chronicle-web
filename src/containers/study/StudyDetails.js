@@ -7,15 +7,12 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { faBell, faBellSlash } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Map } from 'immutable';
 import {
-  // $FlowFixMe
   Box,
   Button,
   Card,
   CardSegment,
   Colors,
-  // $FlowFixMe
   Grid,
   Typography
 } from 'lattice-ui-kit';
@@ -26,19 +23,11 @@ import { RequestStates } from 'redux-reqseq';
 import DeleteStudyModal from './components/DeleteStudyModal';
 
 import StudyDetailsModal from '../studies/components/StudyDetailsModal';
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { resetRequestState } from '../../core/redux/ReduxActions';
 import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from '../studies/StudiesActions';
+import type { Study } from '../../common/types';
 
 const { isNonEmptyString } = LangUtils;
-
-const {
-  STUDY_DESCRIPTION,
-  STUDY_EMAIL,
-  STUDY_GROUP,
-  STUDY_ID,
-  STUDY_VERSION
-} = PROPERTY_TYPE_FQNS;
 
 const { NEUTRAL, GREEN } = Colors;
 
@@ -88,24 +77,20 @@ StudyDetailsItem.defaultProps = {
   missingValue: false
 };
 
-type Props = {
-  hasDeletePermission :Boolean;
+const StudyDetails = ({
+  hasDeletePermission,
+  notificationsEnabled,
+  study,
+} :{
+  hasDeletePermission :boolean;
   notificationsEnabled :boolean;
-  study :Map;
-}
-
-const StudyDetails = ({ hasDeletePermission, study, notificationsEnabled } :Props) => {
+  study :Study;
+}) => {
   const dispatch = useDispatch();
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [isDeleteModalVisible, showDeleteModal, hideDeleteModal] = useBoolean(false);
 
   const deleteStudyRS = useRequestState(['studies', DELETE_STUDY]);
-
-  const studyDescription = study.getIn([STUDY_DESCRIPTION, 0]);
-  const studyUUID = study.getIn([STUDY_ID, 0]);
-  const studyVersion = study.getIn([STUDY_VERSION, 0]);
-  const studyEmail = study.getIn([STUDY_EMAIL, 0]);
-  const studyGroup = study.getIn([STUDY_GROUP, 0]);
 
   const notificationIcon = notificationsEnabled ? faBell : faBellSlash;
 
@@ -113,11 +98,11 @@ const StudyDetails = ({ hasDeletePermission, study, notificationsEnabled } :Prop
   useEffect(() => {
     if (deleteStudyRS === RequestStates.SUCCESS) {
       setTimeout(() => {
-        dispatch(removeStudyOnDelete(studyUUID));
+        dispatch(removeStudyOnDelete(study.id));
         dispatch(resetRequestState(DELETE_STUDY));
       }, 2000);
     }
-  }, [deleteStudyRS, dispatch, studyUUID]);
+  }, [deleteStudyRS, dispatch, study]);
 
   const closeEditModal = () => {
     setEditModalVisible(false);
@@ -153,27 +138,27 @@ const StudyDetails = ({ hasDeletePermission, study, notificationsEnabled } :Prop
             <Grid item xs={12} sm={6}>
               <StudyDetailsItem
                   label="Description"
-                  missingValue={!isNonEmptyString(studyDescription)}
+                  missingValue={!isNonEmptyString(study.description)}
                   placeholder="No description"
-                  value={studyDescription} />
+                  value={study.description} />
               <StudyDetailsItem
                   label="UUID"
-                  value={studyUUID} />
+                  value={study.id} />
               <StudyDetailsItem
                   label="Version"
-                  missingValue={!isNonEmptyString(studyVersion)}
+                  missingValue={!isNonEmptyString(study.version)}
                   placeholder="No version"
-                  value={studyVersion} />
+                  value={study.version} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <StudyDetailsItem
                   label="Email"
-                  value={studyEmail} />
+                  value={study.contact} />
               <StudyDetailsItem
                   label="Group"
-                  missingValue={!isNonEmptyString(studyGroup)}
+                  missingValue={!isNonEmptyString(study.group)}
                   placeholder="No group"
-                  value={studyGroup} />
+                  value={study.group} />
             </Grid>
 
             <Grid container item xs={12} spacing={3}>

@@ -6,9 +6,7 @@ import { useEffect } from 'react';
 
 import styled from 'styled-components';
 import { List, Map, Set } from 'immutable';
-import { Constants } from 'lattice';
 import {
-  // $FlowFixMe
   Box,
   Colors,
   Spinner,
@@ -33,24 +31,20 @@ import QuestionnairesContainer from '../questionnaires/QuestionnairesContainer';
 import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
 import * as AppModules from '../../utils/constants/AppModules';
 import * as Routes from '../../core/router/Routes';
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
+import { selectStudy } from '../../core/redux/selectors';
 import { getIdFromMatch } from '../../core/router/RouterUtils';
 import { goToRoot } from '../../core/router/RoutingActions';
 import {
   APP_REDUX_CONSTANTS,
-  PERMISSIONS_REDUX_CONSTANTS,
   STUDIES_REDUX_CONSTANTS
 } from '../../utils/constants/ReduxConstants';
 import {
   GET_STUDY_PARTICIPANTS,
   getStudyParticipants,
 } from '../studies/StudiesActions';
+import type { Study } from '../../common/types';
 
 const { isPending } = ReduxUtils;
-
-const { OPENLATTICE_ID_FQN } = Constants;
-
-const { FULL_NAME_FQN } = PROPERTY_TYPE_FQNS;
 
 const {
   APP_MODULES_ORG_LIST_MAP,
@@ -58,13 +52,10 @@ const {
 } = APP_REDUX_CONSTANTS;
 
 const {
-  NOTIFICATIONS_ENABLED_STUDIES,
   PARTICIPANTS,
   STUDIES,
   TIME_USE_DIARY_STUDIES,
 } = STUDIES_REDUX_CONSTANTS;
-
-const { HAS_DELETE_PERMISSION } = PERMISSIONS_REDUX_CONSTANTS;
 
 const { NEUTRAL, PURPLE } = Colors;
 
@@ -112,19 +103,15 @@ const StudyDetailsContainer = () => {
   const match :Match = useRouteMatch();
   const studyId :UUID = getIdFromMatch(match) || '';
 
-  const study = useSelector((state) => state.getIn([STUDIES, STUDIES, studyId], Map()));
-  const notificationsEnabledStudies = useSelector(
-    (state) => state.getIn([STUDIES, NOTIFICATIONS_ENABLED_STUDIES], Set())
-  );
+  const study :?Study = useSelector(selectStudy(studyId));
+  // TODO - get study object permissions
+  const hasDeletePermission = false;
+
   const questionnaireModuleOrgs = useSelector(
     (state) => state.getIn(['app', APP_MODULES_ORG_LIST_MAP, AppModules.QUESTIONNAIRES], List())
   );
 
   const selectedOrgId = useSelector((state) => state.getIn(['app', SELECTED_ORG_ID]));
-
-  const notificationsEnabled :boolean = notificationsEnabledStudies.has(studyId);
-
-  const hasDeletePermission :Boolean = useSelector((state) => state.getIn(['permissions', HAS_DELETE_PERMISSION]));
 
   const timeUseDiaryStudies = useSelector((state) => state.getIn([STUDIES, TIME_USE_DIARY_STUDIES], Set()));
 
@@ -139,15 +126,13 @@ const StudyDetailsContainer = () => {
     // This is useful for avoiding a network request if
     // a cached value is already available.
     if (participants.isEmpty()) {
-      dispatch(getStudyParticipants({
-        studyEKID: study.getIn([OPENLATTICE_ID_FQN, 0]),
-        studyId
-      }));
+      dispatch(getStudyParticipants(studyId));
     }
   }, [dispatch, participants, study, studyId]);
 
-  if (study.isEmpty()) {
+  if (!study) {
     dispatch(goToRoot());
+    return null;
   }
 
   if (isPending(getParticipantsRS)) {
@@ -159,7 +144,7 @@ const StudyDetailsContainer = () => {
   return (
     <>
       <Box fontSize={28} fontWeight="fontWeightNormal">
-        { study.getIn([FULL_NAME_FQN, 0]) }
+        { study.title }
       </Box>
       <Box display="flex" mt="30px" mb="50px" overflow="scroll">
         <TabLink exact to={Routes.STUDY.replace(Routes.ID_PARAM, studyId)}>
@@ -209,8 +194,8 @@ const StudyDetailsContainer = () => {
             render={() => (
               <StudyDetails
                   hasDeletePermission={hasDeletePermission}
-                  study={study}
-                  notificationsEnabled={notificationsEnabled} />
+                  notificationsEnabled={study?.notificationsEnabled}
+                  study={study} />
             )} />
         {
           questionnaireModuleOrgs.includes(selectedOrgId) && (

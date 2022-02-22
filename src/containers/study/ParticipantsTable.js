@@ -18,9 +18,9 @@ const TableWrapper = styled.div`
 `;
 
 type Props = {
-  hasDeletePermission :Boolean;
-  orgHasDataCollectionModule :Boolean;
-  orgHasSurveyModule :Boolean;
+  hasDeletePermission :boolean;
+  orgHasDataCollectionModule :boolean;
+  orgHasSurveyModule :boolean;
   participants :Map<UUID, Map>;
 };
 

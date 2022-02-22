@@ -129,7 +129,7 @@ const reducer = (state :Object, action :Object) => {
 };
 
 type Props = {
-  hasDeletePermission :Boolean;
+  hasDeletePermission :boolean;
   participants :Map;
   study :Map;
 };

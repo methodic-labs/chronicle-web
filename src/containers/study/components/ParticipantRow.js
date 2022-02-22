@@ -78,10 +78,10 @@ const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
 `;
 
 type Props = {
-  orgHasSurveyModule :Boolean;
-  orgHasDataCollectionModule :Boolean;
+  orgHasSurveyModule :boolean;
+  orgHasDataCollectionModule :boolean;
   data :Object;
-  hasDeletePermission :Boolean;
+  hasDeletePermission :boolean;
 };
 
 const ParticipantRow = (props :Props) => {
