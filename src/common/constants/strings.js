@@ -37,6 +37,7 @@ export const IS_AUTHENTICATING :'isAuthenticating' = 'isAuthenticating';
 export const NOTIFICATIONS_ENABLED :'notificationsEnabled' = 'notificationsEnabled';
 export const ORGANIZATION :'organization' = 'organization';
 export const ORGANIZATION_API :'OrganizationApi' = 'OrganizationApi';
+export const ORGANIZATION_IDS :'organizationIds' = 'organizationIds';
 export const ORGANIZATION_ID_MAP :'organization_id_map' = 'organization_id_map';
 export const PARTICIPANT :'participant' = 'participant';
 export const PRINCIPAL :'principal' = 'principal';

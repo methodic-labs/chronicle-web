@@ -14,6 +14,7 @@ import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as StudyApi from '../../../core/api/study';
+import { ORGANIZATION_IDS } from '../../../common/constants';
 import { selectSelectedOrgId } from '../../../core/redux/selectors';
 import { CREATE_STUDY, createStudy } from '../actions';
 
@@ -28,8 +29,11 @@ function* createStudyWorker(action :SequenceAction) :Saga<WorkerResponse> {
 
   try {
     yield put(createStudy.request(id, value));
+    let study = { ...value };
     const orgId = yield select(selectSelectedOrgId());
-    let study = { ...value, organizationIds: [orgId] };
+    if (orgId) {
+      study[ORGANIZATION_IDS] = [orgId];
+    }
     const studyId = yield call(StudyApi.createStudy, study);
     study = { ...study, id: studyId };
     workerResponse = { data: study };
