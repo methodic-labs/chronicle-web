@@ -5,7 +5,6 @@
 import { useEffect } from 'react';
 
 import _isFunction from 'lodash/isFunction';
-import { Map } from 'immutable';
 import {
   AppContainerWrapper,
   AppContentWrapper,
@@ -14,7 +13,7 @@ import {
   Spinner,
 } from 'lattice-ui-kit';
 import { LangUtils, useRequestState } from 'lattice-utils';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   NavLink,
   Redirect,
@@ -24,7 +23,7 @@ import {
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
-import { INITIALIZE_APPLICATION, initializeApplication, switchOrganization } from './actions';
+import { INITIALIZE_APPLICATION, initializeApplication } from './actions';
 
 import Auth0AdminRoute from '../../core/router/Auth0AdminRoute';
 import BasicErrorComponent from '../shared/BasicErrorComponent';
@@ -36,7 +35,6 @@ import * as Routes from '../../core/router/Routes';
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import { logout } from '../../core/auth/actions';
 import { getUserInfo, isAdmin } from '../../core/auth/utils';
-import { selectOrganizations, selectSelectedOrgId } from '../../core/redux/selectors';
 import { GOOGLE_TRACKING_ID } from '../../core/tracking/google/GoogleAnalytics';
 
 declare var gtag :?Function;
@@ -47,9 +45,6 @@ const AppContainer = () => {
   const dispatch = useDispatch();
 
   const initializeApplicationRS :?RequestState = useRequestState(['app', INITIALIZE_APPLICATION]);
-
-  const organizations :Map = useSelector(selectOrganizations());
-  const selectedOrgId :string = useSelector(selectSelectedOrgId()) || organizations.keySeq().first();
 
   useEffect(() => {
     dispatch(initializeApplication());
@@ -104,24 +99,12 @@ const AppContainer = () => {
     user = userInfo.email;
   }
 
-  const handleSwitchOrganization = (organization :Object) => {
-    if (organization.value !== selectedOrgId) {
-      dispatch(switchOrganization(organization.value));
-    }
-  };
-
   return (
     <AppContainerWrapper>
       <AppHeaderWrapper
           appIcon={OpenLatticeIconSVG}
           appTitle="Chronicle"
           logout={onLogout}
-          organizationsSelect={{
-            isLoading: initializeApplicationRS === RequestStates.PENDING,
-            onChange: handleSwitchOrganization,
-            organizations,
-            selectedOrganizationId: selectedOrgId
-          }}
           user={user}>
         <AppNavigationWrapper>
           <NavLink to={Routes.STUDIES} />

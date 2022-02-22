@@ -8,7 +8,7 @@ import {
   select,
   takeEvery,
 } from '@redux-saga/core/effects';
-import { AxiosUtils, Logger } from 'lattice-utils';
+import { AxiosUtils, Logger, ValidationUtils } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
@@ -19,6 +19,7 @@ import { selectSelectedOrgId } from '../../../core/redux/selectors';
 import { CREATE_STUDY, createStudy } from '../actions';
 
 const { toSagaError } = AxiosUtils;
+const { isValidUUID } = ValidationUtils;
 
 const LOG = new Logger('StudySagas');
 
@@ -31,7 +32,7 @@ function* createStudyWorker(action :SequenceAction) :Saga<WorkerResponse> {
     yield put(createStudy.request(id, value));
     let study = { ...value };
     const orgId = yield select(selectSelectedOrgId());
-    if (orgId) {
+    if (isValidUUID(orgId)) {
       study[ORGANIZATION_IDS] = [orgId];
     }
     const studyId = yield call(StudyApi.createStudy, study);

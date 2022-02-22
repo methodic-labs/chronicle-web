@@ -2,23 +2,13 @@
  * @flow
  */
 
-import {
-  call,
-  put,
-  select,
-  takeEvery,
-} from '@redux-saga/core/effects';
+import { call, put, takeEvery } from '@redux-saga/core/effects';
 import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
-import { SELECTED_ORG_ID } from '../../../common/constants';
-import { getOrgIdFromStorage } from '../../../common/utils';
-import { getOrganizations } from '../../../core/orgs/actions';
-import { getOrganizationsWorker } from '../../../core/orgs/sagas';
-import { selectOrganizations } from '../../../core/redux/selectors';
-import { getOrgStudies } from '../../studies/actions';
-import { getOrgStudiesWorker } from '../../studies/sagas';
+import { getAllStudies } from '../../studies/actions';
+import { getAllStudiesWorker } from '../../studies/sagas';
 import { INITIALIZE_APPLICATION, initializeApplication } from '../actions';
 
 const { toSagaError } = AxiosUtils;
@@ -30,21 +20,22 @@ function* initializeApplicationWorker(action :SequenceAction) :Saga<*> {
   try {
     yield put(initializeApplication.request(action.id));
 
-    yield call(getOrganizationsWorker, getOrganizations());
-    const organizations = yield select(selectOrganizations());
-    let selectedOrgId = organizations.first()?.id;
-    const storedOrgId = getOrgIdFromStorage();
-    if (storedOrgId && organizations.has(storedOrgId)) {
-      selectedOrgId = storedOrgId;
-    }
+    // NOTE - leaving this here in case we want to bring back org selection
+    // yield call(getOrganizationsWorker, getOrganizations());
+    // const organizations = yield select(selectOrganizations());
+    // let selectedOrgId = organizations.first()?.id;
+    // const storedOrgId = getOrgIdFromStorage();
+    // if (storedOrgId && organizations.has(storedOrgId)) {
+    //   selectedOrgId = storedOrgId;
+    // }
+    // if (selectedOrgId) {
+    //   yield call(getOrgStudiesWorker, getOrgStudies(selectedOrgId));
+    // }
 
-    if (selectedOrgId) {
-      yield call(getOrgStudiesWorker, getOrgStudies(selectedOrgId));
-    }
+    const response = yield call(getAllStudiesWorker, getAllStudies());
+    if (response.error) throw response.error;
 
-    yield put(initializeApplication.success(action.id, {
-      [SELECTED_ORG_ID]: selectedOrgId,
-    }));
+    yield put(initializeApplication.success(action.id));
   }
   catch (error) {
     LOG.error(action.type, error);

@@ -5,6 +5,7 @@
 import { Map, fromJS } from 'immutable';
 
 import createStudyReducer from './createStudyReducer';
+import getAllStudiesReducer from './getAllStudiesReducer';
 import getOrgStudiesReducer from './getOrgStudiesReducer';
 import getStudySettingsReducer from './getStudySettingsReducer';
 import switchOrganizationReducer from './switchOrganizationReducer';
@@ -19,9 +20,11 @@ import { resetRequestStatesReducer } from '../../../core/redux/reducers';
 import { switchOrganization } from '../../app/actions';
 import {
   CREATE_STUDY,
+  GET_ALL_STUDIES,
   GET_ORG_STUDIES,
   GET_STUDY_SETTINGS,
   createStudy,
+  getAllStudies,
   getOrgStudies,
   getStudySettings,
 } from '../actions';
@@ -29,6 +32,7 @@ import {
 const INITIAL_STATE :Map = fromJS({
   // actions
   [CREATE_STUDY]: RS_INITIAL_STATE,
+  [GET_ALL_STUDIES]: RS_INITIAL_STATE,
   [GET_ORG_STUDIES]: RS_INITIAL_STATE,
   [GET_STUDY_SETTINGS]: RS_INITIAL_STATE,
   // data
@@ -46,6 +50,10 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case createStudy.case(action.type): {
       return createStudyReducer(state, action);
+    }
+
+    case getAllStudies.case(action.type): {
+      return getAllStudiesReducer(state, action);
     }
 
     case getOrgStudies.case(action.type): {
