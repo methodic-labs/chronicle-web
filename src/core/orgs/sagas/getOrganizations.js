@@ -6,7 +6,7 @@ import { call, put, takeEvery } from '@redux-saga/core/effects';
 import { Map } from 'immutable';
 import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from 'lattice-sagas';
+import type { WorkerResponse } from '../../../common/types';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as OrganizationApi from '../../api/organization';

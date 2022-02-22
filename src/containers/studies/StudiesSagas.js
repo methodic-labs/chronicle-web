@@ -31,7 +31,6 @@ import {
 import { DataUtils, Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
@@ -85,6 +84,7 @@ import { APP_REDUX_CONSTANTS, STUDIES_REDUX_CONSTANTS } from '../../utils/consta
 import { COLUMN_FIELDS } from '../study/constants/tableColumns';
 import { getTudSubmissionDates } from '../tud/TimeUseDiaryActions';
 import { getTudSubmissionDatesWorker } from '../tud/TimeUseDiarySagas';
+import type { WorkerResponse } from '../../common/types';
 
 const { createAssociations, getEntitySetData, updateEntityData } = DataApiActions;
 const { createAssociationsWorker, getEntitySetDataWorker, updateEntityDataWorker } = DataApiSagas;

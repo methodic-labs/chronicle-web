@@ -5,11 +5,11 @@
 import { call, put, takeEvery } from '@redux-saga/core/effects';
 import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as StudyApi from '../../../core/api/study';
 import { GET_STUDY_SETTINGS, getStudySettings } from '../actions';
+import type { WorkerResponse } from '../../../common/types';
 
 const { toSagaError } = AxiosUtils;
 

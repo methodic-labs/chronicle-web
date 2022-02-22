@@ -7,7 +7,7 @@ import { List, Map, fromJS } from 'immutable';
 import { AxiosUtils, Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from 'lattice-sagas';
+import type { WorkerResponse } from '../../../common/types';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as AppUsageSurveyApi from '../../../core/api/appusagesurvey';

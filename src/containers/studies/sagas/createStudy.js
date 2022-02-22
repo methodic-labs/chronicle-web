@@ -10,13 +10,13 @@ import {
 } from '@redux-saga/core/effects';
 import { AxiosUtils, Logger, ValidationUtils } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as StudyApi from '../../../core/api/study';
 import { ORGANIZATION_IDS } from '../../../common/constants';
 import { selectSelectedOrgId } from '../../../core/redux/selectors';
 import { CREATE_STUDY, createStudy } from '../actions';
+import type { WorkerResponse } from '../../../common/types';
 
 const { toSagaError } = AxiosUtils;
 const { isValidUUID } = ValidationUtils;

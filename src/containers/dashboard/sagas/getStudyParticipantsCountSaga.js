@@ -10,7 +10,6 @@ import { List, Map, fromJS } from 'immutable';
 import { SearchApiActions, SearchApiSagas } from 'lattice-sagas';
 import { Logger, ValidationUtils } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
@@ -20,6 +19,7 @@ import { PARTICIPANTS, PARTICIPATED_IN, STUDIES } from '../../../core/edm/consta
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { ERR_ACTION_VALUE_TYPE } from '../../../utils/Errors';
 import { GET_STUDY_PARTICIPANTS_COUNT, getStudyParticipantsCount } from '../actions';
+import type { WorkerResponse } from '../../../common/types';
 
 const { searchEntityNeighborsWithFilter } = SearchApiActions;
 const { searchEntityNeighborsWithFilterWorker } = SearchApiSagas;
