@@ -11,15 +11,17 @@ import authReducer from '../auth/reducers';
 import dashboardReducer from '../../containers/dashboard/reducers';
 import edmReducer from '../edm/EDMReducer';
 import orgsReducer from '../orgs/reducers';
-import permissionsReducer from '../permissions/PermissionsReducer';
+import permissionsReducer from '../permissions/reducers';
 import questionnareReducer from '../../containers/questionnaire/QuestionnaireReducer';
 import studiesReducer from '../../containers/studies/reducers';
+import studyReducer from '../../containers/study/reducers';
 import timeUseDiaryReducer from '../../containers/tud/TimeUseDiaryReducer';
 import {
   APP,
   APP_USAGE_SURVEY,
   AUTH,
   ORGANIZATIONS,
+  PERMISSIONS,
   STUDIES,
 } from '../../common/constants';
 
@@ -30,10 +32,11 @@ export default function reduxReducer(routerHistory :any) {
     [APP_USAGE_SURVEY]: appUsageSurveyReducer,
     [AUTH]: authReducer,
     [ORGANIZATIONS]: orgsReducer,
+    [PERMISSIONS]: permissionsReducer,
     [STUDIES]: studiesReducer,
+    'study': studyReducer,
     dashboard: dashboardReducer,
     edm: edmReducer,
-    permissions: permissionsReducer,
     questionnaire: questionnareReducer,
     router: connectRouter(routerHistory),
     tud: timeUseDiaryReducer,

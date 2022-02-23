@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { faBell, faBellSlash } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { List, Set } from 'immutable';
 import {
   Box,
   Button,
@@ -17,15 +18,16 @@ import {
   Typography
 } from 'lattice-ui-kit';
 import { LangUtils, useBoolean, useRequestState } from 'lattice-utils';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 
 import DeleteStudyModal from './components/DeleteStudyModal';
 
 import StudyDetailsModal from '../studies/components/StudyDetailsModal';
 import { resetRequestState } from '../../core/redux/ReduxActions';
+import { selectMyKeys } from '../../core/redux/selectors';
 import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from '../studies/StudiesActions';
-import type { Study } from '../../common/types';
+import type { Study, UUID } from '../../common/types';
 
 const { isNonEmptyString } = LangUtils;
 
@@ -78,21 +80,21 @@ StudyDetailsItem.defaultProps = {
 };
 
 const StudyDetails = ({
-  hasDeletePermission,
-  notificationsEnabled,
   study,
 } :{
-  hasDeletePermission :boolean;
-  notificationsEnabled :boolean;
   study :Study;
 }) => {
+
   const dispatch = useDispatch();
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [isDeleteModalVisible, showDeleteModal, hideDeleteModal] = useBoolean(false);
 
   const deleteStudyRS = useRequestState(['studies', DELETE_STUDY]);
 
-  const notificationIcon = notificationsEnabled ? faBell : faBellSlash;
+  const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
+  const isOwner :boolean = myKeys.has(List([study.id]));
+
+  const notificationIcon = study.notificationsEnabled ? faBell : faBellSlash;
 
   // After deleting study, redirect to root
   useEffect(() => {
@@ -122,7 +124,7 @@ const StudyDetails = ({
 
   const DetailsHeader = () => (
     <Box display="flex" alignItems="center">
-      <StyledFontAwesome icon={notificationIcon} color={notificationsEnabled ? GREEN.G300 : NEUTRAL.N300} />
+      <StyledFontAwesome icon={notificationIcon} color={study.notificationsEnabled ? GREEN.G300 : NEUTRAL.N300} />
       <Box ml={1}>
         <Typography color="textSecondary" variant="button"> Daily Notifications </Typography>
       </Box>
@@ -174,7 +176,7 @@ const StudyDetails = ({
               <Grid item xs={6}>
                 <Button
                     color="error"
-                    disabled={!hasDeletePermission}
+                    disabled={!isOwner}
                     fullWidth
                     onClick={showDeleteModal}>
                   Delete Study
@@ -184,7 +186,6 @@ const StudyDetails = ({
           </Grid>
           <StudyDetailsModal
               handleOnCloseModal={closeEditModal}
-              notificationsEnabled={notificationsEnabled}
               isVisible={editModalVisible}
               study={study} />
           <DeleteStudyModal

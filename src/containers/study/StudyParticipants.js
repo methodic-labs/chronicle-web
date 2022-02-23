@@ -7,18 +7,16 @@ import { useEffect, useReducer, useState } from 'react';
 import styled from 'styled-components';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Map } from 'immutable';
+import { List, Map, Set } from 'immutable';
 import {
-  // $FlowFixMe
   Box,
   Button,
   Card,
   CardSegment,
-  // $FlowFixMe
   Grid,
   SearchInput,
 } from 'lattice-ui-kit';
-import { DataUtils, useRequestState } from 'lattice-utils';
+import { useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RequestState } from 'redux-reqseq';
 
@@ -34,7 +32,8 @@ import TudSubmissionHistory from './components/TudSubmissionHistory';
 import { COLUMN_FIELDS } from './constants/tableColumns';
 
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
-import { resetRequestState } from '../../core/redux/ReduxActions';
+import { resetRequestStates } from '../../core/redux/actions';
+import { selectMyKeys } from '../../core/redux/selectors';
 import {
   currentOrgIdSelector,
   orgHasDataCollectionModuleSelector,
@@ -47,10 +46,9 @@ import {
   changeEnrollmentStatus,
   deleteStudyParticipant,
 } from '../studies/StudiesActions';
+import type { Study } from '../../common/types';
 
-const { getEntityKeyId } = DataUtils;
-
-const { PERSON_ID, STUDY_ID } = PROPERTY_TYPE_FQNS;
+const { PERSON_ID } = PROPERTY_TYPE_FQNS;
 
 const { ENROLLMENT_STATUS } = COLUMN_FIELDS;
 
@@ -129,12 +127,11 @@ const reducer = (state :Object, action :Object) => {
 };
 
 type Props = {
-  hasDeletePermission :boolean;
   participants :Map;
-  study :Map;
+  study :Study;
 };
 
-const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) => {
+const StudyParticipants = ({ participants, study } :Props) => {
   const storeDispatch = useDispatch();
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -149,15 +146,15 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
     participantEntityKeyId,
   } = state;
 
-  const studyId = study.getIn([STUDY_ID, 0]);
-  const studyEntityKeyId = getEntityKeyId(study);
-
   const [filteredParticipants, setFilteredParticipants] = useState(Map());
 
   // selectors
   const orgHasSurveyModule = useSelector(orgHasSurveyModuleSelector);
   const orgHasDataCollectionModule = useSelector(orgHasDataCollectionModuleSelector);
   const selectedOrgId :UUID = useSelector(currentOrgIdSelector);
+
+  const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
+  const isOwner :boolean = myKeys.has(List([study.id]));
 
   const changeEnrollmentStatusRS :?RequestState = useRequestState(['studies', CHANGE_ENROLLMENT_STATUS]);
   const deleteParticipantRS :?RequestState = useRequestState(['studies', DELETE_STUDY_PARTICIPANT]);
@@ -168,15 +165,15 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
 
   // console.log(isEnrollmentModalOpen)
   useEffect(() => {
-    storeDispatch(resetRequestState(CHANGE_ENROLLMENT_STATUS));
+    storeDispatch(resetRequestStates([CHANGE_ENROLLMENT_STATUS]));
   }, [isEnrollmentModalOpen, storeDispatch]);
 
   useEffect(() => {
-    storeDispatch(resetRequestState(DELETE_STUDY_PARTICIPANT));
+    storeDispatch(resetRequestStates([DELETE_STUDY_PARTICIPANT]));
   }, [isDeleteModalOpen, storeDispatch]);
 
   useEffect(() => {
-    storeDispatch(resetRequestState(ADD_PARTICIPANT));
+    storeDispatch(resetRequestStates([ADD_PARTICIPANT]));
   }, [isAddParticipantModalOpen, storeDispatch]);
 
   const handleOnChange = (event :SyntheticInputEvent<HTMLInputElement>) => {
@@ -192,7 +189,7 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
     storeDispatch(deleteStudyParticipant({
       participantEntityKeyId,
       participantId: participants.getIn([participantEntityKeyId, PERSON_ID, 0]),
-      studyId,
+      studyId: study.id,
     }));
   };
 
@@ -200,7 +197,7 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
     storeDispatch(changeEnrollmentStatus({
       enrollmentStatus: participants.getIn([participantEntityKeyId, ENROLLMENT_STATUS, 0]),
       participantEntityKeyId,
-      studyId,
+      studyId: study.id,
     }));
   };
 
@@ -235,7 +232,7 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
             !filteredParticipants.isEmpty()
             && (
               <ParticipantsTable
-                  hasDeletePermission={hasDeletePermission}
+                  hasDeletePermission={isOwner}
                   orgHasDataCollectionModule={orgHasDataCollectionModule}
                   orgHasSurveyModule={orgHasSurveyModule}
                   participants={filteredParticipants} />
@@ -255,7 +252,7 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
                   isVisible={isInfoModalOpen}
                   orgId={selectedOrgId}
                   participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])}
-                  studyId={studyId} />
+                  studyId={study.id} />
               <ChangeEnrollmentModal
                   enrollmentStatus={participants.getIn([participantEntityKeyId, ENROLLMENT_STATUS, 0])}
                   handleOnChangeEnrollment={handleOnChangeEnrollment}
@@ -278,15 +275,14 @@ const StudyParticipants = ({ hasDeletePermission, participants, study } :Props) 
           )
         }
         {
-          participantEntityKeyId && studyEntityKeyId && (
+          participantEntityKeyId && (
             <DownloadParticipantDataModal
                 handleOnClose={() => dispatch({ type: TOGGLE_DOWNLOAD_MODAL, isModalOpen: false })}
                 isVisible={isDownloadModalOpen}
                 participantEntityKeyId={participantEntityKeyId}
                 participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])}
                 selectedOrgId={selectedOrgId}
-                studyEntityKeyId={studyEntityKeyId}
-                studyId={studyId} />
+                studyId={study.id} />
           )
         }
       </Card>

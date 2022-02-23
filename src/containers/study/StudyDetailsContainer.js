@@ -12,7 +12,7 @@ import {
   Spinner,
   StyleUtils,
 } from 'lattice-ui-kit';
-import { DataUtils, ReduxUtils, useRequestState } from 'lattice-utils';
+import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   NavLink,
@@ -26,11 +26,13 @@ import type { RequestState } from 'redux-reqseq';
 
 import StudyDetails from './StudyDetails';
 import StudyParticipants from './StudyParticipants';
+import { INITIALIZE_STUDY, initializeStudy } from './actions';
 
 import QuestionnairesContainer from '../questionnaires/QuestionnairesContainer';
 import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
 import * as AppModules from '../../utils/constants/AppModules';
 import * as Routes from '../../core/router/Routes';
+import { resetRequestStates } from '../../core/redux/actions';
 import { selectStudy } from '../../core/redux/selectors';
 import { getIdFromMatch } from '../../core/router/RouterUtils';
 import { goToRoot } from '../../core/router/RoutingActions';
@@ -58,8 +60,6 @@ const {
 } = STUDIES_REDUX_CONSTANTS;
 
 const { NEUTRAL, PURPLE } = Colors;
-
-const { getEntityKeyId } = DataUtils;
 
 const { media } = StyleUtils;
 
@@ -104,8 +104,6 @@ const StudyDetailsContainer = () => {
   const studyId :UUID = getIdFromMatch(match) || '';
 
   const study :?Study = useSelector(selectStudy(studyId));
-  // TODO - get study object permissions
-  const hasDeletePermission = false;
 
   const questionnaireModuleOrgs = useSelector(
     (state) => state.getIn(['app', APP_MODULES_ORG_LIST_MAP, AppModules.QUESTIONNAIRES], List())
@@ -115,12 +113,19 @@ const StudyDetailsContainer = () => {
 
   const timeUseDiaryStudies = useSelector((state) => state.getIn([STUDIES, TIME_USE_DIARY_STUDIES], Set()));
 
-  const studyEKID = getEntityKeyId(study);
-  const hasTimeUseDiary = timeUseDiaryStudies.has(studyEKID);
+  const hasTimeUseDiary = timeUseDiaryStudies.has(studyId);
 
   const participants :Map = useSelector((state) => state.getIn([STUDIES, PARTICIPANTS, studyId], Map()));
 
   const getParticipantsRS :?RequestState = useRequestState([STUDIES, GET_STUDY_PARTICIPANTS]);
+
+  useEffect(() => {
+    dispatch(resetRequestStates([INITIALIZE_STUDY]));
+    dispatch(initializeStudy(studyId));
+    return () => {
+      dispatch(resetRequestStates([INITIALIZE_STUDY]));
+    };
+  }, [dispatch, studyId]);
 
   useEffect(() => {
     // This is useful for avoiding a network request if
@@ -173,10 +178,7 @@ const StudyDetailsContainer = () => {
             exact
             path={Routes.PARTICIPANTS}
             render={() => (
-              <StudyParticipants
-                  hasDeletePermission={hasDeletePermission}
-                  participants={participants}
-                  study={study} />
+              <StudyParticipants participants={participants} study={study} />
             )} />
         <Route
             path={Routes.QUESTIONNAIRES}
@@ -184,18 +186,12 @@ const StudyDetailsContainer = () => {
         <Route
             path={Routes.TUD_DASHBOARD}
             render={() => (
-              <TimeUseDiaryDashboard
-                  participants={participants}
-                  studyEKID={studyEKID}
-                  studyId={studyId} />
+              <TimeUseDiaryDashboard participants={participants} studyId={studyId} />
             )} />
         <Route
             path={Routes.STUDY}
             render={() => (
-              <StudyDetails
-                  hasDeletePermission={hasDeletePermission}
-                  notificationsEnabled={study?.notificationsEnabled}
-                  study={study} />
+              <StudyDetails study={study} />
             )} />
         {
           questionnaireModuleOrgs.includes(selectedOrgId) && (

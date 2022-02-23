@@ -35,7 +35,6 @@ type Props = {
   participantEntityKeyId :UUID;
   participantId :UUID;
   selectedOrgId :UUID;
-  studyEntityKeyId :UUID;
   studyId :UUID;
 }
 
@@ -46,7 +45,6 @@ const DownloadParticipantDataModal = (props :Props) => {
     participantEntityKeyId,
     participantId,
     selectedOrgId,
-    studyEntityKeyId,
     studyId
   } = props;
 
@@ -120,7 +118,6 @@ const DownloadParticipantDataModal = (props :Props) => {
           onCloseModal={handleOnCloseQuestionnaireModal}
           participantEKID={participantEntityKeyId}
           participantId={participantId}
-          studyEKID={studyEntityKeyId}
           studyId={studyId} />
     );
   }

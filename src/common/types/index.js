@@ -13,6 +13,15 @@ export type Auth0NonceState = {
   redirectUrl :string;
 };
 
+export type AuthorizationObject = {|
+  aclKey :UUID[];
+  permissions :{
+    OWNER ?:boolean;
+    READ ?:boolean;
+    WRITE ?:boolean;
+  };
+|};
+
 export type PermissionTypesEnum = {|
   DISCOVER :'DISCOVER';
   INTEGRATE :'INTEGRATE';

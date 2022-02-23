@@ -18,7 +18,6 @@ import { SearchApiActions, SearchApiSagas } from 'lattice-sagas';
 import { DataUtils, Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from '../../../common/types';
 import type { SequenceAction } from 'redux-reqseq';
 
 import DataTypes from './constants/DataTypes';
@@ -63,6 +62,7 @@ import {
 } from '../../core/edm/constants/EntityTemplateNames';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { orgHasSurveyModuleSelector } from '../app/AppSelectors';
+import type { WorkerResponse } from '../../common/types';
 
 const LOG = new Logger('TimeUseDiarySagas');
 

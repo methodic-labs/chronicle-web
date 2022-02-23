@@ -3,7 +3,6 @@
  */
 import { useRef } from 'react';
 
-import { Map } from 'immutable';
 import { ActionModal } from 'lattice-ui-kit';
 import { useRequestState } from 'lattice-utils';
 import { RequestStates } from 'redux-reqseq';
@@ -12,12 +11,12 @@ import type { RequestState } from 'redux-reqseq';
 import CreateStudyForm from './CreateStudyForm';
 
 import { CREATE_STUDY, UPDATE_STUDY } from '../StudiesActions';
+import type { Study } from '../../../common/types';
 
 type Props = {
   handleOnCloseModal :() => void;
   isVisible :boolean;
-  notificationsEnabled :boolean;
-  study ?:Map;
+  study ?:Study;
 };
 
 const StudyDetailsModal = (props :Props) => {
@@ -29,7 +28,6 @@ const StudyDetailsModal = (props :Props) => {
   const {
     handleOnCloseModal,
     isVisible,
-    notificationsEnabled,
     study
   } = props;
 
@@ -42,7 +40,7 @@ const StudyDetailsModal = (props :Props) => {
   const requestStateComponents = {
     [RequestStates.STANDBY]: (
       <div>
-        <CreateStudyForm ref={formRef} study={study} notificationsEnabled={notificationsEnabled} />
+        <CreateStudyForm ref={formRef} study={study} notificationsEnabled={study?.notificationsEnabled || false} />
       </div>
     ),
     [RequestStates.FAILURE]: (
@@ -85,7 +83,6 @@ const StudyDetailsModal = (props :Props) => {
 };
 
 StudyDetailsModal.defaultProps = {
-  notificationsEnabled: false,
   study: undefined
 };
 

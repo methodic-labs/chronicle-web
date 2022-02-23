@@ -6,6 +6,8 @@ import { Map, OrderedMap } from 'immutable';
 import { LangUtils } from 'lattice-utils';
 
 import {
+  AUTHORIZATIONS,
+  AUTHORIZATIONS_API,
   CANDIDATE,
   CANDIDATE_API,
   CHRONICLE,
@@ -27,11 +29,12 @@ const { isNonEmptyString } = LangUtils;
 
 /* eslint-disable key-spacing */
 const API_TO_PATH_MAP :Map<string, string> = OrderedMap({
-  [CANDIDATE_API]   : `${CHRONICLE}/${V3}/${CANDIDATE}`,
-  [ORGANIZATION_API]: `${CHRONICLE}/${V3}/${ORGANIZATION}`,
-  [PRINCIPAL_API]   : `${DATASTORE}/${PRINCIPAL}`,
-  [STUDY_API]       : `${CHRONICLE}/${V3}/${STUDY}`,
-  [SURVEY_API]      : `${CHRONICLE}/${V3}/${SURVEY}`,
+  [AUTHORIZATIONS_API]: `${CHRONICLE}/${V3}/${AUTHORIZATIONS}`,
+  [CANDIDATE_API]     : `${CHRONICLE}/${V3}/${CANDIDATE}`,
+  [ORGANIZATION_API]  : `${CHRONICLE}/${V3}/${ORGANIZATION}`,
+  [PRINCIPAL_API]     : `${DATASTORE}/${PRINCIPAL}`,
+  [STUDY_API]         : `${CHRONICLE}/${V3}/${STUDY}`,
+  [SURVEY_API]        : `${CHRONICLE}/${V3}/${SURVEY}`,
 });
 /* eslint-enable */
 
