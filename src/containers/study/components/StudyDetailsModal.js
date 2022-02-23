@@ -10,7 +10,8 @@ import type { RequestState } from 'redux-reqseq';
 
 import CreateStudyForm from './CreateStudyForm';
 
-import { CREATE_STUDY, UPDATE_STUDY } from '../StudiesActions';
+import { STUDIES } from '../../../common/constants';
+import { CREATE_STUDY, UPDATE_STUDY } from '../actions';
 import type { Study } from '../../../common/types';
 
 type Props = {
@@ -22,8 +23,8 @@ type Props = {
 const StudyDetailsModal = (props :Props) => {
   const formRef = useRef();
 
-  const createStudyRS :?RequestState = useRequestState(['studies', CREATE_STUDY]);
-  const updateStudyRS :?RequestState = useRequestState(['studies', UPDATE_STUDY]);
+  const createStudyRS :?RequestState = useRequestState([STUDIES, CREATE_STUDY]);
+  const updateStudyRS :?RequestState = useRequestState([STUDIES, UPDATE_STUDY]);
 
   const {
     handleOnCloseModal,

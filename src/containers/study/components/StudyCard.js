@@ -35,7 +35,7 @@ class StudyCard extends Component<Props> {
     const { dataset } = currentTarget;
     const { studyId } = dataset;
 
-    actions.goToRoute(Routes.STUDY.replace(Routes.ID_PARAM, studyId));
+    actions.goToRoute(Routes.STUDY.replace(Routes.STUDY_ID_PARAM, studyId));
   }
 
   render() {

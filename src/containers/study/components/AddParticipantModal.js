@@ -10,7 +10,7 @@ import type { RequestState } from 'redux-reqseq';
 
 import AddParticipantForm from './AddParticipantForm';
 
-import { ADD_PARTICIPANT } from '../../studies/StudiesActions';
+import { ADD_PARTICIPANT } from '../actions';
 
 type Props = {
   isVisible :boolean;

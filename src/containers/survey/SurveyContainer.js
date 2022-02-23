@@ -23,7 +23,7 @@ import {
   STUDIES,
 } from '../../common/constants';
 import { selectAppUsageSurveyData, selectStudySettings } from '../../core/redux/selectors';
-import { GET_STUDY_SETTINGS, getStudySettings } from '../studies/actions';
+import { GET_STUDY_SETTINGS, getStudySettings } from '../study/actions';
 import type { AppUsageFreqType } from '../../common/types';
 
 const { isPending, isStandby } = ReduxUtils;

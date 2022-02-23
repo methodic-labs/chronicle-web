@@ -13,8 +13,7 @@ import edmReducer from '../edm/EDMReducer';
 import orgsReducer from '../orgs/reducers';
 import permissionsReducer from '../permissions/reducers';
 import questionnareReducer from '../../containers/questionnaire/QuestionnaireReducer';
-import studiesReducer from '../../containers/studies/reducers';
-import studyReducer from '../../containers/study/reducers';
+import studiesReducer from '../../containers/study/reducers';
 import timeUseDiaryReducer from '../../containers/tud/TimeUseDiaryReducer';
 import {
   APP,
@@ -34,7 +33,6 @@ export default function reduxReducer(routerHistory :any) {
     [ORGANIZATIONS]: orgsReducer,
     [PERMISSIONS]: permissionsReducer,
     [STUDIES]: studiesReducer,
-    'study': studyReducer,
     dashboard: dashboardReducer,
     edm: edmReducer,
     questionnaire: questionnareReducer,

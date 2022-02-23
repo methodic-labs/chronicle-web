@@ -21,12 +21,11 @@ import { LangUtils, useBoolean, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 
-import DeleteStudyModal from './components/DeleteStudyModal';
+import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from './actions';
+import { DeleteStudyModal, StudyDetailsModal } from './components';
 
-import StudyDetailsModal from '../studies/components/StudyDetailsModal';
-import { resetRequestState } from '../../core/redux/ReduxActions';
+import { resetRequestStates } from '../../core/redux/actions';
 import { selectMyKeys } from '../../core/redux/selectors';
-import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from '../studies/StudiesActions';
 import type { Study, UUID } from '../../common/types';
 
 const { isNonEmptyString } = LangUtils;
@@ -37,19 +36,18 @@ const StyledFontAwesome = styled(FontAwesomeIcon)`
   font-size: 22px;
 `;
 
-type StudyDetailsItemProps = {
-  label :string;
-  missingValue?:boolean;
-  placeholder?:string;
-  value :string;
-}
-
 const StudyDetailsItem = ({
   label,
   missingValue,
   placeholder,
   value,
-} :StudyDetailsItemProps) => {
+} :{
+  label :string;
+  missingValue ?:boolean;
+  placeholder ?:string;
+  value :string;
+}) => {
+
   const detailValue = missingValue ? placeholder : value;
 
   return (
@@ -79,7 +77,7 @@ StudyDetailsItem.defaultProps = {
   missingValue: false
 };
 
-const StudyDetails = ({
+const StudyContainer = ({
   study,
 } :{
   study :Study;
@@ -101,7 +99,7 @@ const StudyDetails = ({
     if (deleteStudyRS === RequestStates.SUCCESS) {
       setTimeout(() => {
         dispatch(removeStudyOnDelete(study.id));
-        dispatch(resetRequestState(DELETE_STUDY));
+        dispatch(resetRequestStates([DELETE_STUDY]));
       }, 2000);
     }
   }, [deleteStudyRS, dispatch, study]);
@@ -112,13 +110,11 @@ const StudyDetails = ({
 
   const onCloseDeleteModal = () => {
     hideDeleteModal();
-    dispatch(resetRequestState(DELETE_STUDY));
+    dispatch(resetRequestStates([DELETE_STUDY]));
   };
 
   const openEditModal = () => {
-    // clear any previous state
-    dispatch(resetRequestState(UPDATE_STUDY));
-
+    dispatch(resetRequestStates([UPDATE_STUDY]));
     setEditModalVisible(true);
   };
 
@@ -198,4 +194,4 @@ const StudyDetails = ({
     </Card>
   );
 };
-export default StudyDetails;
+export default StudyContainer;

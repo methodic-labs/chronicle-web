@@ -29,8 +29,8 @@ import Auth0AdminRoute from '../../core/router/Auth0AdminRoute';
 import BasicErrorComponent from '../shared/BasicErrorComponent';
 import ContactSupportButton from '../shared/ContactSupportButton';
 import DashboardContainer from '../dashboard/DashboardContainer';
-import StudiesContainer from '../studies/StudiesContainer';
-import StudyDetailsContainer from '../study/StudyDetailsContainer';
+import StudiesContainer from '../study/StudiesContainer';
+import StudyRouter from '../study/StudyRouter';
 import * as Routes from '../../core/router/Routes';
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import { logout } from '../../core/auth/actions';
@@ -61,9 +61,7 @@ const AppContainer = () => {
     if (initializeApplicationRS === RequestStates.SUCCESS) {
       return (
         <Switch>
-          <Route path={Routes.STUDY}>
-            <StudyDetailsContainer />
-          </Route>
+          <Route path={Routes.STUDY} component={StudyRouter} />
           <Route path={Routes.STUDIES}>
             <StudiesContainer />
           </Route>

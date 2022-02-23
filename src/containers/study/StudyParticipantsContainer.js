@@ -29,23 +29,23 @@ import ParticipantsTable from './ParticipantsTable';
 import ParticipantsTableActions from './constants/ParticipantsTableActions';
 import ParticipantsTableDispatch from './components/ParticipantsTableDispatch';
 import TudSubmissionHistory from './components/TudSubmissionHistory';
-import { COLUMN_FIELDS } from './constants/tableColumns';
-
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
-import { resetRequestStates } from '../../core/redux/actions';
-import { selectMyKeys } from '../../core/redux/selectors';
-import {
-  currentOrgIdSelector,
-  orgHasDataCollectionModuleSelector,
-  orgHasSurveyModuleSelector
-} from '../app/AppSelectors';
 import {
   ADD_PARTICIPANT,
   CHANGE_ENROLLMENT_STATUS,
   DELETE_STUDY_PARTICIPANT,
   changeEnrollmentStatus,
   deleteStudyParticipant,
-} from '../studies/StudiesActions';
+} from './actions';
+import { COLUMN_FIELDS } from './constants/tableColumns';
+
+import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
+import { resetRequestStates } from '../../core/redux/actions';
+import { selectMyKeys, selectStudyParticipants } from '../../core/redux/selectors';
+import {
+  currentOrgIdSelector,
+  orgHasDataCollectionModuleSelector,
+  orgHasSurveyModuleSelector
+} from '../app/AppSelectors';
 import type { Study } from '../../common/types';
 
 const { PERSON_ID } = PROPERTY_TYPE_FQNS;
@@ -126,12 +126,12 @@ const reducer = (state :Object, action :Object) => {
   }
 };
 
-type Props = {
-  participants :Map;
+const StudyParticipantsContainer = ({
+  study,
+} :{
   study :Study;
-};
+}) => {
 
-const StudyParticipants = ({ participants, study } :Props) => {
   const storeDispatch = useDispatch();
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -149,6 +149,7 @@ const StudyParticipants = ({ participants, study } :Props) => {
   const [filteredParticipants, setFilteredParticipants] = useState(Map());
 
   // selectors
+  const participants :Map = useSelector(selectStudyParticipants(study.id));
   const orgHasSurveyModule = useSelector(orgHasSurveyModuleSelector);
   const orgHasDataCollectionModule = useSelector(orgHasDataCollectionModuleSelector);
   const selectedOrgId :UUID = useSelector(currentOrgIdSelector);
@@ -290,4 +291,4 @@ const StudyParticipants = ({ participants, study } :Props) => {
   );
 };
 
-export default StudyParticipants;
+export default StudyParticipantsContainer;

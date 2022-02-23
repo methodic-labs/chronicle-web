@@ -7,8 +7,8 @@ import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
-import { getAllStudies } from '../../studies/actions';
-import { getAllStudiesWorker } from '../../studies/sagas';
+import { getAllStudies } from '../../study/actions';
+import { getAllStudiesWorker } from '../../study/sagas';
 import { INITIALIZE_APPLICATION, initializeApplication } from '../actions';
 
 const { toSagaError } = AxiosUtils;

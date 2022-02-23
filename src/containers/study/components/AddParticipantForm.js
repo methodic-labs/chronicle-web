@@ -7,11 +7,10 @@ import { Constants } from 'lattice';
 import { Form } from 'lattice-fabricate';
 import { useDispatch } from 'react-redux';
 
-import { dataSchema, uiSchema } from '../schema/AddParticipantSchema';
-
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { validateAddParticipantForm } from '../../../utils/FormUtils';
-import { addStudyParticipant } from '../../studies/StudiesActions';
+import { addStudyParticipant } from '../actions';
+import { dataSchema, uiSchema } from '../schema/AddParticipantSchema';
 
 const { STUDY_ID } = PROPERTY_TYPE_FQNS;
 const { OPENLATTICE_ID_FQN } = Constants;

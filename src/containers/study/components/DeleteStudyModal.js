@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 import { Map } from 'immutable';
 import {
-  // $FlowFixMe
   Box,
   Input,
   Label,
@@ -18,7 +17,7 @@ import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
-import { deleteStudy } from '../../studies/StudiesActions';
+import { deleteStudy } from '../actions';
 
 const { FULL_NAME_FQN } = PROPERTY_TYPE_FQNS;
 
