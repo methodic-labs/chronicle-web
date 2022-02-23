@@ -5,13 +5,11 @@ import { useContext, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { getIn } from 'immutable';
+import { get, getIn } from 'immutable';
 import {
   Colors,
   IconButton,
-  // $FlowFixMe
   Menu,
-  // $FlowFixMe
   MenuItem,
   Tag,
 } from 'lattice-ui-kit';
@@ -22,6 +20,7 @@ import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 
 import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
+import { CANDIDATE, ID, PARTICIPANT_ID } from '../../../common/constants';
 import { COLUMN_FIELDS } from '../constants/tableColumns';
 
 const { formatDateTime } = DateTimeUtils;
@@ -33,7 +32,7 @@ const {
   FIRST_TUD_SUBMISSION,
   LAST_ANDROID_DATA,
   LAST_TUD_SUBMISSION,
-  PARTICIPANT_ID,
+  // PARTICIPANT_ID,
   TUD_SUBMISSION_DURATION,
 } = COLUMN_FIELDS;
 
@@ -95,8 +94,10 @@ const ParticipantRow = (props :Props) => {
   const dispatch = useContext(ParticipantsTableDispatch);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const participantEntityKeyId = getIn(data, ['id', 0]);
-  const participantId = getIn(data, [PARTICIPANT_ID, 0]);
+  // const participantEntityKeyId = getIn(data, ['id', 0]);
+  const candidateId = getIn(data, [CANDIDATE, ID]);
+  // const participantId = getIn(data, [PARTICIPANT_ID, 0]);
+  const participantId = get(data, PARTICIPANT_ID);
   const enrollmentStatus = getIn(data, [ENROLLMENT_STATUS, 0]);
   const firstAndroidData = formatDateTime(getIn(data, [FIRST_ANDROID_DATA, 0]), DateTime.DATETIME_SHORT);
   const lastAndroidData = formatDateTime(getIn(data, [LAST_ANDROID_DATA, 0]), DateTime.DATETIME_SHORT);
@@ -121,7 +122,7 @@ const ParticipantRow = (props :Props) => {
     return [participantId, ...androidData, ...tudData];
   };
 
-  const rowData = useMemo(() => getRowData(), [participantEntityKeyId]);
+  const rowData = useMemo(() => getRowData(), [candidateId]);
 
   const handleOnClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -138,7 +139,7 @@ const ParticipantRow = (props :Props) => {
 
     setAnchorEl(null);
 
-    dispatch({ type: SET_PARTICIPANT_EKID, participantEntityKeyId });
+    dispatch({ type: SET_PARTICIPANT_EKID, candidateId });
     dispatch({ type: actionId, isModalOpen: true });
   };
 
