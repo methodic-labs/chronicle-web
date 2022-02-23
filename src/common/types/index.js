@@ -22,6 +22,15 @@ export type AuthorizationObject = {|
   };
 |};
 
+export type ParticipationStatusesEnum = {|
+  ENROLLED :'ENROLLED';
+  NOT_ENROLLED :'NOT_ENROLLED';
+  PAUSED :'PAUSED';
+  UNKNOWN :'UNKNOWN';
+|};
+
+export type ParticipationStatus = $Values<ParticipationStatusesEnum>;
+
 export type PermissionTypesEnum = {|
   DISCOVER :'DISCOVER';
   INTEGRATE :'INTEGRATE';
@@ -33,6 +42,20 @@ export type PermissionTypesEnum = {|
 |};
 
 export type PermissionType = $Values<PermissionTypesEnum>;
+
+export type Participant = {
+  candidate :{
+    dateOfBirth ?:string;
+    email ?:string;
+    firstName ?:string;
+    id :UUID;
+    lastName ?:string;
+    name ?:string;
+    phoneNumber ?:string;
+  };
+  participantId :string;
+  participationStatus :ParticipationStatus;
+};
 
 export type Study = {
   category :'Study';

@@ -22,6 +22,9 @@ const getAppUsageLink = (orgId :UUID, studyId :UUID, participantId :string) => (
   + `&studyId=${studyId}&participantId=${participantId}`
 );
 
+export { default as createFormDataFromStudyEntity } from './createFormDataFromStudyEntity';
+export { default as validateAddParticipantForm } from './validateAddParticipantForm';
+
 export {
   getAppUsageLink,
   getParticipantLoginLink,

@@ -2,30 +2,29 @@
  * @flow
  */
 
-import { memo, forwardRef } from 'react';
+import { forwardRef, memo } from 'react';
 
-import { Map } from 'immutable';
 import { Form } from 'lattice-fabricate';
 import { useDispatch } from 'react-redux';
 
 import { createSchema, createUiSchema } from './CreateStudySchemas';
 
-import { createFormDataFromStudyEntity } from '../../../utils/FormUtils';
 import { createStudy } from '../actions';
+import { createFormDataFromStudyEntity } from '../utils';
+import type { Study } from '../../../common/types';
 
-type Props = {
-  notificationsEnabled :boolean;
-  study :Map;
-}
-const CreateStudyForm = (props:Props, ref) => {
-  const { notificationsEnabled, study } = props;
+const CreateStudyForm = ({
+  study,
+} :{
+  study ?:Study;
+}, ref) => {
 
   const dispatch = useDispatch();
 
   const schema = createSchema();
   const uiSchema = createUiSchema();
 
-  const initialFormData = study ? createFormDataFromStudyEntity(schema, notificationsEnabled, study) : {};
+  const initialFormData = study ? createFormDataFromStudyEntity(schema, study) : {};
 
   const handleSubmit = ({ formData } :Object) => {
     if (study) {
@@ -49,7 +48,11 @@ const CreateStudyForm = (props:Props, ref) => {
   );
 };
 
+CreateStudyForm.defaultProps = {
+  study: undefined
+};
+
 // $FlowFixMe
-export default memo<Props, typeof Form>(
+export default memo(
   forwardRef(CreateStudyForm)
 );

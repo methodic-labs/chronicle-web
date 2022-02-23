@@ -30,14 +30,15 @@ import ParticipantsTableActions from './constants/ParticipantsTableActions';
 import ParticipantsTableDispatch from './components/ParticipantsTableDispatch';
 import TudSubmissionHistory from './components/TudSubmissionHistory';
 import {
-  ADD_PARTICIPANT,
   CHANGE_ENROLLMENT_STATUS,
   DELETE_STUDY_PARTICIPANT,
+  REGISTER_PARTICIPANT,
   changeEnrollmentStatus,
   deleteStudyParticipant,
 } from './actions';
 import { COLUMN_FIELDS } from './constants/tableColumns';
 
+import { PARTICIPANT_ID, STUDY_ID } from '../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectMyKeys, selectStudyParticipants } from '../../core/redux/selectors';
@@ -46,7 +47,7 @@ import {
   orgHasDataCollectionModuleSelector,
   orgHasSurveyModuleSelector
 } from '../app/AppSelectors';
-import type { Study } from '../../common/types';
+import type { Participant, Study } from '../../common/types';
 
 const { PERSON_ID } = PROPERTY_TYPE_FQNS;
 
@@ -174,7 +175,7 @@ const StudyParticipantsContainer = ({
   }, [isDeleteModalOpen, storeDispatch]);
 
   useEffect(() => {
-    storeDispatch(resetRequestStates([ADD_PARTICIPANT]));
+    storeDispatch(resetRequestStates([REGISTER_PARTICIPANT]));
   }, [isAddParticipantModalOpen, storeDispatch]);
 
   const handleOnChange = (event :SyntheticInputEvent<HTMLInputElement>) => {
@@ -182,7 +183,7 @@ const StudyParticipantsContainer = ({
     const { value } = currentTarget;
 
     const matchingResults = participants
-      .filter((participant) => participant.getIn([PERSON_ID, 0]).toLowerCase().includes(value.toLowerCase()));
+      .filter((participant :Participant) => participant[PARTICIPANT_ID].toLowerCase().includes(value.toLowerCase()));
     setFilteredParticipants(matchingResults);
   };
 

@@ -3,13 +3,15 @@
  */
 
 import { call, put, takeEvery } from '@redux-saga/core/effects';
+import { Map } from 'immutable';
 import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from '../../../common/types';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as StudyApi from '../../../core/api/study';
+import { CANDIDATE, ID } from '../../../common/constants';
 import { GET_STUDY_PARTICIPANTS, getStudyParticipants } from '../actions';
+import type { WorkerResponse } from '../../../common/types';
 
 const { toSagaError } = AxiosUtils;
 
@@ -23,8 +25,11 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Saga<WorkerRespons
   try {
     yield put(getStudyParticipants.request(id, value));
     const response = yield call(StudyApi.getStudyParticipants, value);
-    workerResponse = { data: response };
-    yield put(getStudyParticipants.success(id, response));
+    const participants = Map().withMutations((mutableMap) => {
+      response.forEach((participant) => mutableMap.set(participant[CANDIDATE][ID], participant));
+    });
+    workerResponse = { data: participants };
+    yield put(getStudyParticipants.success(id, participants));
   }
   catch (error) {
     LOG.error(action.type, error);

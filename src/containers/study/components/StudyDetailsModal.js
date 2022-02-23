@@ -14,23 +14,20 @@ import { STUDIES } from '../../../common/constants';
 import { CREATE_STUDY, UPDATE_STUDY } from '../actions';
 import type { Study } from '../../../common/types';
 
-type Props = {
+const StudyDetailsModal = ({
+  handleOnCloseModal,
+  isVisible,
+  study,
+} :{
   handleOnCloseModal :() => void;
   isVisible :boolean;
   study ?:Study;
-};
+}) => {
 
-const StudyDetailsModal = (props :Props) => {
   const formRef = useRef();
 
   const createStudyRS :?RequestState = useRequestState([STUDIES, CREATE_STUDY]);
   const updateStudyRS :?RequestState = useRequestState([STUDIES, UPDATE_STUDY]);
-
-  const {
-    handleOnCloseModal,
-    isVisible,
-    study
-  } = props;
 
   const handleOnSubmit = () => {
     if (formRef.current) {
@@ -41,7 +38,7 @@ const StudyDetailsModal = (props :Props) => {
   const requestStateComponents = {
     [RequestStates.STANDBY]: (
       <div>
-        <CreateStudyForm ref={formRef} study={study} notificationsEnabled={study?.notificationsEnabled || false} />
+        <CreateStudyForm ref={formRef} study={study} />
       </div>
     ),
     [RequestStates.FAILURE]: (

@@ -5,9 +5,6 @@
 import { newRequestSequence } from 'redux-reqseq';
 import type { RequestSequence } from 'redux-reqseq';
 
-const ADD_PARTICIPANT :'ADD_PARTICIPANT' = 'ADD_PARTICIPANT';
-const addStudyParticipant :RequestSequence = newRequestSequence(ADD_PARTICIPANT);
-
 const CHANGE_ENROLLMENT_STATUS :'CHANGE_ENROLLMENT_STATUS' = 'CHANGE_ENROLLMENT_STATUS';
 const changeEnrollmentStatus :RequestSequence = newRequestSequence(CHANGE_ENROLLMENT_STATUS);
 
@@ -47,6 +44,9 @@ const getTimeUseDiaryStudies :RequestSequence = newRequestSequence(GET_TIME_USE_
 const INITIALIZE_STUDY :'INITIALIZE_STUDY' = 'INITIALIZE_STUDY';
 const initializeStudy :RequestSequence = newRequestSequence(INITIALIZE_STUDY);
 
+const REGISTER_PARTICIPANT :'REGISTER_PARTICIPANT' = 'REGISTER_PARTICIPANT';
+const registerParticipant :RequestSequence = newRequestSequence(REGISTER_PARTICIPANT);
+
 const REMOVE_STUDY_ON_DELETE :'REMOVE_STUDY_ON_DELETE' = 'REMOVE_STUDY_ON_DELETE';
 const removeStudyOnDelete = (studyId :UUID) => ({
   type: REMOVE_STUDY_ON_DELETE,
@@ -57,7 +57,6 @@ const UPDATE_STUDY :'UPDATE_STUDY' = 'UPDATE_STUDY';
 const updateStudy :RequestSequence = newRequestSequence(UPDATE_STUDY);
 
 export {
-  ADD_PARTICIPANT,
   CHANGE_ENROLLMENT_STATUS,
   CREATE_STUDY,
   DELETE_STUDY,
@@ -71,9 +70,9 @@ export {
   GET_STUDY_SETTINGS,
   GET_TIME_USE_DIARY_STUDIES,
   INITIALIZE_STUDY,
+  REGISTER_PARTICIPANT,
   REMOVE_STUDY_ON_DELETE,
   UPDATE_STUDY,
-  addStudyParticipant,
   changeEnrollmentStatus,
   createStudy,
   deleteStudy,
@@ -87,6 +86,7 @@ export {
   getStudySettings,
   getTimeUseDiaryStudies,
   initializeStudy,
+  registerParticipant,
   removeStudyOnDelete,
   updateStudy,
 };

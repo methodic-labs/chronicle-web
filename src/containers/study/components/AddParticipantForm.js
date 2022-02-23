@@ -3,32 +3,37 @@
 import { forwardRef } from 'react';
 
 import { Map } from 'immutable';
-import { Constants } from 'lattice';
 import { Form } from 'lattice-fabricate';
 import { useDispatch } from 'react-redux';
 
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
-import { validateAddParticipantForm } from '../../../utils/FormUtils';
-import { addStudyParticipant } from '../actions';
-import { dataSchema, uiSchema } from '../schema/AddParticipantSchema';
+import { dataSchema, uiSchema } from './AddParticipantSchema';
 
-const { STUDY_ID } = PROPERTY_TYPE_FQNS;
-const { OPENLATTICE_ID_FQN } = Constants;
+import {
+  PAGE_1_SECTION_1,
+  PARTICIPANT_ID,
+  STUDY_ID,
+} from '../../../common/constants';
+import { registerParticipant } from '../actions';
+import { validateAddParticipantForm } from '../utils';
+import type { Study } from '../../../common/types';
 
-type Props = {
+const AddParticipantForm = ({
+  participants,
+  study,
+} :{
   participants :Map;
-  study :Map;
-}
-const AddParticipantForm = (props :Props, ref) => {
-  const { participants, study } = props;
+  study :Study;
+}, ref) => {
+
   const dispatch = useDispatch();
 
-  const handleSubmit = ({ formData }:Object) => {
-    dispatch(addStudyParticipant({
-      formData,
-      studyEntityKeyId: study.getIn([OPENLATTICE_ID_FQN, 0]),
-      studyId: study.getIn([STUDY_ID, 0])
-    }));
+  const handleSubmit = ({ formData } :Object) => {
+    dispatch(
+      registerParticipant({
+        [PARTICIPANT_ID]: formData[PAGE_1_SECTION_1][PARTICIPANT_ID],
+        [STUDY_ID]: study.id,
+      })
+    );
   };
 
   const validate = (formData, errors) => (

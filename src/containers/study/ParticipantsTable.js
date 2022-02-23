@@ -9,6 +9,8 @@ import { Table } from 'lattice-ui-kit';
 import ParticipantRow from './components/ParticipantRow';
 import getHeaders from './constants/tableHeaders';
 
+import type { Participant } from '../../common/types';
+
 const TableWrapper = styled.div`
   overflow-x: scroll;
 
@@ -17,20 +19,17 @@ const TableWrapper = styled.div`
   }
 `;
 
-type Props = {
+const ParticipantsTable = ({
+  hasDeletePermission,
+  orgHasDataCollectionModule,
+  orgHasSurveyModule,
+  participants,
+} :{
   hasDeletePermission :boolean;
   orgHasDataCollectionModule :boolean;
   orgHasSurveyModule :boolean;
-  participants :Map<UUID, Map>;
-};
-
-const ParticipantsTable = (props :Props) => {
-  const {
-    hasDeletePermission,
-    orgHasDataCollectionModule,
-    orgHasSurveyModule,
-    participants,
-  } = props;
+  participants :Map<UUID, Participant>;
+}) => {
 
   const tableHeaders = getHeaders(orgHasSurveyModule, orgHasDataCollectionModule);
 
@@ -56,4 +55,5 @@ const ParticipantsTable = (props :Props) => {
   );
 };
 
-export default memo<Props>(ParticipantsTable);
+// $FlowFixMe
+export default memo(ParticipantsTable);
