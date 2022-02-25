@@ -43,6 +43,7 @@ import {
 
 import * as AppModules from '../../utils/constants/AppModules';
 import * as ChronicleApi from '../../utils/api/ChronicleApi';
+import { getStudyTUDSubmissionsByDateRange } from '../../core/api/timeusediary';
 import {
   selectESIDByCollection,
   selectEntitySetsByModule,
@@ -212,67 +213,27 @@ function* submitTudDataWatcher() :Saga<*> {
   yield takeEvery(SUBMIT_TUD_DATA, submitTudDataWorker);
 }
 
+// updated for v3
 function* getSubmissionsByDateWorker(action :SequenceAction) :Saga<*> {
   try {
     yield put(getSubmissionsByDate.request(action.id));
 
     const {
-      participants,
+      studyId,
       endDate,
       startDate,
     } = action.value;
 
-    const participantsESID = yield select(selectESIDByCollection(PARTICIPANTS, AppModules.CHRONICLE_CORE));
-
-    const participantEKIDs :UUID[] = participants.keySeq().toJS();
-
-    const submissionESID = yield select(selectESIDByCollection(SUBMISSION, AppModules.QUESTIONNAIRES));
-    const respondsWithESID = yield select(selectESIDByCollection(RESPONDS_WITH, AppModules.QUESTIONNAIRES));
-
-    // filtered neighbor entity search on participants entity set to get submissions
-    const searchFilter = {
-      destinationEntitySetIds: [submissionESID],
-      edgeEntitySetIds: [respondsWithESID],
-      entityKeyIds: participantEKIDs,
-      sourceEntitySetIds: [participantsESID]
-    };
-
+    const adjustedStartDate = DateTime.fromISO(startDate).startOf('day');
+    const adjustedEndDate = DateTime.fromISO(endDate).endOf('day');
     const response = yield call(
-      searchEntityNeighborsWithFilterWorker,
-      searchEntityNeighborsWithFilter({
-        entitySetId: participantsESID,
-        filter: searchFilter,
-      })
+      getStudyTUDSubmissionsByDateRange,
+      studyId,
+      adjustedStartDate.toISO(),
+      adjustedEndDate.toISO()
     );
-    if (response.error) throw response.error;
 
-    // group results by date
-    const adjustedStartDate = DateTime.fromISO(startDate).set({ hour: 0, minute: 0 });
-    const adjustedEndDate = DateTime.fromISO(endDate).set({ hour: 23, minute: 59 });
-
-    const submissionsByDate = Map().withMutations((mutator) => {
-      fromJS(response.data).forEach((neighbors :List, participantEKID :UUID) => {
-        // only consider results that are between startDate & endDate
-        neighbors.forEach((neighbor :Map) => {
-
-          const date = DateTime.fromISO(neighbor.getIn(['associationDetails', DATE_TIME_FQN, 0]));
-          // $FlowFixMe
-          if (date.diff(adjustedStartDate, 'hours').toObject().hours > 0
-          // $FlowFixMe
-            && date.diff(adjustedEndDate, 'hours').toObject().hours < 0) {
-
-            const neighborDetails = neighbor.get('neighborDetails');
-            const entity = fromJS({
-              [OPENLATTICE_ID_FQN]: getPropertyValue(neighborDetails, OPENLATTICE_ID_FQN),
-              [PERSON_ID.toString()]: [getIn(participants, [participantEKID, PERSON_ID, 0])],
-              [ID_FQN.toString()]: [participantEKID],
-              [DATE_TIME_FQN.toString()]: getPropertyValue(neighborDetails, DATE_TIME_FQN)
-            });
-            mutator.update(date, List(), (list) => list.push(entity));
-          }
-        });
-      });
-    }).sortBy((value :List, key :DateTime) => key)
+    const submissionsByDate = fromJS(response).sortBy((value :List, key :DateTime) => key)
       .mapEntries(([key :DateTime, value :List]) => [key.toLocaleString(DateTime.DATE_SHORT), value]);
 
     yield put(getSubmissionsByDate.success(action.id, submissionsByDate));
