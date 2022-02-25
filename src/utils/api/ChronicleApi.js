@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { Types } from 'lattice';
 import { DateTime } from 'luxon';
+import { NIL as NIL_UUID } from 'uuid';
 
 import { getAuthToken } from '../../core/auth/utils';
 import {
@@ -165,7 +166,8 @@ function submitQuestionnaire(
  *
  * Submit time use diary survey data
  */
-function submitTudData(organizationId :UUID, studyId :UUID, participantId :string, requestBody :Object) {
+
+function submitTudData(organizationId :UUID = NIL_UUID, studyId :UUID, participantId :string, requestBody :Object) {
   return new Promise<*>((resolve, reject) => {
     const url = getSubmitTudDataUrl(organizationId, studyId, participantId);
     if (!url) return reject(new Error('Invalid url'));
