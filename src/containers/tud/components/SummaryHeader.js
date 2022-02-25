@@ -33,6 +33,7 @@ const SummaryHeader = ({ onDownloadData, downloadAllDataRS } :Props) => (
       Number of Submissions
     </Typography>
     <div />
+    {/* TODO: Fix download all button for v3 */}
     <DownloadAllButton downloadAllDataRS={downloadAllDataRS} onDownloadData={onDownloadData} />
   </Wrapper>
 );

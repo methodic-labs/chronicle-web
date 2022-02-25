@@ -4,17 +4,14 @@ import styled from 'styled-components';
 import { faCopy } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  // $FlowFixMe
   Box,
   IconButton,
   Modal,
-  // $FlowFixMe
   Tooltip,
   Typography
 } from 'lattice-ui-kit';
 
 import copyToClipboard from '../../../utils/copyToClipboard';
-import { useHasQuestionnairesModule } from '../../shared/hooks';
 import { getAppUsageLink, getParticipantLoginLink, getTimeUseDiaryLink } from '../utils';
 
 const Grid = styled.div`
@@ -40,8 +37,6 @@ const ParticipantInfoModal = ({
   studyId
 } :Props) => {
 
-  const hasQuestionnaireModule = useHasQuestionnairesModule();
-
   const renderParticipantInfo = () => {
     const participantLoginLink = getParticipantLoginLink(orgId, studyId, participantId);
     const timeUseDiaryLink = getTimeUseDiaryLink(orgId, studyId, participantId);
@@ -53,7 +48,10 @@ const ParticipantInfoModal = ({
       { name: 'Enrollment Link', value: participantLoginLink },
       { name: 'App Usage Link', value: appUsageLink }
     ];
-    if (hasQuestionnaireModule) {
+
+    // const hasQuestionnaireModule = useHasQuestionnairesModule();
+    // TODO: Use Study Settings flag instead
+    if (true) {
       participantDetails.push({
         name: 'Time Use Diary Link',
         value: timeUseDiaryLink

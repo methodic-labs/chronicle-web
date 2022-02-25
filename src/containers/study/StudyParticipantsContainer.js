@@ -33,13 +33,10 @@ import {
   CHANGE_ENROLLMENT_STATUS,
   DELETE_STUDY_PARTICIPANT,
   REGISTER_PARTICIPANT,
-  changeEnrollmentStatus,
-  deleteStudyParticipant,
 } from './actions';
 import { COLUMN_FIELDS } from './constants/tableColumns';
 
-import { PARTICIPANT_ID, STUDY_ID } from '../../common/constants';
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
+import { PARTICIPANT_ID } from '../../common/constants';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectMyKeys, selectStudyParticipants } from '../../core/redux/selectors';
 import {
@@ -49,12 +46,10 @@ import {
 } from '../app/AppSelectors';
 import type { Participant, Study } from '../../common/types';
 
-const { PERSON_ID } = PROPERTY_TYPE_FQNS;
-
 const { ENROLLMENT_STATUS } = COLUMN_FIELDS;
 
 const {
-  SET_PARTICIPANT_EKID,
+  SET_CANDIDATE_ID,
   TOGGLE_ADD_PARTICIPANT_MODAL,
   TOGGLE_DELETE_MODAL,
   TOGGLE_DOWNLOAD_MODAL,
@@ -75,7 +70,7 @@ const initialState = {
   isEnrollmentModalOpen: false,
   isInfoModalOpen: false,
   isTudSubmissionHistoryModalOpen: false,
-  participantEntityKeyId: null
+  candidateId: null
 };
 
 const reducer = (state :Object, action :Object) => {
@@ -92,10 +87,10 @@ const reducer = (state :Object, action :Object) => {
         isDeleteModalOpen: action.isModalOpen
       };
 
-    case SET_PARTICIPANT_EKID:
+    case SET_CANDIDATE_ID:
       return {
         ...state,
-        participantEntityKeyId: action.participantEntityKeyId
+        candidateId: action.candidateId
       };
 
     case TOGGLE_ADD_PARTICIPANT_MODAL:
@@ -144,7 +139,7 @@ const StudyParticipantsContainer = ({
     isEnrollmentModalOpen,
     isInfoModalOpen,
     isTudSubmissionHistoryModalOpen,
-    participantEntityKeyId,
+    candidateId,
   } = state;
 
   const [filteredParticipants, setFilteredParticipants] = useState(Map());
@@ -188,19 +183,21 @@ const StudyParticipantsContainer = ({
   };
 
   const handleOnDeleteParticipant = () => {
-    storeDispatch(deleteStudyParticipant({
-      participantEntityKeyId,
-      participantId: participants.getIn([participantEntityKeyId, PERSON_ID, 0]),
-      studyId: study.id,
-    }));
+    // TODO: Fix for v3
+    // storeDispatch(deleteStudyParticipant({
+    //   participantEntityKeyId,
+    //   participantId: participants.getIn([participantEntityKeyId, PERSON_ID, 0]),
+    //   studyId: study.id,
+    // }));
   };
 
   const handleOnChangeEnrollment = () => {
-    storeDispatch(changeEnrollmentStatus({
-      enrollmentStatus: participants.getIn([participantEntityKeyId, ENROLLMENT_STATUS, 0]),
-      participantEntityKeyId,
-      studyId: study.id,
-    }));
+    // TODO Fix for v3
+    // storeDispatch(changeEnrollmentStatus({
+    //   enrollmentStatus: participants.getIn([participantEntityKeyId, ENROLLMENT_STATUS, 0]),
+    //   participantEntityKeyId,
+    //   studyId: study.id,
+    // }));
   };
 
   return (
@@ -247,42 +244,42 @@ const StudyParticipantsContainer = ({
             participants={participants}
             study={study} />
         {
-          participantEntityKeyId && (
+          candidateId && (
             <>
               <ParticipantInfoModal
                   handleOnClose={() => dispatch({ type: TOGGLE_INFO_MODAL, isModalOpen: false })}
                   isVisible={isInfoModalOpen}
                   orgId={selectedOrgId}
-                  participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])}
+                  participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                   studyId={study.id} />
               <ChangeEnrollmentModal
-                  enrollmentStatus={participants.getIn([participantEntityKeyId, ENROLLMENT_STATUS, 0])}
+                  enrollmentStatus={participants.getIn([candidateId, ENROLLMENT_STATUS, 0])}
                   handleOnChangeEnrollment={handleOnChangeEnrollment}
                   handleOnClose={() => dispatch({ type: TOGGLE_ENROLLMENT_MODAL, isModalOpen: false })}
                   isVisible={isEnrollmentModalOpen}
-                  participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])}
+                  participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                   requestState={changeEnrollmentStatusRS} />
               <DeleteParticipantModal
                   handleOnClose={() => dispatch({ type: TOGGLE_DELETE_MODAL, isModalOpen: false })}
                   handleOnDeleteParticipant={handleOnDeleteParticipant}
                   isVisible={isDeleteModalOpen}
-                  participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])}
+                  participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                   requestState={deleteParticipantRS} />
               <TudSubmissionHistory
                   handleOnClose={() => dispatch({ type: TOGGLE_TUD_SUBMISSION_HISTORY_MODAL, isModalOpen: false })}
                   isVisible={isTudSubmissionHistoryModalOpen}
-                  participantEntityKeyId={participantEntityKeyId}
-                  participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])} />
+                  candidateId={candidateId}
+                  participantId={participants.getIn([candidateId, PARTICIPANT_ID])} />
             </>
           )
         }
         {
-          participantEntityKeyId && (
+          candidateId && (
             <DownloadParticipantDataModal
                 handleOnClose={() => dispatch({ type: TOGGLE_DOWNLOAD_MODAL, isModalOpen: false })}
                 isVisible={isDownloadModalOpen}
-                participantEntityKeyId={participantEntityKeyId}
-                participantId={participants.getIn([participantEntityKeyId, PERSON_ID, 0])}
+                candidateId={candidateId}
+                participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                 selectedOrgId={selectedOrgId}
                 studyId={study.id} />
           )

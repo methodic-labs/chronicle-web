@@ -63,6 +63,7 @@ export const SURVEY_API :'SurveyApi' = 'SurveyApi';
 export const SYNC :'sync' = 'sync';
 export const TIMESTAMP :'timestamp' = 'timestamp';
 export const TIMEZONE :'timezone' = 'timezone';
+export const TIME_USE_DIARY_API :'TimeUseDiaryApi' = 'TimeUseDiaryApi';
 export const TITLE :'title' = 'title';
 export const V3 :'v3' = 'v3';
 export const VERSION :'version' = 'version';

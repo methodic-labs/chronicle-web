@@ -1,7 +1,7 @@
 // @flow
 
 export default Object.freeze({
-  SET_PARTICIPANT_EKID: 'set_participant_ekid',
+  SET_CANDIDATE_ID: 'set_candidate_id',
   TOGGLE_ADD_PARTICIPANT_MODAL: 'toggle_add_participant',
   TOGGLE_DELETE_MODAL: 'toggle_delete',
   TOGGLE_DOWNLOAD_MODAL: 'toggle_download',

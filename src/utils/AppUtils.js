@@ -244,7 +244,7 @@ const getVerifyParticipantIdUrl = (studyId :UUID, participantId :string) => {
 
 const getStudySettingsUrl = (studyId :UUID) => {
   if (!isValidUUID(studyId)) {
-    LOG.error('invalid orgId: ', studyId);
+    LOG.error('invalid studyId: ', studyId);
     return null;
   }
 
