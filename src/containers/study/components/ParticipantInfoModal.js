@@ -12,7 +12,6 @@ import {
 } from 'lattice-ui-kit';
 
 import copyToClipboard from '../../../utils/copyToClipboard';
-import { useHasQuestionnairesModule } from '../../shared/hooks';
 import { getAppUsageLink, getParticipantLoginLink, getTimeUseDiaryLink } from '../utils';
 
 const Grid = styled.div`
