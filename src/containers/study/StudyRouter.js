@@ -14,6 +14,7 @@ import StudyContainer from './StudyContainer';
 import StudyParticipantsContainer from './StudyParticipantsContainer';
 import { INITIALIZE_STUDY, initializeStudy } from './actions';
 
+import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
 import * as Routes from '../../core/router/Routes';
 import { BasicErrorComponent, Spinner, TabLink } from '../../common/components';
 import { STUDIES } from '../../common/constants';
@@ -92,8 +93,9 @@ const StudyRouter = () => {
 
   if (isSuccess(initializeStudyRS) && study) {
 
-    const hasQuestionnaires = false;
-    const hasTimeUseDiary = false;
+    // TODO: Adjust this according to study settings
+    const hasQuestionnaires = true;
+    const hasTimeUseDiary = true;
 
     const renderStudyContainer = () => (
       (study)
@@ -134,6 +136,7 @@ const StudyRouter = () => {
         </Box>
         <Switch>
           <Route path={Routes.PARTICIPANTS} render={renderStudyParticipantsContainer} />
+          <Route path={Routes.STUDY_TUD} component={TimeUseDiaryDashboard} />
           <Route path={Routes.STUDY} render={renderStudyContainer} />
         </Switch>
       </>

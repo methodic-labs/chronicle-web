@@ -11,6 +11,7 @@ import {
 } from 'lattice-ui-kit';
 import { ReduxConstants, ReduxUtils, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouteMatch } from 'react-router-dom';
 import type { RequestState } from 'redux-reqseq';
 
 import SearchPanel from './components/SearchPanel';
@@ -31,7 +32,6 @@ import { resetRequestState } from '../../core/redux/ReduxActions';
 import { TUD_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 
 const { SUBMISSIONS_BY_DATE } = TUD_REDUX_CONSTANTS;
-
 const { REQUEST_STATE } = ReduxConstants;
 
 const {
@@ -41,17 +41,16 @@ const {
   isSuccess,
 } = ReduxUtils;
 
-type Props = {
-  participants :Map;
-};
-
-const TimeUseDiaryDashboard = ({ participants } :Props) => {
+const TimeUseDiaryDashboard = () => {
   const dispatch = useDispatch();
 
   const [dates, setDates] = useState({
     startDate: undefined,
     endDate: undefined
   });
+
+  const match :Match = useRouteMatch();
+  const { studyId } = match.params;
 
   // selectors
   const downloadAllDataRS :?RequestState = useRequestState(['tud', DOWNLOAD_ALL_TUD_DATA]);
@@ -77,7 +76,7 @@ const TimeUseDiaryDashboard = ({ participants } :Props) => {
     if (startDate && endDate) {
       dispatch(getSubmissionsByDate({
         endDate,
-        participants,
+        studyId,
         startDate,
       }));
     }
