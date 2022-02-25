@@ -4,11 +4,9 @@ import styled from 'styled-components';
 import { faCopy } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  // $FlowFixMe
   Box,
   IconButton,
   Modal,
-  // $FlowFixMe
   Tooltip,
   Typography
 } from 'lattice-ui-kit';
@@ -40,8 +38,6 @@ const ParticipantInfoModal = ({
   studyId
 } :Props) => {
 
-  const hasQuestionnaireModule = useHasQuestionnairesModule();
-
   const renderParticipantInfo = () => {
     const participantLoginLink = getParticipantLoginLink(orgId, studyId, participantId);
     const timeUseDiaryLink = getTimeUseDiaryLink(orgId, studyId, participantId);
@@ -54,6 +50,7 @@ const ParticipantInfoModal = ({
       { name: 'App Usage Link', value: appUsageLink }
     ];
 
+    // const hasQuestionnaireModule = useHasQuestionnairesModule();
     // TODO: Use Study Settings flag instead
     if (true) {
       participantDetails.push({
