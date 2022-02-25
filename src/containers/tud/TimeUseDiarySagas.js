@@ -11,7 +11,6 @@ import {
   Map,
   OrderedSet,
   fromJS,
-  getIn
 } from 'immutable';
 import { Constants } from 'lattice';
 import { SearchApiActions, SearchApiSagas } from 'lattice-sagas';
@@ -55,7 +54,6 @@ import {
   PARTICIPATED_IN,
   QUESTION,
   REGISTERED_FOR,
-  RESPONDS_WITH,
   SUBMISSION,
   SUMMARY_SET,
   SURVEY,
@@ -78,9 +76,7 @@ const TIME_USE_DIARY = 'Time Use Diary';
 const {
   DATETIME_END_FQN,
   DATETIME_START_FQN,
-  DATE_TIME_FQN,
   ID_FQN,
-  PERSON_ID,
   VALUES_FQN,
   VARIABLE_FQN,
 } = PROPERTY_TYPE_FQNS;
