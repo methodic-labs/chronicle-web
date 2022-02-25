@@ -21,8 +21,10 @@ import {
   STUDY_API,
   SURVEY,
   SURVEY_API,
+  TIME_USE_DIARY_API,
   V3,
 } from '../../../common/constants';
+import { TIME_USE_DIARY } from '../../../utils/constants/UrlConstants';
 import { getConfig } from '../../config/Configuration';
 
 const { isNonEmptyString } = LangUtils;
@@ -35,6 +37,7 @@ const API_TO_PATH_MAP :Map<string, string> = OrderedMap({
   [PRINCIPAL_API]     : `${DATASTORE}/${PRINCIPAL}`,
   [STUDY_API]         : `${CHRONICLE}/${V3}/${STUDY}`,
   [SURVEY_API]        : `${CHRONICLE}/${V3}/${SURVEY}`,
+  [TIME_USE_DIARY_API]: `${CHRONICLE}/${V3}/${TIME_USE_DIARY}`
 });
 /* eslint-enable */
 
