@@ -53,7 +53,9 @@ const ParticipantInfoModal = ({
       { name: 'Enrollment Link', value: participantLoginLink },
       { name: 'App Usage Link', value: appUsageLink }
     ];
-    if (hasQuestionnaireModule) {
+
+    // TODO: Use Study Settings flag instead
+    if (true) {
       participantDetails.push({
         name: 'Time Use Diary Link',
         value: timeUseDiaryLink

@@ -41,7 +41,7 @@ const { NEUTRAL } = Colors;
 const { ENROLLED } = EnrollmentStatuses;
 
 const {
-  SET_PARTICIPANT_EKID,
+  SET_CANDIDATE_ID,
   TOGGLE_DELETE_MODAL,
   TOGGLE_DOWNLOAD_MODAL,
   TOGGLE_ENROLLMENT_MODAL,
@@ -139,7 +139,7 @@ const ParticipantRow = (props :Props) => {
 
     setAnchorEl(null);
 
-    dispatch({ type: SET_PARTICIPANT_EKID, candidateId });
+    dispatch({ type: SET_CANDIDATE_ID, candidateId });
     dispatch({ type: actionId, isModalOpen: true });
   };
 
