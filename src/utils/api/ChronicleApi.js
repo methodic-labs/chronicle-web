@@ -227,11 +227,11 @@ function getStudySettings(studyId :UUID) {
 export {
   deleteStudy,
   deleteStudyParticipant,
-  getStudySettings,
   getAppUsageSurveyData,
   getQuestionnaire,
+  getStudySettings,
+  submitAppUsageSurvey,
   submitQuestionnaire,
   submitTudData,
-  submitAppUsageSurvey,
   verifyTudLink,
 };
