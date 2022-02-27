@@ -41,8 +41,8 @@ jobs:
 
       - name: deploy to s3
         run: |
-          aws s3 rm --recursive s3://getmethodic.com/chronicle/
-          aws s3 cp --recursive build/ s3://getmethodic.com/chronicle/
+          aws s3 rm --recursive s3://staging.getmethodic.com/chronicle/
+          aws s3 cp --recursive build/ s3://staging.getmethodic.com/chronicle/
 
       - name: clear cloudflare cache
         run: |
@@ -50,4 +50,4 @@ jobs:
             -H "X-Auth-Email: ${{ secrets.METHODIC_CLOUDFLARE_EMAIL }}" \
             -H "X-Auth-Key: ${{ secrets.METHODIC_CLOUDFLARE_API_KEY }}" \
             -H "Content-Type: application/json" \
-            --data '{"files":["https://getmethodic.com/chronicle"]}'
+            --data '{"files":["https://staging.getmethodic.com/chronicle"]}'
