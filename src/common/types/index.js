@@ -57,6 +57,12 @@ export type Participant = {
   participationStatus :ParticipationStatus;
 };
 
+export type SagaError = {
+  message :string;
+  status :number;
+  statusText :string;
+};
+
 export type Study = {
   category :'Study';
   contact :string;

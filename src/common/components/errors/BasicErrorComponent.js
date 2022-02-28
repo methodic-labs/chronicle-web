@@ -2,13 +2,12 @@
  * @flow
  */
 
-import React from 'react';
 import type { Node } from 'react';
 
 import styled from 'styled-components';
 import { Typography } from 'lattice-ui-kit';
 
-import type { SagaError } from '../../common/types';
+import type { SagaError } from '../../types';
 
 const Error = styled.div`
   align-items: center;
