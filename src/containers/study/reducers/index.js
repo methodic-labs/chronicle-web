@@ -11,6 +11,7 @@ import getStudyParticipantsReducer from './getStudyParticipantsReducer';
 import getStudySettingsReducer from './getStudySettingsReducer';
 import initializeStudyReducer from './initializeStudyReducer';
 import registerParticipantReducer from './registerParticipantReducer';
+import verifyParticipantReducer from './verifyParticipantReducer';
 
 import {
   PARTICIPANTS,
@@ -28,6 +29,7 @@ import {
   GET_STUDY_SETTINGS,
   INITIALIZE_STUDY,
   REGISTER_PARTICIPANT,
+  VERIFY_PARTICIPANT,
   createStudy,
   getAllStudies,
   getOrgStudies,
@@ -35,6 +37,7 @@ import {
   getStudySettings,
   initializeStudy,
   registerParticipant,
+  verifyParticipant,
 } from '../actions';
 
 const INITIAL_STATE :Map = fromJS({
@@ -46,6 +49,7 @@ const INITIAL_STATE :Map = fromJS({
   [GET_STUDY_SETTINGS]: RS_INITIAL_STATE,
   [INITIALIZE_STUDY]: RS_INITIAL_STATE,
   [REGISTER_PARTICIPANT]: RS_INITIAL_STATE,
+  [VERIFY_PARTICIPANT]: RS_INITIAL_STATE,
   // data
   [PARTICIPANTS]: Map(),
   [SETTINGS]: Map(),
@@ -86,6 +90,10 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case registerParticipant.case(action.type): {
       return registerParticipantReducer(state, action);
+    }
+
+    case verifyParticipant.case(action.type): {
+      return verifyParticipantReducer(state, action);
     }
 
     // case switchOrganization.case(action.type): {

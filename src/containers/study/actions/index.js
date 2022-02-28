@@ -56,6 +56,9 @@ const removeStudyOnDelete = (studyId :UUID) => ({
 const UPDATE_STUDY :'UPDATE_STUDY' = 'UPDATE_STUDY';
 const updateStudy :RequestSequence = newRequestSequence(UPDATE_STUDY);
 
+const VERIFY_PARTICIPANT :'VERIFY_PARTICIPANT' = 'VERIFY_PARTICIPANT';
+const verifyParticipant :RequestSequence = newRequestSequence(VERIFY_PARTICIPANT);
+
 export {
   CHANGE_ENROLLMENT_STATUS,
   CREATE_STUDY,
@@ -73,6 +76,7 @@ export {
   REGISTER_PARTICIPANT,
   REMOVE_STUDY_ON_DELETE,
   UPDATE_STUDY,
+  VERIFY_PARTICIPANT,
   changeEnrollmentStatus,
   createStudy,
   deleteStudy,
@@ -89,4 +93,5 @@ export {
   registerParticipant,
   removeStudyOnDelete,
   updateStudy,
+  verifyParticipant,
 };
