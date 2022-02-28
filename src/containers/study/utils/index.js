@@ -8,19 +8,24 @@ const getBaseUrl = () => (
 // 2022-02-24: Default all orgIds to NIL if not provided
 
 const getParticipantLoginLink = (orgId :UUID = NIL_UUID, studyId :UUID, participantId :string) => (
-  `${getBaseUrl()}/login?organizationId=${orgId}&studyId=${studyId}&participantId=${participantId}`
+  `${getBaseUrl()}/login`
+  + `?organizationId=${orgId}`
+  + `&studyId=${studyId}`
+  + `&participantId=${participantId}`
 );
 
 const getTimeUseDiaryLink = (orgId :UUID = NIL_UUID, studyId :UUID, participantId :string) => (
   `${getBaseUrl()}#/time-use-diary`
   + `?organizationId=${orgId}`
-  + `&studyId=${studyId}&participantId=${participantId}`
+  + `&studyId=${studyId}`
+  + `&participantId=${participantId}`
 );
 
 const getAppUsageLink = (orgId :UUID = NIL_UUID, studyId :UUID, participantId :string) => (
   `${getBaseUrl()}#/survey`
   + `?organizationId=${orgId}`
-  + `&studyId=${studyId}&participantId=${participantId}`
+  + `&studyId=${studyId}`
+  + `&participantId=${participantId}`
 );
 
 export { default as createFormDataFromStudyEntity } from './createFormDataFromStudyEntity';
