@@ -7,11 +7,9 @@ const getBaseUrl = () => (
 
 // 2022-02-24: Default all orgIds to NIL if not provided
 
-const getParticipantLoginLink = (orgId :UUID = NIL_UUID, studyId :UUID, participantId :string) => {
-  const rootUrl = 'https://openlattice.com/chronicle/login';
-
-  return `${rootUrl}?organizationId=${orgId}&studyId=${studyId}&participantId=${participantId}`;
-};
+const getParticipantLoginLink = (orgId :UUID = NIL_UUID, studyId :UUID, participantId :string) => (
+  `${getBaseUrl()}/login?organizationId=${orgId}&studyId=${studyId}&participantId=${participantId}`
+);
 
 const getTimeUseDiaryLink = (orgId :UUID = NIL_UUID, studyId :UUID, participantId :string) => (
   `${getBaseUrl()}#/time-use-diary`
