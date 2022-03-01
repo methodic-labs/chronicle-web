@@ -26,22 +26,22 @@ const LOG = new Logger('StudySagas');
 function* registerParticipantWorker(action :SequenceAction) :Saga<WorkerResponse> {
 
   let workerResponse :WorkerResponse;
-  const { id, value } = action;
+  const { id, type, value } = action;
 
   try {
     yield put(registerParticipant.request(id, value));
     const participant = {
       [CANDIDATE]: {},
-      [PARTICIPANT_ID]: action.value[PARTICIPANT_ID],
+      [PARTICIPANT_ID]: value[PARTICIPANT_ID],
       [PARTICIPATION_STATUS]: ParticipationStatuses.UNKNOWN,
     };
-    const candidateId = yield call(StudyApi.registerParticipant, action.value[STUDY_ID], participant);
+    const candidateId = yield call(StudyApi.registerParticipant, value[STUDY_ID], participant);
     participant[CANDIDATE][ID] = candidateId;
     workerResponse = { data: participant };
     yield put(registerParticipant.success(id, participant));
   }
   catch (error) {
-    LOG.error(action.type, error);
+    LOG.error(type, error);
     workerResponse = { error };
     yield put(registerParticipant.failure(id, toSagaError(error)));
   }
