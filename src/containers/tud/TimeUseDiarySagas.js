@@ -24,17 +24,12 @@ import {
   DOWNLOAD_ALL_TUD_DATA,
   DOWNLOAD_DAILY_TUD_DATA,
   GET_SUBMISSIONS_BY_DATE,
-  SUBMIT_TUD_DATA,
-  VERIFY_TUD_LINK,
   downloadAllTudData,
   downloadDailyTudData,
   getSubmissionsByDate,
   getTudSubmissionDates,
-  submitTudData,
-  verifyTudLink,
 } from './TimeUseDiaryActions';
 import {
-  createSubmitRequestBody,
   exportRawDataToCsvFile,
   exportSummarizedDataToCsvFile,
   getOutputFileName
@@ -144,69 +139,6 @@ function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<WorkerRespon
     yield put(getTudSubmissionDates.finally(action.id));
   }
   return workerResponse;
-}
-
-function* verifyTudLinkWorker(action :SequenceAction) :Saga<*> {
-  try {
-    yield put(verifyTudLink.request(action.id));
-
-    const { participantId, studyId } = action.value;
-
-    const response = yield call(ChronicleApi.verifyTudLink, studyId, participantId);
-
-    // response is a boolean
-    if (response.data) {
-      yield put(verifyTudLink.success(action.id));
-    }
-    else {
-      throw new Error('Invalid TUD link');
-    }
-  }
-  catch (error) {
-    LOG.error(action.type, error);
-    yield put(verifyTudLink.failure(action.id));
-  }
-  finally {
-    yield put(verifyTudLink.finally(action.id));
-  }
-}
-
-function* verifyTudLinkWatcher() :Saga<*> {
-  yield takeEvery(VERIFY_TUD_LINK, verifyTudLinkWorker);
-}
-
-function* submitTudDataWorker(action :SequenceAction) :Saga<*> {
-  try {
-    yield put(submitTudData.request(action.id));
-    const {
-      familyId,
-      formData,
-      organizationId,
-      participantId,
-      studyId,
-      waveId,
-      language,
-      translationData
-    } = action.value;
-
-    const requestBody = createSubmitRequestBody(formData, familyId, waveId, language, translationData);
-
-    const response = yield call(ChronicleApi.submitTudData, organizationId, studyId, participantId, requestBody);
-    if (response.error) throw response.error;
-
-    yield put(submitTudData.success(action.id));
-  }
-  catch (error) {
-    LOG.error(action.type, error);
-    yield put(submitTudData.failure(action.id));
-  }
-  finally {
-    yield put(submitTudData.finally(action.id));
-  }
-}
-
-function* submitTudDataWatcher() :Saga<*> {
-  yield takeEvery(SUBMIT_TUD_DATA, submitTudDataWorker);
 }
 
 // updated for v3
@@ -545,6 +477,4 @@ export {
   downloadDailyTudDataWatcher,
   getSubmissionsByDateWatcher,
   getTudSubmissionDatesWorker,
-  submitTudDataWatcher,
-  verifyTudLinkWatcher,
 };

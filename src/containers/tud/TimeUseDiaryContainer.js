@@ -30,7 +30,7 @@ import SUPPORTED_LANGUAGES from './constants/SupportedLanguages';
 import SubmissionErrorModal from './components/SubmissionErrorModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import TranslationKeys from './constants/TranslationKeys';
-import { SUBMIT_TUD_DATA } from './TimeUseDiaryActions';
+import { SUBMIT_TIME_USE_DIARY } from './actions';
 import { PAGE_NUMBERS } from './constants/GeneralConstants';
 import { PROPERTY_CONSTS } from './constants/SchemaConstants';
 import { usePrevious } from './hooks';
@@ -43,7 +43,12 @@ import {
 } from './utils';
 
 import * as LanguageCodes from '../../utils/constants/LanguageCodes';
-import { PARTICIPANT_ID, STUDIES, STUDY_ID } from '../../common/constants';
+import {
+  PARTICIPANT_ID,
+  STUDIES,
+  STUDY_ID,
+  TIME_USE_DIARY,
+} from '../../common/constants';
 import { DEFAULT_LANGUAGE_COOKIE } from '../../utils/constants/StorageConstants';
 import { VERIFY_PARTICIPANT, verifyParticipant } from '../study/actions';
 
@@ -98,7 +103,7 @@ const TimeUseDiaryContainer = () => {
   const [shouldReset, setShouldReset] = useState(false);
 
   // selectors
-  const submitRequestState :?RequestState = useRequestState(['tud', SUBMIT_TUD_DATA]);
+  const submitTimeUseDiaryRS :?RequestState = useRequestState([TIME_USE_DIARY, SUBMIT_TIME_USE_DIARY]);
   const verifyParticipantRS :?RequestState = useRequestState([STUDIES, VERIFY_PARTICIPANT]);
 
   useEffect(() => {
@@ -111,10 +116,10 @@ const TimeUseDiaryContainer = () => {
   }, [dispatch, studyId, participantId]);
 
   useEffect(() => {
-    if (submitRequestState === RequestStates.FAILURE) {
+    if (submitTimeUseDiaryRS === RequestStates.FAILURE) {
       setIsErrorModalVisible(true);
     }
-  }, [submitRequestState]);
+  }, [submitTimeUseDiaryRS]);
 
   // select default language
   useEffect(() => {
@@ -257,7 +262,7 @@ const TimeUseDiaryContainer = () => {
             isVisible={isErrorModalVisible}
             trans={t} />
         {
-          submitRequestState === RequestStates.SUCCESS
+          submitTimeUseDiaryRS === RequestStates.SUCCESS
             ? (
               <SubmissionSuccessful trans={t} />
             )
@@ -287,7 +292,7 @@ const TimeUseDiaryContainer = () => {
                             resetSurvey={resetSurvey}
                             shouldReset={shouldReset}
                             studyId={studyId}
-                            submitRequestState={submitRequestState}
+                            submitRequestState={submitTimeUseDiaryRS}
                             trans={t}
                             translationData={i18n.store.data}
                             updateFormState={updateFormState}

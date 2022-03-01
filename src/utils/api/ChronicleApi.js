@@ -161,26 +161,6 @@ function submitQuestionnaire(
   });
 }
 
-/*
- * POST chronicle/study/<studyId>/<participantId>/time-use-diary
- *
- * Submit time use diary survey data
- */
-
-function submitTudData(organizationId :UUID = NIL_UUID, studyId :UUID, participantId :string, requestBody :Object) {
-  return new Promise<*>((resolve, reject) => {
-    const url = getSubmitTudDataUrl(organizationId, studyId, participantId);
-    if (!url) return reject(new Error('Invalid url'));
-
-    return axios({
-      data: requestBody,
-      method: 'post',
-      url: encodeURI(url),
-    }).then((result) => resolve(result))
-      .catch((error) => reject(error));
-  });
-}
-
 function deleteStudy(orgId :UUID, studyId :UUID) {
   return new Promise<*>((resolve, reject) => {
 
@@ -194,20 +174,6 @@ function deleteStudy(orgId :UUID, studyId :UUID) {
       method: 'delete',
       params: { type: DeleteTypes.HARD },
       url,
-    }).then((result) => resolve(result))
-      .catch((error) => reject(error));
-  });
-}
-
-function verifyTudLink(studyId :UUID, participantId :string) {
-  return new Promise<*>((resolve, reject) => {
-    const url = getVerifyParticipantIdUrl(studyId, participantId);
-
-    if (!url) return reject(new Error('Invalid url'));
-
-    return axios({
-      method: 'get',
-      url
     }).then((result) => resolve(result))
       .catch((error) => reject(error));
   });
@@ -234,6 +200,4 @@ export {
   getStudySettings,
   submitAppUsageSurvey,
   submitQuestionnaire,
-  submitTudData,
-  verifyTudLink,
 };

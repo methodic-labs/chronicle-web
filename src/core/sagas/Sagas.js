@@ -15,7 +15,7 @@ import * as QuestionnaireSagas from '../../containers/questionnaire/Questionnair
 import * as RoutingSagas from '../router/RoutingSagas';
 import * as StudySagas from '../../containers/study/sagas';
 import * as SurveySagas from '../../containers/survey/sagas';
-import * as TimeUseDiarySagas from '../../containers/tud/TimeUseDiarySagas';
+import * as TimeUseDiarySagas from '../../containers/tud/sagas';
 
 export default function* sagas() :Generator<*, *, *> {
 
@@ -76,11 +76,10 @@ export default function* sagas() :Generator<*, *, *> {
     // fork(PermissionsSagas.getDeletePermissionWatcher),
 
     // time use diary
-    fork(TimeUseDiarySagas.downloadAllTudDataWatcher),
-    fork(TimeUseDiarySagas.downloadDailyTudDataWatcher),
-    fork(TimeUseDiarySagas.getSubmissionsByDateWatcher),
-    fork(TimeUseDiarySagas.submitTudDataWatcher),
-    fork(TimeUseDiarySagas.verifyTudLinkWatcher),
+    fork(TimeUseDiarySagas.submitTimeUseDiaryWatcher),
+    // fork(TimeUseDiarySagas.downloadAllTudDataWatcher),
+    // fork(TimeUseDiarySagas.downloadDailyTudDataWatcher),
+    // fork(TimeUseDiarySagas.getSubmissionsByDateWatcher),
 
     fork(DashboardSagas.countAllParticipantsWatcher),
     fork(DashboardSagas.countAllStudiesWatcher),

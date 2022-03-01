@@ -14,7 +14,7 @@ import orgsReducer from '../orgs/reducers';
 import permissionsReducer from '../permissions/reducers';
 import questionnareReducer from '../../containers/questionnaire/QuestionnaireReducer';
 import studiesReducer from '../../containers/study/reducers';
-import timeUseDiaryReducer from '../../containers/tud/TimeUseDiaryReducer';
+import timeUseDiaryReducer from '../../containers/tud/reducers';
 import {
   APP,
   APP_USAGE_SURVEY,
@@ -22,6 +22,7 @@ import {
   ORGANIZATIONS,
   PERMISSIONS,
   STUDIES,
+  TIME_USE_DIARY,
 } from '../../common/constants';
 
 export default function reduxReducer(routerHistory :any) {
@@ -33,10 +34,10 @@ export default function reduxReducer(routerHistory :any) {
     [ORGANIZATIONS]: orgsReducer,
     [PERMISSIONS]: permissionsReducer,
     [STUDIES]: studiesReducer,
+    [TIME_USE_DIARY]: timeUseDiaryReducer,
     dashboard: dashboardReducer,
     edm: edmReducer,
     questionnaire: questionnareReducer,
     router: connectRouter(routerHistory),
-    tud: timeUseDiaryReducer,
   });
 }
