@@ -19,7 +19,6 @@ import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 
 import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
-import { formatDurationAsDays } from '../../../common/utils';
 import type { Participant, ParticipantStats } from '../../../common/types';
 
 const { formatDateTime } = DateTimeUtils;
@@ -86,14 +85,14 @@ const ParticipantRow = ({
   const enrollmentStatus = participant.participationStatus;
   const androidFirstDate = formatDateTime(stats.androidFirstDate || '', DateTime.DATETIME_SHORT);
   const androidLastDate = formatDateTime(stats.androidLastDate || '', DateTime.DATETIME_SHORT);
-  const androidDuration = formatDurationAsDays(stats.androidFirstDate, stats.androidLastDate);
+  const androidUniqueDates = stats.androidUniqueDates.length;
   const tudFirstDate = formatDateTime(stats.tudFirstDate || '', DateTime.DATETIME_SHORT);
   const tudLastDate = formatDateTime(stats.tudLastDate || '', DateTime.DATETIME_SHORT);
-  const tudDuration = formatDurationAsDays(stats.tudFirstDate, stats.tudLastDate);
+  const tudUniqueDates = stats.tudUniqueDates.length;
 
   const getRowData = () => {
-    const tudData = [tudFirstDate, tudLastDate, tudDuration];
-    const androidData = [androidFirstDate, androidLastDate, androidDuration];
+    const tudData = [tudFirstDate, tudLastDate, tudUniqueDates];
+    const androidData = [androidFirstDate, androidLastDate, androidUniqueDates];
     if (orgHasDataCollectionModule && orgHasSurveyModule) {
       return [participantId, ...androidData, ...tudData];
     }
