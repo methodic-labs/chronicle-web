@@ -38,7 +38,7 @@ import { COLUMN_FIELDS } from './constants/tableColumns';
 
 import { PARTICIPANT_ID } from '../../common/constants';
 import { resetRequestStates } from '../../core/redux/actions';
-import { selectMyKeys, selectStudyParticipants } from '../../core/redux/selectors';
+import { selectMyKeys, selectParticipantStats, selectStudyParticipants } from '../../core/redux/selectors';
 import {
   currentOrgIdSelector,
   orgHasDataCollectionModuleSelector,
@@ -146,6 +146,7 @@ const StudyParticipantsContainer = ({
 
   // selectors
   const participants :Map = useSelector(selectStudyParticipants(study.id));
+  const participantStats = useSelector(selectParticipantStats(study.id));
   const orgHasSurveyModule = useSelector(orgHasSurveyModuleSelector);
   const orgHasDataCollectionModule = useSelector(orgHasDataCollectionModuleSelector);
   const selectedOrgId :UUID = useSelector(currentOrgIdSelector);
@@ -234,7 +235,8 @@ const StudyParticipantsContainer = ({
                   hasDeletePermission={isOwner}
                   orgHasDataCollectionModule={orgHasDataCollectionModule}
                   orgHasSurveyModule={orgHasSurveyModule}
-                  participants={filteredParticipants} />
+                  participants={filteredParticipants}
+                  participantStats={participantStats} />
             )
           }
         </CardSegment>

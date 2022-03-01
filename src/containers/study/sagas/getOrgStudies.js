@@ -14,12 +14,12 @@ import type { WorkerResponse } from '../../../common/types';
 
 const { toSagaError } = AxiosUtils;
 
-const LOG = new Logger('OrgsSagas');
+const LOG = new Logger('StudySagas');
 
 function* getOrgStudiesWorker(action :SequenceAction) :Saga<WorkerResponse> {
 
   let workerResponse :WorkerResponse;
-  const { id, value } = action;
+  const { id, type, value } = action;
 
   try {
     yield put(getOrgStudies.request(id, value));
@@ -31,7 +31,7 @@ function* getOrgStudiesWorker(action :SequenceAction) :Saga<WorkerResponse> {
     yield put(getOrgStudies.success(id, studies));
   }
   catch (error) {
-    LOG.error(action.type, error);
+    LOG.error(type, error);
     workerResponse = { error };
     yield put(getOrgStudies.failure(id, toSagaError(error)));
   }

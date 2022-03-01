@@ -57,6 +57,20 @@ export type Participant = {
   participationStatus :ParticipationStatus;
 };
 
+export type ParticipantStats = {
+  androidFirstDate :?string;
+  androidLastDate :?string;
+  androidUniqueDates :string[];
+  iosFirstDate :?string;
+  iosLastDate :?string;
+  iosUniqueDates :string[];
+  participantId :string;
+  studyId :UUID;
+  tudFirstDate :?string;
+  tudLastDate :?string;
+  tudUniqueDates :string[];
+};
+
 export type SagaError = {
   message :string;
   status :number;

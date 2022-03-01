@@ -13,6 +13,7 @@ import type { Saga } from '@redux-saga/core';
 import type { UUID } from 'lattice';
 import type { SequenceAction } from 'redux-reqseq';
 
+import { getParticipantStatsWorker } from './getParticipantStats';
 import { getStudyWorker } from './getStudy';
 import { getStudyParticipantsWorker } from './getStudyParticipants';
 
@@ -21,6 +22,7 @@ import { getAuthorizations } from '../../../core/permissions/actions';
 import { getAuthorizationsWorker } from '../../../core/permissions/sagas';
 import {
   INITIALIZE_STUDY,
+  getParticipantStats,
   getStudy,
   getStudyParticipants,
   initializeStudy,
@@ -33,13 +35,16 @@ const LOG = new Logger('StudySagas');
 
 function* initializeStudyWorker(action :SequenceAction) :Saga<*> {
 
-  try {
-    yield put(initializeStudy.request(action.id, action.value));
+  const { id, type, value } = action;
 
-    const studyId :UUID = action.value;
+  try {
+    yield put(initializeStudy.request(id, value));
+
+    const studyId :UUID = value;
 
     const getStudyCall = call(getStudyWorker, getStudy(studyId));
     const getStudyParticipantsCall = call(getStudyParticipantsWorker, getStudyParticipants(studyId));
+    const getParticipantStatsCall = call(getParticipantStatsWorker, getParticipantStats(studyId));
     const getAuthorizationsCall = call(getAuthorizationsWorker, getAuthorizations([{
       aclKey: [studyId],
       permissions: [PermissionTypes.OWNER]
@@ -48,31 +53,34 @@ function* initializeStudyWorker(action :SequenceAction) :Saga<*> {
     const [
       getStudyResponse,
       getStudyParticipantsResponse,
+      getParticipantStatsResponse,
       getAuthorizationsResponse,
     ] :Array<WorkerResponse> = yield all([
       getStudyCall,
       getStudyParticipantsCall,
+      getParticipantStatsCall,
       getAuthorizationsCall,
     ]);
 
     if (getStudyResponse.error) throw getStudyResponse.error;
     if (getStudyParticipantsResponse.error) throw getStudyParticipantsResponse.error;
+    if (getParticipantStatsResponse.error) throw getParticipantStatsResponse.error;
     if (getAuthorizationsResponse.error) throw getAuthorizationsResponse.error;
 
     const authorizations :AuthorizationObject[] = getAuthorizationsResponse.data;
     const isOwner = authorizations[0].permissions[PermissionTypes.OWNER] === true;
 
-    yield put(initializeStudy.success(action.id, {
+    yield put(initializeStudy.success(id, {
       [IS_OWNER]: isOwner,
       [STUDY_ID]: studyId,
     }));
   }
   catch (error) {
-    LOG.error(action.type, error);
-    yield put(initializeStudy.failure(action.id, toSagaError(error)));
+    LOG.error(type, error);
+    yield put(initializeStudy.failure(id, toSagaError(error)));
   }
   finally {
-    yield put(initializeStudy.finally(action.id));
+    yield put(initializeStudy.finally(id));
   }
 }
 

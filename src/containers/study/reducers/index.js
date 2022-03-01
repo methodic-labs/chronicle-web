@@ -7,6 +7,7 @@ import { Map, fromJS } from 'immutable';
 import createStudyReducer from './createStudyReducer';
 import getAllStudiesReducer from './getAllStudiesReducer';
 import getOrgStudiesReducer from './getOrgStudiesReducer';
+import getParticipantStatsReducer from './getParticipantStatsReducer';
 import getStudyParticipantsReducer from './getStudyParticipantsReducer';
 import getStudySettingsReducer from './getStudySettingsReducer';
 import initializeStudyReducer from './initializeStudyReducer';
@@ -17,6 +18,7 @@ import {
   PARTICIPANTS,
   RS_INITIAL_STATE,
   SETTINGS,
+  STATS,
   STUDIES,
 } from '../../../common/constants';
 import { RESET_REQUEST_STATES } from '../../../core/redux/actions';
@@ -25,6 +27,7 @@ import {
   CREATE_STUDY,
   GET_ALL_STUDIES,
   GET_ORG_STUDIES,
+  GET_PARTICIPANT_STATS,
   GET_STUDY_PARTICIPANTS,
   GET_STUDY_SETTINGS,
   INITIALIZE_STUDY,
@@ -33,6 +36,7 @@ import {
   createStudy,
   getAllStudies,
   getOrgStudies,
+  getParticipantStats,
   getStudyParticipants,
   getStudySettings,
   initializeStudy,
@@ -45,6 +49,7 @@ const INITIAL_STATE :Map = fromJS({
   [CREATE_STUDY]: RS_INITIAL_STATE,
   [GET_ALL_STUDIES]: RS_INITIAL_STATE,
   [GET_ORG_STUDIES]: RS_INITIAL_STATE,
+  [GET_PARTICIPANT_STATS]: RS_INITIAL_STATE,
   [GET_STUDY_PARTICIPANTS]: RS_INITIAL_STATE,
   [GET_STUDY_SETTINGS]: RS_INITIAL_STATE,
   [INITIALIZE_STUDY]: RS_INITIAL_STATE,
@@ -53,6 +58,7 @@ const INITIAL_STATE :Map = fromJS({
   // data
   [PARTICIPANTS]: Map(),
   [SETTINGS]: Map(),
+  [STATS]: Map(),
   [STUDIES]: Map(),
 });
 
@@ -74,6 +80,10 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case getOrgStudies.case(action.type): {
       return getOrgStudiesReducer(state, action);
+    }
+
+    case getParticipantStats.case(action.type): {
+      return getParticipantStatsReducer(state, action);
     }
 
     case getStudyParticipants.case(action.type): {

@@ -5,7 +5,6 @@ import { useContext, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { get, getIn } from 'immutable';
 import {
   Colors,
   IconButton,
@@ -20,21 +19,10 @@ import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 
 import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
-import { CANDIDATE, ID, PARTICIPANT_ID } from '../../../common/constants';
-import { COLUMN_FIELDS } from '../constants/tableColumns';
+import { formatDurationAsDays } from '../../../common/utils';
+import type { Participant, ParticipantStats } from '../../../common/types';
 
 const { formatDateTime } = DateTimeUtils;
-
-const {
-  ANDROID_DATA_DURATION,
-  ENROLLMENT_STATUS,
-  FIRST_ANDROID_DATA,
-  FIRST_TUD_SUBMISSION,
-  LAST_ANDROID_DATA,
-  LAST_TUD_SUBMISSION,
-  // PARTICIPANT_ID,
-  TUD_SUBMISSION_DURATION,
-} = COLUMN_FIELDS;
 
 const { NEUTRAL } = Colors;
 
@@ -76,39 +64,36 @@ const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-type Props = {
-  orgHasSurveyModule :boolean;
-  orgHasDataCollectionModule :boolean;
-  data :Object;
+const ParticipantRow = ({
+  hasDeletePermission,
+  orgHasDataCollectionModule,
+  orgHasSurveyModule,
+  participant,
+  stats,
+} :{
   hasDeletePermission :boolean;
-};
-
-const ParticipantRow = (props :Props) => {
-  const {
-    orgHasSurveyModule,
-    data,
-    orgHasDataCollectionModule,
-    hasDeletePermission
-  } = props;
+  orgHasDataCollectionModule :boolean;
+  orgHasSurveyModule :boolean;
+  participant :Participant;
+  stats :ParticipantStats;
+}) => {
 
   const dispatch = useContext(ParticipantsTableDispatch);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  // const participantEntityKeyId = getIn(data, ['id', 0]);
-  const candidateId = getIn(data, [CANDIDATE, ID]);
-  // const participantId = getIn(data, [PARTICIPANT_ID, 0]);
-  const participantId = get(data, PARTICIPANT_ID);
-  const enrollmentStatus = getIn(data, [ENROLLMENT_STATUS, 0]);
-  const firstAndroidData = formatDateTime(getIn(data, [FIRST_ANDROID_DATA, 0]), DateTime.DATETIME_SHORT);
-  const lastAndroidData = formatDateTime(getIn(data, [LAST_ANDROID_DATA, 0]), DateTime.DATETIME_SHORT);
-  const androidDataDuration = getIn(data, [ANDROID_DATA_DURATION, 0]);
-  const firstTudSubmission = formatDateTime(getIn(data, [FIRST_TUD_SUBMISSION, 0]), DateTime.DATETIME_SHORT);
-  const lastTudSubmission = formatDateTime(getIn(data, [LAST_TUD_SUBMISSION, 0]), DateTime.DATETIME_SHORT);
-  const tudSubmissionDuration = getIn(data, [TUD_SUBMISSION_DURATION, 0]);
+  const candidateId = participant.candidate.id;
+  const participantId = participant.participantId;
+  const enrollmentStatus = participant.participationStatus;
+  const androidFirstDate = formatDateTime(stats.androidFirstDate || '', DateTime.DATETIME_SHORT);
+  const androidLastDate = formatDateTime(stats.androidLastDate || '', DateTime.DATETIME_SHORT);
+  const androidDuration = formatDurationAsDays(stats.androidFirstDate, stats.androidLastDate);
+  const tudFirstDate = formatDateTime(stats.tudFirstDate || '', DateTime.DATETIME_SHORT);
+  const tudLastDate = formatDateTime(stats.tudLastDate || '', DateTime.DATETIME_SHORT);
+  const tudDuration = formatDurationAsDays(stats.tudFirstDate, stats.tudLastDate);
 
   const getRowData = () => {
-    const tudData = [firstTudSubmission, lastTudSubmission, tudSubmissionDuration];
-    const androidData = [firstAndroidData, lastAndroidData, androidDataDuration];
+    const tudData = [tudFirstDate, tudLastDate, tudDuration];
+    const androidData = [androidFirstDate, androidLastDate, androidDuration];
     if (orgHasDataCollectionModule && orgHasSurveyModule) {
       return [participantId, ...androidData, ...tudData];
     }

@@ -58,6 +58,7 @@ export const PRINCIPAL :'principal' = 'principal';
 export const PRINCIPAL_API :'PrincipalApi' = 'PrincipalApi';
 export const SELECTED_ORG_ID :'selectedOrgId' = 'selectedOrgId';
 export const SETTINGS :'settings' = 'settings';
+export const STATS :'stats' = 'stats';
 export const STUDIES :'studies' = 'studies';
 export const STUDY :'study' = 'study';
 export const STUDY_API :'StudyApi' = 'StudyApi';

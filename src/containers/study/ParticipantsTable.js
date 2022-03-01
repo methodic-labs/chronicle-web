@@ -9,7 +9,8 @@ import { Table } from 'lattice-ui-kit';
 import ParticipantRow from './components/ParticipantRow';
 import getHeaders from './constants/tableHeaders';
 
-import type { Participant } from '../../common/types';
+import { PARTICIPANT_ID } from '../../common/constants';
+import type { Participant, ParticipantStats } from '../../common/types';
 
 const TableWrapper = styled.div`
   overflow-x: scroll;
@@ -24,11 +25,13 @@ const ParticipantsTable = ({
   orgHasDataCollectionModule,
   orgHasSurveyModule,
   participants,
+  participantStats,
 } :{
   hasDeletePermission :boolean;
   orgHasDataCollectionModule :boolean;
   orgHasSurveyModule :boolean;
   participants :Map<UUID, Participant>;
+  participantStats :{ [string] :ParticipantStats };
 }) => {
 
   const tableHeaders = getHeaders(orgHasSurveyModule, orgHasDataCollectionModule);
@@ -36,10 +39,11 @@ const ParticipantsTable = ({
   const components = {
     Row: ({ data: rowData } :any) => (
       <ParticipantRow
-          orgHasSurveyModule={orgHasSurveyModule}
+          hasDeletePermission={hasDeletePermission}
           orgHasDataCollectionModule={orgHasDataCollectionModule}
-          data={rowData}
-          hasDeletePermission={hasDeletePermission} />
+          orgHasSurveyModule={orgHasSurveyModule}
+          participant={rowData}
+          stats={participantStats[rowData[PARTICIPANT_ID]] || {}} />
     )
   };
 

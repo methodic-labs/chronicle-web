@@ -23,23 +23,17 @@ const getAllStudies :RequestSequence = newRequestSequence(GET_ALL_STUDIES);
 const GET_ORG_STUDIES :'GET_ORG_STUDIES' = 'GET_ORG_STUDIES';
 const getOrgStudies :RequestSequence = newRequestSequence(GET_ORG_STUDIES);
 
-const GET_PARTICIPANTS_METADATA :'GET_PARTICIPANTS_METADATA' = 'GET_PARTICIPANTS_METADATA';
-const getParticipantsMetadata :RequestSequence = newRequestSequence(GET_PARTICIPANTS_METADATA);
+const GET_PARTICIPANT_STATS :'GET_PARTICIPANT_STATS' = 'GET_PARTICIPANT_STATS';
+const getParticipantStats :RequestSequence = newRequestSequence(GET_PARTICIPANT_STATS);
 
 const GET_STUDY :'GET_STUDY' = 'GET_STUDY';
 const getStudy :RequestSequence = newRequestSequence(GET_STUDY);
-
-const GET_STUDY_NOTIFICATION_STATUS :'GET_STUDY_NOTIFICATION_STATUS' = 'GET_STUDY_NOTIFICATION_STATUS';
-const getStudyNotificationStatus :RequestSequence = newRequestSequence(GET_STUDY_NOTIFICATION_STATUS);
 
 const GET_STUDY_PARTICIPANTS :'GET_STUDY_PARTICIPANTS' = 'GET_STUDY_PARTICIPANTS';
 const getStudyParticipants :RequestSequence = newRequestSequence(GET_STUDY_PARTICIPANTS);
 
 const GET_STUDY_SETTINGS :'GET_STUDY_SETTINGS' = 'GET_STUDY_SETTINGS';
 const getStudySettings :RequestSequence = newRequestSequence(GET_STUDY_SETTINGS);
-
-const GET_TIME_USE_DIARY_STUDIES :'GET_TIME_USE_DIARY_STUDIES' = 'GET_TIME_USE_DIARY_STUDIES';
-const getTimeUseDiaryStudies :RequestSequence = newRequestSequence(GET_TIME_USE_DIARY_STUDIES);
 
 const INITIALIZE_STUDY :'INITIALIZE_STUDY' = 'INITIALIZE_STUDY';
 const initializeStudy :RequestSequence = newRequestSequence(INITIALIZE_STUDY);
@@ -66,12 +60,10 @@ export {
   DELETE_STUDY_PARTICIPANT,
   GET_ALL_STUDIES,
   GET_ORG_STUDIES,
-  GET_PARTICIPANTS_METADATA,
+  GET_PARTICIPANT_STATS,
   GET_STUDY,
-  GET_STUDY_NOTIFICATION_STATUS,
   GET_STUDY_PARTICIPANTS,
   GET_STUDY_SETTINGS,
-  GET_TIME_USE_DIARY_STUDIES,
   INITIALIZE_STUDY,
   REGISTER_PARTICIPANT,
   REMOVE_STUDY_ON_DELETE,
@@ -83,12 +75,10 @@ export {
   deleteStudyParticipant,
   getAllStudies,
   getOrgStudies,
-  getParticipantsMetadata,
+  getParticipantStats,
   getStudy,
-  getStudyNotificationStatus,
   getStudyParticipants,
   getStudySettings,
-  getTimeUseDiaryStudies,
   initializeStudy,
   registerParticipant,
   removeStudyOnDelete,
