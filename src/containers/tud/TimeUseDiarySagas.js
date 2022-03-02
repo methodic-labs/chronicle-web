@@ -15,7 +15,6 @@ import {
 import { Constants } from 'lattice';
 import { SearchApiActions, SearchApiSagas } from 'lattice-sagas';
 import { DataUtils, Logger } from 'lattice-utils';
-import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
@@ -23,11 +22,8 @@ import DataTypes from './constants/DataTypes';
 import {
   DOWNLOAD_ALL_TUD_DATA,
   DOWNLOAD_DAILY_TUD_DATA,
-  GET_SUBMISSIONS_BY_DATE,
   downloadAllTudData,
   downloadDailyTudData,
-  getSubmissionsByDate,
-  getTudSubmissionDates,
 } from './TimeUseDiaryActions';
 import {
   exportRawDataToCsvFile,
@@ -36,26 +32,17 @@ import {
 } from './utils';
 
 import * as AppModules from '../../utils/constants/AppModules';
-import * as ChronicleApi from '../../utils/api/ChronicleApi';
-import { getStudyTUDSubmissionsByDateRange } from '../../core/api/timeusediary';
-import {
-  selectESIDByCollection,
-  selectEntitySetsByModule,
-} from '../../core/edm/EDMUtils';
+import { selectEntitySetsByModule } from '../../core/edm/EDMUtils';
 import {
   ADDRESSES,
   ANSWER,
-  PARTICIPANTS,
-  PARTICIPATED_IN,
   QUESTION,
   REGISTERED_FOR,
   SUBMISSION,
   SUMMARY_SET,
-  SURVEY,
   TIME_RANGE
 } from '../../core/edm/constants/EntityTemplateNames';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
-import { orgHasSurveyModuleSelector } from '../app/AppSelectors';
 import type { WorkerResponse } from '../../common/types';
 
 const LOG = new Logger('TimeUseDiarySagas');
@@ -66,7 +53,6 @@ const { searchEntityNeighborsWithFilter } = SearchApiActions;
 const { getEntityKeyId, getPropertyValue } = DataUtils;
 
 const { OPENLATTICE_ID_FQN } = Constants;
-const TIME_USE_DIARY = 'Time Use Diary';
 
 const {
   DATETIME_END_FQN,
@@ -75,110 +61,6 @@ const {
   VALUES_FQN,
   VARIABLE_FQN,
 } = PROPERTY_TYPE_FQNS;
-
-function* getTudSubmissionDatesWorker(action :SequenceAction) :Saga<WorkerResponse> {
-  let workerResponse = {};
-
-  try {
-    yield put(getTudSubmissionDates.request(action.id));
-
-    const participantEKIDs :UUID[] = action.value;
-
-    // if selected org does not have 'surveys' module installed, return empty
-    const orgHasSurveyModule = yield select(orgHasSurveyModuleSelector);
-    if (!orgHasSurveyModule || !participantEKIDs.length) {
-      yield put(getTudSubmissionDates.success(action.id, Map()));
-      return { data: Map() };
-    }
-
-    // entity set ids
-    const participantsESID = yield select(selectESIDByCollection(PARTICIPANTS, AppModules.CHRONICLE_CORE));
-    const participatedInESID = yield select(selectESIDByCollection(PARTICIPATED_IN, AppModules.CHRONICLE_CORE));
-
-    const surveyESID = yield select(selectESIDByCollection(SURVEY, AppModules.QUESTIONNAIRES));
-
-    // search
-    const searchFilter = {
-      destinationEntitySetIds: [surveyESID],
-      edgeEntitySetIds: [participatedInESID],
-      entityKeyIds: participantEKIDs,
-      sourceEntitySetIds: [participantsESID]
-    };
-    const response = yield call(
-      searchEntityNeighborsWithFilterWorker,
-      searchEntityNeighborsWithFilter({
-        entitySetId: participantsESID,
-        filter: searchFilter
-      })
-    );
-    if (response.error) throw response.error;
-
-    const data :Map<UUID, OrderedSet> = Map().withMutations((mutator) => {
-      fromJS(response.data).forEach((neighbors :List, participantEKID :UUID) => {
-
-        neighbors.forEach((neighbor) => {
-          if (neighbor.getIn(['neighborDetails', ID_FQN, 0]) === TIME_USE_DIARY) {
-            const dateTime = neighbor.getIn(['associationDetails', DATETIME_START_FQN, 0]);
-            mutator.update(participantEKID, OrderedSet(), (dates) => dates.add(DateTime.fromISO(dateTime)));
-          }
-        });
-      });
-    });
-    workerResponse = { data };
-
-    yield put(getTudSubmissionDates.success(action.id, data));
-  }
-
-  catch (error) {
-    workerResponse = { error };
-    LOG.error(action.type, error);
-    yield put(getTudSubmissionDates.failure(action.id));
-  }
-
-  finally {
-    yield put(getTudSubmissionDates.finally(action.id));
-  }
-  return workerResponse;
-}
-
-// updated for v3
-function* getSubmissionsByDateWorker(action :SequenceAction) :Saga<*> {
-  try {
-    yield put(getSubmissionsByDate.request(action.id));
-
-    const {
-      studyId,
-      endDate,
-      startDate,
-    } = action.value;
-
-    const adjustedStartDate = DateTime.fromISO(startDate).startOf('day');
-    const adjustedEndDate = DateTime.fromISO(endDate).endOf('day');
-    const response = yield call(
-      getStudyTUDSubmissionsByDateRange,
-      studyId,
-      adjustedStartDate.toISO(),
-      adjustedEndDate.toISO()
-    );
-
-    const submissionsByDate = fromJS(response).sortBy((value :List, key :DateTime) => key)
-      .mapEntries(([key :DateTime, value :List]) => [key.toLocaleString(DateTime.DATE_SHORT), value]);
-
-    yield put(getSubmissionsByDate.success(action.id, submissionsByDate));
-
-  }
-  catch (error) {
-    LOG.error(action.type, error);
-    yield put(getSubmissionsByDate.failure(action.id));
-  }
-  finally {
-    yield put(getSubmissionsByDate.finally(action.id));
-  }
-}
-
-function* getSubmissionsByDateWatcher() :Saga<*> {
-  yield takeEvery(GET_SUBMISSIONS_BY_DATE, getSubmissionsByDateWorker);
-}
 
 function* downloadSummarizedData(entities, outputFilename) :Saga<WorkerResponse> {
   let workerResponse = {};
@@ -475,6 +357,4 @@ function* downloadAllTudDataWatcher() :Saga<*> {
 export {
   downloadAllTudDataWatcher,
   downloadDailyTudDataWatcher,
-  getSubmissionsByDateWatcher,
-  getTudSubmissionDatesWorker,
 };

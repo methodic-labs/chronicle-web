@@ -3,7 +3,6 @@
 import axios from 'axios';
 import { Types } from 'lattice';
 import { DateTime } from 'luxon';
-import { NIL as NIL_UUID } from 'uuid';
 
 import { getAuthToken } from '../../core/auth/utils';
 import {
@@ -13,8 +12,6 @@ import {
   getQuestionnaireUrl,
   getStudySettingsUrl,
   getSubmitQuestionnaireUrl,
-  getSubmitTudDataUrl,
-  getVerifyParticipantIdUrl
 } from '../AppUtils';
 
 const { DeleteTypes } = Types;
