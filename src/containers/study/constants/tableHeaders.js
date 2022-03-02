@@ -3,14 +3,14 @@
 import { COLUMN_FIELDS, HEADER_NAMES } from './tableColumns';
 
 const {
-  ANDROID_DATA_DURATION,
+  ANDROID_DATA_UNIQUE_DAYS,
   ENROLLMENT_STATUS,
   FIRST_ANDROID_DATA,
   FIRST_TUD_SUBMISSION,
   LAST_ANDROID_DATA,
   LAST_TUD_SUBMISSION,
   PARTICIPANT_ID,
-  TUD_SUBMISSION_DURATION,
+  TUD_SUBMISSION_UNIQUE_DAYS,
 } = COLUMN_FIELDS;
 
 const TUD_COLUMNS = [
@@ -29,8 +29,8 @@ const TUD_COLUMNS = [
     }
   },
   {
-    key: TUD_SUBMISSION_DURATION,
-    label: HEADER_NAMES[TUD_SUBMISSION_DURATION],
+    key: TUD_SUBMISSION_UNIQUE_DAYS,
+    label: HEADER_NAMES[TUD_SUBMISSION_UNIQUE_DAYS],
     sortable: false,
     cellStyle: {
       fontWeight: 500,
@@ -54,8 +54,8 @@ const ANDROID_COLUMNS = [
     }
   },
   {
-    key: ANDROID_DATA_DURATION,
-    label: HEADER_NAMES[ANDROID_DATA_DURATION],
+    key: ANDROID_DATA_UNIQUE_DAYS,
+    label: HEADER_NAMES[ANDROID_DATA_UNIQUE_DAYS],
     sortable: false,
     cellStyle: {
       fontWeight: 500,

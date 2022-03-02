@@ -107,14 +107,14 @@ const { getEntityKeyId, getPropertyValue } = DataUtils;
 const { OPENLATTICE_ID_FQN } = Constants;
 
 const {
-  ANDROID_DATA_DURATION,
+  ANDROID_DATA_UNIQUE_DAYS,
   ENROLLMENT_STATUS,
   FIRST_ANDROID_DATA,
   FIRST_TUD_SUBMISSION,
   LAST_ANDROID_DATA,
   LAST_TUD_SUBMISSION,
   PARTICIPANT_ID,
-  TUD_SUBMISSION_DURATION,
+  TUD_SUBMISSION_UNIQUE_DAYS,
 } = COLUMN_FIELDS;
 
 const {
@@ -508,10 +508,10 @@ function* getStudyParticipantsWorker(action :SequenceAction) :Generator<*, *, *>
         [PARTICIPANT_ID]: getIn(neighbor, ['neighborDetails', PERSON_ID]),
         [FIRST_ANDROID_DATA]: [androidFirstDataValues.max()],
         [LAST_ANDROID_DATA]: [androidLastDataValues.min()],
-        [ANDROID_DATA_DURATION]: [`${androidDataDuration} ${androidDataDurationLabel}`],
+        [ANDROID_DATA_UNIQUE_DAYS]: [`${androidDataDuration} ${androidDataDurationLabel}`],
         [FIRST_TUD_SUBMISSION]: [tudSubmissionDates.get(participantEKID, OrderedSet()).first()],
         [LAST_TUD_SUBMISSION]: [tudSubmissionDates.get(participantEKID, OrderedSet()).last()],
-        [TUD_SUBMISSION_DURATION]: [`${tudSubmissionsDuration} ${tudSubmissionDurationLabel}`],
+        [TUD_SUBMISSION_UNIQUE_DAYS]: [`${tudSubmissionsDuration} ${tudSubmissionDurationLabel}`],
         [PARTICIPATED_IN_EKID]: getIn(neighbor, ['associationDetails', OPENLATTICE_ID_FQN]),
         [ENROLLMENT_STATUS]: getIn(neighbor, ['associationDetails', STATUS], [ENROLLED]),
         id: [participantEKID], // needed by LUK table
@@ -829,10 +829,10 @@ function* addStudyParticipantWorker(action :SequenceAction) :Generator<*, *, *> 
       [OPENLATTICE_ID_FQN]: [participantEntityKeyId],
       [FIRST_ANDROID_DATA]: ['---'],
       [LAST_ANDROID_DATA]: ['---'],
-      [ANDROID_DATA_DURATION]: ['0 days'],
+      [ANDROID_DATA_UNIQUE_DAYS]: ['0 days'],
       [FIRST_TUD_SUBMISSION]: ['---'],
       [LAST_TUD_SUBMISSION]: ['---'],
-      [TUD_SUBMISSION_DURATION]: ['0 days'],
+      [TUD_SUBMISSION_UNIQUE_DAYS]: ['0 days'],
       [PARTICIPATED_IN_EKID]: [participatedInEKID],
       [ENROLLMENT_STATUS]: [ENROLLED],
       id: [participantEntityKeyId]
