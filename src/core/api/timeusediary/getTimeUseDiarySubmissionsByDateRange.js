@@ -4,8 +4,8 @@
 
 import {
   END_DATE,
+  IDS,
   START_DATE,
-  STUDY,
   TIME_USE_DIARY_API,
 } from '../../../common/constants';
 import { getApiAxiosInstance } from '../axios';
@@ -17,7 +17,7 @@ export default function getTimeUseDiarySubmissionsByDateRange(
   endDate :string,
 ) :Promise<*> {
   return getApiAxiosInstance(TIME_USE_DIARY_API)
-    .get(`/${STUDY}/${studyId}?${START_DATE}=${startDate}&${END_DATE}=${endDate}`)
+    .get(`/${studyId}/${IDS}?${START_DATE}=${startDate}&${END_DATE}=${endDate}`)
     .then((axiosResponse) => axiosResponse.data)
     .catch((error :Error) => Promise.reject(error));
 }

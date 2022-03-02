@@ -41,6 +41,7 @@ export const FAMILY_ID :'familyId' = 'familyId';
 export const FORM_DATA :'formData' = 'formData';
 export const GROUP :'group' = 'group';
 export const ID :'id' = 'id';
+export const IDS :'ids' = 'ids';
 export const IS_AUTHENTICATING :'isAuthenticating' = 'isAuthenticating';
 export const IS_OWNER :'isOwner' = 'isOwner';
 export const LANGUAGE :'language' = 'language';
