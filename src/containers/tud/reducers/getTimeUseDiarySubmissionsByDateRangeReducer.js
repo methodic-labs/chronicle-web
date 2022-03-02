@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { Map, fromJS } from 'immutable';
+import { Map } from 'immutable';
 import { RequestStates } from 'redux-reqseq';
 import type { SequenceAction } from 'redux-reqseq';
 
@@ -17,7 +17,7 @@ export default function reducer(state :Map, action :SequenceAction) {
     SUCCESS: () => {
       if (state.hasIn([GET_TUD_SUBMISSIONS_BY_DATE_RANGE, action.id])) {
         return state
-          .set(TIME_USE_DIARY_SUBMISSIONS, fromJS(action.value))
+          .set(TIME_USE_DIARY_SUBMISSIONS, action.value)
           .setIn([GET_TUD_SUBMISSIONS_BY_DATE_RANGE, REQUEST_STATE], RequestStates.SUCCESS);
       }
       return state;
