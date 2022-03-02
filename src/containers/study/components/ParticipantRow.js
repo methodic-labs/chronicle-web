@@ -86,13 +86,21 @@ const ParticipantRow = ({
   const androidFirstDate = formatDateTime(stats.androidFirstDate || '', DateTime.DATETIME_SHORT);
   const androidLastDate = formatDateTime(stats.androidLastDate || '', DateTime.DATETIME_SHORT);
   const androidUniqueDates = stats.androidUniqueDates?.length;
+  let androidUniqueDatesLabel = '---';
+  if (androidUniqueDates > 0) {
+    androidUniqueDatesLabel = `${androidUniqueDates} ${(androidUniqueDates === 1) ? 'day' : 'days'}`;
+  }
   const tudFirstDate = formatDateTime(stats.tudFirstDate || '', DateTime.DATETIME_SHORT);
   const tudLastDate = formatDateTime(stats.tudLastDate || '', DateTime.DATETIME_SHORT);
   const tudUniqueDates = stats.tudUniqueDates?.length;
+  let tudUniqueDatesLabel = '---';
+  if (tudUniqueDates > 0) {
+    tudUniqueDatesLabel = `${tudUniqueDates} ${(tudUniqueDates === 1) ? 'day' : 'days'}`;
+  }
 
   const getRowData = () => {
-    const tudData = [tudFirstDate, tudLastDate, tudUniqueDates];
-    const androidData = [androidFirstDate, androidLastDate, androidUniqueDates];
+    const tudData = [tudFirstDate, tudLastDate, tudUniqueDatesLabel];
+    const androidData = [androidFirstDate, androidLastDate, androidUniqueDatesLabel];
     if (orgHasDataCollectionModule && orgHasSurveyModule) {
       return [participantId, ...androidData, ...tudData];
     }
