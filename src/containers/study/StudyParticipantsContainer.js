@@ -31,12 +31,18 @@ import ParticipantsTableDispatch from './components/ParticipantsTableDispatch';
 import TudSubmissionHistory from './components/TudSubmissionHistory';
 import {
   CHANGE_ENROLLMENT_STATUS,
-  DELETE_STUDY_PARTICIPANT,
+  DELETE_STUDY_PARTICIPANTS,
   REGISTER_PARTICIPANT,
+  deleteStudyParticipants,
 } from './actions';
 import { COLUMN_FIELDS } from './constants/tableColumns';
 
-import { PARTICIPANT_ID } from '../../common/constants';
+import {
+  CANDIDATE_IDS,
+  PARTICIPANT_ID,
+  STUDIES,
+  STUDY_ID,
+} from '../../common/constants';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectMyKeys, selectParticipantStats, selectStudyParticipants } from '../../core/redux/selectors';
 import {
@@ -145,7 +151,7 @@ const StudyParticipantsContainer = ({
   const [filteredParticipants, setFilteredParticipants] = useState(Map());
 
   // selectors
-  const participants :Map = useSelector(selectStudyParticipants(study.id));
+  const participants :Map<UUID, Participant> = useSelector(selectStudyParticipants(study.id));
   const participantStats = useSelector(selectParticipantStats(study.id));
   const orgHasSurveyModule = useSelector(orgHasSurveyModuleSelector);
   const orgHasDataCollectionModule = useSelector(orgHasDataCollectionModuleSelector);
@@ -154,8 +160,8 @@ const StudyParticipantsContainer = ({
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
 
-  const changeEnrollmentStatusRS :?RequestState = useRequestState(['studies', CHANGE_ENROLLMENT_STATUS]);
-  const deleteParticipantRS :?RequestState = useRequestState(['studies', DELETE_STUDY_PARTICIPANT]);
+  const changeEnrollmentStatusRS :?RequestState = useRequestState([STUDIES, CHANGE_ENROLLMENT_STATUS]);
+  const deleteParticipantRS :?RequestState = useRequestState([STUDIES, DELETE_STUDY_PARTICIPANTS]);
 
   useEffect(() => {
     setFilteredParticipants(participants);
@@ -167,7 +173,7 @@ const StudyParticipantsContainer = ({
   }, [isEnrollmentModalOpen, storeDispatch]);
 
   useEffect(() => {
-    storeDispatch(resetRequestStates([DELETE_STUDY_PARTICIPANT]));
+    storeDispatch(resetRequestStates([DELETE_STUDY_PARTICIPANTS]));
   }, [isDeleteModalOpen, storeDispatch]);
 
   useEffect(() => {
@@ -184,12 +190,12 @@ const StudyParticipantsContainer = ({
   };
 
   const handleOnDeleteParticipant = () => {
-    // TODO: Fix for v3
-    // storeDispatch(deleteStudyParticipant({
-    //   participantEntityKeyId,
-    //   participantId: participants.getIn([participantEntityKeyId, PERSON_ID, 0]),
-    //   studyId: study.id,
-    // }));
+    storeDispatch(
+      deleteStudyParticipants({
+        [CANDIDATE_IDS]: [candidateId],
+        [STUDY_ID]: study.id,
+      })
+    );
   };
 
   const handleOnChangeEnrollment = () => {

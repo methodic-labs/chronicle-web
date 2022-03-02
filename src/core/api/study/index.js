@@ -3,6 +3,7 @@
  */
 
 export { default as createStudy } from './createStudy';
+export { default as deleteStudyParticipants } from './deleteStudyParticipants';
 export { default as getAllStudies } from './getAllStudies';
 export { default as getOrgStudies } from './getOrgStudies';
 export { default as getParticipantStats } from './getParticipantStats';

@@ -14,8 +14,8 @@ const createStudy :RequestSequence = newRequestSequence(CREATE_STUDY);
 const DELETE_STUDY :'DELETE_STUDY' = 'DELETE_STUDY';
 const deleteStudy :RequestSequence = newRequestSequence(DELETE_STUDY);
 
-const DELETE_STUDY_PARTICIPANT :'DELETE_STUDY_PARTICIPANT' = 'DELETE_STUDY_PARTICIPANT';
-const deleteStudyParticipant :RequestSequence = newRequestSequence(DELETE_STUDY_PARTICIPANT);
+const DELETE_STUDY_PARTICIPANTS :'DELETE_STUDY_PARTICIPANTS' = 'DELETE_STUDY_PARTICIPANTS';
+const deleteStudyParticipants :RequestSequence = newRequestSequence(DELETE_STUDY_PARTICIPANTS);
 
 const GET_ALL_STUDIES :'GET_ALL_STUDIES' = 'GET_ALL_STUDIES';
 const getAllStudies :RequestSequence = newRequestSequence(GET_ALL_STUDIES);
@@ -57,7 +57,7 @@ export {
   CHANGE_ENROLLMENT_STATUS,
   CREATE_STUDY,
   DELETE_STUDY,
-  DELETE_STUDY_PARTICIPANT,
+  DELETE_STUDY_PARTICIPANTS,
   GET_ALL_STUDIES,
   GET_ORG_STUDIES,
   GET_PARTICIPANT_STATS,
@@ -72,7 +72,7 @@ export {
   changeEnrollmentStatus,
   createStudy,
   deleteStudy,
-  deleteStudyParticipant,
+  deleteStudyParticipants,
   getAllStudies,
   getOrgStudies,
   getParticipantStats,
