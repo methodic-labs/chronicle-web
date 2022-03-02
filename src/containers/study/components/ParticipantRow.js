@@ -68,13 +68,13 @@ const ParticipantRow = ({
   orgHasDataCollectionModule,
   orgHasSurveyModule,
   participant,
-  stats,
+  stats = {},
 } :{
   hasDeletePermission :boolean;
   orgHasDataCollectionModule :boolean;
   orgHasSurveyModule :boolean;
   participant :Participant;
-  stats :ParticipantStats;
+  stats ?:ParticipantStats;
 }) => {
 
   const dispatch = useContext(ParticipantsTableDispatch);
@@ -85,10 +85,10 @@ const ParticipantRow = ({
   const enrollmentStatus = participant.participationStatus;
   const androidFirstDate = formatDateTime(stats.androidFirstDate || '', DateTime.DATETIME_SHORT);
   const androidLastDate = formatDateTime(stats.androidLastDate || '', DateTime.DATETIME_SHORT);
-  const androidUniqueDates = stats.androidUniqueDates.length;
+  const androidUniqueDates = stats.androidUniqueDates?.length;
   const tudFirstDate = formatDateTime(stats.tudFirstDate || '', DateTime.DATETIME_SHORT);
   const tudLastDate = formatDateTime(stats.tudLastDate || '', DateTime.DATETIME_SHORT);
-  const tudUniqueDates = stats.tudUniqueDates.length;
+  const tudUniqueDates = stats.tudUniqueDates?.length;
 
   const getRowData = () => {
     const tudData = [tudFirstDate, tudLastDate, tudUniqueDates];
@@ -207,5 +207,9 @@ const ParticipantRow = ({
   );
 };
 /* eslint-enable */
+
+ParticipantRow.defaultProps = {
+  stats: {},
+};
 
 export default ParticipantRow;
