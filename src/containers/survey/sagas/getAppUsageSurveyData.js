@@ -7,7 +7,6 @@ import { List, Map, fromJS } from 'immutable';
 import { AxiosUtils, Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from '../../../common/types';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as AppUsageSurveyApi from '../../../core/api/appusagesurvey';
@@ -20,6 +19,7 @@ import {
   TIMEZONE,
 } from '../../../common/constants';
 import { GET_APP_USAGE_SURVEY_DATA, getAppUsageSurveyData } from '../actions';
+import type { WorkerResponse } from '../../../common/types';
 
 const { toSagaError } = AxiosUtils;
 
