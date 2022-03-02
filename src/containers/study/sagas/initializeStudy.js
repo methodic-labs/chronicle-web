@@ -10,7 +10,6 @@ import {
 } from '@redux-saga/core/effects';
 import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
-import type { UUID } from 'lattice';
 import type { SequenceAction } from 'redux-reqseq';
 
 import { getParticipantStatsWorker } from './getParticipantStats';
@@ -27,7 +26,7 @@ import {
   getStudyParticipants,
   initializeStudy,
 } from '../actions';
-import type { AuthorizationObject, WorkerResponse } from '../../../common/types';
+import type { AuthorizationObject, UUID, WorkerResponse } from '../../../common/types';
 
 const { toSagaError } = AxiosUtils;
 

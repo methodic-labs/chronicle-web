@@ -8,9 +8,9 @@ import {
   Set,
   getIn,
 } from 'immutable';
-import type { UUID } from 'lattice';
 
 import { MY_KEYS, PERMISSIONS } from '../../../common/constants';
+import type { UUID } from '../../../common/types';
 
 export default function selectMyKeys() {
 
