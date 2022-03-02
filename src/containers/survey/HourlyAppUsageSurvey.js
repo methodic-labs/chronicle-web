@@ -24,7 +24,7 @@ import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch
 import { submitAppUsageSurvey } from './actions';
 import { createHourlySurveySubmissionData } from './utils';
 
-import BasicErrorComponent from '../shared/BasicErrorComponent';
+import { BasicErrorComponent } from '../../common/components';
 
 const { isFailure, isSuccess, isPending } = ReduxUtils;
 

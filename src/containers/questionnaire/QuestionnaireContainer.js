@@ -24,8 +24,8 @@ import {
   getQuestionnaire
 } from './QuestionnaireActions';
 
-import BasicErrorComponent from '../shared/BasicErrorComponent';
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
+import { BasicErrorComponent } from '../../common/components';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { QUESTIONNAIRE_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 

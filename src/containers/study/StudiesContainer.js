@@ -20,7 +20,7 @@ import StudyCard from './components/StudyCard';
 import StudyDetailsModal from './components/StudyDetailsModal';
 import { CREATE_STUDY, GET_ORG_STUDIES } from './actions';
 
-import BasicErrorComponent from '../shared/BasicErrorComponent';
+import { BasicErrorComponent } from '../../common/components';
 import { STUDIES } from '../../common/constants';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectStudies } from '../../core/redux/selectors';

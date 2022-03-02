@@ -43,6 +43,7 @@ import {
 } from './utils';
 
 import * as LanguageCodes from '../../utils/constants/LanguageCodes';
+import { BasicErrorComponent } from '../../common/components';
 import {
   PARTICIPANT_ID,
   STUDIES,
@@ -238,11 +239,11 @@ const TimeUseDiaryContainer = () => {
     return (
       <AppContainerWrapper>
         <HeaderComponent onChangeLanguage={onChangeLanguage} selectedLanguage={selectedLanguage} />
-        <Box textAlign="center" mt="30px">
+        <BasicErrorComponent>
           <Typography>
             {t(TranslationKeys.ERROR_INVALID_URL)}
           </Typography>
-        </Box>
+        </BasicErrorComponent>
       </AppContainerWrapper>
     );
   }

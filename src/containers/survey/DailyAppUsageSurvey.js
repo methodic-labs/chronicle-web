@@ -16,8 +16,8 @@ import type { RequestState } from 'redux-reqseq';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import SurveyForm from './components/SurveyForm';
 
-import BasicErrorComponent from '../shared/BasicErrorComponent';
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
+import { BasicErrorComponent } from '../../common/components';
 
 const { isPending } = ReduxUtils;
 

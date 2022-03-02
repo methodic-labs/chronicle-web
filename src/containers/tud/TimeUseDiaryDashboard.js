@@ -25,7 +25,7 @@ import {
 import { GET_TUD_SUBMISSIONS_BY_DATE_RANGE, getTimeUseDiarySubmissionsByDateRange } from './actions';
 import type { DataType } from './constants/DataTypes';
 
-import BasicErrorComponent from '../shared/BasicErrorComponent';
+import { BasicErrorComponent } from '../../common/components';
 import {
   END_DATE,
   START_DATE,
