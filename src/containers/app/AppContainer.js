@@ -35,7 +35,7 @@ import * as Routes from '../../core/router/Routes';
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import { logout } from '../../core/auth/actions';
 import { getUserInfo, isAdmin } from '../../core/auth/utils';
-import { GOOGLE_TRACKING_ID } from '../../core/tracking/google/GoogleAnalytics';
+import { GOOGLE_MEASUREMENT_ID } from '../../core/tracking/google/GoogleAnalytics';
 
 declare var gtag :?Function;
 
@@ -53,7 +53,7 @@ const AppContainer = () => {
   const onLogout = () => {
     dispatch(logout());
     if (_isFunction(gtag)) {
-      gtag('config', GOOGLE_TRACKING_ID, { user_id: undefined, send_page_view: false });
+      gtag('config', GOOGLE_MEASUREMENT_ID, { user_id: undefined, send_page_view: false });
     }
   };
 
