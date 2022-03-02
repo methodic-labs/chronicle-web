@@ -125,13 +125,13 @@ const StudyRouter = () => {
           <TabLink exact to={participantsRoute}>
             Participants
           </TabLink>
-          {
+          {/*
             hasQuestionnaires && (
               <TabLink exact to={questionnairesRoute}>
                 Questionnaires
               </TabLink>
             )
-          }
+          */}
           {
             hasTimeUseDiary && (
               <TabLink exact to={timeUseDiaryRoute}>
