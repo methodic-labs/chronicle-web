@@ -11,7 +11,6 @@ import {
 } from 'lattice-ui-kit';
 import { ReduxConstants, ReduxUtils, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouteMatch } from 'react-router-dom';
 import type { RequestState } from 'redux-reqseq';
 
 import SearchPanel from './components/SearchPanel';
@@ -20,18 +19,23 @@ import SummaryListComponent from './components/SummaryListComponent';
 import {
   DOWNLOAD_ALL_TUD_DATA,
   DOWNLOAD_DAILY_TUD_DATA,
-  GET_SUBMISSIONS_BY_DATE,
   downloadAllTudData,
   downloadDailyTudData,
-  getSubmissionsByDate
 } from './TimeUseDiaryActions';
+import { GET_TUD_SUBMISSIONS_BY_DATE_RANGE, getTimeUseDiarySubmissionsByDateRange } from './actions';
 import type { DataType } from './constants/DataTypes';
 
 import BasicErrorComponent from '../shared/BasicErrorComponent';
-import { resetRequestState } from '../../core/redux/ReduxActions';
-import { TUD_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
+import {
+  END_DATE,
+  START_DATE,
+  STUDY_ID,
+  TIME_USE_DIARY,
+} from '../../common/constants';
+import { resetRequestStates } from '../../core/redux/actions';
+import { selectTimeUseDiarySubmissions } from '../../core/redux/selectors';
+import type { Study } from '../../common/types';
 
-const { SUBMISSIONS_BY_DATE } = TUD_REDUX_CONSTANTS;
 const { REQUEST_STATE } = ReduxConstants;
 
 const {
@@ -41,7 +45,12 @@ const {
   isSuccess,
 } = ReduxUtils;
 
-const TimeUseDiaryDashboard = () => {
+const TimeUseDiaryDashboard = ({
+  study,
+} :{
+  study :Study;
+}) => {
+
   const dispatch = useDispatch();
 
   const [dates, setDates] = useState({
@@ -49,18 +58,15 @@ const TimeUseDiaryDashboard = () => {
     endDate: undefined
   });
 
-  const match :Match = useRouteMatch();
-  const { studyId } = match.params;
-
   // selectors
   const downloadAllDataRS :?RequestState = useRequestState(['tud', DOWNLOAD_ALL_TUD_DATA]);
-  const getSubmissionsByDateRS :?RequestState = useRequestState(['tud', GET_SUBMISSIONS_BY_DATE]);
-  const submissionsByDate = useSelector((state) => state.getIn(['tud', SUBMISSIONS_BY_DATE], Map()));
   const downloadStates = useSelector((state) => state.getIn(['tud', DOWNLOAD_DAILY_TUD_DATA, REQUEST_STATE], Map()));
+  const getSubmissionsRS :?RequestState = useRequestState([TIME_USE_DIARY, GET_TUD_SUBMISSIONS_BY_DATE_RANGE]);
+  const timeUseDiarySubmissions = useSelector(selectTimeUseDiarySubmissions());
 
   // reset state on dismount
   useEffect(() => () => {
-    dispatch(resetRequestState(GET_SUBMISSIONS_BY_DATE));
+    dispatch(resetRequestStates([GET_TUD_SUBMISSIONS_BY_DATE_RANGE]));
   }, [dispatch]);
 
   const onSetDate = (name :string, value :string) => {
@@ -74,11 +80,13 @@ const TimeUseDiaryDashboard = () => {
     const { startDate, endDate } = dates;
 
     if (startDate && endDate) {
-      dispatch(getSubmissionsByDate({
-        endDate,
-        studyId,
-        startDate,
-      }));
+      dispatch(
+        getTimeUseDiarySubmissionsByDateRange({
+          [END_DATE]: endDate,
+          [START_DATE]: startDate,
+          [STUDY_ID]: study.id,
+        })
+      );
     }
   };
 
@@ -88,7 +96,7 @@ const TimeUseDiaryDashboard = () => {
     if (!date) {
       // download all
       dispatch(downloadAllTudData({
-        entities: submissionsByDate.toList().flatten(true),
+        entities: timeUseDiarySubmissions.toList().flatten(true),
         dataType,
         endDate,
         startDate
@@ -113,22 +121,22 @@ const TimeUseDiaryDashboard = () => {
       <CardSegment>
         <SearchPanel
             endDate={dates.endDate}
-            getSubmissionsRS={getSubmissionsByDateRS}
+            getSubmissionsRS={getSubmissionsRS}
             onGetSubmissions={handleOnGetSubmissions}
             onSetDate={onSetDate}
             startDate={dates.startDate} />
       </CardSegment>
 
       {
-        !isStandby(getSubmissionsByDateRS) && (
+        !isStandby(getSubmissionsRS) && (
           <CardSegment>
             {
-              isPending(getSubmissionsByDateRS) && (
+              isPending(getSubmissionsRS) && (
                 <Spinner size="2x" />
               )
             }
             {
-              isFailure(getSubmissionsByDateRS) && (
+              isFailure(getSubmissionsRS) && (
                 <BasicErrorComponent>
                   <Typography variant="body2">
                     { errorMsg }
@@ -137,10 +145,10 @@ const TimeUseDiaryDashboard = () => {
               )
             }
             {
-              isSuccess(getSubmissionsByDateRS) && (
+              isSuccess(getSubmissionsRS) && (
                 <>
                   {
-                    submissionsByDate.isEmpty() ? (
+                    timeUseDiarySubmissions.isEmpty() ? (
                       <Typography>
                         No submissions found for the selected date range.
                       </Typography>
@@ -151,13 +159,13 @@ const TimeUseDiaryDashboard = () => {
                             downloadAllDataRS={downloadAllDataRS} />
                         <div>
                           {
-                            submissionsByDate.entrySeq().map(([key, entities]) => (
+                            timeUseDiarySubmissions.entrySeq().map(([key, submissionIds]) => (
                               <SummaryListComponent
                                   date={key}
                                   downloadRS={downloadStates.get(key, Map())}
-                                  entities={entities}
                                   key={key}
-                                  onDownloadData={handleDownload}>
+                                  onDownloadData={handleDownload}
+                                  submissionIds={submissionIds}>
                                 {key}
                               </SummaryListComponent>
                             ))

@@ -38,14 +38,14 @@ function* submitTimeUseDiaryWorker(action :SequenceAction) :Saga<*> {
       action.value[TRANSLATION_DATA],
     );
 
-    const response = yield call(
+    yield call(
       TimeUseDiaryApi.submitTimeUseDiary,
       action.value[ORGANIZATION_ID],
       action.value[STUDY_ID],
       action.value[PARTICIPANT_ID],
       data,
     );
-    if (response.error) throw response.error;
+
     yield put(submitTimeUseDiary.success(action.id));
   }
   catch (error) {

@@ -109,6 +109,12 @@ const StudyRouter = () => {
         : null
     );
 
+    const renderTimeUseDiary = () => (
+      (study)
+        ? <TimeUseDiaryDashboard study={study} />
+        : null
+    );
+
     return (
       <>
         <Box fontSize={28} fontWeight="fontWeightNormal">{study.title}</Box>
@@ -136,7 +142,7 @@ const StudyRouter = () => {
         </Box>
         <Switch>
           <Route path={Routes.PARTICIPANTS} render={renderStudyParticipantsContainer} />
-          <Route path={Routes.STUDY_TUD} component={TimeUseDiaryDashboard} />
+          <Route path={Routes.STUDY_TUD} render={renderTimeUseDiary} />
           <Route path={Routes.STUDY} render={renderStudyContainer} />
         </Switch>
       </>

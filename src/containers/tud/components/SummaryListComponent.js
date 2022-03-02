@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { faCloudDownload } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { List } from 'immutable';
-// $FlowFixMe
 import { Button, Grid, Typography } from 'lattice-ui-kit';
 import { ReduxUtils } from 'lattice-utils';
 import type { RequestState } from 'redux-reqseq';
@@ -34,7 +33,7 @@ const ButtonWrapper = styled(Button)`
 type Props = {
   downloadRS :Map<DataType, RequestState>;
   date :string;
-  entities :List;
+  submissionIds :List;
   onDownloadData :(entity :List, date :string, dataType :DataType) => void;
 }
 
@@ -42,7 +41,7 @@ const SummaryListComponent = (
   {
     date,
     downloadRS,
-    entities,
+    submissionIds,
     onDownloadData,
   } :Props
 ) => (
@@ -52,16 +51,17 @@ const SummaryListComponent = (
     </Typography>
 
     <Typography variant="body2" gutterBottom>
-      { entities.size }
+      { submissionIds.size }
     </Typography>
     <div />
 
     <Grid container spacing={2}>
       <Grid item xs={4}>
         <ButtonWrapper
+            disabled
             fullWidth
             isLoading={isPending(downloadRS.get(DataTypes.SUMMARIZED))}
-            onClick={() => onDownloadData(entities, date, DataTypes.SUMMARIZED)}
+            onClick={() => onDownloadData(submissionIds, date, DataTypes.SUMMARIZED)}
             size="small"
             startIcon={<FontAwesomeIcon icon={faCloudDownload} />}
             variant="outlined">
@@ -70,9 +70,10 @@ const SummaryListComponent = (
       </Grid>
       <Grid item xs={4}>
         <ButtonWrapper
+            disabled
             fullWidth
             isLoading={isPending(downloadRS.get(DataTypes.DAYTIME))}
-            onClick={() => onDownloadData(entities, date, DataTypes.DAYTIME)}
+            onClick={() => onDownloadData(submissionIds, date, DataTypes.DAYTIME)}
             size="small"
             startIcon={<FontAwesomeIcon icon={faCloudDownload} />}
             variant="outlined">
@@ -81,9 +82,10 @@ const SummaryListComponent = (
       </Grid>
       <Grid item xs={4}>
         <ButtonWrapper
+            disabled
             fullWidth
             isLoading={isPending(downloadRS.get(DataTypes.NIGHTTIME))}
-            onClick={() => onDownloadData(entities, date, DataTypes.NIGHTTIME)}
+            onClick={() => onDownloadData(submissionIds, date, DataTypes.NIGHTTIME)}
             size="small"
             startIcon={<FontAwesomeIcon icon={faCloudDownload} />}
             variant="outlined">

@@ -52,6 +52,7 @@ const DownloadAllButton = ({ downloadAllDataRS, onDownloadData } :Props) => {
           aria-haspopup="true"
           color="primary"
           data-action-id={TOGGLE_MENU}
+          disabled
           isLoading={isPending(downloadAllDataRS)}
           onClick={handleClick}
           size="small">

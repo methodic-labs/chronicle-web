@@ -2,5 +2,5 @@
  * @flow
  */
 
-export { default as getStudyTUDSubmissionsByDateRange } from './getStudyTUDSubmissionsByDateRange';
+export { default as getTimeUseDiarySubmissionsByDateRange } from './getTimeUseDiarySubmissionsByDateRange';
 export { default as submitTimeUseDiary } from './submitTimeUseDiary';
