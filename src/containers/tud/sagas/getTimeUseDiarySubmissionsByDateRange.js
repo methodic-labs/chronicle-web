@@ -25,8 +25,8 @@ function* getTimeUseDiarySubmissionsByDateRangeWorker(action :SequenceAction) :S
     const response = yield call(
       TimeUseDiaryApi.getTimeUseDiarySubmissionsByDateRange,
       value[STUDY_ID],
-      DateTime.fromISO(value[START_DATE]).toISO(),
-      DateTime.fromISO(value[END_DATE]).toISO(),
+      DateTime.fromISO(value[START_DATE]).startOf('day').toISO(),
+      DateTime.fromISO(value[END_DATE]).endOf('day').toISO(),
     );
     yield put(getTimeUseDiarySubmissionsByDateRange.success(id, response));
   }
