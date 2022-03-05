@@ -2,26 +2,21 @@
 
 import { useState } from 'react';
 
-import { List } from 'immutable';
-// $FlowFixMe
 import { Button, Menu, MenuItem } from 'lattice-ui-kit';
-import { ReduxUtils } from 'lattice-utils';
-import type { RequestState } from 'redux-reqseq';
+import { DateTime } from 'luxon';
 
 import DataTypes from '../constants/DataTypes';
 import type { DataType } from '../constants/DataTypes';
-
-const { isPending } = ReduxUtils;
 
 // actions
 const DOWNLOAD_DATA = 'downloadData';
 const TOGGLE_MENU = 'toggleMenu';
 
 type Props = {
-  onDownloadData :(entity :?List, date :?string, dataType :DataType) => void;
-  downloadAllDataRS :?RequestState;
+  onDownloadData :(date :?DateTime, dataType :DataType) => void;
+  isLoading :boolean
 }
-const DownloadAllButton = ({ downloadAllDataRS, onDownloadData } :Props) => {
+const DownloadAllButton = ({ isLoading, onDownloadData } :Props) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClose = () => {
@@ -39,7 +34,7 @@ const DownloadAllButton = ({ downloadAllDataRS, onDownloadData } :Props) => {
         break;
       case DOWNLOAD_DATA:
         handleClose();
-        onDownloadData(undefined, undefined, typeId);
+        onDownloadData(undefined, typeId);
         break;
       default:
     }
@@ -52,8 +47,7 @@ const DownloadAllButton = ({ downloadAllDataRS, onDownloadData } :Props) => {
           aria-haspopup="true"
           color="primary"
           data-action-id={TOGGLE_MENU}
-          disabled
-          isLoading={isPending(downloadAllDataRS)}
+          isLoading={isLoading}
           onClick={handleClick}
           size="small">
         Download All
@@ -78,6 +72,7 @@ const DownloadAllButton = ({ downloadAllDataRS, onDownloadData } :Props) => {
         </MenuItem>
 
         <MenuItem
+            disabled
             data-action-id={DOWNLOAD_DATA}
             data-type-id={DataTypes.SUMMARIZED}
             onClick={handleClick}>
