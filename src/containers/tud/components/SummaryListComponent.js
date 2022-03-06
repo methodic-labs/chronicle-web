@@ -56,7 +56,6 @@ const SummaryListComponent = (
     <Grid container spacing={2}>
       <Grid item xs={4}>
         <ButtonWrapper
-            disabled
             fullWidth
             onClick={() => onDownloadData(date, DataTypes.SUMMARIZED)}
             size="small"

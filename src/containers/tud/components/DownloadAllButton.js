@@ -14,9 +14,8 @@ const TOGGLE_MENU = 'toggleMenu';
 
 type Props = {
   onDownloadData :(date :?DateTime, dataType :DataType) => void;
-  isLoading :boolean
 }
-const DownloadAllButton = ({ isLoading, onDownloadData } :Props) => {
+const DownloadAllButton = ({ onDownloadData } :Props) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClose = () => {
@@ -47,7 +46,6 @@ const DownloadAllButton = ({ isLoading, onDownloadData } :Props) => {
           aria-haspopup="true"
           color="primary"
           data-action-id={TOGGLE_MENU}
-          isLoading={isLoading}
           onClick={handleClick}
           size="small">
         Download All
@@ -72,7 +70,6 @@ const DownloadAllButton = ({ isLoading, onDownloadData } :Props) => {
         </MenuItem>
 
         <MenuItem
-            disabled
             data-action-id={DOWNLOAD_DATA}
             data-type-id={DataTypes.SUMMARIZED}
             onClick={handleClick}>

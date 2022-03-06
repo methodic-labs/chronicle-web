@@ -32,7 +32,6 @@ const SummaryHeader = ({ onDownloadData } :Props) => (
     </Typography>
     <div />
     <DownloadAllButton
-        disabled
         onDownloadData={onDownloadData} />
   </Wrapper>
 );
