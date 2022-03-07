@@ -3,6 +3,7 @@
 import getApiBaseUrl from '../../../core/api/axios/getApiBaseUrl';
 import {
   CSRF_TOKEN,
+  DATA,
   DATA_TYPE,
   END_DATE,
   START_DATE,
@@ -21,7 +22,7 @@ export default function getTimeUseDiaryDataDownloadUrl(
   const configAuthToken :string = getCSRFToken() || '';
   const baseUrl = getApiBaseUrl(TIME_USE_DIARY_API);
 
-  return `${baseUrl}/${studyId}`
+  return `${baseUrl}/${studyId}/${DATA}/`
   + `?${START_DATE}=${startDate}&${END_DATE}=${endDate}`
   + `&${DATA_TYPE}=${dataType}&${CSRF_TOKEN}=${configAuthToken}`;
 }
