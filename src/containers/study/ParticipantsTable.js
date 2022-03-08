@@ -4,7 +4,7 @@ import { memo } from 'react';
 
 import styled from 'styled-components';
 import { Map } from 'immutable';
-import { Colors, Table } from 'lattice-ui-kit';
+import { Table } from 'lattice-ui-kit';
 
 import ParticipantRow from './components/ParticipantRow';
 import getHeaders from './constants/tableHeaders';
@@ -12,40 +12,36 @@ import getHeaders from './constants/tableHeaders';
 import { PARTICIPANT_ID } from '../../common/constants';
 import type { Participant, ParticipantStats } from '../../common/types';
 
-const { NEUTRAL } = Colors;
-
 const TableWrapper = styled.div`
-  &:nth-child(2) {
+  > div:nth-child(1) {
     overflow-x: auto;
   }
   table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    min-width: 950px;
-    overflow-x: scroll;
-
+    margin-top: 20px;
     th {
       background-color: inherit;
       border: none;
-      border-bottom: 1px solid ${NEUTRAL.N200};
+      border-bottom: 1px solid black;
       font-size: 14px;
-      min-width: 100px;
-      white-space: nowrap;
     }
-    tbody {
-      tr > :last-child {
-        position: sticky;
-        right: 0;
-        background: white;
-        index: 1;
-      }
+    th:first-child, td:first-child {
+      position: sticky;
+      left: 0;
+      background: white;
+      z-index: 500;
     }
-    tbody > tr {
-      white-space: nowrap;
+    th:last-child, td:last-child {
+      position: sticky;
+      right: 0;
+      background: white;
+      z-index: 500;
+      text-align: right;
     }
     th, td {
-      min-width: 100px;
       padding: 10px;
+    }
+    td {
+      font-size: 15px;
     }
   }
 `;
