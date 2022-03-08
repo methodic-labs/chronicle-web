@@ -157,7 +157,7 @@ const StudyParticipantsContainer = ({
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
 
-  const { components } = study.settings;
+  const { components = [] } = study.settings;
   // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
   const studyHasTimeUseDiaryModule = components.includes(AppComponents.TIME_USE_DIARY);
   const studyHasDataCollectionModule = components.includes(AppComponents.CHRONICLE_DATA_COLLECTION);
