@@ -36,7 +36,6 @@ import {
   changeEnrollmentStatus,
   deleteStudyParticipants
 } from './actions';
-import { COLUMN_FIELDS } from './constants/tableColumns';
 
 import {
   AppComponents,
@@ -54,8 +53,6 @@ import {
   selectStudyParticipants,
 } from '../../core/redux/selectors';
 import type { Participant, ParticipationStatus, Study } from '../../common/types';
-
-const { ENROLLMENT_STATUS } = COLUMN_FIELDS;
 
 const {
   SET_CANDIDATE_ID,
