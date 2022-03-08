@@ -33,7 +33,6 @@ const {
   TOGGLE_DOWNLOAD_MODAL,
   TOGGLE_ENROLLMENT_MODAL,
   TOGGLE_INFO_MODAL,
-  TOGGLE_TUD_SUBMISSION_HISTORY_MODAL
 } = ParticipantsTableActions;
 
 const RowWrapper = styled.tr.attrs(() => ({ tabIndex: '1' }))`
@@ -166,21 +165,17 @@ const ParticipantRow = ({
                 onClick={handleMenuItemClick}>
               Delete
             </MenuItem>
-            {
-              hasDataCollectionModule && (
-                <MenuItem
-                    data-action-id={TOGGLE_DOWNLOAD_MODAL}
-                    onClick={handleMenuItemClick}>
-                  Download Data
-                </MenuItem>
-              )
-            }
+            <MenuItem
+                data-action-id={TOGGLE_DOWNLOAD_MODAL}
+                onClick={handleMenuItemClick}>
+              Download Data
+            </MenuItem>
             <MenuItem
                 data-action-id={TOGGLE_ENROLLMENT_MODAL}
                 onClick={handleMenuItemClick}>
               { pauseOrResume }
             </MenuItem>
-            {
+            {/* {
               hasTimeUseDiaryModule && (
                 <MenuItem
                     data-action-id={TOGGLE_TUD_SUBMISSION_HISTORY_MODAL}
@@ -188,7 +183,7 @@ const ParticipantRow = ({
                   TUD Submission Dates
                 </MenuItem>
               )
-            }
+            } */}
           </Menu>
         </td>
       </RowWrapper>

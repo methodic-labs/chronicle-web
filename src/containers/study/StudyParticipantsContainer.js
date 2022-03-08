@@ -40,7 +40,6 @@ import { COLUMN_FIELDS } from './constants/tableColumns';
 import {
   AppComponents,
   CANDIDATE_IDS,
-  COMPONENTS,
   PARTICIPANT_ID,
   STUDIES,
   STUDY_ID
@@ -50,9 +49,8 @@ import {
   selectMyKeys,
   selectParticipantStats,
   selectStudyParticipants,
-  selectStudySettings
 } from '../../core/redux/selectors';
-import type { AppComponent, Participant, Study } from '../../common/types';
+import type { Participant, Study } from '../../common/types';
 
 const { ENROLLMENT_STATUS } = COLUMN_FIELDS;
 
@@ -155,12 +153,11 @@ const StudyParticipantsContainer = ({
   // selectors
   const participants :Map<UUID, Participant> = useSelector(selectStudyParticipants(study.id));
   const participantStats = useSelector(selectParticipantStats(study.id));
-  const settings = useSelector(selectStudySettings(study.id));
 
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
 
-  const components :List<AppComponent> = settings.get(COMPONENTS, List());
+  const { components } = study.settings;
   // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
   const studyHasTimeUseDiaryModule = components.includes(AppComponents.TIME_USE_DIARY);
   const studyHasDataCollectionModule = components.includes(AppComponents.CHRONICLE_DATA_COLLECTION);
