@@ -285,8 +285,9 @@ const StudyParticipantsContainer = ({
           candidateId && (
             <DownloadParticipantDataModal
                 handleOnClose={() => dispatch({ type: TOGGLE_DOWNLOAD_MODAL, isModalOpen: false })}
+                hasDataCollectionModule={studyHasDataCollectionModule}
+                hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
                 isVisible={isDownloadModalOpen}
-                candidateId={candidateId}
                 participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                 studyId={study.id} />
           )

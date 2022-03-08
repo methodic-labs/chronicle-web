@@ -19,10 +19,10 @@ export default function getTimeUseDiaryDataDownloadUrl(
   endDate :string,
   dataType :DataType
 ) :string {
-  const configAuthToken :string = getCSRFToken() || '';
+  const csrfToken :string = getCSRFToken() || '';
   const baseUrl = getApiBaseUrl(TIME_USE_DIARY_API);
 
   return `${baseUrl}/${studyId}/${DATA}/`
   + `?${START_DATE}=${startDate}&${END_DATE}=${endDate}`
-  + `&${DATA_TYPE}=${dataType}&${CSRF_TOKEN}=${configAuthToken}`;
+  + `&${DATA_TYPE}=${dataType}&${CSRF_TOKEN}=${csrfToken}`;
 }

@@ -11,8 +11,10 @@ import {
 import type {
   AppComponent,
   AppUsageFreqType,
+  ParticipantDataType,
   ParticipationStatusesEnum,
-  PermissionTypesEnum
+  PermissionTypesEnum,
+  TimeUseDiaryDataType
 } from '../types';
 
 export const AppUsageFreqTypes :{| ...AppUsageFreqType |} = Object.freeze({
@@ -34,6 +36,13 @@ export const ParticipationStatuses :{| ...ParticipationStatusesEnum |} = Object.
   UNKNOWN: 'UNKNOWN',
 });
 
+export const ParticipantDataTypes :{| ...ParticipantDataType |} = Object.freeze({
+  USAGE_EVENTS: 'UsageEvents',
+  PREPROCESSED: 'Preprocessed',
+  APP_USAGE_SURVEY: 'AppUsageSurvey',
+  TIME_USE_DIARY: 'TimeUseDiary',
+});
+
 export const PermissionTypes :{| ...PermissionTypesEnum |} = Object.freeze({
   DISCOVER: 'DISCOVER',
   INTEGRATE: 'INTEGRATE',
@@ -48,3 +57,9 @@ export const RS_INITIAL_STATE = {
   [ERROR]: false,
   [REQUEST_STATE]: RequestStates.STANDBY,
 };
+
+export const TimeUseDiaryDataTypes :{| ...TimeUseDiaryDataType |} = Object.freeze({
+  DAYTIME: 'DayTime',
+  NIGHTTIME: 'NightTime',
+  SUMMARIZED: 'Summarized',
+});

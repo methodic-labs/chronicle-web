@@ -29,6 +29,13 @@ export type AuthorizationObject = {|
   };
 |};
 
+export type ParticipantDataType = {|
+  USAGE_EVENTS :'UsageEvents';
+  PREPROCESSED :'Preprocessed';
+  APP_USAGE_SURVEY :'AppUsageSurvey';
+  TIME_USE_DIARY :'TimeUseDiary';
+|}
+
 export type ParticipationStatusesEnum = {|
   ENROLLED :'ENROLLED';
   NOT_ENROLLED :'NOT_ENROLLED';
@@ -103,6 +110,12 @@ export type Study = {
   updatedAt :string;
   version :string;
 };
+
+export type TimeUseDiaryDataType = {|
+  DAYTIME :'DayTime';
+  NIGHTTIME :'NightTime';
+  SUMMARIZED :'Summarized';
+|};
 
 export type UserInfo = {
   email ?:string;
