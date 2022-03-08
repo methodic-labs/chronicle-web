@@ -52,14 +52,14 @@ const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
 
 const ParticipantRow = ({
   hasDeletePermission,
-  orgHasDataCollectionModule,
-  orgHasSurveyModule,
+  hasDataCollectionModule,
+  hasTimeUseDiaryModule,
   participant,
   stats = {},
 } :{
   hasDeletePermission :boolean;
-  orgHasDataCollectionModule :boolean;
-  orgHasSurveyModule :boolean;
+  hasDataCollectionModule :boolean;
+  hasTimeUseDiaryModule :boolean;
   participant :Participant;
   stats ?:ParticipantStats;
 }) => {
@@ -88,13 +88,13 @@ const ParticipantRow = ({
   const getRowData = () => {
     const tudData = [tudFirstDate, tudLastDate, tudUniqueDatesLabel];
     const androidData = [androidFirstDate, androidLastDate, androidUniqueDatesLabel];
-    if (orgHasDataCollectionModule && orgHasSurveyModule) {
+    if (hasDataCollectionModule && hasTimeUseDiaryModule) {
       return [participantId, ...androidData, ...tudData];
     }
-    if (orgHasDataCollectionModule) {
+    if (hasDataCollectionModule) {
       return [participantId, ...androidData];
     }
-    if (orgHasSurveyModule) {
+    if (hasTimeUseDiaryModule) {
       return [participantId, ...tudData];
     }
 
@@ -167,7 +167,7 @@ const ParticipantRow = ({
               Delete
             </MenuItem>
             {
-              orgHasDataCollectionModule && (
+              hasDataCollectionModule && (
                 <MenuItem
                     data-action-id={TOGGLE_DOWNLOAD_MODAL}
                     onClick={handleMenuItemClick}>
@@ -181,7 +181,7 @@ const ParticipantRow = ({
               { pauseOrResume }
             </MenuItem>
             {
-              orgHasSurveyModule && (
+              hasTimeUseDiaryModule && (
                 <MenuItem
                     data-action-id={TOGGLE_TUD_SUBMISSION_HISTORY_MODAL}
                     onClick={handleMenuItemClick}>

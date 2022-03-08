@@ -32,6 +32,7 @@ export const CANDIDATE :'candidate' = 'candidate';
 export const CANDIDATE_API :'CandidateApi' = 'CandidateApi';
 export const CANDIDATE_IDS :'candidateIds' = 'candidateIds';
 export const CHRONICLE :'chronicle' = 'chronicle';
+export const COMPONENTS :'components' = 'components';
 export const CONTACT :'contact' = 'contact';
 export const CSRF_COOKIE :'ol_csrf_token' = 'ol_csrf_token';
 export const CSRF_TOKEN :'csrfToken' = 'csrfToken';

@@ -48,26 +48,26 @@ const TableWrapper = styled.div`
 
 const ParticipantsTable = ({
   hasDeletePermission,
-  orgHasDataCollectionModule,
-  orgHasSurveyModule,
+  hasDataCollectionModule,
+  hasTimeUseDiaryModule,
   participants,
   participantStats,
 } :{
   hasDeletePermission :boolean;
-  orgHasDataCollectionModule :boolean;
-  orgHasSurveyModule :boolean;
+  hasDataCollectionModule :boolean;
+  hasTimeUseDiaryModule :boolean;
   participants :Map<UUID, Participant>;
   participantStats :{ [string] :ParticipantStats };
 }) => {
 
-  const tableHeaders = getHeaders(orgHasSurveyModule, orgHasDataCollectionModule);
+  const tableHeaders = getHeaders(hasTimeUseDiaryModule, hasDataCollectionModule);
 
   const components = {
     Row: ({ data: rowData } :any) => (
       <ParticipantRow
           hasDeletePermission={hasDeletePermission}
-          orgHasDataCollectionModule={orgHasDataCollectionModule}
-          orgHasSurveyModule={orgHasSurveyModule}
+          hasDataCollectionModule={hasDataCollectionModule}
+          hasTimeUseDiaryModule={hasTimeUseDiaryModule}
           participant={rowData}
           stats={participantStats[rowData[PARTICIPANT_ID]] || {}} />
     )

@@ -99,12 +99,12 @@ type ColumnType = {
   }
 };
 
-export default function getHeaders(orgHasSurveyModule :boolean, orgHasDataCollectionModule :boolean) {
+export default function getHeaders(hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) {
   let data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
-  if (orgHasSurveyModule && !orgHasDataCollectionModule) {
+  if (hasTimeUseDiaryModule && !hasDataCollectionModule) {
     data = [PARTICIPANT_ID_COLUMN, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
   }
-  if (orgHasDataCollectionModule && !orgHasSurveyModule) {
+  if (hasDataCollectionModule && !hasTimeUseDiaryModule) {
     data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
   }
 

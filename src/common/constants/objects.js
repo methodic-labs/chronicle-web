@@ -8,11 +8,23 @@ import {
   REQUEST_STATE,
 } from './strings';
 
-import type { AppUsageFreqType, ParticipationStatusesEnum, PermissionTypesEnum } from '../types';
+import type {
+  AppComponent,
+  AppUsageFreqType,
+  ParticipationStatusesEnum,
+  PermissionTypesEnum
+} from '../types';
 
 export const AppUsageFreqTypes :{| ...AppUsageFreqType |} = Object.freeze({
   HOURLY: 'HOURLY',
   DAILY: 'DAILY'
+});
+
+export const AppComponents :{|...AppComponent |} = Object.freeze({
+  CHRONICLE: 'CHRONICLE',
+  CHRONICLE_DATA_COLLECTION: 'CHRONICLE_DATA_COLLECTION',
+  CHRONICLE_SURVEYS: 'CHRONICLE_SURVEYS',
+  TIME_USE_DIARY: 'TIME_USE_DIARY'
 });
 
 export const ParticipationStatuses :{| ...ParticipationStatusesEnum |} = Object.freeze({

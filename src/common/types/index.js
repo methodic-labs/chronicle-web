@@ -13,6 +13,13 @@ export type Auth0NonceState = {
   redirectUrl :string;
 };
 
+export type AppComponent = {|
+  CHRONICLE :'CHRONICLE';
+  CHRONICLE_DATA_COLLECTION :'CHRONICLE_DATA_COLLECTION';
+  CHRONICLE_SURVEYS :'CHRONICLE_SURVEYS';
+  TIME_USE_DIARY :'TIME_USE_DIARY';
+|}
+
 export type AuthorizationObject = {|
   aclKey :UUID[];
   permissions :{

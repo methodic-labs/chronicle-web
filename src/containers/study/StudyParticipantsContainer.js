@@ -38,19 +38,21 @@ import {
 import { COLUMN_FIELDS } from './constants/tableColumns';
 
 import {
+  AppComponents,
   CANDIDATE_IDS,
+  COMPONENTS,
   PARTICIPANT_ID,
   STUDIES,
-  STUDY_ID,
+  STUDY_ID
 } from '../../common/constants';
 import { resetRequestStates } from '../../core/redux/actions';
-import { selectMyKeys, selectParticipantStats, selectStudyParticipants } from '../../core/redux/selectors';
 import {
-  currentOrgIdSelector,
-  orgHasDataCollectionModuleSelector,
-  orgHasSurveyModuleSelector
-} from '../app/AppSelectors';
-import type { Participant, Study } from '../../common/types';
+  selectMyKeys,
+  selectParticipantStats,
+  selectStudyParticipants,
+  selectStudySettings
+} from '../../core/redux/selectors';
+import type { AppComponent, Participant, Study } from '../../common/types';
 
 const { ENROLLMENT_STATUS } = COLUMN_FIELDS;
 
@@ -153,12 +155,15 @@ const StudyParticipantsContainer = ({
   // selectors
   const participants :Map<UUID, Participant> = useSelector(selectStudyParticipants(study.id));
   const participantStats = useSelector(selectParticipantStats(study.id));
-  const orgHasSurveyModule = useSelector(orgHasSurveyModuleSelector);
-  const orgHasDataCollectionModule = useSelector(orgHasDataCollectionModuleSelector);
-  const selectedOrgId :UUID = useSelector(currentOrgIdSelector);
+  const settings = useSelector(selectStudySettings(study.id));
 
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
+
+  const components :List<AppComponent> = settings.get(COMPONENTS, List());
+  // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
+  const studyHasTimeUseDiaryModule = components.includes(AppComponents.TIME_USE_DIARY);
+  const studyHasDataCollectionModule = components.includes(AppComponents.CHRONICLE_DATA_COLLECTION);
 
   const changeEnrollmentStatusRS :?RequestState = useRequestState([STUDIES, CHANGE_ENROLLMENT_STATUS]);
   const deleteParticipantRS :?RequestState = useRequestState([STUDIES, DELETE_STUDY_PARTICIPANTS]);
@@ -239,8 +244,8 @@ const StudyParticipantsContainer = ({
             && (
               <ParticipantsTable
                   hasDeletePermission={isOwner}
-                  orgHasDataCollectionModule={orgHasDataCollectionModule}
-                  orgHasSurveyModule={orgHasSurveyModule}
+                  hasDataCollectionModule={studyHasDataCollectionModule}
+                  hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
                   participants={filteredParticipants}
                   participantStats={participantStats} />
             )
@@ -257,7 +262,6 @@ const StudyParticipantsContainer = ({
               <ParticipantInfoModal
                   handleOnClose={() => dispatch({ type: TOGGLE_INFO_MODAL, isModalOpen: false })}
                   isVisible={isInfoModalOpen}
-                  orgId={selectedOrgId}
                   participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                   studyId={study.id} />
               <ChangeEnrollmentModal
@@ -288,7 +292,6 @@ const StudyParticipantsContainer = ({
                 isVisible={isDownloadModalOpen}
                 candidateId={candidateId}
                 participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
-                selectedOrgId={selectedOrgId}
                 studyId={study.id} />
           )
         }

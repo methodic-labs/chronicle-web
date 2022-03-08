@@ -34,7 +34,6 @@ type Props = {
   isVisible :boolean;
   participantEntityKeyId :UUID;
   participantId :UUID;
-  selectedOrgId :UUID;
   studyId :UUID;
 }
 
@@ -44,7 +43,6 @@ const DownloadParticipantDataModal = (props :Props) => {
     isVisible,
     participantEntityKeyId,
     participantId,
-    selectedOrgId,
     studyId
   } = props;
 
@@ -76,7 +74,7 @@ const DownloadParticipantDataModal = (props :Props) => {
     }
 
     if (participantEntityKeyId != null) {
-      const downloadUrl = getParticipantDataUrl(dataType, participantEntityKeyId, studyId, selectedOrgId);
+      const downloadUrl = getParticipantDataUrl(dataType, participantEntityKeyId, studyId);
       window.open(downloadUrl, '_blank');
     }
   };

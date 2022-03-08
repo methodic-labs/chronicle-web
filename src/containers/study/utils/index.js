@@ -1,5 +1,4 @@
 // @flow
-import { NIL as NIL_UUID } from 'uuid';
 
 const getBaseUrl = () => {
   const url = window.location.href.split('#')[0];
@@ -7,25 +6,22 @@ const getBaseUrl = () => {
 };
 
 // 2022-02-24: Default all orgIds to NIL if not provided
-
-const getParticipantLoginLink = (orgId :UUID = NIL_UUID, studyId :UUID, participantId :string) => (
+// TODO: Might need to hardcode the base url host name as openlattice.com for compatibility with android devices
+const getParticipantLoginLink = (studyId :UUID, participantId :string) => (
   `${getBaseUrl()}/login`
-  + `?organizationId=${orgId}`
-  + `&studyId=${studyId}`
+  + `?studyId=${studyId}`
   + `&participantId=${participantId}`
 );
 
-const getTimeUseDiaryLink = (orgId :UUID = NIL_UUID, studyId :UUID, participantId :string) => (
+const getTimeUseDiaryLink = (studyId :UUID, participantId :string) => (
   `${getBaseUrl()}/#/time-use-diary`
-  + `?organizationId=${orgId}`
-  + `&studyId=${studyId}`
+  + `?studyId=${studyId}`
   + `&participantId=${participantId}`
 );
 
-const getAppUsageLink = (orgId :UUID = NIL_UUID, studyId :UUID, participantId :string) => (
+const getAppUsageLink = (studyId :UUID, participantId :string) => (
   `${getBaseUrl()}/#/survey`
-  + `?organizationId=${orgId}`
-  + `&studyId=${studyId}`
+  + `?studyId=${studyId}`
   + `&participantId=${participantId}`
 );
 
