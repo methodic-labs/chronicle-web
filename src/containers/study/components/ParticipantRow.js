@@ -49,6 +49,10 @@ const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
   }
 `;
 
+const StyledTag = styled(Tag)`
+  margin-left: 0;
+`;
+
 const ParticipantRow = ({
   hasDeletePermission,
   hasDataCollectionModule,
@@ -138,9 +142,9 @@ const ParticipantRow = ({
           ))
         }
         <td>
-          <Tag mode={enrollmentStatus === ENROLLED ? 'primary' : 'default'}>
+          <StyledTag mode={enrollmentStatus === ENROLLED ? 'primary' : 'default'}>
             { enrollmentStatus }
-          </Tag>
+          </StyledTag>
         </td>
         <td>
           <IconButton
