@@ -257,6 +257,8 @@ const StudyParticipantsContainer = ({
             <>
               <ParticipantInfoModal
                   handleOnClose={() => dispatch({ type: TOGGLE_INFO_MODAL, isModalOpen: false })}
+                  hasDataCollectionModule={studyHasDataCollectionModule}
+                  hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
                   isVisible={isInfoModalOpen}
                   participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                   studyId={study.id} />
