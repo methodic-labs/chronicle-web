@@ -6,9 +6,9 @@ const getBaseUrl = () => {
 };
 
 // 2022-02-24: Default all orgIds to NIL if not provided
-// TODO: Might need to hardcode the base url host name as openlattice.com for compatibility with android devices
+// TODO: Don't hard code link
 const getParticipantLoginLink = (studyId :UUID, participantId :string) => (
-  `${getBaseUrl()}/login`
+  'https://openlattice.com/chronicle/login'
   + `?studyId=${studyId}`
   + `&participantId=${participantId}`
 );
