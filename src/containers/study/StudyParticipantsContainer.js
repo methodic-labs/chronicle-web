@@ -169,7 +169,6 @@ const StudyParticipantsContainer = ({
     setFilteredParticipants(participants);
   }, [participants]);
 
-  // console.log(isEnrollmentModalOpen)
   useEffect(() => {
     storeDispatch(resetRequestStates([CHANGE_ENROLLMENT_STATUS]));
   }, [isEnrollmentModalOpen, storeDispatch]);

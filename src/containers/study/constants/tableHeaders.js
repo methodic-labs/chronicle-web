@@ -99,19 +99,31 @@ type ColumnType = {
   }
 };
 
-export default function getHeaders(hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) {
-  let data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
-  if (hasTimeUseDiaryModule && !hasDataCollectionModule) {
-    data = [PARTICIPANT_ID_COLUMN, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
-  }
-  if (hasDataCollectionModule && !hasTimeUseDiaryModule) {
-    data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+const getColumnsList = (hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) => {
+  let result = [PARTICIPANT_ID_COLUMN];
+  if (hasDataCollectionModule) {
+    result = result.concat(ANDROID_COLUMNS);
   }
 
-  const numColumns = data.length;
+  if (hasTimeUseDiaryModule) {
+    result = result.concat(TUD_COLUMNS);
+  }
+
+  // TODO: Need to update this later for ios sensor
+
+  result.push(STATUS_COLUMN);
+  result.push(ACTIONS_COLUMN);
+
+  return result;
+};
+
+export default function getHeaders(hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) {
+  const columns = getColumnsList(hasTimeUseDiaryModule, hasDataCollectionModule);
+
+  const numColumns = columns.length;
   const lastIndex = numColumns - 1;
 
-  return data.map<ColumnType>((column :ColumnType, index) => {
+  return columns.map<ColumnType>((column :ColumnType, index) => {
     const width = index === lastIndex ? '50px' : '200px';
     return {
       ...column,

@@ -87,6 +87,7 @@ const ParticipantRow = ({
   const getRowData = () => {
     const tudData = [tudFirstDate, tudLastDate, tudUniqueDatesLabel];
     const androidData = [androidFirstDate, androidLastDate, androidUniqueDatesLabel];
+
     if (hasDataCollectionModule && hasTimeUseDiaryModule) {
       return [participantId, ...androidData, ...tudData];
     }
@@ -97,7 +98,9 @@ const ParticipantRow = ({
       return [participantId, ...tudData];
     }
 
-    return [participantId, ...androidData, ...tudData];
+    // TODO: Need to update this later for ios sensor
+
+    return [participantId];
   };
 
   const rowData = useMemo(() => getRowData(), [candidateId]);
