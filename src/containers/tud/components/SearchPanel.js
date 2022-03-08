@@ -1,19 +1,15 @@
 // @flow
 
-import { DateTime } from 'luxon';
-
-import { ReduxUtils } from 'lattice-utils';
-
-import type { RequestState } from 'redux-reqseq';
-
-import {
-  Typography,
-  Button,
-  Label,
-  DatePicker
-} from 'lattice-ui-kit';
-
 import styled from 'styled-components';
+import {
+  Button,
+  DatePicker,
+  Label,
+  Typography
+} from 'lattice-ui-kit';
+import { ReduxUtils } from 'lattice-utils';
+import { DateTime } from 'luxon';
+import type { RequestState } from 'redux-reqseq';
 
 const { isPending } = ReduxUtils;
 
@@ -50,13 +46,13 @@ const SearchPanel = (props :Props) => {
           <Label subtle> Start Date </Label>
           <DatePicker
               value={startDate}
-              onChange={(value) => onSetDate('startDate', value)} />
+              onChange={(value) => onSetDate('selectedStartDate', value)} />
         </div>
         <div>
           <Label subtle> End Date </Label>
           <DatePicker
               value={endDate}
-              onChange={(value) => onSetDate('endDate', value)} />
+              onChange={(value) => onSetDate('selectedEndDate', value)} />
         </div>
         <div />
         <Button

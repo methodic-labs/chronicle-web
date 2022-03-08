@@ -1,9 +1,8 @@
 // @flow
 
 import styled from 'styled-components';
-import { List } from 'immutable';
 import { Typography } from 'lattice-ui-kit';
-import type { RequestState } from 'redux-reqseq';
+import { DateTime } from 'luxon';
 
 import DownloadAllButton from './DownloadAllButton';
 
@@ -19,11 +18,10 @@ const Wrapper = styled.div`
 // TODO: Add additional button to download summarized
 
 type Props = {
-  onDownloadData :(entity :?List, date :?string, dataType :DataType) => void;
-  downloadAllDataRS :?RequestState;
+  onDownloadData :(date :?DateTime, dataType :DataType) => void;
 }
 
-const SummaryHeader = ({ onDownloadData, downloadAllDataRS } :Props) => (
+const SummaryHeader = ({ onDownloadData } :Props) => (
   <Wrapper>
     <Typography variant="overline" display="block" gutterBottom>
       Date
@@ -33,8 +31,8 @@ const SummaryHeader = ({ onDownloadData, downloadAllDataRS } :Props) => (
       Number of Submissions
     </Typography>
     <div />
-    {/* TODO: Fix download all button for v3 */}
-    <DownloadAllButton downloadAllDataRS={downloadAllDataRS} onDownloadData={onDownloadData} />
+    <DownloadAllButton
+        onDownloadData={onDownloadData} />
   </Wrapper>
 );
 

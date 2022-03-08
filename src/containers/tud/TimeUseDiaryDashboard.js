@@ -2,27 +2,25 @@
 
 import { useEffect, useState } from 'react';
 
-import { List, Map } from 'immutable';
 import {
   Card,
   CardSegment,
   Spinner,
   Typography
 } from 'lattice-ui-kit';
-import { ReduxConstants, ReduxUtils, useRequestState } from 'lattice-utils';
+import { DateTimeUtils, ReduxUtils, useRequestState } from 'lattice-utils';
+import { DateTime } from 'luxon';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RequestState } from 'redux-reqseq';
 
 import SearchPanel from './components/SearchPanel';
 import SummaryHeader from './components/SummaryHeader';
 import SummaryListComponent from './components/SummaryListComponent';
+import getTimeUseDiaryDataDownloadUrl from './utils/getTimeUseDiaryDataDownloadUrl';
 import {
-  DOWNLOAD_ALL_TUD_DATA,
-  DOWNLOAD_DAILY_TUD_DATA,
-  downloadAllTudData,
-  downloadDailyTudData,
-} from './TimeUseDiaryActions';
-import { GET_TUD_SUBMISSIONS_BY_DATE_RANGE, getTimeUseDiarySubmissionsByDateRange } from './actions';
+  GET_TUD_SUBMISSIONS_BY_DATE_RANGE,
+  getTimeUseDiarySubmissionsByDateRange,
+} from './actions';
 import type { DataType } from './constants/DataTypes';
 
 import { BasicErrorComponent } from '../../common/components';
@@ -30,13 +28,13 @@ import {
   END_DATE,
   START_DATE,
   STUDY_ID,
-  TIME_USE_DIARY,
+  TIME_USE_DIARY
 } from '../../common/constants';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectTimeUseDiarySubmissions } from '../../core/redux/selectors';
 import type { Study } from '../../common/types';
 
-const { REQUEST_STATE } = ReduxConstants;
+const { formatAsDate } = DateTimeUtils;
 
 const {
   isFailure,
@@ -54,13 +52,11 @@ const TimeUseDiaryDashboard = ({
   const dispatch = useDispatch();
 
   const [dates, setDates] = useState({
-    startDate: undefined,
-    endDate: undefined
+    selectedStartDate: undefined,
+    selectedEndDate: undefined
   });
 
   // selectors
-  const downloadAllDataRS :?RequestState = useRequestState(['tud', DOWNLOAD_ALL_TUD_DATA]);
-  const downloadStates = useSelector((state) => state.getIn(['tud', DOWNLOAD_DAILY_TUD_DATA, REQUEST_STATE], Map()));
   const getSubmissionsRS :?RequestState = useRequestState([TIME_USE_DIARY, GET_TUD_SUBMISSIONS_BY_DATE_RANGE]);
   const timeUseDiarySubmissions = useSelector(selectTimeUseDiarySubmissions());
 
@@ -77,40 +73,33 @@ const TimeUseDiaryDashboard = ({
   };
 
   const handleOnGetSubmissions = () => {
-    const { startDate, endDate } = dates;
+    const { selectedStartDate, selectedEndDate } = dates;
 
-    if (startDate && endDate) {
+    if (selectedStartDate && selectedEndDate) {
       dispatch(
         getTimeUseDiarySubmissionsByDateRange({
-          [END_DATE]: endDate,
-          [START_DATE]: startDate,
+          [START_DATE]: selectedStartDate,
+          [END_DATE]: selectedEndDate,
           [STUDY_ID]: study.id,
         })
       );
     }
   };
 
-  const handleDownload = (entities :?List, date :?string, dataType :DataType) => {
-    const { endDate, startDate } = dates;
+  const handleDownload = (date :?DateTime, dataType :DataType) => {
+    const { selectedStartDate, selectedEndDate } = dates;
 
-    if (!date) {
-      // download all
-      dispatch(downloadAllTudData({
-        entities: timeUseDiarySubmissions.toList().flatten(true),
-        dataType,
-        endDate,
-        startDate
-      }));
-    }
-    else {
-      dispatch(downloadDailyTudData({
-        dataType,
-        date,
-        endDate,
-        entities,
-        startDate,
-      }));
-    }
+    const startDate = date || DateTime.fromISO(selectedStartDate);
+    const endDate = date || DateTime.fromISO(selectedEndDate);
+
+    const url = getTimeUseDiaryDataDownloadUrl(
+      study.id,
+      startDate.startOf('day').toISO(),
+      endDate.endOf('day').toISO(),
+      dataType,
+    );
+
+    window.open(url, '_blank');
   };
 
   const errorMsg = 'An error occurred while loading time use diary data.'
@@ -120,11 +109,11 @@ const TimeUseDiaryDashboard = ({
     <Card>
       <CardSegment>
         <SearchPanel
-            endDate={dates.endDate}
+            endDate={dates.selectedEndDate}
             getSubmissionsRS={getSubmissionsRS}
             onGetSubmissions={handleOnGetSubmissions}
             onSetDate={onSetDate}
-            startDate={dates.startDate} />
+            startDate={dates.selectedStartDate} />
       </CardSegment>
 
       {
@@ -154,21 +143,17 @@ const TimeUseDiaryDashboard = ({
                       </Typography>
                     ) : (
                       <>
-                        <SummaryHeader
-                            onDownloadData={handleDownload}
-                            downloadAllDataRS={downloadAllDataRS} />
+                        <SummaryHeader onDownloadData={handleDownload} />
                         <div>
                           {
-                            timeUseDiarySubmissions.entrySeq().map(([key, submissionIds]) => (
-                              <SummaryListComponent
-                                  date={key}
-                                  downloadRS={downloadStates.get(key, Map())}
-                                  key={key}
-                                  onDownloadData={handleDownload}
-                                  submissionIds={submissionIds}>
-                                {key}
-                              </SummaryListComponent>
-                            ))
+                            timeUseDiarySubmissions
+                              .entrySeq().map(([key :DateTime, submissionIds]) => (
+                                <SummaryListComponent
+                                    key={formatAsDate(key)}
+                                    date={key}
+                                    onDownloadData={handleDownload}
+                                    submissionIds={submissionIds} />
+                              ))
                           }
                         </div>
                       </>
