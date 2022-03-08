@@ -12,3 +12,4 @@ export { default as getStudyParticipants } from './getStudyParticipants';
 export { default as getStudySettings } from './getStudySettings';
 export { default as registerParticipant } from './registerParticipant';
 export { default as verifyParticipant } from './verifyParticipant';
+export { default as changeEnrollmentStatus } from './changeEnrollmentStatus';

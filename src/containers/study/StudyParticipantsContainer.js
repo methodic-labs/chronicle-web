@@ -33,14 +33,17 @@ import {
   CHANGE_ENROLLMENT_STATUS,
   DELETE_STUDY_PARTICIPANTS,
   REGISTER_PARTICIPANT,
-  deleteStudyParticipants,
+  changeEnrollmentStatus,
+  deleteStudyParticipants
 } from './actions';
 import { COLUMN_FIELDS } from './constants/tableColumns';
 
 import {
   AppComponents,
+  CANDIDATE_ID,
   CANDIDATE_IDS,
   PARTICIPANT_ID,
+  PARTICIPATION_STATUS,
   STUDIES,
   STUDY_ID
 } from '../../common/constants';
@@ -50,7 +53,7 @@ import {
   selectParticipantStats,
   selectStudyParticipants,
 } from '../../core/redux/selectors';
-import type { Participant, Study } from '../../common/types';
+import type { Participant, ParticipationStatus, Study } from '../../common/types';
 
 const { ENROLLMENT_STATUS } = COLUMN_FIELDS;
 
@@ -199,13 +202,13 @@ const StudyParticipantsContainer = ({
     );
   };
 
-  const handleOnChangeEnrollment = () => {
-    // TODO Fix for v3
-    // storeDispatch(changeEnrollmentStatus({
-    //   enrollmentStatus: participants.getIn([participantEntityKeyId, ENROLLMENT_STATUS, 0]),
-    //   participantEntityKeyId,
-    //   studyId: study.id,
-    // }));
+  const handleOnChangeEnrollment = (status :ParticipationStatus) => {
+    storeDispatch(changeEnrollmentStatus({
+      [CANDIDATE_ID]: candidateId,
+      [STUDY_ID]: study.id,
+      [PARTICIPANT_ID]: participants.getIn([candidateId, PARTICIPANT_ID]),
+      [PARTICIPATION_STATUS]: status
+    }));
   };
 
   return (
@@ -263,7 +266,7 @@ const StudyParticipantsContainer = ({
                   participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                   studyId={study.id} />
               <ChangeEnrollmentModal
-                  enrollmentStatus={participants.getIn([candidateId, ENROLLMENT_STATUS, 0])}
+                  enrollmentStatus={participants.getIn([candidateId, PARTICIPATION_STATUS])}
                   handleOnChangeEnrollment={handleOnChangeEnrollment}
                   handleOnClose={() => dispatch({ type: TOGGLE_ENROLLMENT_MODAL, isModalOpen: false })}
                   isVisible={isEnrollmentModalOpen}
