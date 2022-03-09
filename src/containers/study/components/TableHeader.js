@@ -55,8 +55,9 @@ const TableHeader = ({
         <Grid item xs={12} md={6}>
           <Box display="flex" justifyContent="flex-start" width="100%">
             <Checkbox
-                onChange={() => dispatch({ type: SELECT_CANDIDATE_IDS, ids: candidateIds })}
-                label={checkBoxLabel} />
+                checked={selectedParticipants !== 0}
+                label={checkBoxLabel}
+                onChange={() => dispatch({ type: SELECT_CANDIDATE_IDS, ids: candidateIds, all: true })} />
             <BulkActionsButton
                 disabled={selectedParticipants === 0}
                 endIcon={<FontAwesomeIcon icon={faAngleDown} />}>

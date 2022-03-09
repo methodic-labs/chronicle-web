@@ -3,13 +3,13 @@
 import { memo } from 'react';
 
 import styled from 'styled-components';
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 import { Table } from 'lattice-ui-kit';
 
 import ParticipantRow from './components/ParticipantRow';
 import getHeaders from './constants/tableHeaders';
 
-import { PARTICIPANT_ID } from '../../common/constants';
+import { CANDIDATE, ID, PARTICIPANT_ID } from '../../common/constants';
 import type { Participant, ParticipantStats } from '../../common/types';
 
 const TableWrapper = styled.div`
@@ -66,12 +66,14 @@ const ParticipantsTable = ({
   hasTimeUseDiaryModule,
   participants,
   participantStats,
+  selectedParticipants
 } :{
   hasDeletePermission :boolean;
   hasDataCollectionModule :boolean;
   hasTimeUseDiaryModule :boolean;
   participants :Map<UUID, Participant>;
   participantStats :{ [string] :ParticipantStats };
+  selectedParticipants :Set;
 }) => {
 
   const tableHeaders = getHeaders(hasTimeUseDiaryModule, hasDataCollectionModule);
@@ -82,6 +84,7 @@ const ParticipantsTable = ({
           hasDeletePermission={hasDeletePermission}
           hasDataCollectionModule={hasDataCollectionModule}
           hasTimeUseDiaryModule={hasTimeUseDiaryModule}
+          isSelected={selectedParticipants.has(rowData[CANDIDATE][ID])}
           participant={rowData}
           stats={participantStats[rowData[PARTICIPANT_ID]] || {}} />
     )

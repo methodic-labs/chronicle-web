@@ -74,8 +74,22 @@ const initialState = {
 const reducer = (state :Object, action :Object) => {
   switch (action.type) {
     case SELECT_CANDIDATE_IDS: {
-      const { ids } = action;
+      const { ids, all = false } = action;
       const { selectedParticipants } = state;
+
+      if (all) {
+        if (!selectedParticipants.isEmpty()) {
+          return {
+            ...state,
+            selectedParticipants: Set()
+          };
+        }
+        return {
+          ...state,
+          selectedParticipants: ids
+        };
+      }
+
       const updated = selectedParticipants.withMutations((mutableSet :Set) => {
         ids.forEach((id) => {
           if (selectedParticipants.has(id)) {
@@ -244,7 +258,8 @@ const StudyParticipantsContainer = ({
                   hasDataCollectionModule={studyHasDataCollectionModule}
                   hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
                   participants={filteredParticipants}
-                  participantStats={participantStats} />
+                  participantStats={participantStats}
+                  selectedParticipants={selectedParticipants} />
             )
           }
         </CardSegment>

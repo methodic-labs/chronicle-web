@@ -5,6 +5,7 @@ import { useContext, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Set } from 'immutable';
 import {
   Checkbox,
   Colors,
@@ -34,6 +35,7 @@ const {
   TOGGLE_DOWNLOAD_MODAL,
   TOGGLE_ENROLLMENT_MODAL,
   TOGGLE_INFO_MODAL,
+  SELECT_CANDIDATE_IDS
 } = ParticipantsTableActions;
 
 const RowWrapper = styled.tr.attrs(() => ({ tabIndex: '1' }))`
@@ -59,11 +61,13 @@ const ParticipantRow = ({
   hasDataCollectionModule,
   hasTimeUseDiaryModule,
   participant,
+  isSelected,
   stats = {},
 } :{
   hasDeletePermission :boolean;
   hasDataCollectionModule :boolean;
   hasTimeUseDiaryModule :boolean;
+  isSelected :boolean;
   participant :Participant;
   stats ?:ParticipantStats;
 }) => {
@@ -136,7 +140,9 @@ const ParticipantRow = ({
     <>
       <RowWrapper onClick={() => {}}>
         <td>
-          <Checkbox />
+          <Checkbox
+              onChange={() => dispatch({ type: SELECT_CANDIDATE_IDS, ids: Set([candidateId]) })}
+              checked={isSelected} />
         </td>
         {
           rowData.map((item, index) => (
