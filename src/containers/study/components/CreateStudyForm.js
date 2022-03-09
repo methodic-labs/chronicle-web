@@ -28,7 +28,7 @@ const CreateStudyForm = ({
 
   const handleSubmit = ({ formData } :Object) => {
     if (study) {
-      throw Error('update study not implemented');
+      // throw Error('update study not implemented');
       // dispatch(updateStudy({ formData, initialFormData, study }));
     }
     else {
