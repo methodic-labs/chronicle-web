@@ -1,5 +1,5 @@
 // @flow
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import styled from 'styled-components';
 import { faAngleDown, faPlus } from '@fortawesome/pro-solid-svg-icons';
@@ -44,6 +44,8 @@ const TableHeader = ({
 }) => {
   const dispatch = useContext(ParticipantsTableDispatch);
 
+  const [anchorEl, setAnchorEl] = useState(null);
+
   const candidateIds :Set = filteredParticipants.keySeq().toSet();
 
   const checkBoxLabel = selectedParticipants === 0
@@ -59,10 +61,31 @@ const TableHeader = ({
                 label={checkBoxLabel}
                 onChange={() => dispatch({ type: SELECT_CANDIDATE_IDS, ids: candidateIds, all: true })} />
             <BulkActionsButton
+                aria-controls="bulk-actions-menu"
                 disabled={selectedParticipants === 0}
-                endIcon={<FontAwesomeIcon icon={faAngleDown} />}>
+                endIcon={<FontAwesomeIcon icon={faAngleDown} />}
+                onClick={(event) => setAnchorEl(event.currentTarget)}>
               Bulk Actions
             </BulkActionsButton>
+            <Menu
+                id="bulk-actions-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{
+                  horizontal: 'right',
+                  vertical: 'bottom',
+                }}
+                getContentAnchorEl={null}
+                transformOrigin={{
+                  horizontal: 'right',
+                  vertical: 'top',
+                }}>
+              <MenuItem>
+                Send Message
+              </MenuItem>
+            </Menu>
           </Box>
         </Grid>
         <Grid item xs={12} md={6}>

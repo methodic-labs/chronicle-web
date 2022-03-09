@@ -169,6 +169,15 @@ const ParticipantRow = ({
               id="table_actions_menu"
               anchorEl={anchorEl}
               keepMounted
+              anchorOrigin={{
+                horizontal: 'right',
+                vertical: 'bottom',
+              }}
+              getContentAnchorEl={null}
+              transformOrigin={{
+                horizontal: 'right',
+                vertical: 'top',
+              }}
               open={Boolean(anchorEl)}
               onClose={handleOnClose}>
             <MenuItem
