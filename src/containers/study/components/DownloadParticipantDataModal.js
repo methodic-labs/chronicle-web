@@ -4,7 +4,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import styled from 'styled-components';
 import {
   Box,
   Button,
@@ -17,7 +16,6 @@ import {
 
 import getParticipantDataDownloadUrl from '../utils/getParticipantDataDownloadUrl';
 import { ParticipantDataTypes, TimeUseDiaryDataTypes } from '../../../common/constants';
-import { getParticipantDataUrl } from '../../../utils/AppUtils';
 
 const {
   USAGE_EVENTS,
