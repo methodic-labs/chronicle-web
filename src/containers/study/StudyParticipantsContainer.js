@@ -5,7 +5,7 @@
 import { useEffect, useReducer, useState } from 'react';
 
 import styled from 'styled-components';
-import { faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { faAngleDown, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { List, Map, Set } from 'immutable';
 import {
@@ -13,8 +13,9 @@ import {
   Button,
   Card,
   CardSegment,
+  Checkbox,
   Grid,
-  SearchInput,
+  SearchInput
 } from 'lattice-ui-kit';
 import { useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -67,6 +68,10 @@ const {
 const AddParticipantsButton = styled(Button)`
   align-self: flex-start;
   margin-bottom: 5px;
+`;
+
+const BulkActionsButton = styled(Button)`
+  margin-left: 10px;
 `;
 
 const initialState = {
@@ -213,8 +218,20 @@ const StudyParticipantsContainer = ({
       <Card>
         <CardSegment vertical>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={9}>
-              <SearchInput placeholder="Filter participants" onChange={handleOnChange} />
+            <Grid container spacing={2} item xs={12} sm={6} md={9}>
+              <Grid item xs={12} md={6}>
+                <Box display="flex" justifyContent="flex-start" width="100%">
+                  <Checkbox
+                      label={`${filteredParticipants.size} participants`} />
+                  <BulkActionsButton
+                      endIcon={<FontAwesomeIcon icon={faAngleDown} />}>
+                    Bulk Actions
+                  </BulkActionsButton>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <SearchInput placeholder="Filter participants" onChange={handleOnChange} />
+              </Grid>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AddParticipantsButton
