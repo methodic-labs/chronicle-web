@@ -92,8 +92,6 @@ const StudyRouter = () => {
   }
 
   if (isSuccess(initializeStudyRS) && study) {
-
-    // TODO: Adjust this according to study settings
     const { components = [] } = study.settings;
     // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
     const hasTimeUseDiary = components.includes(AppComponents.TIME_USE_DIARY);
