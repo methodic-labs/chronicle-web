@@ -4,18 +4,11 @@
 
 import { useEffect, useReducer, useState } from 'react';
 
-import styled from 'styled-components';
-import { faAngleDown, faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { List, Map, Set } from 'immutable';
 import {
   Box,
-  Button,
   Card,
   CardSegment,
-  Checkbox,
-  Grid,
-  SearchInput
 } from 'lattice-ui-kit';
 import { useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,6 +22,7 @@ import ParticipantInfoModal from './components/ParticipantInfoModal';
 import ParticipantsTable from './ParticipantsTable';
 import ParticipantsTableActions from './constants/ParticipantsTableActions';
 import ParticipantsTableDispatch from './components/ParticipantsTableDispatch';
+import TableHeader from './components/TableHeader';
 import TudSubmissionHistory from './components/TudSubmissionHistory';
 import {
   CHANGE_ENROLLMENT_STATUS,
@@ -65,15 +59,6 @@ const {
   TOGGLE_TUD_SUBMISSION_HISTORY_MODAL,
 } = ParticipantsTableActions;
 
-const AddParticipantsButton = styled(Button)`
-  align-self: flex-start;
-  margin-bottom: 5px;
-`;
-
-const BulkActionsButton = styled(Button)`
-  margin-left: 10px;
-`;
-
 const initialState = {
   isAddParticipantModalOpen: false,
   isDeleteModalOpen: false,
@@ -81,7 +66,8 @@ const initialState = {
   isEnrollmentModalOpen: false,
   isInfoModalOpen: false,
   isTudSubmissionHistoryModalOpen: false,
-  candidateId: null
+  candidateId: null,
+  selectedParticipants: Set()
 };
 
 const reducer = (state :Object, action :Object) => {
@@ -151,6 +137,7 @@ const StudyParticipantsContainer = ({
     isInfoModalOpen,
     isTudSubmissionHistoryModalOpen,
     candidateId,
+    selectedParticipants
   } = state;
 
   const [filteredParticipants, setFilteredParticipants] = useState(Map());
@@ -217,32 +204,10 @@ const StudyParticipantsContainer = ({
     <ParticipantsTableDispatch.Provider value={dispatch}>
       <Card>
         <CardSegment vertical>
-          <Grid container spacing={2}>
-            <Grid container spacing={2} item xs={12} sm={6} md={9}>
-              <Grid item xs={12} md={6}>
-                <Box display="flex" justifyContent="flex-start" width="100%">
-                  <Checkbox
-                      label={`${filteredParticipants.size} participants`} />
-                  <BulkActionsButton
-                      endIcon={<FontAwesomeIcon icon={faAngleDown} />}>
-                    Bulk Actions
-                  </BulkActionsButton>
-                </Box>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <SearchInput placeholder="Filter participants" onChange={handleOnChange} />
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <AddParticipantsButton
-                  fullWidth
-                  onClick={() => dispatch({ type: TOGGLE_ADD_PARTICIPANT_MODAL, isModalOpen: true })}
-                  color="primary"
-                  startIcon={<FontAwesomeIcon icon={faPlus} />}>
-                Add Participant
-              </AddParticipantsButton>
-            </Grid>
-          </Grid>
+          <TableHeader
+              filteredParticipants={filteredParticipants.size}
+              selectedParticipants={selectedParticipants.size}
+              handleOnChange={handleOnChange} />
           {
             !participants.isEmpty()
             && filteredParticipants.isEmpty()
