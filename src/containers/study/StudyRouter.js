@@ -17,7 +17,7 @@ import { INITIALIZE_STUDY, initializeStudy } from './actions';
 import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
 import * as Routes from '../../core/router/Routes';
 import { BasicErrorComponent, Spinner, TabLink } from '../../common/components';
-import { STUDIES } from '../../common/constants';
+import { AppComponents, STUDIES } from '../../common/constants';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectStudy } from '../../core/redux/selectors';
 import type { Study, UUID } from '../../common/types';
@@ -94,8 +94,11 @@ const StudyRouter = () => {
   if (isSuccess(initializeStudyRS) && study) {
 
     // TODO: Adjust this according to study settings
+    const { components = [] } = study.settings;
+    // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
+    const hasTimeUseDiary = components.includes(AppComponents.TIME_USE_DIARY);
+
     const hasQuestionnaires = true;
-    const hasTimeUseDiary = true;
 
     const renderStudyContainer = () => (
       (study)
