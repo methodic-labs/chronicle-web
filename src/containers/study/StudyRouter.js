@@ -67,11 +67,11 @@ const StudyRouter = () => {
       : Routes.NO_ROUTE
   ), [studyId]);
 
-  const questionnairesRoute = useMemo(() => (
-    studyId
-      ? Routes.QUESTIONNAIRES.replace(Routes.STUDY_ID_PARAM, studyId)
-      : Routes.NO_ROUTE
-  ), [studyId]);
+  // const questionnairesRoute = useMemo(() => (
+  //   studyId
+  //     ? Routes.QUESTIONNAIRES.replace(Routes.STUDY_ID_PARAM, studyId)
+  //     : Routes.NO_ROUTE
+  // ), [studyId]);
 
   const timeUseDiaryRoute = useMemo(() => (
     studyId
@@ -98,7 +98,7 @@ const StudyRouter = () => {
     // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
     const hasTimeUseDiary = components.includes(AppComponents.TIME_USE_DIARY);
 
-    const hasQuestionnaires = true;
+    // const hasQuestionnaires = true;
 
     const renderStudyContainer = () => (
       (study)

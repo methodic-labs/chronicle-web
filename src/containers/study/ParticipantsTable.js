@@ -16,32 +16,38 @@ const TableWrapper = styled.div`
   > div:nth-child(1) {
     overflow-x: auto;
   }
+
   table {
     margin-top: 20px;
+
     th {
       background-color: inherit;
       border: none;
       border-bottom: 1px solid black;
       font-size: 14px;
+      padding: 10px;
     }
-    th:first-child, td:first-child {
+
+    td {
+      font-size: 15px;
+      padding: 10px;
+    }
+
+    th:first-child,
+    td:first-child {
       position: sticky;
       left: 0;
       background: white;
       z-index: 500;
     }
-    th:last-child, td:last-child {
+
+    th:last-child,
+    td:last-child {
       position: sticky;
       right: 0;
       background: white;
       z-index: 500;
       text-align: right;
-    }
-    th, td {
-      padding: 10px;
-    }
-    td {
-      font-size: 15px;
     }
   }
 `;
