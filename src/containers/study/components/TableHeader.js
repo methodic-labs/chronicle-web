@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import styled from 'styled-components';
 import { faAngleDown, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Map, Set } from 'immutable';
 import {
   Box,
   Button,
@@ -19,6 +20,7 @@ import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
 
 const {
+  SELECT_CANDIDATE_IDS,
   TOGGLE_ADD_PARTICIPANT_MODAL,
 } = ParticipantsTableActions;
 
@@ -28,7 +30,7 @@ const AddParticipantsButton = styled(Button)`
 `;
 
 const BulkActionsButton = styled(Button)`
-  margin-left: 10px;
+  margin-left: 20px;
 `;
 
 const TableHeader = ({
@@ -38,19 +40,22 @@ const TableHeader = ({
 } :{
   handleOnChange :(SyntheticInputEvent<HTMLInputElement>) => void;
   selectedParticipants :number;
-  filteredParticipants :number;
+  filteredParticipants :Map;
 }) => {
   const dispatch = useContext(ParticipantsTableDispatch);
-  const checkBoxLabel = selectedParticipants === 0
-    ? `${filteredParticipants} participants`
-    : `${selectedParticipants} selected`;
 
+  const candidateIds :Set = filteredParticipants.keySeq().toSet();
+
+  const checkBoxLabel = selectedParticipants === 0
+    ? `${filteredParticipants.size} participants`
+    : `${selectedParticipants} selected`;
   return (
     <Grid container spacing={2}>
       <Grid container spacing={2} item xs={12} sm={6} md={9}>
         <Grid item xs={12} md={6}>
           <Box display="flex" justifyContent="flex-start" width="100%">
             <Checkbox
+                onChange={() => dispatch({ type: SELECT_CANDIDATE_IDS, ids: candidateIds })}
                 label={checkBoxLabel} />
             <BulkActionsButton
                 endIcon={<FontAwesomeIcon icon={faAngleDown} />}>

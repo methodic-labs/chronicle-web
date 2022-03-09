@@ -50,6 +50,7 @@ import {
 import type { Participant, ParticipationStatus, Study } from '../../common/types';
 
 const {
+  SELECT_CANDIDATE_IDS,
   SET_CANDIDATE_ID,
   TOGGLE_ADD_PARTICIPANT_MODAL,
   TOGGLE_DELETE_MODAL,
@@ -72,6 +73,24 @@ const initialState = {
 
 const reducer = (state :Object, action :Object) => {
   switch (action.type) {
+    case SELECT_CANDIDATE_IDS: {
+      const { ids } = action;
+      const { selectedParticipants } = state;
+      const updated = selectedParticipants.withMutations((mutableSet :Set) => {
+        ids.forEach((id) => {
+          if (selectedParticipants.has(id)) {
+            mutableSet.delete(id);
+          }
+          else {
+            mutableSet.add(id);
+          }
+        });
+      });
+      return {
+        ...state,
+        selectedParticipants: updated
+      };
+    }
     case TOGGLE_INFO_MODAL:
       return {
         ...state,
@@ -205,7 +224,7 @@ const StudyParticipantsContainer = ({
       <Card>
         <CardSegment vertical>
           <TableHeader
-              filteredParticipants={filteredParticipants.size}
+              filteredParticipants={filteredParticipants}
               selectedParticipants={selectedParticipants.size}
               handleOnChange={handleOnChange} />
           {
