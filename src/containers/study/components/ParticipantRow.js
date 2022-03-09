@@ -33,13 +33,7 @@ const {
   TOGGLE_DOWNLOAD_MODAL,
   TOGGLE_ENROLLMENT_MODAL,
   TOGGLE_INFO_MODAL,
-  TOGGLE_TUD_SUBMISSION_HISTORY_MODAL
 } = ParticipantsTableActions;
-
-const StyledCell = styled.td`
-  padding: 10px;
-  word-wrap: break-word;
-`;
 
 const RowWrapper = styled.tr.attrs(() => ({ tabIndex: '1' }))`
   border-bottom: 1px solid ${NEUTRAL.N100};
@@ -49,30 +43,26 @@ const RowWrapper = styled.tr.attrs(() => ({ tabIndex: '1' }))`
   }
 `;
 
-const CellContent = styled.div`
-  display: flex;
-  font-size: 15px;
-  overflow: hidden;
-  color: ${NEUTRAL.N800};
-  justify-content: ${(props) => (props.centerContent ? 'center' : 'flex-start')};
-`;
-
 const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
   :hover {
     cursor: pointer;
   }
 `;
 
+const StyledTag = styled(Tag)`
+  margin-left: 0;
+`;
+
 const ParticipantRow = ({
   hasDeletePermission,
-  orgHasDataCollectionModule,
-  orgHasSurveyModule,
+  hasDataCollectionModule,
+  hasTimeUseDiaryModule,
   participant,
   stats = {},
 } :{
   hasDeletePermission :boolean;
-  orgHasDataCollectionModule :boolean;
-  orgHasSurveyModule :boolean;
+  hasDataCollectionModule :boolean;
+  hasTimeUseDiaryModule :boolean;
   participant :Participant;
   stats ?:ParticipantStats;
 }) => {
@@ -81,7 +71,7 @@ const ParticipantRow = ({
   const [anchorEl, setAnchorEl] = useState(null);
 
   const candidateId = participant.candidate.id;
-  const participantId = participant.participantId;
+  const { participantId } = participant;
   const enrollmentStatus = participant.participationStatus;
   const androidFirstDate = formatDateTime(stats.androidFirstDate || '', DateTime.DATETIME_SHORT);
   const androidLastDate = formatDateTime(stats.androidLastDate || '', DateTime.DATETIME_SHORT);
@@ -101,17 +91,20 @@ const ParticipantRow = ({
   const getRowData = () => {
     const tudData = [tudFirstDate, tudLastDate, tudUniqueDatesLabel];
     const androidData = [androidFirstDate, androidLastDate, androidUniqueDatesLabel];
-    if (orgHasDataCollectionModule && orgHasSurveyModule) {
+
+    if (hasDataCollectionModule && hasTimeUseDiaryModule) {
       return [participantId, ...androidData, ...tudData];
     }
-    if (orgHasDataCollectionModule) {
+    if (hasDataCollectionModule) {
       return [participantId, ...androidData];
     }
-    if (orgHasSurveyModule) {
+    if (hasTimeUseDiaryModule) {
       return [participantId, ...tudData];
     }
 
-    return [participantId, ...androidData, ...tudData];
+    // TODO: Need to update this later for ios sensor
+
+    return [participantId];
   };
 
   const rowData = useMemo(() => getRowData(), [candidateId]);
@@ -143,73 +136,63 @@ const ParticipantRow = ({
       <RowWrapper onClick={() => {}}>
         {
           rowData.map((item, index) => (
-            <StyledCell key={index}>
-              <CellContent>
-                { item }
-              </CellContent>
-            </StyledCell>
+            <td key={index}>
+              { item }
+            </td>
           ))
         }
-        <StyledCell>
-          <CellContent>
-            <Tag mode={enrollmentStatus === ENROLLED ? 'primary' : 'default'}>
-              { enrollmentStatus }
-            </Tag>
-          </CellContent>
-        </StyledCell>
-        <StyledCell>
-          <CellContent>
-            <IconButton
-                aria-controls="table_actions_menu"
-                aria-haspopup="true"
-                onClick={handleOnClick}>
-              <StyledFontAwesomeIcon
-                  color={NEUTRAL.N800}
-                  icon={faEllipsisV} />
-            </IconButton>
-            <Menu
-                id="table_actions_menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleOnClose}>
-              <MenuItem
-                  data-action-id={TOGGLE_INFO_MODAL}
-                  onClick={handleMenuItemClick}>
-                Participant Info
-              </MenuItem>
-              <MenuItem
-                  data-action-id={TOGGLE_DELETE_MODAL}
-                  disabled={!hasDeletePermission}
-                  onClick={handleMenuItemClick}>
-                Delete
-              </MenuItem>
-              {
-                orgHasDataCollectionModule && (
-                  <MenuItem
-                      data-action-id={TOGGLE_DOWNLOAD_MODAL}
-                      onClick={handleMenuItemClick}>
-                    Download Data
-                  </MenuItem>
-                )
-              }
-              <MenuItem
-                  data-action-id={TOGGLE_ENROLLMENT_MODAL}
-                  onClick={handleMenuItemClick}>
-                { pauseOrResume }
-              </MenuItem>
-              {
-                orgHasSurveyModule && (
-                  <MenuItem
-                      data-action-id={TOGGLE_TUD_SUBMISSION_HISTORY_MODAL}
-                      onClick={handleMenuItemClick}>
-                    TUD Submission Dates
-                  </MenuItem>
-                )
-              }
-            </Menu>
-          </CellContent>
-        </StyledCell>
+        <td>
+          <StyledTag mode={enrollmentStatus === ENROLLED ? 'primary' : 'default'}>
+            { enrollmentStatus }
+          </StyledTag>
+        </td>
+        <td>
+          <IconButton
+              aria-controls="table_actions_menu"
+              aria-haspopup="true"
+              onClick={handleOnClick}>
+            <StyledFontAwesomeIcon
+                color={NEUTRAL.N800}
+                icon={faEllipsisV} />
+          </IconButton>
+          <Menu
+              id="table_actions_menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleOnClose}>
+            <MenuItem
+                data-action-id={TOGGLE_INFO_MODAL}
+                onClick={handleMenuItemClick}>
+              Participant Info
+            </MenuItem>
+            <MenuItem
+                data-action-id={TOGGLE_DELETE_MODAL}
+                disabled={!hasDeletePermission}
+                onClick={handleMenuItemClick}>
+              Delete
+            </MenuItem>
+            <MenuItem
+                data-action-id={TOGGLE_DOWNLOAD_MODAL}
+                onClick={handleMenuItemClick}>
+              Download Data
+            </MenuItem>
+            <MenuItem
+                data-action-id={TOGGLE_ENROLLMENT_MODAL}
+                onClick={handleMenuItemClick}>
+              { pauseOrResume }
+            </MenuItem>
+            {/* {
+              hasTimeUseDiaryModule && (
+                <MenuItem
+                    data-action-id={TOGGLE_TUD_SUBMISSION_HISTORY_MODAL}
+                    onClick={handleMenuItemClick}>
+                  TUD Submission Dates
+                </MenuItem>
+              )
+            } */}
+          </Menu>
+        </td>
       </RowWrapper>
     </>
   );

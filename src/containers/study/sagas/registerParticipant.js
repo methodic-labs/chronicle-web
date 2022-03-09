@@ -33,7 +33,7 @@ function* registerParticipantWorker(action :SequenceAction) :Saga<WorkerResponse
     const participant = {
       [CANDIDATE]: {},
       [PARTICIPANT_ID]: value[PARTICIPANT_ID],
-      [PARTICIPATION_STATUS]: ParticipationStatuses.UNKNOWN,
+      [PARTICIPATION_STATUS]: ParticipationStatuses.ENROLLED,
     };
     const candidateId = yield call(StudyApi.registerParticipant, value[STUDY_ID], participant);
     participant[CANDIDATE][ID] = candidateId;

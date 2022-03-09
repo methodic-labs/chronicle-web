@@ -22,9 +22,10 @@ const Grid = styled.div`
 `;
 
 type Props = {
+  hasDataCollectionModule :boolean;
+  hasTimeUseDiaryModule :boolean;
   handleOnClose :() => void;
   isVisible :boolean;
-  orgId :UUID;
   participantId :UUID;
   studyId :UUID;
 }
@@ -32,29 +33,35 @@ type Props = {
 const ParticipantInfoModal = ({
   handleOnClose,
   isVisible,
-  orgId,
   participantId,
-  studyId
+  studyId,
+  hasDataCollectionModule,
+  hasTimeUseDiaryModule
 } :Props) => {
 
   const renderParticipantInfo = () => {
-    const participantLoginLink = getParticipantLoginLink(orgId, studyId, participantId);
-    const timeUseDiaryLink = getTimeUseDiaryLink(orgId, studyId, participantId);
-    const appUsageLink = getAppUsageLink(orgId, studyId, participantId);
+    const enrollmentLink = getParticipantLoginLink(studyId, participantId);
+    const timeUseDiaryLink = getTimeUseDiaryLink(studyId, participantId);
+    const appUsageLink = getAppUsageLink(studyId, participantId);
 
     const participantDetails = [
       { name: 'Participant ID', value: participantId },
-      { name: 'Study ID', value: studyId },
-      { name: 'Enrollment Link', value: participantLoginLink },
-      { name: 'App Usage Link', value: appUsageLink }
+      { name: 'Study ID', value: studyId }
     ];
 
-    // const hasQuestionnaireModule = useHasQuestionnairesModule();
-    // TODO: Use Study Settings flag instead
-    if (true) {
+    if (hasTimeUseDiaryModule) {
       participantDetails.push({
         name: 'Time Use Diary Link',
         value: timeUseDiaryLink
+      });
+    }
+
+    if (hasDataCollectionModule) {
+      participantDetails.push({
+        name: 'Enrollment Link', value: enrollmentLink
+      });
+      participantDetails.push({
+        name: 'App Usage Link', value: appUsageLink
       });
     }
 

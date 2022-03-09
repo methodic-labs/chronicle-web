@@ -17,7 +17,7 @@ import { INITIALIZE_STUDY, initializeStudy } from './actions';
 import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
 import * as Routes from '../../core/router/Routes';
 import { BasicErrorComponent, Spinner, TabLink } from '../../common/components';
-import { STUDIES } from '../../common/constants';
+import { AppComponents, STUDIES } from '../../common/constants';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectStudy } from '../../core/redux/selectors';
 import type { Study, UUID } from '../../common/types';
@@ -67,11 +67,11 @@ const StudyRouter = () => {
       : Routes.NO_ROUTE
   ), [studyId]);
 
-  const questionnairesRoute = useMemo(() => (
-    studyId
-      ? Routes.QUESTIONNAIRES.replace(Routes.STUDY_ID_PARAM, studyId)
-      : Routes.NO_ROUTE
-  ), [studyId]);
+  // const questionnairesRoute = useMemo(() => (
+  //   studyId
+  //     ? Routes.QUESTIONNAIRES.replace(Routes.STUDY_ID_PARAM, studyId)
+  //     : Routes.NO_ROUTE
+  // ), [studyId]);
 
   const timeUseDiaryRoute = useMemo(() => (
     studyId
@@ -92,10 +92,11 @@ const StudyRouter = () => {
   }
 
   if (isSuccess(initializeStudyRS) && study) {
+    const { components = [] } = study.settings;
+    // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
+    const hasTimeUseDiary = components.includes(AppComponents.TIME_USE_DIARY);
 
-    // TODO: Adjust this according to study settings
-    const hasQuestionnaires = true;
-    const hasTimeUseDiary = true;
+    // const hasQuestionnaires = true;
 
     const renderStudyContainer = () => (
       (study)

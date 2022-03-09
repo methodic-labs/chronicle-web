@@ -43,6 +43,7 @@ export default function* sagas() :Generator<*, *, *> {
     fork(RoutingSagas.goToRouteWatcher),
 
     // StudiesSagas
+    fork(StudySagas.changeEnrollmentStatusWatcher),
     fork(StudySagas.createStudyWatcher),
     fork(StudySagas.deleteStudyParticipantsWatcher),
     fork(StudySagas.getAllStudiesWatcher),
@@ -51,7 +52,6 @@ export default function* sagas() :Generator<*, *, *> {
     fork(StudySagas.initializeStudyWatcher),
     fork(StudySagas.registerParticipantWatcher),
     fork(StudySagas.verifyParticipantWatcher),
-    // fork(StudiesSagas.changeEnrollmentStatusWatcher),
     // fork(StudiesSagas.deleteStudyWatcher),
     // fork(StudiesSagas.updateStudyWatcher),
 

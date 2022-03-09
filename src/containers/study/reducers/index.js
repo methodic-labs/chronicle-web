@@ -4,6 +4,7 @@
 
 import { Map, fromJS } from 'immutable';
 
+import changeEnrollmentReducer from './changeEnrollmentReducer';
 import createStudyReducer from './createStudyReducer';
 import deleteStudyParticipantsReducer from './deleteStudyParticipantsReducer';
 import getAllStudiesReducer from './getAllStudiesReducer';
@@ -25,6 +26,7 @@ import {
 import { RESET_REQUEST_STATES } from '../../../core/redux/actions';
 import { resetRequestStatesReducer } from '../../../core/redux/reducers';
 import {
+  CHANGE_ENROLLMENT_STATUS,
   CREATE_STUDY,
   DELETE_STUDY_PARTICIPANTS,
   GET_ALL_STUDIES,
@@ -35,6 +37,7 @@ import {
   INITIALIZE_STUDY,
   REGISTER_PARTICIPANT,
   VERIFY_PARTICIPANT,
+  changeEnrollmentStatus,
   createStudy,
   deleteStudyParticipants,
   getAllStudies,
@@ -44,11 +47,12 @@ import {
   getStudySettings,
   initializeStudy,
   registerParticipant,
-  verifyParticipant,
+  verifyParticipant
 } from '../actions';
 
 const INITIAL_STATE :Map = fromJS({
   // actions
+  [CHANGE_ENROLLMENT_STATUS]: RS_INITIAL_STATE,
   [CREATE_STUDY]: RS_INITIAL_STATE,
   [DELETE_STUDY_PARTICIPANTS]: RS_INITIAL_STATE,
   [GET_ALL_STUDIES]: RS_INITIAL_STATE,
@@ -112,6 +116,10 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case verifyParticipant.case(action.type): {
       return verifyParticipantReducer(state, action);
+    }
+
+    case changeEnrollmentStatus.case(action.type): {
+      return changeEnrollmentReducer(state, action);
     }
 
     // case switchOrganization.case(action.type): {

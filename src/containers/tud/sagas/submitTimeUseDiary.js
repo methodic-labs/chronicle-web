@@ -12,7 +12,6 @@ import {
   FAMILY_ID,
   FORM_DATA,
   LANGUAGE,
-  ORGANIZATION_ID,
   PARTICIPANT_ID,
   STUDY_ID,
   TRANSLATION_DATA,
@@ -40,7 +39,6 @@ function* submitTimeUseDiaryWorker(action :SequenceAction) :Saga<*> {
 
     yield call(
       TimeUseDiaryApi.submitTimeUseDiary,
-      action.value[ORGANIZATION_ID],
       action.value[STUDY_ID],
       action.value[PARTICIPANT_ID],
       data,

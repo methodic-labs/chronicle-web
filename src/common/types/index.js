@@ -13,6 +13,13 @@ export type Auth0NonceState = {
   redirectUrl :string;
 };
 
+export type AppComponent = {|
+  CHRONICLE :'CHRONICLE';
+  CHRONICLE_DATA_COLLECTION :'CHRONICLE_DATA_COLLECTION';
+  CHRONICLE_SURVEYS :'CHRONICLE_SURVEYS';
+  TIME_USE_DIARY :'TIME_USE_DIARY';
+|}
+
 export type AuthorizationObject = {|
   aclKey :UUID[];
   permissions :{
@@ -21,6 +28,13 @@ export type AuthorizationObject = {|
     WRITE ?:boolean;
   };
 |};
+
+export type ParticipantDataType = {|
+  USAGE_EVENTS :'UsageEvents';
+  PREPROCESSED :'Preprocessed';
+  APP_USAGE_SURVEY :'AppUsageSurvey';
+  TIME_USE_DIARY :'TimeUseDiary';
+|}
 
 export type ParticipationStatusesEnum = {|
   ENROLLED :'ENROLLED';
@@ -96,6 +110,12 @@ export type Study = {
   updatedAt :string;
   version :string;
 };
+
+export type TimeUseDiaryDataType = {|
+  DAYTIME :'DayTime';
+  NIGHTTIME :'NightTime';
+  SUMMARIZED :'Summarized';
+|};
 
 export type UserInfo = {
   email ?:string;

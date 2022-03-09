@@ -16,7 +16,12 @@ import { getParticipantStatsWorker } from './getParticipantStats';
 import { getStudyWorker } from './getStudy';
 import { getStudyParticipantsWorker } from './getStudyParticipants';
 
-import { IS_OWNER, PermissionTypes, STUDY_ID } from '../../../common/constants';
+import {
+  IS_OWNER,
+  PermissionTypes,
+  STUDY,
+  STUDY_ID
+} from '../../../common/constants';
 import { getAuthorizations } from '../../../core/permissions/actions';
 import { getAuthorizationsWorker } from '../../../core/permissions/sagas';
 import {
@@ -72,6 +77,7 @@ function* initializeStudyWorker(action :SequenceAction) :Saga<*> {
     yield put(initializeStudy.success(id, {
       [IS_OWNER]: isOwner,
       [STUDY_ID]: studyId,
+      [STUDY]: getStudyResponse.data
     }));
   }
   catch (error) {
