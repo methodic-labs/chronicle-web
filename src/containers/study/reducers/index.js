@@ -14,6 +14,7 @@ import getStudyParticipantsReducer from './getStudyParticipantsReducer';
 import getStudySettingsReducer from './getStudySettingsReducer';
 import initializeStudyReducer from './initializeStudyReducer';
 import registerParticipantReducer from './registerParticipantReducer';
+import updateStudyReducer from './updateStudyReducer';
 import verifyParticipantReducer from './verifyParticipantReducer';
 
 import {
@@ -36,6 +37,7 @@ import {
   GET_STUDY_SETTINGS,
   INITIALIZE_STUDY,
   REGISTER_PARTICIPANT,
+  UPDATE_STUDY,
   VERIFY_PARTICIPANT,
   changeEnrollmentStatus,
   createStudy,
@@ -47,6 +49,7 @@ import {
   getStudySettings,
   initializeStudy,
   registerParticipant,
+  updateStudy,
   verifyParticipant
 } from '../actions';
 
@@ -62,6 +65,7 @@ const INITIAL_STATE :Map = fromJS({
   [GET_STUDY_SETTINGS]: RS_INITIAL_STATE,
   [INITIALIZE_STUDY]: RS_INITIAL_STATE,
   [REGISTER_PARTICIPANT]: RS_INITIAL_STATE,
+  [UPDATE_STUDY]: RS_INITIAL_STATE,
   [VERIFY_PARTICIPANT]: RS_INITIAL_STATE,
   // data
   [PARTICIPANTS]: Map(),
@@ -76,6 +80,10 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case RESET_REQUEST_STATES: {
       return resetRequestStatesReducer(state, action);
+    }
+
+    case changeEnrollmentStatus.case(action.type): {
+      return changeEnrollmentReducer(state, action);
     }
 
     case deleteStudyParticipants.case(action.type): {
@@ -114,12 +122,12 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
       return registerParticipantReducer(state, action);
     }
 
-    case verifyParticipant.case(action.type): {
-      return verifyParticipantReducer(state, action);
+    case updateStudy.case(action.type): {
+      return updateStudyReducer(state, action);
     }
 
-    case changeEnrollmentStatus.case(action.type): {
-      return changeEnrollmentReducer(state, action);
+    case verifyParticipant.case(action.type): {
+      return verifyParticipantReducer(state, action);
     }
 
     // case switchOrganization.case(action.type): {

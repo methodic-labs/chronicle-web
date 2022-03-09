@@ -9,7 +9,8 @@ import { useDispatch } from 'react-redux';
 
 import { createSchema, createUiSchema } from './CreateStudySchemas';
 
-import { createStudy } from '../actions';
+import { ID, STUDY } from '../../../common/constants';
+import { createStudy, updateStudy } from '../actions';
 import { createFormDataFromStudyEntity } from '../utils';
 import type { Study } from '../../../common/types';
 
@@ -28,8 +29,8 @@ const CreateStudyForm = ({
 
   const handleSubmit = ({ formData } :Object) => {
     if (study) {
-      // throw Error('update study not implemented');
-      // dispatch(updateStudy({ formData, initialFormData, study }));
+      const updated = { ...initialFormData.page1section1 || {}, ...formData.page1section1 };
+      dispatch(updateStudy({ [STUDY]: updated, [ID]: study.id }));
     }
     else {
       dispatch(createStudy(formData.page1section1));

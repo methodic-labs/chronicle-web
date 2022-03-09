@@ -66,6 +66,7 @@ export const PARTICIPANT_IDS :'participantIds' = 'participantIds';
 export const PARTICIPATION_STATUS :'participationStatus' = 'participationStatus';
 export const PRINCIPAL :'principal' = 'principal';
 export const PRINCIPAL_API :'PrincipalApi' = 'PrincipalApi';
+export const RETRIEVE :'retrieve' = 'retrieve';
 export const SELECTED_ORG_ID :'selectedOrgId' = 'selectedOrgId';
 export const SETTINGS :'settings' = 'settings';
 export const START_DATE :'startDate' = 'startDate';
