@@ -58,6 +58,7 @@ const TableHeader = ({
                 onChange={() => dispatch({ type: SELECT_CANDIDATE_IDS, ids: candidateIds })}
                 label={checkBoxLabel} />
             <BulkActionsButton
+                disabled={selectedParticipants === 0}
                 endIcon={<FontAwesomeIcon icon={faAngleDown} />}>
               Bulk Actions
             </BulkActionsButton>
