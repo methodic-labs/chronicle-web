@@ -86,7 +86,7 @@ const ParticipantsTable = ({
           data={participants.valueSeq().toJS()}
           headers={tableHeaders}
           paginated
-          rowsPerPageOptions={[5, 20, 50]} />
+          rowsPerPageOptions={[20, 50, 100]} />
     </TableWrapper>
   );
 };

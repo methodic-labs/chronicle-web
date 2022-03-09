@@ -30,9 +30,10 @@ const {
   SUMMARIZED
 } = TimeUseDiaryDataTypes;
 
+// 2022-03-09 TODO: change PREPROCESSED label to Preprocessed Data
 const dataTypeSelectorLabel = {
   [USAGE_EVENTS]: 'Android Raw Data',
-  [PREPROCESSED]: 'Preprocessed Data',
+  [PREPROCESSED]: 'Preprocessed Data - coming soon',
   [APP_USAGE_SURVEY]: 'App Usage Survey Data',
   [TIME_USE_DIARY]: 'Time Use Diary Data'
 };
@@ -131,6 +132,7 @@ const DownloadParticipantDataModal = (props :Props) => {
           What kind of data do you want to download?
         </Typography>
         <Select
+            isOptionDisabled={(option) => option.value === PREPROCESSED}
             options={dataTypeSelectOptions}
             value={dataType}
             onChange={(value) => setDataType(value)} />
