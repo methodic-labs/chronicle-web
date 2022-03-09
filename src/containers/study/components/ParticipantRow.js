@@ -6,11 +6,12 @@ import styled from 'styled-components';
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  Checkbox,
   Colors,
   IconButton,
   Menu,
   MenuItem,
-  Tag,
+  Tag
 } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
@@ -134,6 +135,9 @@ const ParticipantRow = ({
   return (
     <>
       <RowWrapper onClick={() => {}}>
+        <td>
+          <Checkbox />
+        </td>
         {
           rowData.map((item, index) => (
             <td key={index}>

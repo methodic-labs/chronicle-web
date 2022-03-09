@@ -33,10 +33,18 @@ const TableWrapper = styled.div`
       padding: 10px;
     }
 
-    th:first-child,
-    td:first-child {
+    th:nth-child(1),
+    td:nth-child(1) {
       position: sticky;
       left: 0;
+      background: white;
+      z-index: 500;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      position: sticky;
+      left: 50px;
       background: white;
       z-index: 500;
     }

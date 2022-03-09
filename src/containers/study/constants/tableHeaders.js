@@ -11,6 +11,8 @@ const {
   LAST_TUD_SUBMISSION,
   PARTICIPANT_ID,
   TUD_SUBMISSION_UNIQUE_DAYS,
+  SELECT_PARTICIPANTS,
+  ACTIONS
 } = COLUMN_FIELDS;
 
 const TUD_COLUMNS = [
@@ -71,8 +73,15 @@ const PARTICIPANT_ID_COLUMN = {
   }
 };
 
+const SELECT_PARTICIPANTS_COLUMN = {
+  key: SELECT_PARTICIPANTS,
+  label: '',
+  sortable: false,
+  cellStyle: {}
+};
+
 const ACTIONS_COLUMN = {
-  key: 'actions',
+  key: ACTIONS,
   label: '',
   sortable: false,
   cellStyle: {
@@ -100,7 +109,7 @@ type ColumnType = {
 };
 
 const getColumnsList = (hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) => {
-  let result = [PARTICIPANT_ID_COLUMN];
+  let result = [SELECT_PARTICIPANTS_COLUMN, PARTICIPANT_ID_COLUMN];
   if (hasDataCollectionModule) {
     result = result.concat(ANDROID_COLUMNS);
   }
@@ -120,11 +129,10 @@ const getColumnsList = (hasTimeUseDiaryModule :boolean, hasDataCollectionModule 
 export default function getHeaders(hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) {
   const columns = getColumnsList(hasTimeUseDiaryModule, hasDataCollectionModule);
 
-  const numColumns = columns.length;
-  const lastIndex = numColumns - 1;
+  const firstAndLastColumnKeys = [ACTIONS, SELECT_PARTICIPANTS];
 
-  return columns.map<ColumnType>((column :ColumnType, index) => {
-    const width = index === lastIndex ? '50px' : '200px';
+  return columns.map<ColumnType>((column :ColumnType) => {
+    const width = firstAndLastColumnKeys.includes(column.key) ? '50px' : '200px';
     return {
       ...column,
       cellStyle: {

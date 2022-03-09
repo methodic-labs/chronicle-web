@@ -9,8 +9,11 @@ const FIRST_TUD_SUBMISSION = 'first_tud_submission';
 const LAST_TUD_SUBMISSION = 'last_tud_submission';
 const TUD_SUBMISSION_UNIQUE_DAYS = 'tud_submission_duration';
 const ENROLLMENT_STATUS = 'enrollment_status';
+const SELECT_PARTICIPANTS = 'select_participants';
+const ACTIONS = 'actions';
 
 const COLUMN_FIELDS = {
+  ACTIONS,
   ANDROID_DATA_UNIQUE_DAYS,
   ENROLLMENT_STATUS,
   FIRST_ANDROID_DATA,
@@ -18,6 +21,7 @@ const COLUMN_FIELDS = {
   LAST_ANDROID_DATA,
   LAST_TUD_SUBMISSION,
   PARTICIPANT_ID,
+  SELECT_PARTICIPANTS,
   TUD_SUBMISSION_UNIQUE_DAYS,
 };
 
