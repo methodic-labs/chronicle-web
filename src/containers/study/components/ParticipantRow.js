@@ -56,6 +56,13 @@ const StyledTag = styled(Tag)`
   margin-left: 0;
 `;
 
+const getColumnDateValue = (date = '') => formatDateTime(date, DateTime.DATETIME_SHORT);
+
+const getUniqueDaysLabel = (days = 0) => {
+  if (days === 0) return '---';
+  return days === 1 ? `${days} day` : `${days} days`;
+};
+
 const ParticipantRow = ({
   hasDeletePermission,
   hasDataCollectionModule,
@@ -78,24 +85,18 @@ const ParticipantRow = ({
   const candidateId = participant.candidate.id;
   const { participantId } = participant;
   const enrollmentStatus = participant.participationStatus;
-  const androidFirstDate = formatDateTime(stats.androidFirstDate || '', DateTime.DATETIME_SHORT);
-  const androidLastDate = formatDateTime(stats.androidLastDate || '', DateTime.DATETIME_SHORT);
-  const androidUniqueDates = stats.androidUniqueDates?.length;
-  let androidUniqueDatesLabel = '---';
-  if (androidUniqueDates > 0) {
-    androidUniqueDatesLabel = `${androidUniqueDates} ${(androidUniqueDates === 1) ? 'day' : 'days'}`;
-  }
-  const tudFirstDate = formatDateTime(stats.tudFirstDate || '', DateTime.DATETIME_SHORT);
-  const tudLastDate = formatDateTime(stats.tudLastDate || '', DateTime.DATETIME_SHORT);
-  const tudUniqueDates = stats.tudUniqueDates?.length;
-  let tudUniqueDatesLabel = '---';
-  if (tudUniqueDates > 0) {
-    tudUniqueDatesLabel = `${tudUniqueDates} ${(tudUniqueDates === 1) ? 'day' : 'days'}`;
-  }
 
   const getRowData = () => {
-    const tudData = [tudFirstDate, tudLastDate, tudUniqueDatesLabel];
-    const androidData = [androidFirstDate, androidLastDate, androidUniqueDatesLabel];
+    const tudData = [
+      getColumnDateValue(stats.tudFirstDate),
+      getColumnDateValue(stats.tudLastDate),
+      getUniqueDaysLabel(stats.tudUniqueDates?.length)
+    ];
+    const androidData = [
+      getColumnDateValue(stats.androidFirstDate),
+      getColumnDateValue(stats.androidLastDate),
+      getUniqueDaysLabel(stats.androidUniqueDates?.length)
+    ];
 
     if (hasDataCollectionModule && hasTimeUseDiaryModule) {
       return [participantId, ...androidData, ...tudData];
