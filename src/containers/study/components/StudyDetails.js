@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Box,
   Colors,
-  Divider,
   IconButton,
   Tag,
   Tooltip,
