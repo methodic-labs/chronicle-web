@@ -56,6 +56,7 @@ const SearchPanel = (props :Props) => {
         </div>
         <div />
         <Button
+            disabled={!endDate || !startDate}
             isLoading={isPending(getSubmissionsRS)}
             onClick={onGetSubmissions}>
           Search
