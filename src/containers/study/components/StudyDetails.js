@@ -74,7 +74,7 @@ const StudyDetails = ({ study } :{ study :Study}) => {
           </Box>
         ))
       }
-      <Typography> Daily Notifications </Typography>
+      <Typography variant="subtitle2"> DAILY NOTIFICATIONS </Typography>
       <StyledTag mode={notificationsEnabled ? 'primary' : 'default'}>
         {
           notificationsEnabled ? 'Enabled' : 'Disabled'
