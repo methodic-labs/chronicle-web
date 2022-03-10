@@ -5,6 +5,8 @@ import { faCopy } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Box,
+  Colors,
+  Divider,
   IconButton,
   Tag,
   Tooltip,
@@ -15,6 +17,8 @@ import { DateTime } from 'luxon';
 
 import copyToClipboard from '../../../utils/copyToClipboard';
 import type { Study } from '../../../common/types';
+
+const { NEUTRAL } = Colors;
 
 const { formatDateTime } = DateTimeUtils;
 const { isNonEmptyString } = LangUtils;
@@ -31,13 +35,12 @@ const StudyDetails = ({ study } :{ study :Study}) => {
     return '---';
   };
 
-  const dateCreated = formatDateTime(study.createdAt, DateTime.DATETIME_SHORT);
+  const lastUpdated = formatDateTime(study.updatedAt, DateTime.DATETIME_SHORT);
   const { notificationsEnabled } = study;
   const details = [
     { label: 'Title', value: study.title },
     { label: 'Description', value: getValue(study.description) },
     { label: 'Study Id', value: study.id, enableCopy: true },
-    { label: 'Date Created', value: dateCreated },
     { label: 'Contact', value: getValue(study.contact) },
     { label: 'Group', value: getValue(study.group) },
     { label: 'Version', value: getValue(study.version) },
@@ -45,10 +48,22 @@ const StudyDetails = ({ study } :{ study :Study}) => {
 
   return (
     <Box>
+      <Typography
+          mb="20px"
+          style={{ color: NEUTRAL.N500 }}
+          variant="subtitle2">
+        Last Updated
+
+        <Box component="span" ml="20px" color={NEUTRAL.N400}>
+          { lastUpdated }
+        </Box>
+      </Typography>
+      <Box mb="20px" />
+
       {
         details.map((detail) => (
           <Box mb={2} key={detail.label}>
-            <Typography variant="subtitle2">
+            <Typography style={{ color: NEUTRAL.N500 }} variant="subtitle1">
               { detail.label.toUpperCase() }
             </Typography>
             <Typography>
@@ -74,8 +89,8 @@ const StudyDetails = ({ study } :{ study :Study}) => {
           </Box>
         ))
       }
-      <Typography variant="subtitle2"> DAILY NOTIFICATIONS </Typography>
-      <StyledTag mode={notificationsEnabled ? 'primary' : 'default'}>
+      <Typography style={{ color: NEUTRAL.N500 }} variant="subtitle1"> DAILY NOTIFICATIONS </Typography>
+      <StyledTag mode={notificationsEnabled ? 'primary' : 'neutral'}>
         {
           notificationsEnabled ? 'Enabled' : 'Disabled'
         }
