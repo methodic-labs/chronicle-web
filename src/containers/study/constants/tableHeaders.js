@@ -70,6 +70,7 @@ const PARTICIPANT_ID_COLUMN = {
   label: HEADER_NAMES[PARTICIPANT_ID],
   cellStyle: {
     fontWeight: 500,
+    width: '150px'
   }
 };
 
@@ -77,7 +78,9 @@ const SELECT_PARTICIPANTS_COLUMN = {
   key: SELECT_PARTICIPANTS,
   label: '',
   sortable: false,
-  cellStyle: {}
+  cellStyle: {
+    width: '50px'
+  }
 };
 
 const ACTIONS_COLUMN = {
@@ -86,6 +89,7 @@ const ACTIONS_COLUMN = {
   sortable: false,
   cellStyle: {
     fontWeight: 500,
+    width: '50px'
   }
 };
 
@@ -95,6 +99,7 @@ const STATUS_COLUMN = {
   sortable: false,
   cellStyle: {
     fontWeight: 500,
+    width: '100px'
   }
 };
 
@@ -129,10 +134,8 @@ const getColumnsList = (hasTimeUseDiaryModule :boolean, hasDataCollectionModule 
 export default function getHeaders(hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) {
   const columns = getColumnsList(hasTimeUseDiaryModule, hasDataCollectionModule);
 
-  const firstAndLastColumnKeys = [ACTIONS, SELECT_PARTICIPANTS];
-
   return columns.map<ColumnType>((column :ColumnType) => {
-    const width = firstAndLastColumnKeys.includes(column.key) ? '50px' : '200px';
+    const width = column.cellStyle?.width || '200px';
     return {
       ...column,
       cellStyle: {
