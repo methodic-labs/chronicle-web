@@ -19,14 +19,15 @@ const { formatAsDate } = DateTimeUtils;
 
 const Wrapper = styled.div`
   align-items: center;
-  display: grid;
-  grid-template-columns: auto 1fr 400px;
-  grid-column-gap: 20px;
-  padding: 10px 0;
   border-bottom: 1px solid ${NEUTRAL.N50};
+  display: grid;
+  grid-column-gap: 20px;
+  grid-template-columns: auto 1fr 400px;
+  padding: 10px 0;
 
   :last-of-type {
     margin-bottom: 0;
+    border-bottom: none;
   }
 `;
 

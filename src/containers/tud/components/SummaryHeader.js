@@ -11,16 +11,16 @@ import type { DataType } from '../constants/DataTypes';
 const { NEUTRAL } = Colors;
 
 const Wrapper = styled.div`
+  align-items: flex-end;
+  background: white;
+  border-bottom: 1px solid ${NEUTRAL.N100};
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
   grid-gap: 30px;
+  grid-template-columns: auto auto 1fr auto;
   margin-bottom: 10px;
   padding-bottom: 10px;
-  align-items: flex-end;
-  border-bottom: 1px solid ${NEUTRAL.N100};
   position: sticky;
   top: 0;
-  background: white;
   z-index: 1
 `;
 
