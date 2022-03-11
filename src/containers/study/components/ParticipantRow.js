@@ -110,12 +110,12 @@ const ParticipantRow = ({
     if (hasDataCollectionModule) {
       result = [...result, ...androidData];
     }
-    if (hasTimeUseDiaryModule) {
-      result = [...result, ...tudData];
-    }
-
     if (iosSensorUseEnabled) {
       result = [...result, ...iosSensorData];
+    }
+
+    if (hasTimeUseDiaryModule) {
+      result = [...result, ...tudData];
     }
 
     return result;
