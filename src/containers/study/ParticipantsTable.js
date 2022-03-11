@@ -3,13 +3,26 @@
 import { memo } from 'react';
 
 import styled from 'styled-components';
-import { Map, Set } from 'immutable';
+import { List, Map, Set } from 'immutable';
 import { Table } from 'lattice-ui-kit';
 
 import ParticipantRow from './components/ParticipantRow';
 import getHeaders from './constants/tableHeaders';
 
-import { CANDIDATE, ID, PARTICIPANT_ID } from '../../common/constants';
+import {
+  ANDROID_FIRST_DATE,
+  ANDROID_LAST_DATE,
+  ANDROID_UNIQUE_DATES,
+  CANDIDATE,
+  ID,
+  IOS_FIRST_DATE,
+  IOS_LAST_DATE,
+  IOS_UNIQUE_DATES,
+  PARTICIPANT_ID,
+  TUD_FIRST_DATE,
+  TUD_LAST_DATE,
+  TUD_UNIQUE_DATES
+} from '../../common/constants';
 import type { Participant, ParticipantStats } from '../../common/types';
 
 const TableWrapper = styled.div`
@@ -60,10 +73,23 @@ const TableWrapper = styled.div`
   }
 `;
 
+const defaultStats = {
+  [ANDROID_FIRST_DATE]: null,
+  [ANDROID_LAST_DATE]: null,
+  [ANDROID_UNIQUE_DATES]: [],
+  [IOS_FIRST_DATE]: null,
+  [IOS_LAST_DATE]: null,
+  [IOS_UNIQUE_DATES]: [],
+  [TUD_FIRST_DATE]: null,
+  [TUD_LAST_DATE]: null,
+  [TUD_UNIQUE_DATES]: []
+};
+
 const ParticipantsTable = ({
   hasDeletePermission,
   hasDataCollectionModule,
   hasTimeUseDiaryModule,
+  iosSensorUseEnabled,
   participants,
   participantStats,
   selectedParticipants
@@ -71,12 +97,29 @@ const ParticipantsTable = ({
   hasDeletePermission :boolean;
   hasDataCollectionModule :boolean;
   hasTimeUseDiaryModule :boolean;
+  iosSensorUseEnabled :boolean;
   participants :Map<UUID, Participant>;
   participantStats :{ [string] :ParticipantStats };
   selectedParticipants :Set;
 }) => {
 
-  const tableHeaders = getHeaders(hasTimeUseDiaryModule, hasDataCollectionModule);
+  const tableData = List().withMutations((mutableList) => {
+    participants.forEach((participant, id) => {
+      const stats = participantStats[participant[PARTICIPANT_ID]] || defaultStats;
+      const result = {
+        [ID]: id,
+        ...stats,
+        ...participant
+      };
+      mutableList.push(result);
+    });
+  }).toJS();
+
+  const tableHeaders = getHeaders(
+    hasTimeUseDiaryModule,
+    hasDataCollectionModule,
+    iosSensorUseEnabled
+  );
 
   const components = {
     Row: ({ data: rowData } :any) => (
@@ -84,6 +127,7 @@ const ParticipantsTable = ({
           hasDeletePermission={hasDeletePermission}
           hasDataCollectionModule={hasDataCollectionModule}
           hasTimeUseDiaryModule={hasTimeUseDiaryModule}
+          iosSensorUseEnabled={iosSensorUseEnabled}
           isSelected={selectedParticipants.has(rowData[CANDIDATE][ID])}
           participant={rowData}
           stats={participantStats[rowData[PARTICIPANT_ID]] || {}} />
@@ -94,7 +138,7 @@ const ParticipantsTable = ({
     <TableWrapper>
       <Table
           components={components}
-          data={participants.valueSeq().toJS()}
+          data={tableData}
           headers={tableHeaders}
           paginated
           rowsPerPageOptions={[20, 50, 100]} />

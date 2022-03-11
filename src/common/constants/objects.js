@@ -11,6 +11,7 @@ import {
 import type {
   AppComponent,
   AppUsageFreqType,
+  IOSSensorType,
   ParticipantDataType,
   ParticipationStatusesEnum,
   PermissionTypesEnum,
@@ -27,6 +28,13 @@ export const AppComponents :{|...AppComponent |} = Object.freeze({
   CHRONICLE_DATA_COLLECTION: 'CHRONICLE_DATA_COLLECTION',
   CHRONICLE_SURVEYS: 'CHRONICLE_SURVEYS',
   TIME_USE_DIARY: 'TIME_USE_DIARY'
+});
+
+export const IOSSensorTypes :{| ...IOSSensorType |} = Object.freeze({
+  DEVICE_USAGE: 'deviceUsage',
+  KEYBOARD_METRICS: 'keyboardMetrics',
+  MESSAGES_USAGE: 'messagesUsage',
+  PHONE_USAGE: 'phoneUsage'
 });
 
 export const ParticipationStatuses :{| ...ParticipationStatusesEnum |} = Object.freeze({

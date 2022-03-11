@@ -29,6 +29,13 @@ export type AuthorizationObject = {|
   };
 |};
 
+export type IOSSensorType = {|
+  DEVICE_USAGE :'deviceUsage';
+  KEYBOARD_METRICS :'keyboardMetrics';
+  MESSAGES_USAGE :'messagesUsage';
+  PHONE_USAGE :'phoneUsage';
+|}
+
 export type ParticipantDataType = {|
   USAGE_EVENTS :'UsageEvents';
   PREPROCESSED :'Preprocessed';

@@ -56,7 +56,7 @@ const StyledTag = styled(Tag)`
   margin-left: 0;
 `;
 
-const getColumnDateValue = (date = '') => formatDateTime(date, DateTime.DATETIME_SHORT);
+const getColumnDateValue = (date) => formatDateTime(date || '', DateTime.DATETIME_SHORT);
 
 const getUniqueDaysLabel = (days = 0) => {
   if (days === 0) return '---';
@@ -64,16 +64,18 @@ const getUniqueDaysLabel = (days = 0) => {
 };
 
 const ParticipantRow = ({
-  hasDeletePermission,
   hasDataCollectionModule,
+  hasDeletePermission,
   hasTimeUseDiaryModule,
-  participant,
+  iosSensorUseEnabled,
   isSelected,
+  participant,
   stats = {},
 } :{
-  hasDeletePermission :boolean;
   hasDataCollectionModule :boolean;
+  hasDeletePermission :boolean;
   hasTimeUseDiaryModule :boolean;
+  iosSensorUseEnabled :boolean;
   isSelected :boolean;
   participant :Participant;
   stats ?:ParticipantStats;
@@ -98,19 +100,25 @@ const ParticipantRow = ({
       getUniqueDaysLabel(stats.androidUniqueDates?.length)
     ];
 
-    if (hasDataCollectionModule && hasTimeUseDiaryModule) {
-      return [participantId, ...androidData, ...tudData];
-    }
+    const iosSensorData = [
+      getColumnDateValue(stats.iosFirstDate),
+      getColumnDateValue(stats.iosLastDate),
+      getUniqueDaysLabel(stats.iosUniqueDates?.length)
+    ];
+
+    let result = [participantId];
     if (hasDataCollectionModule) {
-      return [participantId, ...androidData];
+      result = [...result, ...androidData];
     }
     if (hasTimeUseDiaryModule) {
-      return [participantId, ...tudData];
+      result = [...result, ...tudData];
     }
 
-    // TODO: Need to update this later for ios sensor
+    if (iosSensorUseEnabled) {
+      result = [...result, ...iosSensorData];
+    }
 
-    return [participantId];
+    return result;
   };
 
   const rowData = useMemo(() => getRowData(), [candidateId]);

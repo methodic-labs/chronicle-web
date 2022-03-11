@@ -36,6 +36,7 @@ import {
   AppComponents,
   CANDIDATE_ID,
   CANDIDATE_IDS,
+  IOSSensorTypes,
   PARTICIPANT_ID,
   PARTICIPATION_STATUS,
   STUDIES,
@@ -182,10 +183,13 @@ const StudyParticipantsContainer = ({
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
 
-  const { components = [] } = study.settings;
+  const { components = [], sensors = [] } = study.settings;
   // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
   const studyHasTimeUseDiaryModule = components.includes(AppComponents.TIME_USE_DIARY);
   const studyHasDataCollectionModule = components.includes(AppComponents.CHRONICLE_DATA_COLLECTION);
+
+  const sensorTypes = Object.values(IOSSensorTypes);
+  const iosSensorUseEnabled = sensors.length > 0 && sensors.every((sensor) => sensorTypes.includes(sensor));
 
   const changeEnrollmentStatusRS :?RequestState = useRequestState([STUDIES, CHANGE_ENROLLMENT_STATUS]);
   const deleteParticipantRS :?RequestState = useRequestState([STUDIES, DELETE_STUDY_PARTICIPANTS]);
@@ -257,6 +261,7 @@ const StudyParticipantsContainer = ({
                   hasDeletePermission={isOwner}
                   hasDataCollectionModule={studyHasDataCollectionModule}
                   hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
+                  iosSensorUseEnabled={iosSensorUseEnabled}
                   participants={filteredParticipants}
                   participantStats={participantStats}
                   selectedParticipants={selectedParticipants} />
