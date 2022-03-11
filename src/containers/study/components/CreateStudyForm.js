@@ -31,7 +31,7 @@ const CreateStudyForm = ({
     if (study) {
       const { features, ...rest } = formData.page1section1;
       const updated = {
-        ...initialFormData.page1section1,
+        ...initialFormData?.page1section1,
         ...rest,
         settings: {
           ...study.settings,

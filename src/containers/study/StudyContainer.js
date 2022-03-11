@@ -92,6 +92,7 @@ const StudyContainer = ({
 
   const deleteStudyRS = useRequestState(['studies', DELETE_STUDY]);
 
+  // 2022-03-11 disable delete studies for now
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
 
@@ -167,9 +168,9 @@ const StudyContainer = ({
               Edit Details
             </MenuItem>
             <MenuItem
-                disabled={!isOwner}
+                disabled
                 onClick={onShowDeleteModal}>
-              Delete
+              Delete - coming soon
             </MenuItem>
           </Menu>
         </Box>
