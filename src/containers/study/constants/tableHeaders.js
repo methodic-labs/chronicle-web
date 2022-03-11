@@ -139,7 +139,8 @@ const getColumnsList = (
   hasAndroidDataCollection :boolean,
   hasIOSSensorDataCollection :boolean
 ) => {
-  let result = [SELECT_PARTICIPANTS_COLUMN, PARTICIPANT_ID_COLUMN];
+  // 2022-03-11 remove SELECT_PARTICIPANTS_COLUMN for now
+  let result = [PARTICIPANT_ID_COLUMN];
   if (hasAndroidDataCollection) {
     result = result.concat(ANDROID_COLUMNS);
   }

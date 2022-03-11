@@ -29,7 +29,7 @@ const TableWrapper = styled.div`
   > div:nth-child(1) {
     overflow-x: auto;
   }
-  
+
   > div > div:first-child,
   > div > div:last-child {
     position: sticky;
@@ -58,7 +58,7 @@ const TableWrapper = styled.div`
       position: sticky;
       left: 0;
       background: white;
-      z-index: 500;
+      z-index: 501;
     }
 
     th:nth-child(2),

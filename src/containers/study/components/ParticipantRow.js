@@ -148,11 +148,12 @@ const ParticipantRow = ({
   return (
     <>
       <RowWrapper onClick={() => {}}>
-        <td>
+        { /* <td>
           <Checkbox
               onChange={() => dispatch({ type: SELECT_CANDIDATE_IDS, ids: Set([candidateId]) })}
               checked={isSelected} />
         </td>
+      */}
         {
           rowData.map((item, index) => (
             <td key={index}>
