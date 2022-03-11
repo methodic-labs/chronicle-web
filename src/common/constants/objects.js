@@ -30,6 +30,12 @@ export const AppComponents :{|...AppComponent |} = Object.freeze({
   TIME_USE_DIARY: 'TIME_USE_DIARY'
 });
 
+export const AppFeatures = {
+  ANDROID: 'Android Data Collection',
+  IOS_SENSOR: 'iOS Data Collection',
+  TIME_USE_DIARY: 'Time Use Diary'
+};
+
 export const IOSSensorTypes :{| ...IOSSensorType |} = Object.freeze({
   DEVICE_USAGE: 'deviceUsage',
   KEYBOARD_METRICS: 'keyboardMetrics',

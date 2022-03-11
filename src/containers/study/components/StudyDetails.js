@@ -7,6 +7,7 @@ import {
   Box,
   Chip,
   Colors,
+  Grid,
   IconButton,
   Tag,
   Tooltip,
@@ -15,6 +16,7 @@ import {
 import { LangUtils } from 'lattice-utils';
 
 import copyToClipboard from '../../../utils/copyToClipboard';
+import { AppFeatures } from '../../../common/constants';
 import type { Study } from '../../../common/types';
 
 const { NEUTRAL } = Colors;
@@ -45,14 +47,14 @@ const StudyDetails = ({
 
   const features = [];
   if (hasAndroidDataCollection) {
-    features.push('Android Data Collection');
+    features.push(AppFeatures.ANDROID);
   }
 
   if (hasIOSSensorDataCollection) {
-    features.push('IOS Sensor Data Collection');
+    features.push(AppFeatures.IOS_SENSOR);
   }
   if (hasTimeUseDiary) {
-    features.push('Time Use Diary');
+    features.push(AppFeatures.TIME_USE_DIARY);
   }
 
   const { notificationsEnabled } = study;
@@ -104,17 +106,18 @@ const StudyDetails = ({
       </StyledTag>
       <Box mt={2}>
         <Typography style={{ color: NEUTRAL.N500 }} variant="subtitle1">
-          ENABLED FEATURES
+          FEATURES
         </Typography>
-        <Typography>
+        <Box mt={1} />
+        <Grid container spacing={2}>
           {
-            features.map((feature) => (
-              <Box component="span" mr={2}>
-                <Chip label={feature} />
-              </Box>
+            Object.values(AppFeatures).map((feature) => (
+              <Grid item>
+                <Chip label={feature} color={features.includes(feature) ? 'primary' : 'default'} />
+              </Grid>
             ))
           }
-        </Typography>
+        </Grid>
       </Box>
     </Box>
   );
