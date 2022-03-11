@@ -30,11 +30,13 @@ const StyledTag = styled(Tag)`
 const StudyDetails = ({
   hasAndroidDataCollection,
   hasIOSSensorDataCollection,
+  hasQuestionnaires,
   hasTimeUseDiary,
   study,
 } :{
   hasAndroidDataCollection :boolean;
   hasIOSSensorDataCollection :boolean;
+  hasQuestionnaires :boolean;
   hasTimeUseDiary :boolean;
   study :Study;
 }) => {
@@ -55,6 +57,10 @@ const StudyDetails = ({
   }
   if (hasTimeUseDiary) {
     features.push(AppFeatures.TIME_USE_DIARY);
+  }
+
+  if (hasQuestionnaires) {
+    features.push(AppFeatures.SURVEYS);
   }
 
   const { notificationsEnabled } = study;
@@ -112,7 +118,7 @@ const StudyDetails = ({
         <Grid container spacing={2}>
           {
             Object.values(AppFeatures).map((feature) => (
-              <Grid item>
+              <Grid item key={feature}>
                 <Chip label={feature} color={features.includes(feature) ? 'primary' : 'default'} />
               </Grid>
             ))

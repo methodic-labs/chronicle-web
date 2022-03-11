@@ -74,11 +74,13 @@ StudyDetailsItem.defaultProps = {
 const StudyContainer = ({
   hasAndroidDataCollection,
   hasIOSSensorDataCollection,
+  hasQuestionnaires,
   hasTimeUseDiary,
   study,
 } :{
   hasAndroidDataCollection :boolean;
   hasIOSSensorDataCollection :boolean;
+  hasQuestionnaires :boolean;
   hasTimeUseDiary :boolean;
   study :Study;
 }) => {
@@ -134,6 +136,7 @@ const StudyContainer = ({
           <StudyDetails
               hasAndroidDataCollection={hasAndroidDataCollection}
               hasIOSSensorDataCollection={hasIOSSensorDataCollection}
+              hasQuestionnaires={hasQuestionnaires}
               hasTimeUseDiary={hasTimeUseDiary}
               study={study} />
           <IconButton

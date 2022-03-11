@@ -4,6 +4,7 @@
 
 import { getIn, setIn } from 'immutable';
 
+import { FEATURES } from '../../../common/constants';
 import type { Study } from '../../../common/types';
 
 const PAGE_SECTION_PREFIX = 'page';
@@ -22,7 +23,12 @@ export default function createFormDataFromStudyEntity(dataSchema :Object, study 
   pageSectionKeys.forEach((pageSectionKey) => {
     const studyFields = getIn(properties, [pageSectionKey, 'properties'], {});
     Object.keys(studyFields).forEach((studyField) => {
-      formData = setIn(formData, [pageSectionKey, studyField], study[studyField]);
+      if (studyField === FEATURES) {
+        formData = setIn(formData, [pageSectionKey, studyField], study?.settings?.components || []);
+      }
+      else {
+        formData = setIn(formData, [pageSectionKey, studyField], study[studyField]);
+      }
     });
   });
 

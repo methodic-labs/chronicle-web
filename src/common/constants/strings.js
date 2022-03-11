@@ -46,6 +46,7 @@ export const DATE :'date' = 'date';
 export const DESCRIPTION :'description' = 'description';
 export const END_DATE :'endDate' = 'endDate';
 export const FAMILY_ID :'familyId' = 'familyId';
+export const FEATURES :'features' = 'features';
 export const FILE_NAME :'fileName' = 'fileName';
 export const FORM_DATA :'formData' = 'formData';
 export const GROUP :'group' = 'group';

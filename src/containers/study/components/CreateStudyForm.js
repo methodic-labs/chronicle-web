@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 
 import { createSchema, createUiSchema } from './CreateStudySchemas';
 
-import { ID, STUDY } from '../../../common/constants';
+import { FEATURES, ID, STUDY } from '../../../common/constants';
 import { createStudy, updateStudy } from '../actions';
 import { createFormDataFromStudyEntity } from '../utils';
 import type { Study } from '../../../common/types';
@@ -29,11 +29,27 @@ const CreateStudyForm = ({
 
   const handleSubmit = ({ formData } :Object) => {
     if (study) {
-      const updated = { ...initialFormData.page1section1 || {}, ...formData.page1section1 };
+      const { features, ...rest } = formData.page1section1;
+      const updated = {
+        ...initialFormData.page1section1,
+        ...rest,
+        settings: {
+          ...study.settings,
+          components: features
+        }
+      };
+      delete updated[FEATURES];
       dispatch(updateStudy({ [STUDY]: updated, [ID]: study.id }));
     }
     else {
-      dispatch(createStudy(formData.page1section1));
+      const { features, ...rest } = formData.page1section1;
+      const studyDetails = {
+        settings: {
+          components: features
+        },
+        ...rest
+      };
+      dispatch(createStudy(studyDetails));
     }
   };
 
