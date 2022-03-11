@@ -29,6 +29,13 @@ const TableWrapper = styled.div`
   > div:nth-child(1) {
     overflow-x: auto;
   }
+  
+  > div > div:first-child,
+  > div > div:last-child {
+    position: sticky;
+    left: 0;
+    z-index: 501
+  }
 
   table {
     margin-top: 20px;
@@ -87,17 +94,17 @@ const defaultStats = {
 
 const ParticipantsTable = ({
   hasDeletePermission,
-  hasDataCollectionModule,
-  hasTimeUseDiaryModule,
-  iosSensorUseEnabled,
+  hasAndroidDataCollection,
+  hasTimeUseDiary,
+  hasIOSSensorDataCollection,
   participants,
   participantStats,
   selectedParticipants
 } :{
   hasDeletePermission :boolean;
-  hasDataCollectionModule :boolean;
-  hasTimeUseDiaryModule :boolean;
-  iosSensorUseEnabled :boolean;
+  hasAndroidDataCollection :boolean;
+  hasTimeUseDiary :boolean;
+  hasIOSSensorDataCollection :boolean;
   participants :Map<UUID, Participant>;
   participantStats :{ [string] :ParticipantStats };
   selectedParticipants :Set;
@@ -116,18 +123,18 @@ const ParticipantsTable = ({
   }).toJS();
 
   const tableHeaders = getHeaders(
-    hasTimeUseDiaryModule,
-    hasDataCollectionModule,
-    iosSensorUseEnabled
+    hasTimeUseDiary,
+    hasAndroidDataCollection,
+    hasIOSSensorDataCollection
   );
 
   const components = {
     Row: ({ data: rowData } :any) => (
       <ParticipantRow
           hasDeletePermission={hasDeletePermission}
-          hasDataCollectionModule={hasDataCollectionModule}
-          hasTimeUseDiaryModule={hasTimeUseDiaryModule}
-          iosSensorUseEnabled={iosSensorUseEnabled}
+          hasAndroidDataCollection={hasAndroidDataCollection}
+          hasTimeUseDiary={hasTimeUseDiary}
+          hasIOSSensorDataCollection={hasIOSSensorDataCollection}
           isSelected={selectedParticipants.has(rowData[CANDIDATE][ID])}
           participant={rowData}
           stats={participantStats[rowData[PARTICIPANT_ID]] || {}} />

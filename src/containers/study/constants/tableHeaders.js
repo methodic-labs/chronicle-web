@@ -135,20 +135,20 @@ type ColumnType = {
 };
 
 const getColumnsList = (
-  hasTimeUseDiaryModule :boolean,
-  hasDataCollectionModule :boolean,
-  iosSensorUseEnabled :boolean
+  hasTimeUseDiary :boolean,
+  hasAndroidDataCollection :boolean,
+  hasIOSSensorDataCollection :boolean
 ) => {
   let result = [SELECT_PARTICIPANTS_COLUMN, PARTICIPANT_ID_COLUMN];
-  if (hasDataCollectionModule) {
+  if (hasAndroidDataCollection) {
     result = result.concat(ANDROID_COLUMNS);
   }
 
-  if (iosSensorUseEnabled) {
+  if (hasIOSSensorDataCollection) {
     result = result.concat(IOS_COLUMNS);
   }
 
-  if (hasTimeUseDiaryModule) {
+  if (hasTimeUseDiary) {
     result = result.concat(TUD_COLUMNS);
   }
 
@@ -159,11 +159,11 @@ const getColumnsList = (
 };
 
 export default function getHeaders(
-  hasTimeUseDiaryModule :boolean,
-  hasDataCollectionModule :boolean,
-  iosSensorUseEnabled :boolean
+  hasTimeUseDiary :boolean,
+  hasAndroidDataCollection :boolean,
+  hasIOSSensorDataCollection :boolean
 ) {
-  const columns = getColumnsList(hasTimeUseDiaryModule, hasDataCollectionModule, iosSensorUseEnabled);
+  const columns = getColumnsList(hasTimeUseDiary, hasAndroidDataCollection, hasIOSSensorDataCollection);
 
   return columns.map<ColumnType>((column :ColumnType) => {
     const width = column.cellStyle?.width || '200px';

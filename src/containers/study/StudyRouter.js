@@ -17,7 +17,7 @@ import { INITIALIZE_STUDY, initializeStudy } from './actions';
 import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
 import * as Routes from '../../core/router/Routes';
 import { BasicErrorComponent, Spinner, TabLink } from '../../common/components';
-import { AppComponents, STUDIES } from '../../common/constants';
+import { AppComponents, IOSSensorTypes, STUDIES } from '../../common/constants';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectStudy } from '../../core/redux/selectors';
 import type { Study, UUID } from '../../common/types';
@@ -92,21 +92,37 @@ const StudyRouter = () => {
   }
 
   if (isSuccess(initializeStudyRS) && study) {
-    const { components = [] } = study.settings;
+    const { components = [], sensors = [] } = study.settings;
     // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
     const hasTimeUseDiary = components.includes(AppComponents.TIME_USE_DIARY);
+    const hasAndroidDataCollection = components.includes(AppComponents.CHRONICLE_DATA_COLLECTION);
+
+    const sensorTypes = Object.values(IOSSensorTypes);
+    const hasIOSSensorDataCollection = sensors.length > 0 && sensors.every((sensor) => sensorTypes.includes(sensor));
 
     // const hasQuestionnaires = true;
 
     const renderStudyContainer = () => (
       (study)
-        ? <StudyContainer study={study} />
+        ? (
+          <StudyContainer
+              study={study}
+              hasAndroidDataCollection={hasAndroidDataCollection}
+              hasTimeUseDiary={hasTimeUseDiary}
+              hasIOSSensorDataCollection={hasIOSSensorDataCollection} />
+        )
         : null
     );
 
     const renderStudyParticipantsContainer = () => (
       (study)
-        ? <StudyParticipantsContainer study={study} />
+        ? (
+          <StudyParticipantsContainer
+              study={study}
+              hasAndroidDataCollection={hasAndroidDataCollection}
+              hasTimeUseDiary={hasTimeUseDiary}
+              hasIOSSensorDataCollection={hasIOSSensorDataCollection} />
+        )
         : null
     );
 

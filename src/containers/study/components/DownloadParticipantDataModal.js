@@ -55,8 +55,8 @@ const timeUseDiaryDataTypeOptions = [
 
 type Props = {
   handleOnClose :() => void;
-  hasDataCollectionModule :boolean;
-  hasTimeUseDiaryModule :boolean;
+  hasAndroidDataCollection :boolean;
+  hasTimeUseDiary :boolean;
   isVisible :boolean;
   participantId :string;
   studyId :UUID;
@@ -65,8 +65,8 @@ type Props = {
 const DownloadParticipantDataModal = (props :Props) => {
   const {
     handleOnClose,
-    hasDataCollectionModule,
-    hasTimeUseDiaryModule,
+    hasAndroidDataCollection,
+    hasTimeUseDiary,
     isVisible,
     participantId,
     studyId
@@ -86,16 +86,16 @@ const DownloadParticipantDataModal = (props :Props) => {
   const dataTypes = useMemo(() => {
     const result = [];
 
-    if (hasDataCollectionModule) {
+    if (hasAndroidDataCollection) {
       result.push(USAGE_EVENTS);
       result.push(PREPROCESSED);
       result.push(APP_USAGE_SURVEY);
     }
-    if (hasTimeUseDiaryModule) {
+    if (hasTimeUseDiary) {
       result.push(TIME_USE_DIARY);
     }
     return result;
-  }, [hasDataCollectionModule, hasTimeUseDiaryModule]);
+  }, [hasAndroidDataCollection, hasTimeUseDiary]);
 
   const dataTypeSelectOptions = useMemo(() => dataTypes.map((type) => ({
     value: type,

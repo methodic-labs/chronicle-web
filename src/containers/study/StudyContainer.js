@@ -72,8 +72,14 @@ StudyDetailsItem.defaultProps = {
 };
 
 const StudyContainer = ({
+  hasAndroidDataCollection,
+  hasIOSSensorDataCollection,
+  hasTimeUseDiary,
   study,
 } :{
+  hasAndroidDataCollection :boolean;
+  hasIOSSensorDataCollection :boolean;
+  hasTimeUseDiary :boolean;
   study :Study;
 }) => {
 
@@ -125,7 +131,11 @@ const StudyContainer = ({
     <Card>
       <CardSegment>
         <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-          <StudyDetails study={study} />
+          <StudyDetails
+              hasAndroidDataCollection={hasAndroidDataCollection}
+              hasIOSSensorDataCollection={hasIOSSensorDataCollection}
+              hasTimeUseDiary={hasTimeUseDiary}
+              study={study} />
           <IconButton
               aria-controls="actions_menu"
               onClick={handleOnClick}>
@@ -139,6 +149,15 @@ const StudyContainer = ({
               aria-haspopup="true"
               keepMounted
               open={Boolean(anchorEl)}
+              anchorOrigin={{
+                horizontal: 'right',
+                vertical: 'bottom',
+              }}
+              getContentAnchorEl={null}
+              transformOrigin={{
+                horizontal: 'right',
+                vertical: 'top',
+              }}
               onClose={() => setAnchorEl(null)}>
             <MenuItem
                 onClick={openEditModal}>

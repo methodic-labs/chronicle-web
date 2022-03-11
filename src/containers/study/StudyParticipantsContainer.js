@@ -33,10 +33,8 @@ import {
 } from './actions';
 
 import {
-  AppComponents,
   CANDIDATE_ID,
   CANDIDATE_IDS,
-  IOSSensorTypes,
   PARTICIPANT_ID,
   PARTICIPATION_STATUS,
   STUDIES,
@@ -155,7 +153,13 @@ const reducer = (state :Object, action :Object) => {
 
 const StudyParticipantsContainer = ({
   study,
+  hasAndroidDataCollection,
+  hasIOSSensorDataCollection,
+  hasTimeUseDiary
 } :{
+  hasAndroidDataCollection :boolean;
+  hasIOSSensorDataCollection :boolean;
+  hasTimeUseDiary :boolean;
   study :Study;
 }) => {
 
@@ -182,14 +186,6 @@ const StudyParticipantsContainer = ({
 
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
-
-  const { components = [], sensors = [] } = study.settings;
-  // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
-  const studyHasTimeUseDiaryModule = components.includes(AppComponents.TIME_USE_DIARY);
-  const studyHasDataCollectionModule = components.includes(AppComponents.CHRONICLE_DATA_COLLECTION);
-
-  const sensorTypes = Object.values(IOSSensorTypes);
-  const iosSensorUseEnabled = sensors.length > 0 && sensors.every((sensor) => sensorTypes.includes(sensor));
 
   const changeEnrollmentStatusRS :?RequestState = useRequestState([STUDIES, CHANGE_ENROLLMENT_STATUS]);
   const deleteParticipantRS :?RequestState = useRequestState([STUDIES, DELETE_STUDY_PARTICIPANTS]);
@@ -259,9 +255,9 @@ const StudyParticipantsContainer = ({
             && (
               <ParticipantsTable
                   hasDeletePermission={isOwner}
-                  hasDataCollectionModule={studyHasDataCollectionModule}
-                  hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
-                  iosSensorUseEnabled={iosSensorUseEnabled}
+                  hasAndroidDataCollection={hasAndroidDataCollection}
+                  hasTimeUseDiary={hasTimeUseDiary}
+                  hasIOSSensorDataCollection={hasIOSSensorDataCollection}
                   participants={filteredParticipants}
                   participantStats={participantStats}
                   selectedParticipants={selectedParticipants} />
@@ -278,8 +274,8 @@ const StudyParticipantsContainer = ({
             <>
               <ParticipantInfoModal
                   handleOnClose={() => dispatch({ type: TOGGLE_INFO_MODAL, isModalOpen: false })}
-                  hasDataCollectionModule={studyHasDataCollectionModule}
-                  hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
+                  hasAndroidDataCollection={hasAndroidDataCollection}
+                  hasTimeUseDiary={hasTimeUseDiary}
                   isVisible={isInfoModalOpen}
                   participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                   studyId={study.id} />
@@ -308,8 +304,8 @@ const StudyParticipantsContainer = ({
           candidateId && (
             <DownloadParticipantDataModal
                 handleOnClose={() => dispatch({ type: TOGGLE_DOWNLOAD_MODAL, isModalOpen: false })}
-                hasDataCollectionModule={studyHasDataCollectionModule}
-                hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
+                hasAndroidDataCollection={hasAndroidDataCollection}
+                hasTimeUseDiary={hasTimeUseDiary}
                 isVisible={isDownloadModalOpen}
                 participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                 studyId={study.id} />

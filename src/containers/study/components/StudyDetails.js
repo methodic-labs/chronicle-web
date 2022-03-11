@@ -5,6 +5,7 @@ import { faCopy } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Box,
+  Chip,
   Colors,
   IconButton,
   Tag,
@@ -24,13 +25,35 @@ const StyledTag = styled(Tag)`
   margin-left: 0;
 `;
 
-const StudyDetails = ({ study } :{ study :Study}) => {
+const StudyDetails = ({
+  hasAndroidDataCollection,
+  hasIOSSensorDataCollection,
+  hasTimeUseDiary,
+  study,
+} :{
+  hasAndroidDataCollection :boolean;
+  hasIOSSensorDataCollection :boolean;
+  hasTimeUseDiary :boolean;
+  study :Study;
+}) => {
   const getValue = (input :?string) => {
     if (isNonEmptyString(input)) {
       return input;
     }
     return '---';
   };
+
+  const features = [];
+  if (hasAndroidDataCollection) {
+    features.push('Android Data Collection');
+  }
+
+  if (hasIOSSensorDataCollection) {
+    features.push('IOS Sensor Data Collection');
+  }
+  if (hasTimeUseDiary) {
+    features.push('Time Use Diary');
+  }
 
   const { notificationsEnabled } = study;
   const details = [
@@ -79,6 +102,20 @@ const StudyDetails = ({ study } :{ study :Study}) => {
           notificationsEnabled ? 'Enabled' : 'Disabled'
         }
       </StyledTag>
+      <Box mt={2}>
+        <Typography style={{ color: NEUTRAL.N500 }} variant="subtitle1">
+          ENABLED FEATURES
+        </Typography>
+        <Typography>
+          {
+            features.map((feature) => (
+              <Box component="span" mr={2}>
+                <Chip label={feature} />
+              </Box>
+            ))
+          }
+        </Typography>
+      </Box>
     </Box>
   );
 };

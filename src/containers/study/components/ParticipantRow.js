@@ -64,18 +64,18 @@ const getUniqueDaysLabel = (days = 0) => {
 };
 
 const ParticipantRow = ({
-  hasDataCollectionModule,
+  hasAndroidDataCollection,
   hasDeletePermission,
-  hasTimeUseDiaryModule,
-  iosSensorUseEnabled,
+  hasTimeUseDiary,
+  hasIOSSensorDataCollection,
   isSelected,
   participant,
   stats = {},
 } :{
-  hasDataCollectionModule :boolean;
+  hasAndroidDataCollection :boolean;
   hasDeletePermission :boolean;
-  hasTimeUseDiaryModule :boolean;
-  iosSensorUseEnabled :boolean;
+  hasTimeUseDiary :boolean;
+  hasIOSSensorDataCollection :boolean;
   isSelected :boolean;
   participant :Participant;
   stats ?:ParticipantStats;
@@ -107,14 +107,14 @@ const ParticipantRow = ({
     ];
 
     let result = [participantId];
-    if (hasDataCollectionModule) {
+    if (hasAndroidDataCollection) {
       result = [...result, ...androidData];
     }
-    if (iosSensorUseEnabled) {
+    if (hasIOSSensorDataCollection) {
       result = [...result, ...iosSensorData];
     }
 
-    if (hasTimeUseDiaryModule) {
+    if (hasTimeUseDiary) {
       result = [...result, ...tudData];
     }
 
@@ -211,7 +211,7 @@ const ParticipantRow = ({
               { pauseOrResume }
             </MenuItem>
             {/* {
-              hasTimeUseDiaryModule && (
+              hasTimeUseDiary && (
                 <MenuItem
                     data-action-id={TOGGLE_TUD_SUBMISSION_HISTORY_MODAL}
                     onClick={handleMenuItemClick}>
