@@ -11,15 +11,13 @@ import {
   Tooltip,
   Typography
 } from 'lattice-ui-kit';
-import { DateTimeUtils, LangUtils } from 'lattice-utils';
-import { DateTime } from 'luxon';
+import { LangUtils } from 'lattice-utils';
 
 import copyToClipboard from '../../../utils/copyToClipboard';
 import type { Study } from '../../../common/types';
 
 const { NEUTRAL } = Colors;
 
-const { formatDateTime } = DateTimeUtils;
 const { isNonEmptyString } = LangUtils;
 
 const StyledTag = styled(Tag)`
@@ -34,7 +32,6 @@ const StudyDetails = ({ study } :{ study :Study}) => {
     return '---';
   };
 
-  const lastUpdated = formatDateTime(study.updatedAt, DateTime.DATETIME_SHORT);
   const { notificationsEnabled } = study;
   const details = [
     { label: 'Title', value: study.title },
@@ -47,18 +44,6 @@ const StudyDetails = ({ study } :{ study :Study}) => {
 
   return (
     <Box>
-      <Typography
-          mb="20px"
-          style={{ color: NEUTRAL.N500 }}
-          variant="subtitle2">
-        Last Updated
-
-        <Box component="span" ml="20px" color={NEUTRAL.N400}>
-          { lastUpdated }
-        </Box>
-      </Typography>
-      <Box mb="20px" />
-
       {
         details.map((detail) => (
           <Box mb={2} key={detail.label}>

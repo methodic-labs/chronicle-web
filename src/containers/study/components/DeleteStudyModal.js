@@ -43,9 +43,10 @@ const DeleteStudyModal = ({
   const handleOnDelete = () => {
     if (studyTitle === study.title) {
       setInputError(false);
-      dispatch(deleteStudy({
-        [STUDY_ID]: study.id
-      }));
+      // TODO: enable delete study
+      // dispatch(deleteStudy({
+      //   [STUDY_ID]: study.id
+      // }));
     }
     else {
       setInputError(true);
