@@ -39,6 +39,7 @@ import {
   GET_STUDY_SETTINGS,
   INITIALIZE_STUDY,
   REGISTER_PARTICIPANT,
+  REMOVE_STUDY_ON_DELETE,
   UPDATE_STUDY,
   VERIFY_PARTICIPANT,
   changeEnrollmentStatus,
@@ -84,6 +85,11 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case RESET_REQUEST_STATES: {
       return resetRequestStatesReducer(state, action);
+    }
+
+    case REMOVE_STUDY_ON_DELETE: {
+      const { studyId } = action;
+      return state.deleteIn([STUDIES, studyId]);
     }
 
     case changeEnrollmentStatus.case(action.type): {

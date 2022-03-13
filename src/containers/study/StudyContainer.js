@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,11 +19,13 @@ import {
 } from 'lattice-ui-kit';
 import { useBoolean, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
 
 import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from './actions';
 import { DeleteStudyModal, StudyDetails, StudyDetailsModal } from './components';
 
+import * as Routes from '../../core/router/Routes';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectMyKeys } from '../../core/redux/selectors';
 import type { Study, UUID } from '../../common/types';
@@ -86,25 +88,16 @@ const StudyContainer = ({
 }) => {
 
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDeleteModalVisible, showDeleteModal, hideDeleteModal] = useBoolean(false);
 
   const deleteStudyRS = useRequestState(['studies', DELETE_STUDY]);
 
-  // 2022-03-11 disable delete studies for now
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
-
-  // After deleting study, redirect to root
-  useEffect(() => {
-    if (deleteStudyRS === RequestStates.SUCCESS) {
-      setTimeout(() => {
-        dispatch(removeStudyOnDelete(study.id));
-        dispatch(resetRequestStates([DELETE_STUDY]));
-      }, 2000);
-    }
-  }, [deleteStudyRS, dispatch, study]);
 
   const handleOnClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -116,6 +109,10 @@ const StudyContainer = ({
 
   const onCloseDeleteModal = () => {
     hideDeleteModal();
+    if (deleteStudyRS === RequestStates.SUCCESS) {
+      dispatch(removeStudyOnDelete(study.id));
+      history.push(Routes.ROOT);
+    }
     dispatch(resetRequestStates([DELETE_STUDY]));
   };
 
@@ -168,9 +165,9 @@ const StudyContainer = ({
               Edit Details
             </MenuItem>
             <MenuItem
-                disabled
+                disabled={!isOwner}
                 onClick={onShowDeleteModal}>
-              Delete - coming soon
+              Delete
             </MenuItem>
           </Menu>
         </Box>
