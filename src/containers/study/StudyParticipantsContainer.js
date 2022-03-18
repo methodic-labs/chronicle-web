@@ -277,6 +277,7 @@ const StudyParticipantsContainer = ({
                   hasAndroidDataCollection={hasAndroidDataCollection}
                   hasTimeUseDiary={hasTimeUseDiary}
                   isVisible={isInfoModalOpen}
+                  hasIOSSensorDataCollection={hasIOSSensorDataCollection}
                   participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                   studyId={study.id} />
               <ChangeEnrollmentModal
