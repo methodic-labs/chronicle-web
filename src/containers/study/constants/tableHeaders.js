@@ -96,14 +96,15 @@ const PARTICIPANT_ID_COLUMN = {
   }
 };
 
-const SELECT_PARTICIPANTS_COLUMN = {
-  key: 'select_participants',
-  label: '',
-  sortable: false,
-  cellStyle: {
-    width: '50px'
-  }
-};
+// 2022-03-24 not needed for now. Will restore later
+// const SELECT_PARTICIPANTS_COLUMN = {
+//   key: 'select_participants',
+//   label: '',
+//   sortable: false,
+//   cellStyle: {
+//     width: '50px'
+//   }
+// };
 
 const ACTIONS_COLUMN = {
   key: 'actions',
@@ -140,7 +141,7 @@ const getColumnsList = (
   hasIOSSensorDataCollection :boolean
 ) => {
   // 2022-03-11 remove SELECT_PARTICIPANTS_COLUMN for now
-  let result = [SELECT_PARTICIPANTS_COLUMN, PARTICIPANT_ID_COLUMN];
+  let result = [PARTICIPANT_ID_COLUMN];
   if (hasAndroidDataCollection) {
     result = result.concat(ANDROID_COLUMNS);
   }

@@ -54,7 +54,7 @@ const TableHeader = ({
   return (
     <Grid container spacing={2}>
       <Grid container spacing={2} item xs={12} sm={6} md={9}>
-        <Grid item xs={12} md={6}>
+        { /* <Grid item xs={12} md={6}>
           <Box display="flex" justifyContent="flex-start" width="100%">
             <Checkbox
                 checked={selectedParticipants !== 0}
@@ -87,8 +87,8 @@ const TableHeader = ({
               </MenuItem>
             </Menu>
           </Box>
-        </Grid>
-        <Grid item xs={12} md={6}>
+        </Grid> */ }
+        <Grid item xs={12} md={12}>
           <SearchInput placeholder="Filter participants" onChange={handleOnChange} />
         </Grid>
       </Grid>
