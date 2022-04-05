@@ -137,7 +137,6 @@ type Props = {
   onCloseModal :() => void;
   participantEKID :UUID;
   participantId :UUID;
-  studyEKID :UUID;
   studyId :UUID;
 }
 const DownloadQuestionnaireResponses = (props :Props) => {
@@ -146,7 +145,6 @@ const DownloadQuestionnaireResponses = (props :Props) => {
     onCloseModal,
     participantEKID,
     participantId,
-    studyEKID,
     studyId
   } = props;
 
@@ -159,7 +157,7 @@ const DownloadQuestionnaireResponses = (props :Props) => {
 
   // selectors
   const studyQuestionnaires = useSelector(
-    (state) => state.getIn(['questionnaire', STUDY_QUESTIONNAIRES, studyEKID], Map())
+    (state) => state.getIn(['questionnaire', STUDY_QUESTIONNAIRES, studyId], Map())
   );
   const questionsByQuestionnaireId = useSelector(
     (state) => state.getIn(['questionnaire', QUESTIONNAIRE_QUESTIONS], Map())
@@ -218,9 +216,9 @@ const DownloadQuestionnaireResponses = (props :Props) => {
 
   useEffect(() => {
     if (studyQuestionnaires.isEmpty()) {
-      dispatch(getStudyQuestionnaires(studyEKID));
+      dispatch(getStudyQuestionnaires(studyId));
     }
-  }, [dispatch, studyEKID, studyQuestionnaires]);
+  }, [dispatch, studyId, studyQuestionnaires]);
 
   // create select options for questionnaire
   useEffect(() => {

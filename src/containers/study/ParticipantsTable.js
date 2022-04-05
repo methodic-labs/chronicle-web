@@ -9,38 +9,73 @@ import { Table } from 'lattice-ui-kit';
 import ParticipantRow from './components/ParticipantRow';
 import getHeaders from './constants/tableHeaders';
 
+import { PARTICIPANT_ID } from '../../common/constants';
+import type { Participant, ParticipantStats } from '../../common/types';
+
 const TableWrapper = styled.div`
-  overflow-x: scroll;
+  > div:nth-child(1) {
+    overflow-x: auto;
+  }
 
   table {
-    min-width: 960px;
+    margin-top: 20px;
+
+    th {
+      background-color: inherit;
+      border: none;
+      border-bottom: 1px solid black;
+      font-size: 14px;
+      padding: 10px;
+    }
+
+    td {
+      font-size: 15px;
+      padding: 10px;
+    }
+
+    th:first-child,
+    td:first-child {
+      position: sticky;
+      left: 0;
+      background: white;
+      z-index: 500;
+    }
+
+    th:last-child,
+    td:last-child {
+      position: sticky;
+      right: 0;
+      background: white;
+      z-index: 500;
+      text-align: right;
+    }
   }
 `;
 
-type Props = {
-  hasDeletePermission :Boolean;
-  orgHasDataCollectionModule :Boolean;
-  orgHasSurveyModule :Boolean;
-  participants :Map<UUID, Map>;
-};
+const ParticipantsTable = ({
+  hasDeletePermission,
+  hasDataCollectionModule,
+  hasTimeUseDiaryModule,
+  participants,
+  participantStats,
+} :{
+  hasDeletePermission :boolean;
+  hasDataCollectionModule :boolean;
+  hasTimeUseDiaryModule :boolean;
+  participants :Map<UUID, Participant>;
+  participantStats :{ [string] :ParticipantStats };
+}) => {
 
-const ParticipantsTable = (props :Props) => {
-  const {
-    hasDeletePermission,
-    orgHasDataCollectionModule,
-    orgHasSurveyModule,
-    participants,
-  } = props;
-
-  const tableHeaders = getHeaders(orgHasSurveyModule, orgHasDataCollectionModule);
+  const tableHeaders = getHeaders(hasTimeUseDiaryModule, hasDataCollectionModule);
 
   const components = {
     Row: ({ data: rowData } :any) => (
       <ParticipantRow
-          orgHasSurveyModule={orgHasSurveyModule}
-          orgHasDataCollectionModule={orgHasDataCollectionModule}
-          data={rowData}
-          hasDeletePermission={hasDeletePermission} />
+          hasDeletePermission={hasDeletePermission}
+          hasDataCollectionModule={hasDataCollectionModule}
+          hasTimeUseDiaryModule={hasTimeUseDiaryModule}
+          participant={rowData}
+          stats={participantStats[rowData[PARTICIPANT_ID]] || {}} />
     )
   };
 
@@ -51,9 +86,10 @@ const ParticipantsTable = (props :Props) => {
           data={participants.valueSeq().toJS()}
           headers={tableHeaders}
           paginated
-          rowsPerPageOptions={[5, 20, 50]} />
+          rowsPerPageOptions={[20, 50, 100]} />
     </TableWrapper>
   );
 };
 
-export default memo<Props>(ParticipantsTable);
+// $FlowFixMe
+export default memo(ParticipantsTable);

@@ -11,8 +11,9 @@ export const ACTIONS = {
   NEXT_STEP: 'next_step',
   OTHER_CHILD_SELECT_TIME: 'other_child_select_time',
   PREV_STEP: 'prev_step',
+  SELECT_TIME_RANGE: 'select_time_range',
   SHOW_CONFIRM_MODAL: 'show_confirm_modal',
-  TOGGLE_INSTRUCTIONS_MODAL: 'toggle_instructions_modal'
+  TOGGLE_INSTRUCTIONS_MODAL: 'toggle_instructions_modal',
 };
 
 export default HourlySurveyDispatch;

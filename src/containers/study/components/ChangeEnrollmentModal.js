@@ -6,14 +6,18 @@ import { ActionModal, Colors } from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
-import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
+import { ParticipationStatuses } from '../../../common/constants';
+import type { ParticipationStatus } from '../../../common/types';
 
-const { ENROLLED } = EnrollmentStatuses;
+const {
+  ENROLLED,
+  NOT_ENROLLED,
+} = ParticipationStatuses;
 const { NEUTRAL } = Colors;
 
 type Props = {
   enrollmentStatus :string;
-  handleOnChangeEnrollment :() => void;
+  handleOnChangeEnrollment :(status :ParticipationStatus) => void;
   handleOnClose :() => void;
   isVisible :boolean;
   participantId :UUID;
@@ -36,6 +40,11 @@ const ChangeEnrollment = ({
   }, [isVisible]);
 
   const completedAction = enrollmentStatus === ENROLLED ? 'resumed' : 'paused';
+
+  const handleOnConfirm = () => {
+    const newStatus = enrollmentStatus === ENROLLED ? NOT_ENROLLED : ENROLLED;
+    handleOnChangeEnrollment(newStatus);
+  };
 
   const requestStateComponents = {
     [RequestStates.STANDBY]: (
@@ -65,11 +74,11 @@ const ChangeEnrollment = ({
     )
   };
 
-  const title = `${action.charAt(0).toUpperCase()}${action.substr(1)} Android Data Collection`;
+  const title = `${action.charAt(0).toUpperCase()}${action.substr(1)} Enrollment`;
   return (
     <ActionModal
         isVisible={isVisible}
-        onClickPrimary={handleOnChangeEnrollment}
+        onClickPrimary={handleOnConfirm}
         onClose={handleOnClose}
         requestState={requestState}
         requestStateComponents={requestStateComponents}

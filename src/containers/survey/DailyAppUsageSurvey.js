@@ -5,7 +5,6 @@ import {
   AppContainerWrapper,
   AppContentWrapper,
   AppHeaderWrapper,
-  // $FlowFixMe
   Box,
   Spinner
 } from 'lattice-ui-kit';
@@ -17,8 +16,8 @@ import type { RequestState } from 'redux-reqseq';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import SurveyForm from './components/SurveyForm';
 
-import BasicErrorComponent from '../shared/BasicErrorComponent';
-import OpenLatticeIcon from '../../assets/images/ol_icon.png';
+import { OpenLatticeIconSVG } from '../../assets/svg/icons';
+import { BasicErrorComponent } from '../../common/components';
 
 const { isPending } = ReduxUtils;
 
@@ -26,9 +25,8 @@ type Props = {
   data :Map;
   date :string;
   submitSurveyRS :?RequestState;
-  getUserAppsRS :?RequestState;
+  getAppUsageSurveyDataRS :?RequestState;
   participantId :string;
-  organizationId :UUID;
   studyId :UUID ;
 }
 
@@ -37,13 +35,12 @@ const SurveyContainer = (props :Props) => {
     data,
     date,
     studyId,
-    organizationId,
     participantId,
-    getUserAppsRS,
+    getAppUsageSurveyDataRS,
     submitSurveyRS,
   } = props;
 
-  if (isPending(getUserAppsRS)) {
+  if (isPending(getAppUsageSurveyDataRS)) {
     return (
       <Box mt="60px" textAlign="center">
         <Spinner size="2x" />
@@ -53,13 +50,13 @@ const SurveyContainer = (props :Props) => {
 
   return (
     <AppContainerWrapper>
-      <AppHeaderWrapper appIcon={OpenLatticeIcon} appTitle="Chronicle" />
+      <AppHeaderWrapper appIcon={OpenLatticeIconSVG} appTitle="Chronicle" />
       <AppContentWrapper>
         {
-          getUserAppsRS === RequestStates.FAILURE && <BasicErrorComponent />
+          getAppUsageSurveyDataRS === RequestStates.FAILURE && <BasicErrorComponent />
         }
         {
-          getUserAppsRS === RequestStates.SUCCESS && (
+          getAppUsageSurveyDataRS === RequestStates.SUCCESS && (
             <>
               {
                 submitSurveyRS === RequestStates.SUCCESS
@@ -73,7 +70,6 @@ const SurveyContainer = (props :Props) => {
                         { DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL) }
                       </Box>
                       <SurveyForm
-                          organizationId={organizationId}
                           participantId={participantId}
                           studyId={studyId}
                           submitSurveyRS={submitSurveyRS}

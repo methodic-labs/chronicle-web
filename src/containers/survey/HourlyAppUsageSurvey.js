@@ -1,7 +1,10 @@
 // @flow
 import { useEffect, useReducer } from 'react';
 
-import { Map, Set, fromJS } from 'immutable';
+import {
+  Map,
+  Set,
+} from 'immutable';
 import {
   AppContainerWrapper,
   AppContentWrapper,
@@ -18,22 +21,20 @@ import HourlyUsageSurveyAppBar from './components/HourlyUsageSurveyAppBar';
 import InstructionsModal from './components/InstructionsModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch';
-import { submitSurvey } from './SurveyActions';
+import { submitAppUsageSurvey } from './actions';
+import { createHourlySurveySubmissionData } from './utils';
 
-import BasicErrorComponent from '../shared/BasicErrorComponent';
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
+import { BasicErrorComponent } from '../../common/components';
 
 const { isFailure, isSuccess, isPending } = ReduxUtils;
 
-const { USER_FQN } = PROPERTY_TYPE_FQNS;
-
 const initialState = {
-  childHourlySelections: Map().asMutable(),
   childOnlyApps: Set().asMutable(),
+  initialTimeRangeSelections: Map().asMutable(),
   isConfirmModalVisible: false,
   isInstructionsModalVisible: false,
   isSubmissionConfirmed: false,
-  otherChildHourlySelections: Map().asMutable(),
+  otherTimeRangeSelections: Map().asMutable(),
   sharedApps: Set().asMutable(),
   step: 0,
 };
@@ -65,21 +66,6 @@ const reducer = (state, action) => {
         sharedApps: selected
       };
     }
-    case ACTIONS.OTHER_CHILD_SELECT_TIME: {
-      const { appName, id } = action;
-      const { otherChildHourlySelections } = state;
-
-      if (otherChildHourlySelections.get(appName, Set()).has(id)) {
-        otherChildHourlySelections.update(appName, Set(), (current) => current.delete(id));
-      }
-      else {
-        otherChildHourlySelections.update(appName, Set(), (current) => current.add(id));
-      }
-      return {
-        ...state,
-        otherChildHourlySelections
-      };
-    }
 
     case ACTIONS.TOGGLE_INSTRUCTIONS_MODAL: {
       const { visible } = action;
@@ -89,19 +75,27 @@ const reducer = (state, action) => {
       };
     }
 
-    case ACTIONS.CHILD_SELECT_TIME: {
-      const { appName, id } = action;
-      const { childHourlySelections } = state;
+    case ACTIONS.SELECT_TIME_RANGE: {
+      const { appName, timeRange, initial } = action;
+      const { initialTimeRangeSelections, otherTimeRangeSelections } = state;
 
-      if (childHourlySelections.get(appName, Set()).has(id)) {
-        childHourlySelections.update(appName, Set(), (current) => current.delete(id));
-      }
-      else {
-        childHourlySelections.update(appName, Set(), (current) => current.add(id));
+      const updatedValue = initial ? initialTimeRangeSelections : otherTimeRangeSelections;
+
+      updatedValue.update(
+        appName,
+        Set(),
+        (current) => (current.has(timeRange) ? current.delete(timeRange) : current.add(timeRange))
+      );
+
+      if (initial) {
+        return {
+          ...state,
+          initialTimeRangeSelections: updatedValue
+        };
       }
       return {
         ...state,
-        childHourlySelections
+        remainingTimeRangeOptions: updatedValue
       };
     }
     case ACTIONS.NEXT_STEP: {
@@ -144,8 +138,8 @@ type Props = {
   data :Map;
   date :string;
   submitSurveyRS :?RequestState;
+  getAppUsageSurveyDataRS :?RequestState;
   participantId :string;
-  organizationId :UUID;
   studyId :UUID ;
 };
 
@@ -154,9 +148,9 @@ const HourlyAppUsageSurvey = (props :Props) => {
     data,
     date,
     studyId,
-    organizationId,
     participantId,
     submitSurveyRS,
+    getAppUsageSurveyDataRS,
   } = props;
 
   const storeDispatch = useDispatch();
@@ -167,45 +161,39 @@ const HourlyAppUsageSurvey = (props :Props) => {
     step,
     childOnlyApps,
     isConfirmModalVisible,
-    childHourlySelections,
-    otherChildHourlySelections,
+    initialTimeRangeSelections,
+    otherTimeRangeSelections,
     isSubmissionConfirmed,
     isInstructionsModalVisible
   } = state;
 
   useEffect(() => {
-    const createSubmissionData = () => {
-
-      const childOnlyIds = childOnlyApps
-        .map((app) => data.getIn([app, 'entities']).map((entity) => entity.keySeq())).flatten();
-
-      const otherIds = childHourlySelections.valueSeq()
-        .concat(otherChildHourlySelections.valueSeq()).toSet().flatten();
-
-      return childOnlyIds.concat(otherIds)
-        .toMap()
-        .mapEntries((entry) => [entry[0], fromJS({ [USER_FQN.toString()]: ['Target child'] })])
-        .toJS();
-    };
-
     if (isSubmissionConfirmed) {
-      storeDispatch(submitSurvey({
-        submissionData: createSubmissionData(),
-        organizationId,
+      const timeRangeSelections = initialTimeRangeSelections.mergeWith(
+        (oldVal, newVal) => oldVal.concat(newVal),
+        otherTimeRangeSelections
+      );
+      const submissionData = createHourlySurveySubmissionData(
+        data,
+        childOnlyApps,
+        timeRangeSelections
+      );
+
+      storeDispatch(submitAppUsageSurvey({
+        data: submissionData,
         participantId,
-        studyId
+        studyId,
       }));
     }
   }, [
-    isSubmissionConfirmed,
-    childHourlySelections,
     childOnlyApps,
     data,
-    organizationId,
-    otherChildHourlySelections,
+    initialTimeRangeSelections,
+    isSubmissionConfirmed,
     participantId,
+    otherTimeRangeSelections,
     storeDispatch,
-    studyId
+    studyId,
   ]);
 
   const hasSubmitted = isSuccess(submitSurveyRS) || isFailure(submitSurveyRS);
@@ -232,7 +220,13 @@ const HourlyAppUsageSurvey = (props :Props) => {
               {
                 hasSubmitted
                   ? <SubmissionCompleted />
-                  : <HourlySurvey data={data} state={state} isSubmitting={isSubmitting} />
+                  : (
+                    <HourlySurvey
+                        data={data}
+                        getAppUsageSurveyDataRS={getAppUsageSurveyDataRS}
+                        isSubmitting={isSubmitting}
+                        state={state} />
+                  )
               }
             </CardSegment>
           </Card>

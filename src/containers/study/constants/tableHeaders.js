@@ -3,14 +3,14 @@
 import { COLUMN_FIELDS, HEADER_NAMES } from './tableColumns';
 
 const {
-  ANDROID_DATA_DURATION,
+  ANDROID_DATA_UNIQUE_DAYS,
   ENROLLMENT_STATUS,
   FIRST_ANDROID_DATA,
   FIRST_TUD_SUBMISSION,
   LAST_ANDROID_DATA,
   LAST_TUD_SUBMISSION,
   PARTICIPANT_ID,
-  TUD_SUBMISSION_DURATION,
+  TUD_SUBMISSION_UNIQUE_DAYS,
 } = COLUMN_FIELDS;
 
 const TUD_COLUMNS = [
@@ -29,8 +29,8 @@ const TUD_COLUMNS = [
     }
   },
   {
-    key: TUD_SUBMISSION_DURATION,
-    label: HEADER_NAMES[TUD_SUBMISSION_DURATION],
+    key: TUD_SUBMISSION_UNIQUE_DAYS,
+    label: HEADER_NAMES[TUD_SUBMISSION_UNIQUE_DAYS],
     sortable: false,
     cellStyle: {
       fontWeight: 500,
@@ -54,8 +54,8 @@ const ANDROID_COLUMNS = [
     }
   },
   {
-    key: ANDROID_DATA_DURATION,
-    label: HEADER_NAMES[ANDROID_DATA_DURATION],
+    key: ANDROID_DATA_UNIQUE_DAYS,
+    label: HEADER_NAMES[ANDROID_DATA_UNIQUE_DAYS],
     sortable: false,
     cellStyle: {
       fontWeight: 500,
@@ -99,30 +99,37 @@ type ColumnType = {
   }
 };
 
-export default function getHeaders(orgHasSurveyModule :Boolean, orgHasDataCollectionModule :Boolean) {
-  let data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
-  if (orgHasSurveyModule && !orgHasDataCollectionModule) {
-    data = [PARTICIPANT_ID_COLUMN, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
-  }
-  if (orgHasDataCollectionModule && !orgHasSurveyModule) {
-    data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+const getColumnsList = (hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) => {
+  let result = [PARTICIPANT_ID_COLUMN];
+  if (hasDataCollectionModule) {
+    result = result.concat(ANDROID_COLUMNS);
   }
 
-  const numColumns = data.length;
+  if (hasTimeUseDiaryModule) {
+    result = result.concat(TUD_COLUMNS);
+  }
+
+  // TODO: Need to update this later for ios sensor
+
+  result.push(STATUS_COLUMN);
+  result.push(ACTIONS_COLUMN);
+
+  return result;
+};
+
+export default function getHeaders(hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) {
+  const columns = getColumnsList(hasTimeUseDiaryModule, hasDataCollectionModule);
+
+  const numColumns = columns.length;
   const lastIndex = numColumns - 1;
 
-  // "actions" column will occupy 5% width, and other columns will share remanining width equally
-  const defaultColumnWidth = 95.0 / (numColumns - 1);
-
-  return data.map<ColumnType>((column :ColumnType, index) => {
-    if (index === lastIndex) {
-      return column;
-    }
+  return columns.map<ColumnType>((column :ColumnType, index) => {
+    const width = index === lastIndex ? '50px' : '200px';
     return {
       ...column,
       cellStyle: {
         ...column.cellStyle,
-        width: `${defaultColumnWidth}%`
+        width
       }
     };
   });

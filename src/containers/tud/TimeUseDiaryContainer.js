@@ -9,7 +9,6 @@ import { Paged } from 'lattice-fabricate';
 import {
   AppContainerWrapper,
   AppContentWrapper,
-  // $FlowFixMe
   Box,
   Card,
   CardSegment,
@@ -31,7 +30,7 @@ import SUPPORTED_LANGUAGES from './constants/SupportedLanguages';
 import SubmissionErrorModal from './components/SubmissionErrorModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import TranslationKeys from './constants/TranslationKeys';
-import { SUBMIT_TUD_DATA, VERIFY_TUD_LINK, verifyTudLink } from './TimeUseDiaryActions';
+import { SUBMIT_TIME_USE_DIARY } from './actions';
 import { PAGE_NUMBERS } from './constants/GeneralConstants';
 import { PROPERTY_CONSTS } from './constants/SchemaConstants';
 import { usePrevious } from './hooks';
@@ -44,7 +43,15 @@ import {
 } from './utils';
 
 import * as LanguageCodes from '../../utils/constants/LanguageCodes';
+import { BasicErrorComponent } from '../../common/components';
+import {
+  PARTICIPANT_ID,
+  STUDIES,
+  STUDY_ID,
+  TIME_USE_DIARY,
+} from '../../common/constants';
 import { DEFAULT_LANGUAGE_COOKIE } from '../../utils/constants/StorageConstants';
+import { VERIFY_PARTICIPANT, verifyParticipant } from '../study/actions';
 
 const { isPending, isFailure } = ReduxUtils;
 
@@ -97,22 +104,23 @@ const TimeUseDiaryContainer = () => {
   const [shouldReset, setShouldReset] = useState(false);
 
   // selectors
-  const submitRequestState :?RequestState = useRequestState(['tud', SUBMIT_TUD_DATA]);
-  const verifyTudLinkRS :?RequestState = useRequestState(['tud', VERIFY_TUD_LINK]);
+  const submitTimeUseDiaryRS :?RequestState = useRequestState([TIME_USE_DIARY, SUBMIT_TIME_USE_DIARY]);
+  const verifyParticipantRS :?RequestState = useRequestState([STUDIES, VERIFY_PARTICIPANT]);
 
   useEffect(() => {
-    dispatch(verifyTudLink({
-      organizationId,
-      studyId,
-      participantId
-    }));
-  }, [dispatch, organizationId, studyId, participantId]);
+    dispatch(
+      verifyParticipant({
+        [PARTICIPANT_ID]: participantId,
+        [STUDY_ID]: studyId,
+      })
+    );
+  }, [dispatch, studyId, participantId]);
 
   useEffect(() => {
-    if (submitRequestState === RequestStates.FAILURE) {
+    if (submitTimeUseDiaryRS === RequestStates.FAILURE) {
       setIsErrorModalVisible(true);
     }
-  }, [submitRequestState]);
+  }, [submitTimeUseDiaryRS]);
 
   // select default language
   useEffect(() => {
@@ -216,7 +224,7 @@ const TimeUseDiaryContainer = () => {
     && !isSummaryPage
     && !isNightActivityPage;
 
-  if (isPending(verifyTudLinkRS)) {
+  if (isPending(verifyParticipantRS)) {
     return (
       <AppContainerWrapper>
         <HeaderComponent onChangeLanguage={onChangeLanguage} selectedLanguage={selectedLanguage} />
@@ -227,15 +235,15 @@ const TimeUseDiaryContainer = () => {
     );
   }
 
-  if (isFailure(verifyTudLinkRS)) {
+  if (isFailure(verifyParticipantRS)) {
     return (
       <AppContainerWrapper>
         <HeaderComponent onChangeLanguage={onChangeLanguage} selectedLanguage={selectedLanguage} />
-        <Box textAlign="center" mt="30px">
+        <BasicErrorComponent>
           <Typography>
             {t(TranslationKeys.ERROR_INVALID_URL)}
           </Typography>
-        </Box>
+        </BasicErrorComponent>
       </AppContainerWrapper>
     );
   }
@@ -255,7 +263,7 @@ const TimeUseDiaryContainer = () => {
             isVisible={isErrorModalVisible}
             trans={t} />
         {
-          submitRequestState === RequestStates.SUCCESS
+          submitTimeUseDiaryRS === RequestStates.SUCCESS
             ? (
               <SubmissionSuccessful trans={t} />
             )
@@ -285,7 +293,7 @@ const TimeUseDiaryContainer = () => {
                             resetSurvey={resetSurvey}
                             shouldReset={shouldReset}
                             studyId={studyId}
-                            submitRequestState={submitRequestState}
+                            submitRequestState={submitTimeUseDiaryRS}
                             trans={t}
                             translationData={i18n.store.data}
                             updateFormState={updateFormState}

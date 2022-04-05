@@ -11,7 +11,6 @@ import { Map } from 'immutable';
 import { SearchApiActions, SearchApiSagas } from 'lattice-sagas';
 import { Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import selectOrganizations from '../selectors/selectOrganizations';
@@ -20,6 +19,7 @@ import { selectESIDByCollection, selectEntityTypeId } from '../../../core/edm/ED
 import { STUDIES } from '../../../core/edm/constants/EntityTemplateNames';
 import { ENTITY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { COUNT_ALL_STUDIES, countAllStudies } from '../actions';
+import type { WorkerResponse } from '../../../common/types';
 
 const { countEntitiesInSets } = SearchApiActions;
 const { countEntitiesInSetsWorker } = SearchApiSagas;

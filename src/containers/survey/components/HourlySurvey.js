@@ -1,30 +1,38 @@
 // @flow
 
-import { List, Map, Set } from 'immutable';
-// $FlowFixMe
+import { Map } from 'immutable';
 import { Box } from 'lattice-ui-kit';
+import { ReduxUtils } from 'lattice-utils';
+import type { RequestState } from 'redux-reqseq';
 
 import HourlySurveyInstructions from './HourlySurveyInstructions';
 import SelectAppUsageTimeSlots from './SelectAppUsageTimeSlots';
 import SelectAppsByUser from './SelectAppsByUser';
 import SurveyButtons from './SurveyButtons';
-import { ACTIONS } from './HourlySurveyDispatch';
+
+const { isFailure } = ReduxUtils;
 
 type Props = {
   data :Map;
   isSubmitting :boolean;
   state :Object;
+  getAppUsageSurveyDataRS :?RequestState
 };
 
 const HourlySurvey = (props :Props) => {
 
-  const { data, state, isSubmitting } = props;
+  const {
+    data,
+    getAppUsageSurveyDataRS,
+    isSubmitting,
+    state,
+  } = props;
 
   const {
     childOnlyApps,
     sharedApps,
-    childHourlySelections,
-    otherChildHourlySelections,
+    initialTimeRangeSelections,
+    otherTimeRangeSelections,
     step
   } = state;
 
@@ -44,26 +52,20 @@ const HourlySurvey = (props :Props) => {
     }
   };
 
-  const getChildApppsOtherOptions = () => {
-    const filtered = data.filter((val, key) => sharedApps.has(key)).asMutable();
-
-    filtered.forEach((val, appName) => {
-      const entities :List = val.get('entities');
-
-      const target = entities
-        .filterNot((entity) => childHourlySelections.get(appName, Set()).has(entity.keySeq().first()));
-
-      filtered.setIn([appName, 'entities'], target);
-    });
-    return filtered;
-  };
-
   const sharedAppsData = data.filterNot((val, key) => childOnlyApps.has(key));
-  const childAppsOptions = data.filter((val, key) => sharedApps.has(key));
+  const timeRangeOptions = data.filter((val, key) => sharedApps.has(key));
 
-  const childAppsOtherOptions = getChildApppsOtherOptions();
+  // const childAppsOtherOptions = getChildApppsOtherOptions();
 
   const buttonText = step === 0 ? 'Begin Survey' : 'Submit';
+
+  if (isFailure(getAppUsageSurveyDataRS)) {
+    return (
+      <Box textAlign="center">
+        Sorry, something went wrong. Please try refreshing the page, or contact support.
+      </Box>
+    );
+  }
 
   if (step === 0) {
     return (
@@ -94,18 +96,22 @@ const HourlySurvey = (props :Props) => {
       {
         step === 3 && (
           <SelectAppUsageTimeSlots
-              onChangeAction={ACTIONS.CHILD_SELECT_TIME}
-              appsData={childAppsOptions}
-              selected={childHourlySelections} />
+              data={data}
+              initial
+              initialSelections={Map()}
+              options={timeRangeOptions}
+              selected={initialTimeRangeSelections} />
         )
       }
 
       {
         step === 4 && (
           <SelectAppUsageTimeSlots
-              onChangeAction={ACTIONS.OTHER_CHILD_SELECT_TIME}
-              appsData={childAppsOtherOptions}
-              selected={otherChildHourlySelections} />
+              data={data}
+              initial={false}
+              initialSelections={initialTimeRangeSelections}
+              options={timeRangeOptions}
+              selected={otherTimeRangeSelections} />
         )
       }
       <SurveyButtons
