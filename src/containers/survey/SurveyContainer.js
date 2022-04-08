@@ -20,6 +20,7 @@ import {
   APP_USAGE_FREQUENCY,
   APP_USAGE_SURVEY,
   AppUsageFreqTypes,
+  DATA_COLLECTION,
   STUDIES,
 } from '../../common/constants';
 import { selectAppUsageSurveyData, selectStudySettings } from '../../core/redux/selectors';
@@ -49,7 +50,9 @@ const SurveyContainer = () => {
   const getStudySettingsRS :?RequestState = useRequestState([STUDIES, GET_STUDY_SETTINGS]);
   const submitSurveyRS :?RequestState = useRequestState([APP_USAGE_SURVEY, SUBMIT_APP_USAGE_SURVEY]);
 
-  const appUsageFreqType :AppUsageFreqType = studySettings.get(APP_USAGE_FREQUENCY) || AppUsageFreqTypes.DAILY;
+  const appUsageFreqType :AppUsageFreqType = studySettings.getIn(
+    [DATA_COLLECTION, APP_USAGE_FREQUENCY]
+  ) || AppUsageFreqTypes.DAILY;
 
   useEffect(() => {
     dispatch(getStudySettings(studyId));

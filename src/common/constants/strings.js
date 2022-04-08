@@ -41,6 +41,7 @@ export const CONTACT :'contact' = 'contact';
 export const CSRF_COOKIE :'ol_csrf_token' = 'ol_csrf_token';
 export const CSRF_TOKEN :'csrfToken' = 'csrfToken';
 export const DATASTORE :'datastore' = 'datastore';
+export const DATA_COLLECTION :'DataCollection' = 'DataCollection';
 export const DATA_TYPE :'dataType' = 'dataType';
 export const DATE :'date' = 'date';
 export const DESCRIPTION :'description' = 'description';
