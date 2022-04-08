@@ -112,6 +112,7 @@ export type Study = {
   notificationsEnabled :boolean;
   organizationIds :UUID[];
   settings :Object;
+  modules :Object;
   startedAt :string;
   storage :string;
   title :string;

@@ -27,16 +27,22 @@ const CreateStudyForm = ({
 
   const initialFormData = study ? createFormDataFromStudyEntity(schema, study) : {};
 
+  const getStudyFeatures = (features :[]) => {
+    const result = features.reduce((obj, feature) => ({
+      ...obj,
+      [feature]: study?.modules[feature] ?? {}
+    }), {});
+    return result;
+  };
+
   const handleSubmit = ({ formData } :Object) => {
     if (study) {
       const { features, ...rest } = formData.page1section1;
+
       const updated = {
         ...initialFormData?.page1section1,
         ...rest,
-        settings: {
-          ...study.settings,
-          components: features
-        }
+        modules: getStudyFeatures(features)
       };
       delete updated[FEATURES];
       dispatch(updateStudy({ [STUDY]: updated, [ID]: study.id }));
@@ -44,9 +50,7 @@ const CreateStudyForm = ({
     else {
       const { features, ...rest } = formData.page1section1;
       const studyDetails = {
-        settings: {
-          components: features
-        },
+        modules: getStudyFeatures(features),
         ...rest
       };
       dispatch(createStudy(studyDetails));

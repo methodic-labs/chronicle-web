@@ -24,7 +24,8 @@ export default function createFormDataFromStudyEntity(dataSchema :Object, study 
     const studyFields = getIn(properties, [pageSectionKey, 'properties'], {});
     Object.keys(studyFields).forEach((studyField) => {
       if (studyField === FEATURES) {
-        formData = setIn(formData, [pageSectionKey, studyField], study?.settings?.components || []);
+        const features = Object.keys(study.modules);
+        formData = setIn(formData, [pageSectionKey, studyField], features);
       }
       else {
         formData = setIn(formData, [pageSectionKey, studyField], study[studyField]);

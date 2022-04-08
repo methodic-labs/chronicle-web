@@ -92,8 +92,7 @@ const StudyRouter = () => {
   }
 
   if (isSuccess(initializeStudyRS) && study) {
-    const { components } = study.settings;
-    // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
+    const components = Object.keys(study.modules);
     const hasTimeUseDiary = components.includes(AppComponents.TIME_USE_DIARY);
     const hasAndroidDataCollection = components.includes(AppComponents.CHRONICLE_DATA_COLLECTION);
     const hasIOSSensorDataCollection = components.includes(AppComponents.IOS_SENSOR);
