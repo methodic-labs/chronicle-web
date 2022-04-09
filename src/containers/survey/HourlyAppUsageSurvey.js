@@ -22,11 +22,20 @@ import InstructionsModal from './components/InstructionsModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch';
 import { submitAppUsageSurvey } from './actions';
+import { SURVEY_STEPS } from './constants';
 import { createHourlySurveySubmissionData } from './utils';
 
 import { BasicErrorComponent } from '../../common/components';
 
 const { isFailure, isSuccess, isPending } = ReduxUtils;
+
+const {
+  SELECT_CHILD_APPS,
+  SELECT_SHARED_APPS,
+  RESOLVE_SHARED_APPS,
+  RESOLVE_OTHER_APPS,
+  INTRO
+} = SURVEY_STEPS;
 
 const initialState = {
   childOnlyApps: Set().asMutable(),
@@ -34,17 +43,69 @@ const initialState = {
   isConfirmModalVisible: false,
   isInstructionsModalVisible: false,
   isSubmissionConfirmed: false,
+  isFinalStep: false,
   otherTimeRangeSelections: Map().asMutable(),
   sharedApps: Set().asMutable(),
   step: 0,
+  surveyStep: INTRO,
+  sharedAppsOptionsCount: 0,
 };
 
 const reducer = (state, action) => {
+
+  const getNextStep = () => {
+    let isFinalStep = false;
+    let nextStep = '';
+    const {
+      surveyStep,
+      sharedApps,
+    } = state;
+    if (surveyStep === INTRO) {
+      nextStep = SELECT_CHILD_APPS;
+    }
+    if (surveyStep === SELECT_CHILD_APPS) {
+      nextStep = SELECT_SHARED_APPS;
+    }
+
+    if (surveyStep === SELECT_SHARED_APPS) {
+      if (sharedApps.isEmpty()) {
+        // No shared apps selected: skip time-resolution steps
+        isFinalStep = true;
+      }
+      else {
+        nextStep = RESOLVE_SHARED_APPS;
+      }
+    }
+    if (surveyStep === RESOLVE_SHARED_APPS) {
+      nextStep = RESOLVE_OTHER_APPS;
+      isFinalStep = true;
+    }
+
+    return { isFinalStep, nextStep };
+  };
+
+  const getPrevStep = () => {
+    const {
+      surveyStep
+    } = state;
+
+    if (surveyStep === RESOLVE_OTHER_APPS) {
+      return RESOLVE_SHARED_APPS;
+    }
+    if (surveyStep === RESOLVE_SHARED_APPS) {
+      return SELECT_SHARED_APPS;
+    }
+    if (surveyStep === SELECT_SHARED_APPS) {
+      return SELECT_CHILD_APPS;
+    }
+    return INTRO;
+  };
+
   switch (action.type) {
     case ACTIONS.ASSIGN_USER: {
       const { childOnly, appName } = action;
 
-      const { childOnlyApps, sharedApps } = state;
+      const { childOnlyApps, sharedApps, appsCount } = state;
 
       const selected = childOnly ? childOnlyApps : sharedApps;
 
@@ -56,9 +117,12 @@ const reducer = (state, action) => {
       }
 
       if (childOnly) {
+        // If all apps are indicated as having been used by child, skip all other steps and present button to submit
+        const isFinalStep = selected.size === appsCount;
         return {
           ...state,
-          childOnlyApps: selected
+          childOnlyApps: selected,
+          isFinalStep
         };
       }
       return {
@@ -76,10 +140,15 @@ const reducer = (state, action) => {
     }
 
     case ACTIONS.SELECT_TIME_RANGE: {
-      const { appName, timeRange, initial } = action;
-      const { initialTimeRangeSelections, otherTimeRangeSelections } = state;
+      const { appName, timeRange } = action;
+      const {
+        initialTimeRangeSelections,
+        otherTimeRangeSelections,
+        sharedAppsOptionsCount,
+        surveyStep,
+      } = state;
 
-      const updatedValue = initial ? initialTimeRangeSelections : otherTimeRangeSelections;
+      const updatedValue = surveyStep === RESOLVE_SHARED_APPS ? initialTimeRangeSelections : otherTimeRangeSelections;
 
       updatedValue.update(
         appName,
@@ -87,10 +156,17 @@ const reducer = (state, action) => {
         (current) => (current.has(timeRange) ? current.delete(timeRange) : current.add(timeRange))
       );
 
-      if (initial) {
+      if (surveyStep === RESOLVE_SHARED_APPS) {
+        // Here we count the number of selections so far and compare with the total number of
+        // possible selections. If equal, indicate survey as done by setting isFinalStep = true
+        const currentSelectionsCount = updatedValue.keySeq().toSet().map((key) => updatedValue.get(key).size)
+          .reduce((prev, next) => prev + next);
+
+        const isFinalStep = currentSelectionsCount === sharedAppsOptionsCount;
         return {
           ...state,
-          initialTimeRangeSelections: updatedValue
+          initialTimeRangeSelections: updatedValue,
+          isFinalStep
         };
       }
       return {
@@ -99,15 +175,38 @@ const reducer = (state, action) => {
       };
     }
     case ACTIONS.NEXT_STEP: {
+      const {
+        surveyStep,
+        sharedAppsOptionsCount,
+        appsData,
+        sharedApps
+      } = state;
+      let optionsCount = sharedAppsOptionsCount;
+
+      if (surveyStep === SELECT_SHARED_APPS) {
+        // When navigating away from the shared apps selection page,
+        // we calculate total number of possible selections available for next step(s) of survey
+        optionsCount = sharedApps.asImmutable()
+          .map((app) => appsData.getIn([app, 'data']).size)
+          .reduce((prev, next) => prev + next);
+      }
+
+      const { isFinalStep, nextStep } = getNextStep();
       return {
         ...state,
-        step: state.step + 1
+        isFinalStep,
+        step: state.step + 1,
+        surveyStep: nextStep,
+        sharedApps: sharedApps.asMutable(),
+        sharedAppsOptionsCount: optionsCount
       };
     }
     case ACTIONS.PREV_STEP: {
       return {
         ...state,
-        step: state.step - 1
+        isFinalStep: false,
+        step: state.step - 1,
+        surveyStep: getPrevStep(),
       };
     }
     case ACTIONS.CONFIRM_SUBMIT: {
@@ -155,16 +254,21 @@ const HourlyAppUsageSurvey = (props :Props) => {
 
   const storeDispatch = useDispatch();
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    appsData: data,
+    appsCount: data.keySeq().size
+  });
 
   const {
     step,
+    surveyStep,
     childOnlyApps,
     isConfirmModalVisible,
     initialTimeRangeSelections,
     otherTimeRangeSelections,
     isSubmissionConfirmed,
-    isInstructionsModalVisible
+    isInstructionsModalVisible,
   } = state;
 
   useEffect(() => {
@@ -236,7 +340,7 @@ const HourlyAppUsageSurvey = (props :Props) => {
         isConfirmModalVisible && <ConfirmSurveySubmissionModal />
       }
       {
-        isInstructionsModalVisible && <InstructionsModal step={step} />
+        isInstructionsModalVisible && <InstructionsModal step={step} surveyStep={surveyStep} />
       }
     </HourlySurveyDispatch.Provider>
   );
