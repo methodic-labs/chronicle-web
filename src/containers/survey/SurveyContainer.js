@@ -5,7 +5,16 @@
 import { useEffect } from 'react';
 
 import qs from 'qs';
-import { Box, Spinner } from 'lattice-ui-kit';
+import {
+  Alert,
+  AppContainerWrapper,
+  AppContentWrapper,
+  AppHeaderWrapper,
+  Box,
+  Card,
+  CardSegment,
+  Spinner
+} from 'lattice-ui-kit';
 import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +25,7 @@ import DailyAppUsageSurvey from './DailyAppUsageSurvey';
 import HourlyAppUsageSurvey from './HourlyAppUsageSurvey';
 import { GET_APP_USAGE_SURVEY_DATA, SUBMIT_APP_USAGE_SURVEY, getAppUsageSurveyData } from './actions';
 
+import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import {
   APP_USAGE_FREQUENCY,
   APP_USAGE_SURVEY,
@@ -27,7 +37,12 @@ import { selectAppUsageSurveyData, selectStudySettings } from '../../core/redux/
 import { GET_STUDY_SETTINGS, getStudySettings } from '../study/actions';
 import type { AppUsageFreqType } from '../../common/types';
 
-const { isPending, isStandby } = ReduxUtils;
+const {
+  isPending,
+  isStandby,
+  isSuccess,
+  isFailure
+} = ReduxUtils;
 
 const SurveyContainer = () => {
   const dispatch = useDispatch();
@@ -60,19 +75,39 @@ const SurveyContainer = () => {
 
   // get apps
   useEffect(() => {
-    dispatch(getAppUsageSurveyData({
-      appUsageFreqType,
-      date,
-      participantId,
-      studyId,
-    }));
-  }, [date, participantId, studyId, appUsageFreqType, dispatch]);
+    if (isSuccess(getStudySettingsRS)) {
+      dispatch(getAppUsageSurveyData({
+        appUsageFreqType,
+        date,
+        participantId,
+        studyId,
+      }));
+    }
+
+  }, [date, participantId, studyId, appUsageFreqType, dispatch, getStudySettingsRS]);
 
   if (isPending(getStudySettingsRS) || isStandby(getStudySettingsRS) || isPending(getAppUsageSurveyDataRS)) {
     return (
       <Box mt="60px" textAlign="center">
         <Spinner size="2x" />
       </Box>
+    );
+  }
+
+  if (isFailure(getStudySettingsRS) || isFailure(getAppUsageSurveyDataRS)) {
+    return (
+      <AppContainerWrapper>
+        <AppHeaderWrapper appIcon={OpenLatticeIconSVG} appTitle="Chronicle" />
+        <AppContentWrapper>
+          <Card>
+            <CardSegment>
+              <Alert severity="error">
+                Sorry, An error occurred when fetching survey data. Please try again later.
+              </Alert>
+            </CardSegment>
+          </Card>
+        </AppContentWrapper>
+      </AppContainerWrapper>
     );
   }
 

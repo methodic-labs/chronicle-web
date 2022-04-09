@@ -69,7 +69,7 @@ function* getAppUsageSurveyDataWorker(action :SequenceAction) :Saga<WorkerRespon
           const timeRange = getTimeRange(dateTime);
           mutator.updateIn([appPackageName, DATA, timeRange], List(), (list) => list.push(usage));
         });
-      });
+      }).asImmutable();
     }
     else {
       data = fromJS(response).groupBy((entity) => entity.get(APP_PACKAGE_NAME));
