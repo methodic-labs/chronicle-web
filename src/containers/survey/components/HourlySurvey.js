@@ -96,41 +96,30 @@ const HourlySurvey = (props :Props) => {
     );
   }
 
+  const isAppSelectionStep = surveyStep === SELECT_CHILD_APPS || surveyStep === SELECT_SHARED_APPS;
+  const isSharedAppsResolutionStep = surveyStep === RESOLVE_SHARED_APPS || surveyStep === RESOLVE_OTHER_APPS;
+
   return (
     <Box>
       <Box mb="20px" fontWeight={500}>
         {getInstructionText()}
       </Box>
       {
-        surveyStep === SELECT_CHILD_APPS && (
-          <SelectAppsByUser childOnly appsData={data} selected={childOnlyApps} />
-        )
-      }
-      {
-        surveyStep === SELECT_SHARED_APPS && (
-          <SelectAppsByUser childOnly={false} appsData={sharedAppsData} selected={sharedApps} />
+        isAppSelectionStep && (
+          <SelectAppsByUser
+              appsData={surveyStep === SELECT_CHILD_APPS ? data : sharedAppsData}
+              selected={surveyStep === SELECT_CHILD_APPS ? childOnlyApps : sharedApps} />
         )
       }
 
       {
-        surveyStep === RESOLVE_SHARED_APPS && (
+        isSharedAppsResolutionStep && (
           <SelectAppUsageTimeSlots
               data={data}
-              initial
-              initialSelections={Map()}
+              initial={surveyStep === RESOLVE_SHARED_APPS}
+              initialSelections={surveyStep === RESOLVE_SHARED_APPS ? Map() : initialTimeRangeSelections}
               options={timeRangeOptions}
-              selected={initialTimeRangeSelections} />
-        )
-      }
-
-      {
-        surveyStep === RESOLVE_OTHER_APPS && (
-          <SelectAppUsageTimeSlots
-              data={data}
-              initial={false}
-              initialSelections={initialTimeRangeSelections}
-              options={timeRangeOptions}
-              selected={otherTimeRangeSelections} />
+              selected={surveyStep === RESOLVE_SHARED_APPS ? initialTimeRangeSelections : otherTimeRangeSelections} />
         )
       }
       <SurveyButtons

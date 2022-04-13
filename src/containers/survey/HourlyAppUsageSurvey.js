@@ -65,6 +65,9 @@ const reducer = (state, action) => {
     }
     if (surveyStep === SELECT_CHILD_APPS) {
       nextStep = SELECT_SHARED_APPS;
+      isFinalStep = true; // User might choose not to select anything from the shared apps page
+      // in which case they should be able to submit the survey. However, if they select anything
+      // we need to set isFinalStep = false so that they can move on to the next page
     }
 
     if (surveyStep === SELECT_SHARED_APPS) {
@@ -103,11 +106,16 @@ const reducer = (state, action) => {
 
   switch (action.type) {
     case ACTIONS.ASSIGN_USER: {
-      const { childOnly, appName } = action;
+      const { appName } = action;
 
-      const { childOnlyApps, sharedApps, appsCount } = state;
+      const {
+        childOnlyApps,
+        sharedApps,
+        appsCount,
+        surveyStep
+      } = state;
 
-      const selected = childOnly ? childOnlyApps : sharedApps;
+      const selected = surveyStep === SELECT_CHILD_APPS ? childOnlyApps : sharedApps;
 
       if (selected.has(appName)) {
         selected.delete(appName);
@@ -116,8 +124,8 @@ const reducer = (state, action) => {
         selected.add(appName);
       }
 
-      if (childOnly) {
-        // If all apps are indicated as having been used by child, skip all other steps and present button to submit
+      if (surveyStep === SELECT_CHILD_APPS) {
+        // If user select all apps, enable submit
         const isFinalStep = selected.size === appsCount;
         return {
           ...state,
@@ -125,8 +133,10 @@ const reducer = (state, action) => {
           isFinalStep
         };
       }
+
       return {
         ...state,
+        isFinalStep: selected.isEmpty(),
         sharedApps: selected
       };
     }
