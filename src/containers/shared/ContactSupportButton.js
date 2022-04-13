@@ -13,6 +13,7 @@ const ButtonWrapper = styled(Button)`
   right: 16px;
   width: 200px;
   background-color: white;
+  z-index: 500;
 `;
 
 const StyledIcon = styled(FontAwesomeIcon)`
