@@ -7,6 +7,7 @@ import { Map, fromJS } from 'immutable';
 import changeEnrollmentReducer from './changeEnrollmentReducer';
 import createStudyReducer from './createStudyReducer';
 import deleteStudyParticipantsReducer from './deleteStudyParticipantsReducer';
+import deleteStudyReducer from './deleteStudyReducer';
 import getAllStudiesReducer from './getAllStudiesReducer';
 import getOrgStudiesReducer from './getOrgStudiesReducer';
 import getParticipantStatsReducer from './getParticipantStatsReducer';
@@ -14,6 +15,7 @@ import getStudyParticipantsReducer from './getStudyParticipantsReducer';
 import getStudySettingsReducer from './getStudySettingsReducer';
 import initializeStudyReducer from './initializeStudyReducer';
 import registerParticipantReducer from './registerParticipantReducer';
+import updateStudyReducer from './updateStudyReducer';
 import verifyParticipantReducer from './verifyParticipantReducer';
 
 import {
@@ -28,6 +30,7 @@ import { resetRequestStatesReducer } from '../../../core/redux/reducers';
 import {
   CHANGE_ENROLLMENT_STATUS,
   CREATE_STUDY,
+  DELETE_STUDY,
   DELETE_STUDY_PARTICIPANTS,
   GET_ALL_STUDIES,
   GET_ORG_STUDIES,
@@ -36,9 +39,12 @@ import {
   GET_STUDY_SETTINGS,
   INITIALIZE_STUDY,
   REGISTER_PARTICIPANT,
+  REMOVE_STUDY_ON_DELETE,
+  UPDATE_STUDY,
   VERIFY_PARTICIPANT,
   changeEnrollmentStatus,
   createStudy,
+  deleteStudy,
   deleteStudyParticipants,
   getAllStudies,
   getOrgStudies,
@@ -47,6 +53,7 @@ import {
   getStudySettings,
   initializeStudy,
   registerParticipant,
+  updateStudy,
   verifyParticipant
 } from '../actions';
 
@@ -54,6 +61,7 @@ const INITIAL_STATE :Map = fromJS({
   // actions
   [CHANGE_ENROLLMENT_STATUS]: RS_INITIAL_STATE,
   [CREATE_STUDY]: RS_INITIAL_STATE,
+  [DELETE_STUDY]: RS_INITIAL_STATE,
   [DELETE_STUDY_PARTICIPANTS]: RS_INITIAL_STATE,
   [GET_ALL_STUDIES]: RS_INITIAL_STATE,
   [GET_ORG_STUDIES]: RS_INITIAL_STATE,
@@ -62,6 +70,7 @@ const INITIAL_STATE :Map = fromJS({
   [GET_STUDY_SETTINGS]: RS_INITIAL_STATE,
   [INITIALIZE_STUDY]: RS_INITIAL_STATE,
   [REGISTER_PARTICIPANT]: RS_INITIAL_STATE,
+  [UPDATE_STUDY]: RS_INITIAL_STATE,
   [VERIFY_PARTICIPANT]: RS_INITIAL_STATE,
   // data
   [PARTICIPANTS]: Map(),
@@ -76,6 +85,19 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case RESET_REQUEST_STATES: {
       return resetRequestStatesReducer(state, action);
+    }
+
+    case REMOVE_STUDY_ON_DELETE: {
+      const { studyId } = action;
+      return state.deleteIn([STUDIES, studyId]);
+    }
+
+    case changeEnrollmentStatus.case(action.type): {
+      return changeEnrollmentReducer(state, action);
+    }
+
+    case deleteStudy.case(action.type): {
+      return deleteStudyReducer(state, action);
     }
 
     case deleteStudyParticipants.case(action.type): {
@@ -114,12 +136,12 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
       return registerParticipantReducer(state, action);
     }
 
-    case verifyParticipant.case(action.type): {
-      return verifyParticipantReducer(state, action);
+    case updateStudy.case(action.type): {
+      return updateStudyReducer(state, action);
     }
 
-    case changeEnrollmentStatus.case(action.type): {
-      return changeEnrollmentReducer(state, action);
+    case verifyParticipant.case(action.type): {
+      return verifyParticipantReducer(state, action);
     }
 
     // case switchOrganization.case(action.type): {

@@ -5,12 +5,14 @@ import { useContext, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Set } from 'immutable';
 import {
+  Checkbox,
   Colors,
   IconButton,
   Menu,
   MenuItem,
-  Tag,
+  Tag
 } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
@@ -33,6 +35,7 @@ const {
   TOGGLE_DOWNLOAD_MODAL,
   TOGGLE_ENROLLMENT_MODAL,
   TOGGLE_INFO_MODAL,
+  SELECT_CANDIDATE_IDS
 } = ParticipantsTableActions;
 
 const RowWrapper = styled.tr.attrs(() => ({ tabIndex: '1' }))`
@@ -53,16 +56,27 @@ const StyledTag = styled(Tag)`
   margin-left: 0;
 `;
 
+const getColumnDateValue = (date) => formatDateTime(date || '', DateTime.DATETIME_SHORT);
+
+const getUniqueDaysLabel = (days = 0) => {
+  if (days === 0) return '---';
+  return days === 1 ? `${days} day` : `${days} days`;
+};
+
 const ParticipantRow = ({
+  hasAndroidDataCollection,
   hasDeletePermission,
-  hasDataCollectionModule,
-  hasTimeUseDiaryModule,
+  hasTimeUseDiary,
+  hasIOSSensorDataCollection,
+  isSelected,
   participant,
   stats = {},
 } :{
+  hasAndroidDataCollection :boolean;
   hasDeletePermission :boolean;
-  hasDataCollectionModule :boolean;
-  hasTimeUseDiaryModule :boolean;
+  hasTimeUseDiary :boolean;
+  hasIOSSensorDataCollection :boolean;
+  isSelected :boolean;
   participant :Participant;
   stats ?:ParticipantStats;
 }) => {
@@ -73,38 +87,38 @@ const ParticipantRow = ({
   const candidateId = participant.candidate.id;
   const { participantId } = participant;
   const enrollmentStatus = participant.participationStatus;
-  const androidFirstDate = formatDateTime(stats.androidFirstDate || '', DateTime.DATETIME_SHORT);
-  const androidLastDate = formatDateTime(stats.androidLastDate || '', DateTime.DATETIME_SHORT);
-  const androidUniqueDates = stats.androidUniqueDates?.length;
-  let androidUniqueDatesLabel = '---';
-  if (androidUniqueDates > 0) {
-    androidUniqueDatesLabel = `${androidUniqueDates} ${(androidUniqueDates === 1) ? 'day' : 'days'}`;
-  }
-  const tudFirstDate = formatDateTime(stats.tudFirstDate || '', DateTime.DATETIME_SHORT);
-  const tudLastDate = formatDateTime(stats.tudLastDate || '', DateTime.DATETIME_SHORT);
-  const tudUniqueDates = stats.tudUniqueDates?.length;
-  let tudUniqueDatesLabel = '---';
-  if (tudUniqueDates > 0) {
-    tudUniqueDatesLabel = `${tudUniqueDates} ${(tudUniqueDates === 1) ? 'day' : 'days'}`;
-  }
 
   const getRowData = () => {
-    const tudData = [tudFirstDate, tudLastDate, tudUniqueDatesLabel];
-    const androidData = [androidFirstDate, androidLastDate, androidUniqueDatesLabel];
+    const tudData = [
+      getColumnDateValue(stats.tudFirstDate),
+      getColumnDateValue(stats.tudLastDate),
+      getUniqueDaysLabel(stats.tudUniqueDates?.length)
+    ];
+    const androidData = [
+      getColumnDateValue(stats.androidFirstDate),
+      getColumnDateValue(stats.androidLastDate),
+      getUniqueDaysLabel(stats.androidUniqueDates?.length)
+    ];
 
-    if (hasDataCollectionModule && hasTimeUseDiaryModule) {
-      return [participantId, ...androidData, ...tudData];
+    const iosSensorData = [
+      getColumnDateValue(stats.iosFirstDate),
+      getColumnDateValue(stats.iosLastDate),
+      getUniqueDaysLabel(stats.iosUniqueDates?.length)
+    ];
+
+    let result = [participantId];
+    if (hasAndroidDataCollection) {
+      result = [...result, ...androidData];
     }
-    if (hasDataCollectionModule) {
-      return [participantId, ...androidData];
-    }
-    if (hasTimeUseDiaryModule) {
-      return [participantId, ...tudData];
+    if (hasIOSSensorDataCollection) {
+      result = [...result, ...iosSensorData];
     }
 
-    // TODO: Need to update this later for ios sensor
+    if (hasTimeUseDiary) {
+      result = [...result, ...tudData];
+    }
 
-    return [participantId];
+    return result;
   };
 
   const rowData = useMemo(() => getRowData(), [candidateId]);
@@ -134,6 +148,11 @@ const ParticipantRow = ({
   return (
     <>
       <RowWrapper onClick={() => {}}>
+        {/* <td>
+          <Checkbox
+              onChange={() => dispatch({ type: SELECT_CANDIDATE_IDS, ids: Set([candidateId]) })}
+              checked={isSelected} />
+        </td> */}
         {
           rowData.map((item, index) => (
             <td key={index}>
@@ -159,6 +178,15 @@ const ParticipantRow = ({
               id="table_actions_menu"
               anchorEl={anchorEl}
               keepMounted
+              anchorOrigin={{
+                horizontal: 'right',
+                vertical: 'bottom',
+              }}
+              getContentAnchorEl={null}
+              transformOrigin={{
+                horizontal: 'right',
+                vertical: 'top',
+              }}
               open={Boolean(anchorEl)}
               onClose={handleOnClose}>
             <MenuItem
@@ -183,7 +211,7 @@ const ParticipantRow = ({
               { pauseOrResume }
             </MenuItem>
             {/* {
-              hasTimeUseDiaryModule && (
+              hasTimeUseDiary && (
                 <MenuItem
                     data-action-id={TOGGLE_TUD_SUBMISSION_HISTORY_MODAL}
                     onClick={handleMenuItemClick}>

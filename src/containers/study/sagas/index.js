@@ -3,6 +3,7 @@
  */
 
 export * from './createStudy';
+export * from './deleteStudy';
 export * from './deleteStudyParticipants';
 export * from './getAllStudies';
 export * from './getOrgStudies';
@@ -13,3 +14,4 @@ export * from './initializeStudy';
 export * from './registerParticipant';
 export * from './verifyParticipant';
 export * from './changeEnrollmentStatus';
+export * from './updateStudy';

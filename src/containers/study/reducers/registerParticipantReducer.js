@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { Map, fromJS } from 'immutable';
+import { Map } from 'immutable';
 import { RequestStates } from 'redux-reqseq';
 import type { SequenceAction } from 'redux-reqseq';
 
@@ -27,7 +27,7 @@ export default function reducer(state :Map, action :SequenceAction) {
         const studyId = storedAction.value[STUDY_ID];
         const candidateId = action.value[CANDIDATE][ID];
         return state
-          .setIn([PARTICIPANTS, studyId, candidateId], fromJS(action.value))
+          .setIn([PARTICIPANTS, studyId, candidateId], action.value)
           .setIn([REGISTER_PARTICIPANT, REQUEST_STATE], RequestStates.SUCCESS);
       }
       return state;

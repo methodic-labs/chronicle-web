@@ -8,6 +8,20 @@ const SURVEY_INSTRUCTION_TEXT = 'Thank you for taking the time to complete this 
 + ' you would click “Parent Alone” and “Child Alone.” If you both used this app together,'
 + ' as well as separately, you would click “Parent Alone,” “Child Alone,” and “Parent and Child Together.”';
 
+const SELECT_CHILD_APPS = 'selectChildApps';
+const SELECT_SHARED_APPS = 'selectSharedApps';
+const RESOLVE_SHARED_APPS = 'resolveSharedApps';
+const RESOLVE_OTHER_APPS = 'resolveOtherApps';
+const INTRO = 'intro';
+
+const SURVEY_STEPS = {
+  INTRO,
+  RESOLVE_OTHER_APPS,
+  RESOLVE_SHARED_APPS,
+  SELECT_CHILD_APPS,
+  SELECT_SHARED_APPS,
+};
 export {
-  SURVEY_INSTRUCTION_TEXT
+  SURVEY_INSTRUCTION_TEXT,
+  SURVEY_STEPS
 };

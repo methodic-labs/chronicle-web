@@ -2,39 +2,35 @@
  * @flow
  */
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import styled from 'styled-components';
-import { faBell, faBellSlash } from '@fortawesome/pro-solid-svg-icons';
+import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { List, Set } from 'immutable';
 import {
   Box,
-  Button,
   Card,
   CardSegment,
   Colors,
-  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
   Typography
 } from 'lattice-ui-kit';
-import { LangUtils, useBoolean, useRequestState } from 'lattice-utils';
+import { useBoolean, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
 
 import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from './actions';
-import { DeleteStudyModal, StudyDetailsModal } from './components';
+import { DeleteStudyModal, StudyDetails, StudyDetailsModal } from './components';
 
+import * as Routes from '../../core/router/Routes';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectMyKeys } from '../../core/redux/selectors';
 import type { Study, UUID } from '../../common/types';
 
-const { isNonEmptyString } = LangUtils;
-
-const { NEUTRAL, GREEN } = Colors;
-
-const StyledFontAwesome = styled(FontAwesomeIcon)`
-  font-size: 22px;
-`;
+const { NEUTRAL } = Colors;
 
 const StudyDetailsItem = ({
   label,
@@ -78,13 +74,24 @@ StudyDetailsItem.defaultProps = {
 };
 
 const StudyContainer = ({
+  hasAndroidDataCollection,
+  hasIOSSensorDataCollection,
+  hasQuestionnaires,
+  hasTimeUseDiary,
   study,
 } :{
+  hasAndroidDataCollection :boolean;
+  hasIOSSensorDataCollection :boolean;
+  hasQuestionnaires :boolean;
+  hasTimeUseDiary :boolean;
   study :Study;
 }) => {
 
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [isDeleteModalVisible, showDeleteModal, hideDeleteModal] = useBoolean(false);
 
   const deleteStudyRS = useRequestState(['studies', DELETE_STUDY]);
@@ -92,17 +99,9 @@ const StudyContainer = ({
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
 
-  const notificationIcon = study.notificationsEnabled ? faBell : faBellSlash;
-
-  // After deleting study, redirect to root
-  useEffect(() => {
-    if (deleteStudyRS === RequestStates.SUCCESS) {
-      setTimeout(() => {
-        dispatch(removeStudyOnDelete(study.id));
-        dispatch(resetRequestStates([DELETE_STUDY]));
-      }, 2000);
-    }
-  }, [deleteStudyRS, dispatch, study]);
+  const handleOnClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const closeEditModal = () => {
     setEditModalVisible(false);
@@ -110,87 +109,78 @@ const StudyContainer = ({
 
   const onCloseDeleteModal = () => {
     hideDeleteModal();
+    if (deleteStudyRS === RequestStates.SUCCESS) {
+      dispatch(removeStudyOnDelete(study.id));
+      history.push(Routes.ROOT);
+    }
     dispatch(resetRequestStates([DELETE_STUDY]));
   };
 
   const openEditModal = () => {
     dispatch(resetRequestStates([UPDATE_STUDY]));
     setEditModalVisible(true);
+    setAnchorEl(null);
   };
 
-  const DetailsHeader = () => (
-    <Box display="flex" alignItems="center">
-      <StyledFontAwesome icon={notificationIcon} color={study.notificationsEnabled ? GREEN.G300 : NEUTRAL.N300} />
-      <Box ml={1}>
-        <Typography color="textSecondary" variant="button"> Daily Notifications </Typography>
-      </Box>
-    </Box>
-  );
+  const onShowDeleteModal = () => {
+    showDeleteModal();
+    setAnchorEl(null);
+  };
 
   return (
     <Card>
       <CardSegment>
-        <DetailsHeader />
-        <Box mt={3}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <StudyDetailsItem
-                  label="Description"
-                  missingValue={!isNonEmptyString(study.description)}
-                  placeholder="No description"
-                  value={study.description} />
-              <StudyDetailsItem
-                  label="UUID"
-                  value={study.id} />
-              <StudyDetailsItem
-                  label="Version"
-                  missingValue={!isNonEmptyString(study.version)}
-                  placeholder="No version"
-                  value={study.version} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <StudyDetailsItem
-                  label="Email"
-                  value={study.contact} />
-              <StudyDetailsItem
-                  label="Group"
-                  missingValue={!isNonEmptyString(study.group)}
-                  placeholder="No group"
-                  value={study.group} />
-            </Grid>
-
-            <Grid container item xs={12} spacing={3}>
-              <Grid item xs={6}>
-                <Button
-                    color="secondary"
-                    fullWidth
-                    onClick={openEditModal}>
-                  Edit Details
-                </Button>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Button
-                    color="error"
-                    disabled={!isOwner}
-                    fullWidth
-                    onClick={showDeleteModal}>
-                  Delete Study
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-          <StudyDetailsModal
-              handleOnCloseModal={closeEditModal}
-              isVisible={editModalVisible}
+        <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+          <StudyDetails
+              hasAndroidDataCollection={hasAndroidDataCollection}
+              hasIOSSensorDataCollection={hasIOSSensorDataCollection}
+              hasQuestionnaires={hasQuestionnaires}
+              hasTimeUseDiary={hasTimeUseDiary}
               study={study} />
-          <DeleteStudyModal
-              isVisible={isDeleteModalVisible}
-              onClose={onCloseDeleteModal}
-              requestState={deleteStudyRS || RequestStates.STANDBY}
-              study={study} />
+          <IconButton
+              aria-controls="actions_menu"
+              onClick={handleOnClick}>
+            <FontAwesomeIcon
+                color={NEUTRAL.N800}
+                icon={faEllipsisV} />
+          </IconButton>
+          <Menu
+              id="actions_menu"
+              anchorEl={anchorEl}
+              aria-haspopup="true"
+              keepMounted
+              open={Boolean(anchorEl)}
+              anchorOrigin={{
+                horizontal: 'right',
+                vertical: 'bottom',
+              }}
+              getContentAnchorEl={null}
+              transformOrigin={{
+                horizontal: 'right',
+                vertical: 'top',
+              }}
+              onClose={() => setAnchorEl(null)}>
+            <MenuItem
+                onClick={openEditModal}>
+              Edit Details
+            </MenuItem>
+            <MenuItem
+                disabled={!isOwner}
+                onClick={onShowDeleteModal}>
+              Delete
+            </MenuItem>
+          </Menu>
         </Box>
       </CardSegment>
+      <StudyDetailsModal
+          handleOnCloseModal={closeEditModal}
+          isVisible={editModalVisible}
+          study={study} />
+      <DeleteStudyModal
+          isVisible={isDeleteModalVisible}
+          onClose={onCloseDeleteModal}
+          requestState={deleteStudyRS || RequestStates.STANDBY}
+          study={study} />
     </Card>
   );
 };

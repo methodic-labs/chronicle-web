@@ -1,27 +1,33 @@
 // @flow
 
 import styled from 'styled-components';
-import { faCloudDownload } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { List } from 'immutable';
-import { Button, Grid, Typography } from 'lattice-ui-kit';
+import {
+  Button,
+  Colors,
+  Grid,
+  Typography
+} from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 
 import DataTypes from '../constants/DataTypes';
 import type { DataType } from '../constants/DataTypes';
 
+const { NEUTRAL } = Colors;
 const { formatAsDate } = DateTimeUtils;
 
 const Wrapper = styled.div`
   align-items: center;
+  border-bottom: 1px solid ${NEUTRAL.N50};
   display: grid;
-  grid-template-columns: auto auto 1fr 400px;
   grid-column-gap: 20px;
-  margin-bottom: 20px;
+  grid-template-columns: auto 1fr 400px;
+  padding: 10px 0;
 
   :last-of-type {
     margin-bottom: 0;
+    border-bottom: none;
   }
 `;
 
@@ -44,13 +50,18 @@ const SummaryListComponent = (
   } :Props
 ) => (
   <Wrapper>
-    <Typography variant="body1" gutterBottom>
-      { formatAsDate(date) }
-    </Typography>
-
-    <Typography variant="body2" gutterBottom>
-      { submissionIds.size }
-    </Typography>
+    <Grid container spacing={3}>
+      <Grid item>
+        <Typography variant="body1" gutterBottom>
+          { formatAsDate(date) }
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant="body2" gutterBottom>
+          { submissionIds.size }
+        </Typography>
+      </Grid>
+    </Grid>
     <div />
 
     <Grid container spacing={2}>
@@ -59,7 +70,6 @@ const SummaryListComponent = (
             fullWidth
             onClick={() => onDownloadData(date, DataTypes.SUMMARIZED)}
             size="small"
-            startIcon={<FontAwesomeIcon icon={faCloudDownload} />}
             variant="outlined">
           Summarized
         </ButtonWrapper>
@@ -69,7 +79,6 @@ const SummaryListComponent = (
             fullWidth
             onClick={() => onDownloadData(date, DataTypes.DAYTIME)}
             size="small"
-            startIcon={<FontAwesomeIcon icon={faCloudDownload} />}
             variant="outlined">
           Daytime
         </ButtonWrapper>
@@ -79,7 +88,6 @@ const SummaryListComponent = (
             fullWidth
             onClick={() => onDownloadData(date, DataTypes.NIGHTTIME)}
             size="small"
-            startIcon={<FontAwesomeIcon icon={faCloudDownload} />}
             variant="outlined">
           Nighttime
         </ButtonWrapper>
