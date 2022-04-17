@@ -2,7 +2,6 @@
 
 import styled from 'styled-components';
 import {
-  // $FlowFixMe
   Box,
   Colors,
   Select,
@@ -10,8 +9,8 @@ import {
   Typography
 } from 'lattice-ui-kit';
 
-import OpenLatticeIcon from '../../../assets/images/ol_icon.png';
 import SUPPORTED_LANGUAGES from '../constants/SupportedLanguages';
+import { OpenLatticeIconSVG } from '../../../assets/svg/icons';
 
 const languageOptions = SUPPORTED_LANGUAGES.map((lng) => ({ value: lng.code, label: lng.language }));
 
@@ -63,7 +62,7 @@ const HeaderComponent = ({
   <Wrapper>
     <nav>
       <a href={window.location.href}>
-        <img src={OpenLatticeIcon} alt="OpenLattice Icon" />
+        <img src={OpenLatticeIconSVG} alt="OpenLattice Icon" />
         <Typography variant="h1"> Chronicle </Typography>
       </a>
     </nav>

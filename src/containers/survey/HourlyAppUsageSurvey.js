@@ -1,7 +1,10 @@
 // @flow
 import { useEffect, useReducer } from 'react';
 
-import { Map, Set, fromJS } from 'immutable';
+import {
+  Map,
+  Set,
+} from 'immutable';
 import {
   AppContainerWrapper,
   AppContentWrapper,
@@ -18,34 +21,101 @@ import HourlyUsageSurveyAppBar from './components/HourlyUsageSurveyAppBar';
 import InstructionsModal from './components/InstructionsModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch';
-import { submitSurvey } from './SurveyActions';
+import { submitAppUsageSurvey } from './actions';
+import { SURVEY_STEPS } from './constants';
+import { createHourlySurveySubmissionData } from './utils';
 
-import BasicErrorComponent from '../shared/BasicErrorComponent';
-import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
+import { BasicErrorComponent } from '../../common/components';
 
 const { isFailure, isSuccess, isPending } = ReduxUtils;
 
-const { USER_FQN } = PROPERTY_TYPE_FQNS;
+const {
+  SELECT_CHILD_APPS,
+  SELECT_SHARED_APPS,
+  RESOLVE_SHARED_APPS,
+  RESOLVE_OTHER_APPS,
+  INTRO
+} = SURVEY_STEPS;
 
 const initialState = {
-  childHourlySelections: Map().asMutable(),
   childOnlyApps: Set().asMutable(),
+  initialTimeRangeSelections: Map().asMutable(),
   isConfirmModalVisible: false,
   isInstructionsModalVisible: false,
   isSubmissionConfirmed: false,
-  otherChildHourlySelections: Map().asMutable(),
+  isFinalStep: false,
+  otherTimeRangeSelections: Map().asMutable(),
   sharedApps: Set().asMutable(),
   step: 0,
+  surveyStep: INTRO,
+  sharedAppsOptionsCount: 0,
 };
 
 const reducer = (state, action) => {
+
+  const getNextStep = () => {
+    let isFinalStep = false;
+    let nextStep = '';
+    const {
+      surveyStep,
+      sharedApps,
+    } = state;
+    if (surveyStep === INTRO) {
+      nextStep = SELECT_CHILD_APPS;
+    }
+    if (surveyStep === SELECT_CHILD_APPS) {
+      nextStep = SELECT_SHARED_APPS;
+      isFinalStep = true; // User might choose not to select anything from the shared apps page
+      // in which case they should be able to submit the survey. However, if they select anything
+      // we need to set isFinalStep = false so that they can move on to the next page
+    }
+
+    if (surveyStep === SELECT_SHARED_APPS) {
+      if (sharedApps.isEmpty()) {
+        // No shared apps selected: skip time-resolution steps
+        isFinalStep = true;
+      }
+      else {
+        nextStep = RESOLVE_SHARED_APPS;
+      }
+    }
+    if (surveyStep === RESOLVE_SHARED_APPS) {
+      nextStep = RESOLVE_OTHER_APPS;
+      isFinalStep = true;
+    }
+
+    return { isFinalStep, nextStep };
+  };
+
+  const getPrevStep = () => {
+    const {
+      surveyStep
+    } = state;
+
+    if (surveyStep === RESOLVE_OTHER_APPS) {
+      return RESOLVE_SHARED_APPS;
+    }
+    if (surveyStep === RESOLVE_SHARED_APPS) {
+      return SELECT_SHARED_APPS;
+    }
+    if (surveyStep === SELECT_SHARED_APPS) {
+      return SELECT_CHILD_APPS;
+    }
+    return INTRO;
+  };
+
   switch (action.type) {
     case ACTIONS.ASSIGN_USER: {
-      const { childOnly, appName } = action;
+      const { appName } = action;
 
-      const { childOnlyApps, sharedApps } = state;
+      const {
+        childOnlyApps,
+        sharedApps,
+        appsCount,
+        surveyStep
+      } = state;
 
-      const selected = childOnly ? childOnlyApps : sharedApps;
+      const selected = surveyStep === SELECT_CHILD_APPS ? childOnlyApps : sharedApps;
 
       if (selected.has(appName)) {
         selected.delete(appName);
@@ -54,30 +124,20 @@ const reducer = (state, action) => {
         selected.add(appName);
       }
 
-      if (childOnly) {
+      if (surveyStep === SELECT_CHILD_APPS) {
+        // If user select all apps, enable submit
+        const isFinalStep = selected.size === appsCount;
         return {
           ...state,
-          childOnlyApps: selected
+          childOnlyApps: selected,
+          isFinalStep
         };
       }
-      return {
-        ...state,
-        sharedApps: selected
-      };
-    }
-    case ACTIONS.OTHER_CHILD_SELECT_TIME: {
-      const { appName, id } = action;
-      const { otherChildHourlySelections } = state;
 
-      if (otherChildHourlySelections.get(appName, Set()).has(id)) {
-        otherChildHourlySelections.update(appName, Set(), (current) => current.delete(id));
-      }
-      else {
-        otherChildHourlySelections.update(appName, Set(), (current) => current.add(id));
-      }
       return {
         ...state,
-        otherChildHourlySelections
+        isFinalStep: selected.isEmpty(),
+        sharedApps: selected
       };
     }
 
@@ -89,31 +149,74 @@ const reducer = (state, action) => {
       };
     }
 
-    case ACTIONS.CHILD_SELECT_TIME: {
-      const { appName, id } = action;
-      const { childHourlySelections } = state;
+    case ACTIONS.SELECT_TIME_RANGE: {
+      const { appName, timeRange } = action;
+      const {
+        initialTimeRangeSelections,
+        otherTimeRangeSelections,
+        sharedAppsOptionsCount,
+        surveyStep,
+      } = state;
 
-      if (childHourlySelections.get(appName, Set()).has(id)) {
-        childHourlySelections.update(appName, Set(), (current) => current.delete(id));
-      }
-      else {
-        childHourlySelections.update(appName, Set(), (current) => current.add(id));
+      const updatedValue = surveyStep === RESOLVE_SHARED_APPS ? initialTimeRangeSelections : otherTimeRangeSelections;
+
+      updatedValue.update(
+        appName,
+        Set(),
+        (current) => (current.has(timeRange) ? current.delete(timeRange) : current.add(timeRange))
+      );
+
+      if (surveyStep === RESOLVE_SHARED_APPS) {
+        // Here we count the number of selections so far and compare with the total number of
+        // possible selections. If equal, indicate survey as done by setting isFinalStep = true
+        const currentSelectionsCount = updatedValue.keySeq().toSet().map((key) => updatedValue.get(key).size)
+          .reduce((prev, next) => prev + next);
+
+        const isFinalStep = currentSelectionsCount === sharedAppsOptionsCount;
+        return {
+          ...state,
+          initialTimeRangeSelections: updatedValue,
+          isFinalStep
+        };
       }
       return {
         ...state,
-        childHourlySelections
+        remainingTimeRangeOptions: updatedValue
       };
     }
     case ACTIONS.NEXT_STEP: {
+      const {
+        surveyStep,
+        sharedAppsOptionsCount,
+        appsData,
+        sharedApps
+      } = state;
+      let optionsCount = sharedAppsOptionsCount;
+
+      if (surveyStep === SELECT_SHARED_APPS) {
+        // When navigating away from the shared apps selection page,
+        // we calculate total number of possible selections available for next step(s) of survey
+        optionsCount = sharedApps.asImmutable()
+          .map((app) => appsData.getIn([app, 'data']).size)
+          .reduce((prev, next) => prev + next);
+      }
+
+      const { isFinalStep, nextStep } = getNextStep();
       return {
         ...state,
-        step: state.step + 1
+        isFinalStep,
+        step: state.step + 1,
+        surveyStep: nextStep,
+        sharedApps: sharedApps.asMutable(),
+        sharedAppsOptionsCount: optionsCount
       };
     }
     case ACTIONS.PREV_STEP: {
       return {
         ...state,
-        step: state.step - 1
+        isFinalStep: false,
+        step: state.step - 1,
+        surveyStep: getPrevStep(),
       };
     }
     case ACTIONS.CONFIRM_SUBMIT: {
@@ -144,8 +247,8 @@ type Props = {
   data :Map;
   date :string;
   submitSurveyRS :?RequestState;
+  getAppUsageSurveyDataRS :?RequestState;
   participantId :string;
-  organizationId :UUID;
   studyId :UUID ;
 };
 
@@ -154,58 +257,57 @@ const HourlyAppUsageSurvey = (props :Props) => {
     data,
     date,
     studyId,
-    organizationId,
     participantId,
     submitSurveyRS,
+    getAppUsageSurveyDataRS,
   } = props;
 
   const storeDispatch = useDispatch();
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    appsData: data,
+    appsCount: data.keySeq().size
+  });
 
   const {
     step,
+    surveyStep,
     childOnlyApps,
     isConfirmModalVisible,
-    childHourlySelections,
-    otherChildHourlySelections,
+    initialTimeRangeSelections,
+    otherTimeRangeSelections,
     isSubmissionConfirmed,
-    isInstructionsModalVisible
+    isInstructionsModalVisible,
   } = state;
 
   useEffect(() => {
-    const createSubmissionData = () => {
-
-      const childOnlyIds = childOnlyApps
-        .map((app) => data.getIn([app, 'entities']).map((entity) => entity.keySeq())).flatten();
-
-      const otherIds = childHourlySelections.valueSeq()
-        .concat(otherChildHourlySelections.valueSeq()).toSet().flatten();
-
-      return childOnlyIds.concat(otherIds)
-        .toMap()
-        .mapEntries((entry) => [entry[0], fromJS({ [USER_FQN.toString()]: ['Target child'] })])
-        .toJS();
-    };
-
     if (isSubmissionConfirmed) {
-      storeDispatch(submitSurvey({
-        submissionData: createSubmissionData(),
-        organizationId,
+      const timeRangeSelections = initialTimeRangeSelections.mergeWith(
+        (oldVal, newVal) => oldVal.concat(newVal),
+        otherTimeRangeSelections
+      );
+      const submissionData = createHourlySurveySubmissionData(
+        data,
+        childOnlyApps,
+        timeRangeSelections
+      );
+
+      storeDispatch(submitAppUsageSurvey({
+        data: submissionData,
         participantId,
-        studyId
+        studyId,
       }));
     }
   }, [
-    isSubmissionConfirmed,
-    childHourlySelections,
     childOnlyApps,
     data,
-    organizationId,
-    otherChildHourlySelections,
+    initialTimeRangeSelections,
+    isSubmissionConfirmed,
     participantId,
+    otherTimeRangeSelections,
     storeDispatch,
-    studyId
+    studyId,
   ]);
 
   const hasSubmitted = isSuccess(submitSurveyRS) || isFailure(submitSurveyRS);
@@ -232,7 +334,13 @@ const HourlyAppUsageSurvey = (props :Props) => {
               {
                 hasSubmitted
                   ? <SubmissionCompleted />
-                  : <HourlySurvey data={data} state={state} isSubmitting={isSubmitting} />
+                  : (
+                    <HourlySurvey
+                        data={data}
+                        getAppUsageSurveyDataRS={getAppUsageSurveyDataRS}
+                        isSubmitting={isSubmitting}
+                        state={state} />
+                  )
               }
             </CardSegment>
           </Card>
@@ -242,7 +350,7 @@ const HourlyAppUsageSurvey = (props :Props) => {
         isConfirmModalVisible && <ConfirmSurveySubmissionModal />
       }
       {
-        isInstructionsModalVisible && <InstructionsModal step={step} />
+        isInstructionsModalVisible && <InstructionsModal step={step} surveyStep={surveyStep} />
       }
     </HourlySurveyDispatch.Provider>
   );

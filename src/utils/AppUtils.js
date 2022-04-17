@@ -5,24 +5,29 @@
 import merge from 'lodash/merge';
 import set from 'lodash/set';
 import update from 'lodash/update';
-import { AuthUtils } from 'lattice-auth';
 import { LangUtils, Logger, ValidationUtils } from 'lattice-utils';
 
 import ENV_URLS from './constants/EnvUrls';
 import EnvTypes from './constants/EnvTypes';
 import ParticipantDataTypes from './constants/ParticipantDataTypes';
 import {
+  APP_USAGE as AppUsagePath,
   AUTHENTICATED,
   BASE,
   CSRF_TOKEN,
   DATA,
   FILE_TYPE,
+  PARTICIPANT,
   QUESTIONNAIRE,
   SETTINGS,
-  STATUS,
+  STUDY,
+  SURVEY,
   TIME_USE_DIARY,
+  VERIFY,
 } from './constants/UrlConstants';
 import type { ParticipantDataType } from './constants/ParticipantDataTypes';
+
+import { getCSRFToken } from '../core/auth/utils';
 
 const LOG = new Logger('AppUtils');
 
@@ -64,7 +69,7 @@ const getParticipantDataUrl = (
   }
 
   const baseUrl = getBaseUrl();
-  const csrfToken = AuthUtils.getCSRFToken() ?? '';
+  const csrfToken = getCSRFToken() ?? '';
   let dataTypePath;
 
   switch (dataType) {
@@ -85,16 +90,11 @@ const getParticipantDataUrl = (
   + `&${CSRF_TOKEN}=${csrfToken}`;
 
 };
-
-const getParticipantUserAppsUrl = (participantId :string, studyId :UUID, orgId :UUID) => {
+// SURVEY + STUDY_ID_PATH + PARTICIPANT_PATH + PARTICIPANT_ID_PATH + APP_USAGE_PATH
+const getAppUsageDataUrl = (participantId :string, studyId :UUID) => {
 
   if (!isValidUUID(studyId)) {
     LOG.error('studyId must be a valiud UUID', studyId);
-    return null;
-  }
-
-  if (!isValidUUID(orgId)) {
-    LOG.error('orgId must be a valiud UUID', orgId);
     return null;
   }
 
@@ -105,7 +105,7 @@ const getParticipantUserAppsUrl = (participantId :string, studyId :UUID, orgId :
 
   const baseUrl = getBaseUrl();
 
-  return `${baseUrl}/${BASE}/${orgId}/${studyId}/${participantId}/apps`;
+  return `${baseUrl}/${BASE}/${SURVEY}/${studyId}/${PARTICIPANT}/${participantId}/${AppUsagePath}`;
 };
 
 const getDeleteParticipantPath = (orgId :UUID, participantId :string, studyId :UUID) => {
@@ -217,7 +217,7 @@ const getSubmitTudDataUrl = (orgId :UUID, studyId :UUID, participantId :string) 
     return null;
   }
 
-  return `${getBaseUrl()}/${BASE}/${orgId}/${studyId}/${participantId}/${TIME_USE_DIARY}`;
+  return `${getBaseUrl()}/${BASE}/${TIME_USE_DIARY}/${orgId}/${studyId}/${participantId}`;
 };
 
 const getDeleteStudyUrl = (orgId :UUID, studyId :UUID) => {
@@ -233,38 +233,34 @@ const getDeleteStudyUrl = (orgId :UUID, studyId :UUID) => {
   return `${getBaseUrl()}/${BASE}/${AUTHENTICATED}/${orgId}/${studyId}`;
 };
 
-const getEnrollmentStatusUrl = (organizationId :UUID, studyId :UUID, participantId :string) => {
-  if (!isValidUUID(organizationId)) {
-    LOG.error('invalid orgId: ', organizationId);
-    return null;
-  }
+const getVerifyParticipantIdUrl = (studyId :UUID, participantId :string) => {
   if (!isValidUUID(studyId)) {
     LOG.error('invalid studyId: ', studyId);
     return null;
   }
 
-  return `${getBaseUrl()}/${BASE}/${organizationId}/${studyId}/${participantId}/${STATUS}`;
+  return `${getBaseUrl()}/${BASE}/${STUDY}/${studyId}/${PARTICIPANT}/${participantId}/${VERIFY}`;
 };
 
-const getAppSettingsUrl = (organizationId :UUID) => {
-  if (!isValidUUID(organizationId)) {
-    LOG.error('invalid orgId: ', organizationId);
+const getStudySettingsUrl = (studyId :UUID) => {
+  if (!isValidUUID(studyId)) {
+    LOG.error('invalid studyId: ', studyId);
     return null;
   }
 
-  return `${getBaseUrl()}/${BASE}/${organizationId}/${SETTINGS}`;
+  return `${getBaseUrl()}/${BASE}/${STUDY}/${studyId}/${SETTINGS}`;
 };
 
 export {
-  getAppSettingsUrl,
+  getAppUsageDataUrl,
   getBaseUrl,
   getDeleteParticipantPath,
   getDeleteStudyUrl,
-  getEnrollmentStatusUrl,
   getParticipantDataUrl,
-  getParticipantUserAppsUrl,
   getQuestionnaireUrl,
+  getStudySettingsUrl,
   getSubmitQuestionnaireUrl,
   getSubmitTudDataUrl,
+  getVerifyParticipantIdUrl,
   processAppConfigs,
 };

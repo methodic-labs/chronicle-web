@@ -41,13 +41,13 @@ jobs:
 
       - name: deploy to s3
         run: |
-          aws s3 rm --recursive s3://v3.openlattice.com/chronicle/
-          aws s3 cp --recursive build/ s3://v3.openlattice.com/chronicle/
+          aws s3 rm --recursive s3://app.getmethodic.com/chronicle/
+          aws s3 cp --recursive build/ s3://app.getmethodic.com/chronicle/
 
       - name: clear cloudflare cache
         run: |
-          curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
-            -H "X-Auth-Email: ${{ secrets.CLOUDFLARE_EMAIL }}" \
-            -H "X-Auth-Key: ${{ secrets.CLOUDFLARE_API_KEY }}" \
+          curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${{ secrets.METHODIC_CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            -H "X-Auth-Email: ${{ secrets.METHODIC_CLOUDFLARE_EMAIL }}" \
+            -H "X-Auth-Key: ${{ secrets.METHODIC_CLOUDFLARE_API_KEY }}" \
             -H "Content-Type: application/json" \
-            --data '{"files":["https://v3.openlattice.com/chronicle"]}'
+            --data '{"files":["https://app.getmethodic.com/chronicle"]}'

@@ -16,7 +16,7 @@ import TimeUseSummary from './TimeUseSummary';
 
 import TranslationKeys from '../constants/TranslationKeys';
 import * as SecondaryFollowUpSchema from '../schemas/SecondaryFollowUpSchema';
-import { submitTudData } from '../TimeUseDiaryActions';
+import { submitTimeUseDiary } from '../actions';
 import { PAGE_NUMBERS } from '../constants/GeneralConstants';
 import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
 import {
@@ -24,6 +24,16 @@ import {
   selectPrimaryActivityByPage,
   selectTimeByPageAndKey
 } from '../utils';
+import {
+  FAMILY_ID,
+  FORM_DATA,
+  LANGUAGE,
+  ORGANIZATION_ID,
+  PARTICIPANT_ID,
+  STUDY_ID,
+  TRANSLATION_DATA,
+  WAVE_ID,
+} from '../../../common/constants';
 
 const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
 
@@ -248,16 +258,18 @@ const QuestionnaireForm = ({
 
   const handleNext = () => {
     if (isSummaryPage) {
-      dispatch(submitTudData({
-        familyId,
-        formData: pagedData,
-        organizationId,
-        participantId,
-        studyId,
-        waveId,
-        language,
-        translationData
-      }));
+      dispatch(
+        submitTimeUseDiary({
+          [FAMILY_ID]: familyId,
+          [FORM_DATA]: pagedData,
+          [LANGUAGE]: language,
+          [ORGANIZATION_ID]: organizationId,
+          [PARTICIPANT_ID]: participantId,
+          [STUDY_ID]: studyId,
+          [TRANSLATION_DATA]: translationData,
+          [WAVE_ID]: waveId,
+        })
+      );
       return;
     }
 

@@ -3,30 +3,41 @@
  */
 
 import { connectRouter } from 'connected-react-router/immutable';
-import { AuthReducer } from 'lattice-auth';
 import { combineReducers } from 'redux-immutable';
 
-import appReducer from '../../containers/app/AppReducer';
+import appReducer from '../../containers/app/reducers';
+import appUsageSurveyReducer from '../../containers/survey/reducers';
+import authReducer from '../auth/reducers';
 import dashboardReducer from '../../containers/dashboard/reducers';
 import edmReducer from '../edm/EDMReducer';
-import permissionsReducer from '../permissions/PermissionsReducer';
+import orgsReducer from '../orgs/reducers';
+import permissionsReducer from '../permissions/reducers';
 import questionnareReducer from '../../containers/questionnaire/QuestionnaireReducer';
-import studiesReducer from '../../containers/studies/StudiesReducer';
-import surveyReducer from '../../containers/survey/SurveyReducer';
-import timeUseDiaryReducer from '../../containers/tud/TimeUseDiaryReducer';
+import studiesReducer from '../../containers/study/reducers';
+import timeUseDiaryReducer from '../../containers/tud/reducers';
+import {
+  APP,
+  APP_USAGE_SURVEY,
+  AUTH,
+  ORGANIZATIONS,
+  PERMISSIONS,
+  STUDIES,
+  TIME_USE_DIARY,
+} from '../../common/constants';
 
 export default function reduxReducer(routerHistory :any) {
 
   return combineReducers({
-    app: appReducer,
-    appsData: surveyReducer,
-    auth: AuthReducer,
+    [APP]: appReducer,
+    [APP_USAGE_SURVEY]: appUsageSurveyReducer,
+    [AUTH]: authReducer,
+    [ORGANIZATIONS]: orgsReducer,
+    [PERMISSIONS]: permissionsReducer,
+    [STUDIES]: studiesReducer,
+    [TIME_USE_DIARY]: timeUseDiaryReducer,
     dashboard: dashboardReducer,
     edm: edmReducer,
-    permissions: permissionsReducer,
     questionnaire: questionnareReducer,
     router: connectRouter(routerHistory),
-    studies: studiesReducer,
-    tud: timeUseDiaryReducer,
   });
 }

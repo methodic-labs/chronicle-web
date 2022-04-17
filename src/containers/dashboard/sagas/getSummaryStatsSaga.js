@@ -10,7 +10,6 @@ import {
 import { fromJS } from 'immutable';
 import { Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import { countAllParticipantsWorker } from './countAllParticipantsSaga';
@@ -23,6 +22,7 @@ import {
   countAllStudies,
   getSummaryStats
 } from '../actions';
+import type { WorkerResponse } from '../../../common/types';
 
 const LOG = new Logger('DashboardSagas');
 

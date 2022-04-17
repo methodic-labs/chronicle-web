@@ -1,37 +1,61 @@
 // @flow
 
-import { COLUMN_FIELDS, HEADER_NAMES } from './tableColumns';
-
-const {
-  ANDROID_DATA_DURATION,
-  ENROLLMENT_STATUS,
-  FIRST_ANDROID_DATA,
-  FIRST_TUD_SUBMISSION,
-  LAST_ANDROID_DATA,
-  LAST_TUD_SUBMISSION,
+import {
+  ANDROID_FIRST_DATE,
+  ANDROID_LAST_DATE,
+  ANDROID_UNIQUE_DATES,
+  IOS_FIRST_DATE,
+  IOS_LAST_DATE,
+  IOS_UNIQUE_DATES,
   PARTICIPANT_ID,
-  TUD_SUBMISSION_DURATION,
-} = COLUMN_FIELDS;
+  PARTICIPATION_STATUS,
+  TUD_FIRST_DATE,
+  TUD_LAST_DATE,
+  TUD_UNIQUE_DATES
+} from '../../../common/constants';
 
 const TUD_COLUMNS = [
   {
-    key: FIRST_TUD_SUBMISSION,
-    label: HEADER_NAMES[FIRST_TUD_SUBMISSION],
+    key: TUD_FIRST_DATE,
+    label: 'TUD First Submission',
     cellStyle: {
       fontWeight: 500,
     }
   },
   {
-    key: LAST_TUD_SUBMISSION,
-    label: HEADER_NAMES[LAST_TUD_SUBMISSION],
+    key: TUD_LAST_DATE,
+    label: 'TUD Last Submission',
     cellStyle: {
       fontWeight: 500,
     }
   },
   {
-    key: TUD_SUBMISSION_DURATION,
-    label: HEADER_NAMES[TUD_SUBMISSION_DURATION],
-    sortable: false,
+    key: TUD_UNIQUE_DATES,
+    label: 'TUD Unique Submission Days',
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+];
+
+const IOS_COLUMNS = [
+  {
+    key: IOS_FIRST_DATE,
+    label: 'iOS First Data',
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+  {
+    key: IOS_LAST_DATE,
+    label: 'iOS Last Data',
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+  {
+    key: IOS_UNIQUE_DATES,
+    label: 'iOS Data Unique Days',
     cellStyle: {
       fontWeight: 500,
     }
@@ -40,22 +64,22 @@ const TUD_COLUMNS = [
 
 const ANDROID_COLUMNS = [
   {
-    key: FIRST_ANDROID_DATA,
-    label: HEADER_NAMES[FIRST_ANDROID_DATA],
+    key: ANDROID_FIRST_DATE,
+    label: 'Android First Data',
     cellStyle: {
       fontWeight: 500,
     }
   },
   {
-    key: LAST_ANDROID_DATA,
-    label: HEADER_NAMES[LAST_ANDROID_DATA],
+    key: ANDROID_LAST_DATE,
+    label: 'Android Last Data',
     cellStyle: {
       fontWeight: 500,
     }
   },
   {
-    key: ANDROID_DATA_DURATION,
-    label: HEADER_NAMES[ANDROID_DATA_DURATION],
+    key: ANDROID_UNIQUE_DATES,
+    label: 'Android Data Unique Days',
     sortable: false,
     cellStyle: {
       fontWeight: 500,
@@ -65,11 +89,22 @@ const ANDROID_COLUMNS = [
 
 const PARTICIPANT_ID_COLUMN = {
   key: PARTICIPANT_ID,
-  label: HEADER_NAMES[PARTICIPANT_ID],
+  label: 'Participant Id',
   cellStyle: {
     fontWeight: 500,
+    width: '150px'
   }
 };
+
+// 2022-03-24 not needed for now. Will restore later
+// const SELECT_PARTICIPANTS_COLUMN = {
+//   key: 'select_participants',
+//   label: '',
+//   sortable: false,
+//   cellStyle: {
+//     width: '50px'
+//   }
+// };
 
 const ACTIONS_COLUMN = {
   key: 'actions',
@@ -77,15 +112,17 @@ const ACTIONS_COLUMN = {
   sortable: false,
   cellStyle: {
     fontWeight: 500,
+    width: '50px'
   }
 };
 
 const STATUS_COLUMN = {
-  key: ENROLLMENT_STATUS,
-  label: HEADER_NAMES[ENROLLMENT_STATUS],
+  key: PARTICIPATION_STATUS,
+  label: 'Status',
   sortable: false,
   cellStyle: {
     fontWeight: 500,
+    width: '100px'
   }
 };
 
@@ -94,35 +131,49 @@ type ColumnType = {
   label :string;
   sortable ?:boolean;
   cellStyle :{
-    fontWeight :number;
     width ?:string
   }
 };
 
-export default function getHeaders(orgHasSurveyModule :Boolean, orgHasDataCollectionModule :Boolean) {
-  let data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
-  if (orgHasSurveyModule && !orgHasDataCollectionModule) {
-    data = [PARTICIPANT_ID_COLUMN, ...TUD_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+const getColumnsList = (
+  hasTimeUseDiary :boolean,
+  hasAndroidDataCollection :boolean,
+  hasIOSSensorDataCollection :boolean
+) => {
+  // 2022-03-11 remove SELECT_PARTICIPANTS_COLUMN for now
+  let result = [PARTICIPANT_ID_COLUMN];
+  if (hasAndroidDataCollection) {
+    result = result.concat(ANDROID_COLUMNS);
   }
-  if (orgHasDataCollectionModule && !orgHasSurveyModule) {
-    data = [PARTICIPANT_ID_COLUMN, ...ANDROID_COLUMNS, STATUS_COLUMN, ACTIONS_COLUMN];
+
+  if (hasIOSSensorDataCollection) {
+    result = result.concat(IOS_COLUMNS);
   }
 
-  const numColumns = data.length;
-  const lastIndex = numColumns - 1;
+  if (hasTimeUseDiary) {
+    result = result.concat(TUD_COLUMNS);
+  }
 
-  // "actions" column will occupy 5% width, and other columns will share remanining width equally
-  const defaultColumnWidth = 95.0 / (numColumns - 1);
+  result.push(STATUS_COLUMN);
+  result.push(ACTIONS_COLUMN);
 
-  return data.map<ColumnType>((column :ColumnType, index) => {
-    if (index === lastIndex) {
-      return column;
-    }
+  return result;
+};
+
+export default function getHeaders(
+  hasTimeUseDiary :boolean,
+  hasAndroidDataCollection :boolean,
+  hasIOSSensorDataCollection :boolean
+) {
+  const columns = getColumnsList(hasTimeUseDiary, hasAndroidDataCollection, hasIOSSensorDataCollection);
+
+  return columns.map<ColumnType>((column :ColumnType) => {
+    const width = column.cellStyle?.width || '200px';
     return {
       ...column,
       cellStyle: {
         ...column.cellStyle,
-        width: `${defaultColumnWidth}%`
+        width
       }
     };
   });

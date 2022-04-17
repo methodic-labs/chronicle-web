@@ -10,7 +10,6 @@ import {
 import { List, Map } from 'immutable';
 import { DataUtils, Logger, ValidationUtils } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
-import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
 
 import { getOrgStudiesWorker } from './getOrgStudiesSaga';
@@ -26,6 +25,7 @@ import {
   getOrgStudiesTableData,
   getStudyParticipantsCount,
 } from '../actions';
+import type { WorkerResponse } from '../../../common/types';
 
 const { getEntityKeyId, getPropertyValue } = DataUtils;
 

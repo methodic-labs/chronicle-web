@@ -26,17 +26,17 @@ const { formatDateTime } = DateTimeUtils;
 type Props = {
   handleOnClose :() => void;
   isVisible :boolean;
-  participantEntityKeyId :UUID;
+  candidateId :UUID;
   participantId :UUID;
 }
 
 const TudSubmissionHistory = ({
   handleOnClose,
   isVisible,
-  participantEntityKeyId,
+  candidateId,
   participantId
 } :Props) => {
-  const data :OrderedSet = useSelector(selectTudSubmissionDates(participantEntityKeyId));
+  const data :OrderedSet = useSelector(selectTudSubmissionDates(candidateId));
 
   return (
     <Modal

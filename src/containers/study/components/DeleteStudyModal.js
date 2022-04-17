@@ -2,9 +2,7 @@
 
 import { useState } from 'react';
 
-import { Map } from 'immutable';
 import {
-  // $FlowFixMe
   Box,
   Input,
   Label,
@@ -12,17 +10,13 @@ import {
   Spinner,
   Typography,
 } from 'lattice-ui-kit';
-import { DataUtils } from 'lattice-utils';
 import { useDispatch } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
-import { deleteStudy } from '../../studies/StudiesActions';
-
-const { FULL_NAME_FQN } = PROPERTY_TYPE_FQNS;
-
-const { getPropertyValue } = DataUtils;
+import { STUDY_ID } from '../../../common/constants';
+import { deleteStudy } from '../actions';
+import type { Study } from '../../../common/types';
 
 const DeleteStudyModal = ({
   isVisible,
@@ -33,11 +27,11 @@ const DeleteStudyModal = ({
   isVisible :boolean;
   onClose :() => void;
   requestState :RequestState;
-  study :Map
+  study :Study
 |}) => {
   const dispatch = useDispatch();
 
-  const [studyName, setStudyName] = useState('');
+  const [studyTitle, setStudyName] = useState('');
   const [isInputError, setInputError] = useState(false);
 
   const handleOnChange = (event :SyntheticInputEvent<HTMLInputElement>) => {
@@ -47,9 +41,11 @@ const DeleteStudyModal = ({
   };
 
   const handleOnDelete = () => {
-    if (studyName === getPropertyValue(study, [FULL_NAME_FQN, 0])) {
+    if (studyTitle === study.title) {
       setInputError(false);
-      dispatch(deleteStudy(study));
+      dispatch(deleteStudy({
+        [STUDY_ID]: study.id
+      }));
     }
     else {
       setInputError(true);
@@ -63,14 +59,14 @@ const DeleteStudyModal = ({
           Are you sure you want to delete study?
         </Typography>
 
-        <Label htmlFor="studyName">
+        <Label htmlFor="studyTitle">
           To confirm, please type the name of study.
         </Label>
         <Input
             error={isInputError}
-            id="studyName"
+            id="studyTitle"
             onChange={handleOnChange}
-            value={studyName} />
+            value={studyTitle} />
       </div>
     ),
     [RequestStates.FAILURE]: (

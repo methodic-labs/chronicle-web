@@ -4,10 +4,10 @@
 
 import _isFunction from 'lodash/isFunction';
 import { Map } from 'immutable';
-import { AuthUtils } from 'lattice-auth';
 import { Logger } from 'lattice-utils';
 
-import { GOOGLE_TRACKING_ID } from '../GoogleAnalytics';
+import { getUserInfo, isAuthenticated } from '../../../auth/utils';
+import { GOOGLE_MEASUREMENT_ID } from '../GoogleAnalytics';
 
 const LOG = new Logger('RouteChangeEventHandler');
 
@@ -44,15 +44,15 @@ export default function handler(action :Action, prevState :Map, nextState :Map) 
     event.page_location = url;
     event.page_path = url.replace(origin, '');
 
-    if (AuthUtils.isAuthenticated()) {
-      const userInfo = AuthUtils.getUserInfo();
+    if (isAuthenticated()) {
+      const userInfo = getUserInfo();
       if (userInfo && userInfo.id) {
         event.user_id = userInfo.id;
       }
     }
 
     if (_isFunction(gtag)) {
-      gtag('config', GOOGLE_TRACKING_ID, event);
+      gtag('config', GOOGLE_MEASUREMENT_ID, event);
     }
     else {
       LOG.error('global "gtag" function not available', gtag);

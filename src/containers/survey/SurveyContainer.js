@@ -1,11 +1,20 @@
-// @flow
+/*
+ * @flow
+ */
 
 import { useEffect } from 'react';
 
 import qs from 'qs';
-import { Map } from 'immutable';
-// $FlowFixMe
-import { Box, Spinner } from 'lattice-ui-kit';
+import {
+  Alert,
+  AppContainerWrapper,
+  AppContentWrapper,
+  AppHeaderWrapper,
+  Box,
+  Card,
+  CardSegment,
+  Spinner
+} from 'lattice-ui-kit';
 import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,18 +23,26 @@ import type { RequestState } from 'redux-reqseq';
 
 import DailyAppUsageSurvey from './DailyAppUsageSurvey';
 import HourlyAppUsageSurvey from './HourlyAppUsageSurvey';
-import { GET_CHRONICLE_APPS_DATA, SUBMIT_SURVEY, getChronicleAppsData } from './SurveyActions';
+import { GET_APP_USAGE_SURVEY_DATA, SUBMIT_APP_USAGE_SURVEY, getAppUsageSurveyData } from './actions';
 
-import AppUsageFreqTypes from '../../utils/constants/AppUsageFreqTypes';
-import Settings from '../../utils/constants/AppSettings';
-import * as AppModules from '../../utils/constants/AppModules';
-import { APP_REDUX_CONSTANTS, REDUCERS } from '../../utils/constants/ReduxConstants';
-import { GET_APP_SETTINGS, getAppSettings } from '../app/AppActions';
-import type { AppUsageFreqType } from '../../utils/constants/AppUsageFreqTypes';
+import { OpenLatticeIconSVG } from '../../assets/svg/icons';
+import {
+  APP_USAGE_FREQUENCY,
+  APP_USAGE_SURVEY,
+  AppUsageFreqTypes,
+  DATA_COLLECTION,
+  STUDIES,
+} from '../../common/constants';
+import { selectAppUsageSurveyData, selectStudySettings } from '../../core/redux/selectors';
+import { GET_STUDY_SETTINGS, getStudySettings } from '../study/actions';
+import type { AppUsageFreqType } from '../../common/types';
 
-const { SETTINGS } = APP_REDUX_CONSTANTS;
-
-const { isPending, isStandby } = ReduxUtils;
+const {
+  isPending,
+  isStandby,
+  isSuccess,
+  isFailure
+} = ReduxUtils;
 
 const SurveyContainer = () => {
   const dispatch = useDispatch();
@@ -35,43 +52,41 @@ const SurveyContainer = () => {
 
   const {
     date = DateTime.local().toISODate(),
-    organizationId,
     participantId,
     studyId
     // $FlowFixMe
-  } :{ date :string, organizationId :UUID, participantId :string, studyId :UUID } = queryParams;
+  } :{ date :string, participantId :string, studyId :UUID } = queryParams;
 
   // selectors
-  const settings = useSelector((state) => state.getIn([REDUCERS.APP, SETTINGS], Map()));
-  const userAppsData = useSelector((state) => state.getIn([REDUCERS.APPS_DATA, 'appsData'], Map()));
+  const studySettings = useSelector(selectStudySettings(studyId));
+  const appUsageSurveyData = useSelector(selectAppUsageSurveyData());
 
-  const getUserAppsRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, GET_CHRONICLE_APPS_DATA]);
-  const getAppSettingsRS :?RequestState = useRequestState([REDUCERS.APP, GET_APP_SETTINGS]);
-  const submitSurveyRS :?RequestState = useRequestState([REDUCERS.APPS_DATA, SUBMIT_SURVEY]);
+  const getAppUsageSurveyDataRS :?RequestState = useRequestState([APP_USAGE_SURVEY, GET_APP_USAGE_SURVEY_DATA]);
+  const getStudySettingsRS :?RequestState = useRequestState([STUDIES, GET_STUDY_SETTINGS]);
+  const submitSurveyRS :?RequestState = useRequestState([APP_USAGE_SURVEY, SUBMIT_APP_USAGE_SURVEY]);
 
-  const appUsageFreqType :AppUsageFreqType = settings.getIn(
-    [AppModules.DATA_COLLECTION, organizationId, Settings.APP_USAGE_FREQUENCY]
+  const appUsageFreqType :AppUsageFreqType = studySettings.getIn(
+    [DATA_COLLECTION, APP_USAGE_FREQUENCY]
   ) || AppUsageFreqTypes.DAILY;
 
   useEffect(() => {
-    dispatch(getAppSettings({
-      appName: AppModules.DATA_COLLECTION,
-      organizationId
-    }));
-  }, [organizationId, dispatch]);
+    dispatch(getStudySettings(studyId));
+  }, [studyId, dispatch]);
 
   // get apps
   useEffect(() => {
-    dispatch(getChronicleAppsData({
-      date,
-      participantId,
-      organizationId,
-      studyId,
-      appUsageFreqType
-    }));
-  }, [date, participantId, organizationId, studyId, appUsageFreqType, dispatch]);
+    if (isSuccess(getStudySettingsRS)) {
+      dispatch(getAppUsageSurveyData({
+        appUsageFreqType,
+        date,
+        participantId,
+        studyId,
+      }));
+    }
 
-  if (isPending(getAppSettingsRS) || isStandby(getAppSettingsRS) || isPending(getUserAppsRS)) {
+  }, [date, participantId, studyId, appUsageFreqType, dispatch, getStudySettingsRS]);
+
+  if (isPending(getStudySettingsRS) || isStandby(getStudySettingsRS) || isPending(getAppUsageSurveyDataRS)) {
     return (
       <Box mt="60px" textAlign="center">
         <Spinner size="2x" />
@@ -79,13 +94,29 @@ const SurveyContainer = () => {
     );
   }
 
+  if (isFailure(getStudySettingsRS) || isFailure(getAppUsageSurveyDataRS)) {
+    return (
+      <AppContainerWrapper>
+        <AppHeaderWrapper appIcon={OpenLatticeIconSVG} appTitle="Chronicle" />
+        <AppContentWrapper>
+          <Card>
+            <CardSegment>
+              <Alert severity="error">
+                Sorry, An error occurred when fetching survey data. Please try again later.
+              </Alert>
+            </CardSegment>
+          </Card>
+        </AppContentWrapper>
+      </AppContainerWrapper>
+    );
+  }
+
   if (appUsageFreqType === AppUsageFreqTypes.HOURLY) {
     return (
       <HourlyAppUsageSurvey
-          data={userAppsData}
+          data={appUsageSurveyData}
           date={date}
-          getUserAppsRS={getUserAppsRS}
-          organizationId={organizationId}
+          getAppUsageSurveyDataRS={getAppUsageSurveyDataRS}
           participantId={participantId}
           studyId={studyId}
           submitSurveyRS={submitSurveyRS} />
@@ -94,10 +125,9 @@ const SurveyContainer = () => {
 
   return (
     <DailyAppUsageSurvey
-        data={userAppsData}
+        data={appUsageSurveyData}
         date={date}
-        getUserAppsRS={getUserAppsRS}
-        organizationId={organizationId}
+        getAppUsageSurveyDataRS={getAppUsageSurveyDataRS}
         participantId={participantId}
         studyId={studyId}
         submitSurveyRS={submitSurveyRS} />

@@ -83,10 +83,7 @@ const {
   DATETIME_END_FQN,
   DATETIME_START_FQN,
   DATE_TIME_FQN,
-  ID_FQN,
   PERSON_ID,
-  TITLE_FQN,
-  VALUES_FQN,
 } = PROPERTY_TYPE_FQNS;
 
 const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
@@ -376,12 +373,12 @@ const createSubmitRequestBody = (
         .map(([key, value]) => {
           const stringVal = stringifyValue(value);
           const entity = {
-            [VALUES_FQN.toString()]: translateToEnglish(key, stringVal, language, englishTranslationLookup),
-            [ID_FQN.toString()]: [key],
-            [TITLE_FQN.toString()]: [get(QUESTION_TITLE_LOOKUP, key, key)],
+            response: translateToEnglish(key, stringVal, language, englishTranslationLookup),
+            code: key,
+            question: get(QUESTION_TITLE_LOOKUP, key, key),
             ...(startTime && endTime) && {
-              [DATETIME_START_FQN.toString()]: [startTime],
-              [DATETIME_END_FQN.toString()]: [endTime]
+              startDateTime: startTime,
+              endDateTime: endTime
             }
           };
           return entity;
@@ -394,16 +391,16 @@ const createSubmitRequestBody = (
   // waveId & familyId
   if (waveId) {
     result.push({
-      [VALUES_FQN.toString()]: [waveId],
-      [ID_FQN.toString()]: [WAVE_ID],
-      [TITLE_FQN.toString()]: ['Wave Id']
+      response: [waveId],
+      code: WAVE_ID,
+      question: 'Wave Id'
     });
   }
   if (familyId) {
     result.push({
-      [VALUES_FQN.toString()]: [familyId],
-      [ID_FQN.toString()]: [FAMILY_ID],
-      [TITLE_FQN.toString()]: ['Family Id']
+      response: [familyId],
+      code: FAMILY_ID,
+      question: 'Family Id'
     });
   }
 

@@ -1,9 +1,12 @@
-// @flow
+/*
+ * @flow
+ */
+
 import type { ComponentType } from 'react';
 
-import { AuthUtils } from 'lattice-auth';
-
 import DefaultUnauthorized from './DefaultUnauthorized';
+
+import { isAdmin } from '../auth/utils';
 
 type Props = {
   unauthorizedComponent :ComponentType<any>;
@@ -16,7 +19,7 @@ const Auth0AdminRoute = (props :Props) => {
     children,
   } = props;
 
-  const isAuthorized = AuthUtils.isAdmin();
+  const isAuthorized = isAdmin();
 
   return isAuthorized ? children : <UnauthorizedComponent />;
 };
