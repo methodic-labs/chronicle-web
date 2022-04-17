@@ -1,21 +1,28 @@
 // @flow
 
 import styled from 'styled-components';
-import { Typography } from 'lattice-ui-kit';
+import { Colors, Typography } from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
 
 import DownloadAllButton from './DownloadAllButton';
 
 import type { DataType } from '../constants/DataTypes';
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: auto auto 1fr auto;
-  grid-gap: 30px;
-  margin-bottom: 10px;
-`;
+const { NEUTRAL } = Colors;
 
-// TODO: Add additional button to download summarized
+const Wrapper = styled.div`
+  align-items: flex-end;
+  background: white;
+  border-bottom: 1px solid ${NEUTRAL.N100};
+  display: grid;
+  grid-gap: 30px;
+  grid-template-columns: auto auto 1fr auto;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1
+`;
 
 type Props = {
   onDownloadData :(date :?DateTime, dataType :DataType) => void;
@@ -23,11 +30,11 @@ type Props = {
 
 const SummaryHeader = ({ onDownloadData } :Props) => (
   <Wrapper>
-    <Typography variant="overline" display="block" gutterBottom>
+    <Typography variant="overline" display="block">
       Date
     </Typography>
 
-    <Typography variant="overline" display="block" gutterBottom>
+    <Typography variant="overline" display="block">
       Number of Submissions
     </Typography>
     <div />

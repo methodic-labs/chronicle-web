@@ -13,17 +13,16 @@ import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 
 type Props = {
   appsData :Map;
-  childOnly :boolean;
   selected :Set<string>
 };
 
 const SelectAppsByUser = (props :Props) => {
-  const { appsData, childOnly, selected } = props;
+  const { appsData, selected } = props;
 
   const dispatch = useContext(HourlySurveyDispatch);
 
   const handleOnChange = (appName :string) => {
-    dispatch({ type: ACTIONS.ASSIGN_USER, childOnly, appName });
+    dispatch({ type: ACTIONS.ASSIGN_USER, appName });
   };
 
   return (

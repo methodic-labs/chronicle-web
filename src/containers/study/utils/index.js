@@ -8,7 +8,7 @@ const getBaseUrl = () => {
 // 2022-02-24: Default all orgIds to NIL if not provided
 // TODO: Don't hard code link
 const getParticipantLoginLink = (studyId :UUID, participantId :string) => (
-  'https://openlattice.com/chronicle/login'
+  'https://app.getmethodic.com/enroll'
   + `?studyId=${studyId}`
   + `&participantId=${participantId}`
 );
