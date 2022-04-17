@@ -17,6 +17,7 @@ export type AppComponent = {|
   CHRONICLE :'CHRONICLE';
   CHRONICLE_DATA_COLLECTION :'CHRONICLE_DATA_COLLECTION';
   CHRONICLE_SURVEYS :'CHRONICLE_SURVEYS';
+  IOS_SENSOR :'IOS_SENSOR';
   TIME_USE_DIARY :'TIME_USE_DIARY';
 |}
 
@@ -28,6 +29,13 @@ export type AuthorizationObject = {|
     WRITE ?:boolean;
   };
 |};
+
+export type IOSSensorType = {|
+  DEVICE_USAGE :'deviceUsage';
+  KEYBOARD_METRICS :'keyboardMetrics';
+  MESSAGES_USAGE :'messagesUsage';
+  PHONE_USAGE :'phoneUsage';
+|}
 
 export type ParticipantDataType = {|
   USAGE_EVENTS :'UsageEvents';
@@ -104,6 +112,7 @@ export type Study = {
   notificationsEnabled :boolean;
   organizationIds :UUID[];
   settings :Object;
+  modules :Object;
   startedAt :string;
   storage :string;
   title :string;

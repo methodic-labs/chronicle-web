@@ -22,9 +22,10 @@ const Grid = styled.div`
 `;
 
 type Props = {
-  hasDataCollectionModule :boolean;
-  hasTimeUseDiaryModule :boolean;
   handleOnClose :() => void;
+  hasAndroidDataCollection :boolean;
+  hasIOSSensorDataCollection :boolean;
+  hasTimeUseDiary :boolean;
   isVisible :boolean;
   participantId :UUID;
   studyId :UUID;
@@ -32,11 +33,12 @@ type Props = {
 
 const ParticipantInfoModal = ({
   handleOnClose,
+  hasAndroidDataCollection,
+  hasIOSSensorDataCollection,
+  hasTimeUseDiary,
   isVisible,
   participantId,
   studyId,
-  hasDataCollectionModule,
-  hasTimeUseDiaryModule
 } :Props) => {
 
   const renderParticipantInfo = () => {
@@ -49,17 +51,20 @@ const ParticipantInfoModal = ({
       { name: 'Study ID', value: studyId }
     ];
 
-    if (hasTimeUseDiaryModule) {
+    if (hasTimeUseDiary) {
       participantDetails.push({
         name: 'Time Use Diary Link',
         value: timeUseDiaryLink
       });
     }
 
-    if (hasDataCollectionModule) {
+    if (hasAndroidDataCollection || hasIOSSensorDataCollection) {
       participantDetails.push({
         name: 'Enrollment Link', value: enrollmentLink
       });
+    }
+
+    if (hasAndroidDataCollection) {
       participantDetails.push({
         name: 'App Usage Link', value: appUsageLink
       });

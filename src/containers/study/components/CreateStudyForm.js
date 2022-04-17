@@ -9,7 +9,8 @@ import { useDispatch } from 'react-redux';
 
 import { createSchema, createUiSchema } from './CreateStudySchemas';
 
-import { createStudy } from '../actions';
+import { FEATURES, ID, STUDY } from '../../../common/constants';
+import { createStudy, updateStudy } from '../actions';
 import { createFormDataFromStudyEntity } from '../utils';
 import type { Study } from '../../../common/types';
 
@@ -26,13 +27,33 @@ const CreateStudyForm = ({
 
   const initialFormData = study ? createFormDataFromStudyEntity(schema, study) : {};
 
+  const getStudyFeatures = (features :[]) => {
+    const result = features.reduce((obj, feature) => ({
+      ...obj,
+      [feature]: study?.modules[feature] ?? {}
+    }), {});
+    return result;
+  };
+
   const handleSubmit = ({ formData } :Object) => {
     if (study) {
-      // throw Error('update study not implemented');
-      // dispatch(updateStudy({ formData, initialFormData, study }));
+      const { features, ...rest } = formData.page1section1;
+
+      const updated = {
+        ...initialFormData?.page1section1,
+        ...rest,
+        modules: getStudyFeatures(features)
+      };
+      delete updated[FEATURES];
+      dispatch(updateStudy({ [STUDY]: updated, [ID]: study.id }));
     }
     else {
-      dispatch(createStudy(formData.page1section1));
+      const { features, ...rest } = formData.page1section1;
+      const studyDetails = {
+        modules: getStudyFeatures(features),
+        ...rest
+      };
+      dispatch(createStudy(studyDetails));
     }
   };
 

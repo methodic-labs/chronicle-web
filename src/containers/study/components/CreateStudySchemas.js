@@ -3,14 +3,23 @@
  */
 
 import {
+  AppComponents,
   CONTACT,
   DESCRIPTION,
+  FEATURES,
   GROUP,
   NOTIFICATIONS_ENABLED,
   STUDY_ID,
   TITLE,
-  VERSION,
+  VERSION
 } from '../../../common/constants';
+
+const {
+  CHRONICLE_DATA_COLLECTION,
+  CHRONICLE_SURVEYS,
+  IOS_SENSOR,
+  TIME_USE_DIARY
+} = AppComponents;
 
 const createSchema = () => ({
   properties: {
@@ -40,6 +49,18 @@ const createSchema = () => ({
           title: '',
           type: 'string'
         },
+        [FEATURES]: {
+          title: 'Features',
+          description: 'Select all that apply',
+          type: 'array',
+          items: {
+            enum: [CHRONICLE_DATA_COLLECTION, CHRONICLE_SURVEYS, IOS_SENSOR, TIME_USE_DIARY],
+            enumNames: ['Android Data Collection', 'Custom Surveys', 'iOS Sensor', 'Time Use Diary'],
+            type: 'string'
+          },
+          minItems: 1,
+          uniqueItems: true,
+        },
         [NOTIFICATIONS_ENABLED]: {
           title: 'Enable daily notifications',
           type: 'boolean'
@@ -47,6 +68,7 @@ const createSchema = () => ({
       },
       required: [
         TITLE,
+        FEATURES,
         CONTACT,
       ],
       type: 'object',
@@ -78,6 +100,14 @@ const createUiSchema = () => ({
     },
     [STUDY_ID]: {
       classNames: 'hidden'
+    },
+    [FEATURES]: {
+      classNames: 'column-span-12',
+      'ui:widget': 'checkboxes',
+      'ui:options': {
+        mode: 'button',
+        row: true,
+      }
     },
     [NOTIFICATIONS_ENABLED]: {
       classNames: 'column-span-12'

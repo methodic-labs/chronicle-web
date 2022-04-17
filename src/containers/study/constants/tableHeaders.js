@@ -1,37 +1,61 @@
 // @flow
 
-import { COLUMN_FIELDS, HEADER_NAMES } from './tableColumns';
-
-const {
-  ANDROID_DATA_UNIQUE_DAYS,
-  ENROLLMENT_STATUS,
-  FIRST_ANDROID_DATA,
-  FIRST_TUD_SUBMISSION,
-  LAST_ANDROID_DATA,
-  LAST_TUD_SUBMISSION,
+import {
+  ANDROID_FIRST_DATE,
+  ANDROID_LAST_DATE,
+  ANDROID_UNIQUE_DATES,
+  IOS_FIRST_DATE,
+  IOS_LAST_DATE,
+  IOS_UNIQUE_DATES,
   PARTICIPANT_ID,
-  TUD_SUBMISSION_UNIQUE_DAYS,
-} = COLUMN_FIELDS;
+  PARTICIPATION_STATUS,
+  TUD_FIRST_DATE,
+  TUD_LAST_DATE,
+  TUD_UNIQUE_DATES
+} from '../../../common/constants';
 
 const TUD_COLUMNS = [
   {
-    key: FIRST_TUD_SUBMISSION,
-    label: HEADER_NAMES[FIRST_TUD_SUBMISSION],
+    key: TUD_FIRST_DATE,
+    label: 'TUD First Submission',
     cellStyle: {
       fontWeight: 500,
     }
   },
   {
-    key: LAST_TUD_SUBMISSION,
-    label: HEADER_NAMES[LAST_TUD_SUBMISSION],
+    key: TUD_LAST_DATE,
+    label: 'TUD Last Submission',
     cellStyle: {
       fontWeight: 500,
     }
   },
   {
-    key: TUD_SUBMISSION_UNIQUE_DAYS,
-    label: HEADER_NAMES[TUD_SUBMISSION_UNIQUE_DAYS],
-    sortable: false,
+    key: TUD_UNIQUE_DATES,
+    label: 'TUD Unique Submission Days',
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+];
+
+const IOS_COLUMNS = [
+  {
+    key: IOS_FIRST_DATE,
+    label: 'iOS First Data',
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+  {
+    key: IOS_LAST_DATE,
+    label: 'iOS Last Data',
+    cellStyle: {
+      fontWeight: 500,
+    }
+  },
+  {
+    key: IOS_UNIQUE_DATES,
+    label: 'iOS Data Unique Days',
     cellStyle: {
       fontWeight: 500,
     }
@@ -40,22 +64,22 @@ const TUD_COLUMNS = [
 
 const ANDROID_COLUMNS = [
   {
-    key: FIRST_ANDROID_DATA,
-    label: HEADER_NAMES[FIRST_ANDROID_DATA],
+    key: ANDROID_FIRST_DATE,
+    label: 'Android First Data',
     cellStyle: {
       fontWeight: 500,
     }
   },
   {
-    key: LAST_ANDROID_DATA,
-    label: HEADER_NAMES[LAST_ANDROID_DATA],
+    key: ANDROID_LAST_DATE,
+    label: 'Android Last Data',
     cellStyle: {
       fontWeight: 500,
     }
   },
   {
-    key: ANDROID_DATA_UNIQUE_DAYS,
-    label: HEADER_NAMES[ANDROID_DATA_UNIQUE_DAYS],
+    key: ANDROID_UNIQUE_DATES,
+    label: 'Android Data Unique Days',
     sortable: false,
     cellStyle: {
       fontWeight: 500,
@@ -65,11 +89,22 @@ const ANDROID_COLUMNS = [
 
 const PARTICIPANT_ID_COLUMN = {
   key: PARTICIPANT_ID,
-  label: HEADER_NAMES[PARTICIPANT_ID],
+  label: 'Participant Id',
   cellStyle: {
     fontWeight: 500,
+    width: '150px'
   }
 };
+
+// 2022-03-24 not needed for now. Will restore later
+// const SELECT_PARTICIPANTS_COLUMN = {
+//   key: 'select_participants',
+//   label: '',
+//   sortable: false,
+//   cellStyle: {
+//     width: '50px'
+//   }
+// };
 
 const ACTIONS_COLUMN = {
   key: 'actions',
@@ -77,15 +112,17 @@ const ACTIONS_COLUMN = {
   sortable: false,
   cellStyle: {
     fontWeight: 500,
+    width: '50px'
   }
 };
 
 const STATUS_COLUMN = {
-  key: ENROLLMENT_STATUS,
-  label: HEADER_NAMES[ENROLLMENT_STATUS],
+  key: PARTICIPATION_STATUS,
+  label: 'Status',
   sortable: false,
   cellStyle: {
     fontWeight: 500,
+    width: '100px'
   }
 };
 
@@ -94,22 +131,28 @@ type ColumnType = {
   label :string;
   sortable ?:boolean;
   cellStyle :{
-    fontWeight :number;
     width ?:string
   }
 };
 
-const getColumnsList = (hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) => {
+const getColumnsList = (
+  hasTimeUseDiary :boolean,
+  hasAndroidDataCollection :boolean,
+  hasIOSSensorDataCollection :boolean
+) => {
+  // 2022-03-11 remove SELECT_PARTICIPANTS_COLUMN for now
   let result = [PARTICIPANT_ID_COLUMN];
-  if (hasDataCollectionModule) {
+  if (hasAndroidDataCollection) {
     result = result.concat(ANDROID_COLUMNS);
   }
 
-  if (hasTimeUseDiaryModule) {
-    result = result.concat(TUD_COLUMNS);
+  if (hasIOSSensorDataCollection) {
+    result = result.concat(IOS_COLUMNS);
   }
 
-  // TODO: Need to update this later for ios sensor
+  if (hasTimeUseDiary) {
+    result = result.concat(TUD_COLUMNS);
+  }
 
   result.push(STATUS_COLUMN);
   result.push(ACTIONS_COLUMN);
@@ -117,14 +160,15 @@ const getColumnsList = (hasTimeUseDiaryModule :boolean, hasDataCollectionModule 
   return result;
 };
 
-export default function getHeaders(hasTimeUseDiaryModule :boolean, hasDataCollectionModule :boolean) {
-  const columns = getColumnsList(hasTimeUseDiaryModule, hasDataCollectionModule);
+export default function getHeaders(
+  hasTimeUseDiary :boolean,
+  hasAndroidDataCollection :boolean,
+  hasIOSSensorDataCollection :boolean
+) {
+  const columns = getColumnsList(hasTimeUseDiary, hasAndroidDataCollection, hasIOSSensorDataCollection);
 
-  const numColumns = columns.length;
-  const lastIndex = numColumns - 1;
-
-  return columns.map<ColumnType>((column :ColumnType, index) => {
-    const width = index === lastIndex ? '50px' : '200px';
+  return columns.map<ColumnType>((column :ColumnType) => {
+    const width = column.cellStyle?.width || '200px';
     return {
       ...column,
       cellStyle: {

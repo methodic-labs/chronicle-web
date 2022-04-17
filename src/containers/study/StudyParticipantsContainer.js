@@ -4,17 +4,11 @@
 
 import { useEffect, useReducer, useState } from 'react';
 
-import styled from 'styled-components';
-import { faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { List, Map, Set } from 'immutable';
 import {
   Box,
-  Button,
   Card,
   CardSegment,
-  Grid,
-  SearchInput,
 } from 'lattice-ui-kit';
 import { useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,6 +22,7 @@ import ParticipantInfoModal from './components/ParticipantInfoModal';
 import ParticipantsTable from './ParticipantsTable';
 import ParticipantsTableActions from './constants/ParticipantsTableActions';
 import ParticipantsTableDispatch from './components/ParticipantsTableDispatch';
+import TableHeader from './components/TableHeader';
 import TudSubmissionHistory from './components/TudSubmissionHistory';
 import {
   CHANGE_ENROLLMENT_STATUS,
@@ -38,7 +33,6 @@ import {
 } from './actions';
 
 import {
-  AppComponents,
   CANDIDATE_ID,
   CANDIDATE_IDS,
   PARTICIPANT_ID,
@@ -55,6 +49,7 @@ import {
 import type { Participant, ParticipationStatus, Study } from '../../common/types';
 
 const {
+  SELECT_CANDIDATE_IDS,
   SET_CANDIDATE_ID,
   TOGGLE_ADD_PARTICIPANT_MODAL,
   TOGGLE_DELETE_MODAL,
@@ -64,11 +59,6 @@ const {
   TOGGLE_TUD_SUBMISSION_HISTORY_MODAL,
 } = ParticipantsTableActions;
 
-const AddParticipantsButton = styled(Button)`
-  align-self: flex-start;
-  margin-bottom: 5px;
-`;
-
 const initialState = {
   isAddParticipantModalOpen: false,
   isDeleteModalOpen: false,
@@ -76,11 +66,44 @@ const initialState = {
   isEnrollmentModalOpen: false,
   isInfoModalOpen: false,
   isTudSubmissionHistoryModalOpen: false,
-  candidateId: null
+  candidateId: null,
+  selectedParticipants: Set()
 };
 
 const reducer = (state :Object, action :Object) => {
   switch (action.type) {
+    case SELECT_CANDIDATE_IDS: {
+      const { ids, all = false } = action;
+      const { selectedParticipants } = state;
+
+      if (all) {
+        if (!selectedParticipants.isEmpty()) {
+          return {
+            ...state,
+            selectedParticipants: Set()
+          };
+        }
+        return {
+          ...state,
+          selectedParticipants: ids
+        };
+      }
+
+      const updated = selectedParticipants.withMutations((mutableSet :Set) => {
+        ids.forEach((id) => {
+          if (selectedParticipants.has(id)) {
+            mutableSet.delete(id);
+          }
+          else {
+            mutableSet.add(id);
+          }
+        });
+      });
+      return {
+        ...state,
+        selectedParticipants: updated
+      };
+    }
     case TOGGLE_INFO_MODAL:
       return {
         ...state,
@@ -130,7 +153,13 @@ const reducer = (state :Object, action :Object) => {
 
 const StudyParticipantsContainer = ({
   study,
+  hasAndroidDataCollection,
+  hasIOSSensorDataCollection,
+  hasTimeUseDiary
 } :{
+  hasAndroidDataCollection :boolean;
+  hasIOSSensorDataCollection :boolean;
+  hasTimeUseDiary :boolean;
   study :Study;
 }) => {
 
@@ -146,6 +175,7 @@ const StudyParticipantsContainer = ({
     isInfoModalOpen,
     isTudSubmissionHistoryModalOpen,
     candidateId,
+    selectedParticipants
   } = state;
 
   const [filteredParticipants, setFilteredParticipants] = useState(Map());
@@ -156,11 +186,6 @@ const StudyParticipantsContainer = ({
 
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
-
-  const { components = [] } = study.settings;
-  // const studyHasSurveyModule = components.includes(AppComponent.CHRONICLE_SURVEYS);
-  const studyHasTimeUseDiaryModule = components.includes(AppComponents.TIME_USE_DIARY);
-  const studyHasDataCollectionModule = components.includes(AppComponents.CHRONICLE_DATA_COLLECTION);
 
   const changeEnrollmentStatusRS :?RequestState = useRequestState([STUDIES, CHANGE_ENROLLMENT_STATUS]);
   const deleteParticipantRS :?RequestState = useRequestState([STUDIES, DELETE_STUDY_PARTICIPANTS]);
@@ -212,20 +237,10 @@ const StudyParticipantsContainer = ({
     <ParticipantsTableDispatch.Provider value={dispatch}>
       <Card>
         <CardSegment vertical>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={9}>
-              <SearchInput placeholder="Filter participants" onChange={handleOnChange} />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <AddParticipantsButton
-                  fullWidth
-                  onClick={() => dispatch({ type: TOGGLE_ADD_PARTICIPANT_MODAL, isModalOpen: true })}
-                  color="primary"
-                  startIcon={<FontAwesomeIcon icon={faPlus} />}>
-                Add Participant
-              </AddParticipantsButton>
-            </Grid>
-          </Grid>
+          <TableHeader
+              filteredParticipants={filteredParticipants}
+              selectedParticipants={selectedParticipants.size}
+              handleOnChange={handleOnChange} />
           {
             !participants.isEmpty()
             && filteredParticipants.isEmpty()
@@ -240,10 +255,12 @@ const StudyParticipantsContainer = ({
             && (
               <ParticipantsTable
                   hasDeletePermission={isOwner}
-                  hasDataCollectionModule={studyHasDataCollectionModule}
-                  hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
+                  hasAndroidDataCollection={hasAndroidDataCollection}
+                  hasTimeUseDiary={hasTimeUseDiary}
+                  hasIOSSensorDataCollection={hasIOSSensorDataCollection}
                   participants={filteredParticipants}
-                  participantStats={participantStats} />
+                  participantStats={participantStats}
+                  selectedParticipants={selectedParticipants} />
             )
           }
         </CardSegment>
@@ -257,9 +274,10 @@ const StudyParticipantsContainer = ({
             <>
               <ParticipantInfoModal
                   handleOnClose={() => dispatch({ type: TOGGLE_INFO_MODAL, isModalOpen: false })}
-                  hasDataCollectionModule={studyHasDataCollectionModule}
-                  hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
+                  hasAndroidDataCollection={hasAndroidDataCollection}
+                  hasTimeUseDiary={hasTimeUseDiary}
                   isVisible={isInfoModalOpen}
+                  hasIOSSensorDataCollection={hasIOSSensorDataCollection}
                   participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                   studyId={study.id} />
               <ChangeEnrollmentModal
@@ -287,8 +305,8 @@ const StudyParticipantsContainer = ({
           candidateId && (
             <DownloadParticipantDataModal
                 handleOnClose={() => dispatch({ type: TOGGLE_DOWNLOAD_MODAL, isModalOpen: false })}
-                hasDataCollectionModule={studyHasDataCollectionModule}
-                hasTimeUseDiaryModule={studyHasTimeUseDiaryModule}
+                hasAndroidDataCollection={hasAndroidDataCollection}
+                hasTimeUseDiary={hasTimeUseDiary}
                 isVisible={isDownloadModalOpen}
                 participantId={participants.getIn([candidateId, PARTICIPANT_ID])}
                 studyId={study.id} />
