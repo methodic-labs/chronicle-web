@@ -1,14 +1,14 @@
 // @flow
 import { useContext } from 'react';
 
+import styled from 'styled-components';
 import { Map, Set } from 'immutable';
 import {
-  Box,
   Card,
   CardHeader,
   CardSegment,
   Checkbox,
-  Grid
+  Grid,
 } from 'lattice-ui-kit';
 
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
@@ -20,6 +20,12 @@ type Props = {
   options :Map;
   selected :Map;
 };
+
+const CardTitle = styled.div`
+  text-align: center;
+  width: 100%;
+      overflow-wrap: break-word;
+`;
 
 const SelectAppUsageTimeSlots = (props :Props) => {
   const {
@@ -59,9 +65,9 @@ const SelectAppUsageTimeSlots = (props :Props) => {
           <Grid item xs={12} md={4} key={appName}>
             <Card>
               <CardHeader mode="secondary" padding="sm">
-                <Box textAlign="center" width="100%">
+                <CardTitle>
                   { data.getIn([appName, 'appLabel'])}
-                </Box>
+                </CardTitle>
               </CardHeader>
               <CardSegment noBleed>
                 <Grid container spacing={2}>
