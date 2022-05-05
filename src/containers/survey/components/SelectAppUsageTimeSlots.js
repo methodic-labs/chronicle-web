@@ -24,7 +24,7 @@ type Props = {
 const CardTitle = styled.div`
   text-align: center;
   width: 100%;
-      overflow-wrap: break-word;
+  overflow-wrap: break-word;
 `;
 
 const SelectAppUsageTimeSlots = (props :Props) => {
