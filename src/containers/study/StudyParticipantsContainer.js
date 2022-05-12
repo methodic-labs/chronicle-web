@@ -306,6 +306,7 @@ const StudyParticipantsContainer = ({
             <DownloadParticipantDataModal
                 handleOnClose={() => dispatch({ type: TOGGLE_DOWNLOAD_MODAL, isModalOpen: false })}
                 hasAndroidDataCollection={hasAndroidDataCollection}
+                hasIOSSensorDataCollection={hasIOSSensorDataCollection}
                 hasTimeUseDiary={hasTimeUseDiary}
                 isVisible={isDownloadModalOpen}
                 participantId={participants.getIn([candidateId, PARTICIPANT_ID])}

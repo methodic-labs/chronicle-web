@@ -22,6 +22,7 @@ const {
   PREPROCESSED,
   APP_USAGE_SURVEY,
   TIME_USE_DIARY,
+  IOS_SENSOR
 } = ParticipantDataTypes;
 
 const {
@@ -32,6 +33,7 @@ const {
 
 const dataTypeSelectorLabel = {
   [USAGE_EVENTS]: 'Android Raw Data',
+  [IOS_SENSOR]: 'iOS Sensor Data',
   [PREPROCESSED]: 'Preprocessed Data',
   [APP_USAGE_SURVEY]: 'App Usage Survey Data',
   [TIME_USE_DIARY]: 'Time Use Diary Data'
@@ -55,6 +57,7 @@ const timeUseDiaryDataTypeOptions = [
 type Props = {
   handleOnClose :() => void;
   hasAndroidDataCollection :boolean;
+  hasIOSSensorDataCollection :boolean;
   hasTimeUseDiary :boolean;
   isVisible :boolean;
   participantId :string;
@@ -65,6 +68,7 @@ const DownloadParticipantDataModal = (props :Props) => {
   const {
     handleOnClose,
     hasAndroidDataCollection,
+    hasIOSSensorDataCollection,
     hasTimeUseDiary,
     isVisible,
     participantId,
@@ -93,8 +97,12 @@ const DownloadParticipantDataModal = (props :Props) => {
     if (hasTimeUseDiary) {
       result.push(TIME_USE_DIARY);
     }
+
+    if (hasIOSSensorDataCollection) {
+      result.push(IOS_SENSOR);
+    }
     return result;
-  }, [hasAndroidDataCollection, hasTimeUseDiary]);
+  }, [hasAndroidDataCollection, hasTimeUseDiary, hasIOSSensorDataCollection]);
 
   const dataTypeSelectOptions = useMemo(() => dataTypes.map((type) => ({
     value: type,
@@ -121,7 +129,7 @@ const DownloadParticipantDataModal = (props :Props) => {
     setFilename(value);
   };
 
-  const nonTudTypes = [USAGE_EVENTS, PREPROCESSED, APP_USAGE_SURVEY];
+  const nonTudTypes = [USAGE_EVENTS, PREPROCESSED, APP_USAGE_SURVEY, IOS_SENSOR];
   const isButtonEnabled = dataType && ((nonTudTypes.includes(dataType.value)) || tudDataType);
 
   const renderModalBody = () => (
