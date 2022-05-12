@@ -54,6 +54,7 @@ export const ParticipationStatuses :{| ...ParticipationStatusesEnum |} = Object.
 
 export const ParticipantDataTypes :{| ...ParticipantDataType |} = Object.freeze({
   USAGE_EVENTS: 'UsageEvents',
+  IOS_SENSOR: 'IOSSensor',
   PREPROCESSED: 'Preprocessed',
   APP_USAGE_SURVEY: 'AppUsageSurvey',
   TIME_USE_DIARY: 'TimeUseDiary',
