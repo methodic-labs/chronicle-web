@@ -59,7 +59,7 @@ const SelectAppUsageTimeSlots = (props :Props) => {
           <Grid item xs={12} md={4} key={appName}>
             <Card>
               <CardHeader mode="secondary" padding="sm">
-                <Box textAlign="center" width="100%">
+                <Box overflowWrap="break-word" textAlign="center" width="100%">
                   { data.getIn([appName, 'appLabel'])}
                 </Box>
               </CardHeader>
