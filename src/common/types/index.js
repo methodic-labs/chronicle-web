@@ -38,6 +38,7 @@ export type IOSSensorType = {|
 |}
 
 export type ParticipantDataType = {|
+  IOS_SENSOR :'IOSSensor';
   USAGE_EVENTS :'UsageEvents';
   PREPROCESSED :'Preprocessed';
   APP_USAGE_SURVEY :'AppUsageSurvey';
