@@ -121,8 +121,8 @@ const getIsSummaryPage = (formData :Object, page :number) => {
 /*
  * Return true if the schema is the night activity schema
  */
-const getIsNightActivityPage = (schema :Object, page :number, trans :TranslationFunction) => {
-  const nightSchema = NightTimeActivitySchema.createSchema(page, trans);
+const getIsNightActivityPage = (schema :Object, page :number, trans :TranslationFunction, studySettings :Map) => {
+  const nightSchema = NightTimeActivitySchema.createSchema(page, trans, studySettings);
 
   return isEqual(schema, nightSchema);
 };
@@ -148,12 +148,15 @@ const getSecondaryMediaSelected = (formData :Object, page :number) => getIn(
   formData, [getPageSectionKey(page, 0), SECONDARY_ACTIVITY], []
 ).includes(MEDIA_USE);
 
-const createFormSchema = (formData :Object, pageNum :number, trans :TranslationFunction) => {
+const createFormSchema = (formData :Object, pageNum :number, trans :TranslationFunction, studySettings :Map) => {
 
   const is12hourFormat = getIs12HourFormatSelected(formData);
 
   const isSecondaryReadingSelected = getSecondaryReadingSelected(formData, pageNum);
   const isSecondaryMediaSelected = getSecondaryMediaSelected(formData, pageNum);
+
+  const enableChangesForSherbrookeUniversity = studySettings
+    .getIn(['TimeUseDiary', 'enableChangesForSherbrookeUniversity']) || false;
 
   if (pageNum === SURVEY_INTRO_PAGE) {
     return {
@@ -186,9 +189,15 @@ const createFormSchema = (formData :Object, pageNum :number, trans :TranslationF
   const currentActivity = selectPrimaryActivityByPage(pageNum, formData);
   const prevActivity = selectPrimaryActivityByPage(pageNum - 1, formData);
 
-  const shouldDisplayFollowup = prevActivity
+  let shouldDisplayFollowup = prevActivity
     && pageNum > FIRST_ACTIVITY_PAGE
     && !pageHasFollowupQuestions(formData, pageNum - 1);
+
+  if (enableChangesForSherbrookeUniversity) {
+    if (prevActivity === PRIMARY_ACTIVITIES.CHILDCARE) {
+      shouldDisplayFollowup = false;
+    }
+  }
 
   let schema;
   let uiSchema;
@@ -196,12 +205,19 @@ const createFormSchema = (formData :Object, pageNum :number, trans :TranslationF
   const isDaytimeCompleted = getIsDayTimeCompleted(formData, pageNum);
 
   if (isDaytimeCompleted) {
-    schema = NightTimeActivitySchema.createSchema(pageNum, trans);
+    schema = NightTimeActivitySchema.createSchema(pageNum, trans, studySettings);
     uiSchema = NightTimeActivitySchema.createUiSchema(pageNum, trans);
   }
   else if (shouldDisplayFollowup) {
     schema = ContextualSchema.createSchema(
-      pageNum, prevActivity, prevStartTime, prevEndTime, isSecondaryReadingSelected, isSecondaryMediaSelected, trans
+      pageNum,
+      prevActivity,
+      prevStartTime,
+      prevEndTime,
+      isSecondaryReadingSelected,
+      isSecondaryMediaSelected,
+      trans,
+      studySettings
     );
     uiSchema = ContextualSchema.createUiSchema(pageNum, trans);
   }
