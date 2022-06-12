@@ -1,6 +1,7 @@
 // @flow
 
 import merge from 'lodash/merge';
+import { Map } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
 import { DateTime } from 'luxon';
 
@@ -42,7 +43,8 @@ const createSchema = (
   prevEndTime :DateTime,
   isSecondaryReadingSelected :boolean,
   isSecondaryMediaSelected :boolean,
-  trans :(string, ?Object) => Object
+  trans :TranslationFunction,
+  studySettings :Map,
 ) => {
 
   const psk = getPageSectionKey(pageNum, 0);
@@ -53,7 +55,7 @@ const createSchema = (
   const secondaryMediaSchema = SecondaryFollowUpSchema.createSchema(activities.media_use, trans);
 
   const followupSchema = FollowupSchema.createSchema(selectedActivity, trans);
-  const secondaryActivitySchema = SecondaryActivitySchema.createSchema(selectedActivity, trans);
+  const secondaryActivitySchema = SecondaryActivitySchema.createSchema(selectedActivity, trans, studySettings);
 
   const schema = {
     type: 'object',
