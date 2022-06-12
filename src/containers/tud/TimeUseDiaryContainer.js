@@ -17,7 +17,7 @@ import {
 } from 'lattice-ui-kit';
 import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
@@ -50,8 +50,14 @@ import {
   STUDY_ID,
   TIME_USE_DIARY,
 } from '../../common/constants';
+import { selectStudySettings } from '../../core/redux/selectors';
 import { DEFAULT_LANGUAGE_COOKIE } from '../../utils/constants/StorageConstants';
-import { VERIFY_PARTICIPANT, verifyParticipant } from '../study/actions';
+import {
+  GET_STUDY_SETTINGS,
+  VERIFY_PARTICIPANT,
+  getStudySettings,
+  verifyParticipant,
+} from '../study/actions';
 
 const { isPending, isFailure } = ReduxUtils;
 
@@ -86,7 +92,8 @@ const TimeUseDiaryContainer = () => {
 
   const { i18n, t } = useTranslation();
 
-  const initFormSchema = createFormSchema({}, 0, t);
+  const studySettings = useSelector(selectStudySettings(studyId));
+  const initFormSchema = createFormSchema({}, 0, t, studySettings);
 
   const [formSchema, setFormSchema] = useState(initFormSchema); // {schema, uiSchema}
   const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
@@ -106,6 +113,7 @@ const TimeUseDiaryContainer = () => {
   // selectors
   const submitTimeUseDiaryRS :?RequestState = useRequestState([TIME_USE_DIARY, SUBMIT_TIME_USE_DIARY]);
   const verifyParticipantRS :?RequestState = useRequestState([STUDIES, VERIFY_PARTICIPANT]);
+  const getStudySettingsRS :?RequestState = useRequestState([STUDIES, GET_STUDY_SETTINGS]);
 
   useEffect(() => {
     dispatch(
@@ -115,6 +123,10 @@ const TimeUseDiaryContainer = () => {
       })
     );
   }, [dispatch, studyId, participantId]);
+
+  useEffect(() => {
+    dispatch(getStudySettings(studyId));
+  }, [dispatch, studyId]);
 
   useEffect(() => {
     if (submitTimeUseDiaryRS === RequestStates.FAILURE) {
@@ -137,7 +149,7 @@ const TimeUseDiaryContainer = () => {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    const newSchema = createFormSchema(formData, page, t);
+    const newSchema = createFormSchema(formData, page, t, studySettings);
     setFormSchema(newSchema);
   }, [page, selectedLanguage?.value, t]);
   /* eslint-enable */
@@ -163,9 +175,9 @@ const TimeUseDiaryContainer = () => {
   const prevSchema = usePrevious(formSchema.schema);
   useEffect(() => {
     if (!isEqual(prevSchema, formSchema.schema)) {
-      setIsNightActivityPage(getIsNightActivityPage(formSchema.schema, page, t));
+      setIsNightActivityPage(getIsNightActivityPage(formSchema.schema, page, t, studySettings));
     }
-  }, [page, formSchema]);
+  }, [page, formSchema, studySettings]);
   /* eslint-enable */
 
   const onPageChange = (currPage, currFormData) => {
@@ -224,7 +236,7 @@ const TimeUseDiaryContainer = () => {
     && !isSummaryPage
     && !isNightActivityPage;
 
-  if (isPending(verifyParticipantRS)) {
+  if (isPending(verifyParticipantRS) || isPending(getStudySettingsRS)) {
     return (
       <AppContainerWrapper>
         <HeaderComponent onChangeLanguage={onChangeLanguage} selectedLanguage={selectedLanguage} />
@@ -293,6 +305,7 @@ const TimeUseDiaryContainer = () => {
                             resetSurvey={resetSurvey}
                             shouldReset={shouldReset}
                             studyId={studyId}
+                            studySettings={studySettings}
                             submitRequestState={submitTimeUseDiaryRS}
                             trans={t}
                             translationData={i18n.store.data}
