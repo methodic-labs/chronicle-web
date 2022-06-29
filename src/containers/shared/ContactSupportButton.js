@@ -22,7 +22,7 @@ const StyledIcon = styled(FontAwesomeIcon)`
 
 const ContactSupportButton = () => (
   <ButtonWrapper
-      href="https://openlattice.atlassian.net/servicedesk/customer/portals"
+      href="mailto:support@getmethodic.com"
       startIcon={<StyledIcon color={NEUTRAL.N900} fixedWidth icon={faQuestionCircle} />}
       target="_blank"
       variant="outlined">
