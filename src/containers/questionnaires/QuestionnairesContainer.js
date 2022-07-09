@@ -5,14 +5,11 @@ import { useEffect, useState } from 'react';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Map } from 'immutable';
-import { Constants } from 'lattice';
 import {
-  // $FlowFixMe
   Box,
   Button,
   Card,
   CardSegment,
-  // $FlowFixMe
   Grid,
   Select,
   Spinner,
@@ -26,11 +23,11 @@ import CreateQuestionnaireForm from './components/CreateQuestionnaireForm';
 import QuestionnairesList from './QuestionnairesList';
 import { STATUS_SELECT_OPTIONS } from './constants/constants';
 
+import { OPENLATTICE_ID_FQN } from '../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { QUESTIONNAIRE_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 import { GET_STUDY_QUESTIONNAIRES, getStudyQuestionnaires } from '../questionnaire/QuestionnaireActions';
 
-const { OPENLATTICE_ID_FQN } = Constants;
 const { REQUEST_STATE } = ReduxConstants;
 const { STUDY_QUESTIONNAIRES } = QUESTIONNAIRE_REDUX_CONSTANTS;
 const { ACTIVE_FQN } = PROPERTY_TYPE_FQNS;

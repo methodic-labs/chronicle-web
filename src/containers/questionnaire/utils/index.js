@@ -6,10 +6,9 @@ import {
   getIn,
   setIn
 } from 'immutable';
-import { Constants } from 'lattice';
 import { DataProcessingUtils } from 'lattice-fabricate';
 
-import { QUESTION } from '../../../core/edm/constants/EntityTemplateNames';
+import { OPENLATTICE_ID_FQN, QUESTION } from '../../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 
 const {
@@ -18,7 +17,6 @@ const {
   parseEntityAddressKey
 } = DataProcessingUtils;
 
-const { OPENLATTICE_ID_FQN } = Constants;
 const {
   ACTIVE_FQN,
   DESCRIPTION_FQN,
@@ -33,6 +31,7 @@ const getSchemaProperties = (questions :List) => {
 
   questions.forEach((question) => {
     const entityKeyId = question.getIn([OPENLATTICE_ID_FQN, 0]);
+    // $FlowIgnore
     const addressKey = getEntityAddressKey(entityKeyId, QUESTION, VALUES_FQN);
 
     properties = setIn(properties, [addressKey, 'title'], question.getIn([TITLE_FQN, 0]));
@@ -82,6 +81,7 @@ const createInitialFormData = (answersById :Map, answerQuestionIdMap :Map, quest
 
   answers.forEach((answer, answerId) => {
     const questionId = answerQuestionIdMap.get(answerId);
+    // $FlowIgnore
     const addressKey = getEntityAddressKey(questionId, QUESTION, VALUES_FQN);
 
     const value = answersById.get(answerId).getIn([VALUES_FQN, 0]);

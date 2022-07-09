@@ -96,6 +96,7 @@ const createSchema = (
             minItems: 1
           },
           ...followupSchema.properties,
+          // $FlowFixMe
           ...secondaryActivitySchema.properties,
           [BG_TV_DAY]: {
             type: 'string',

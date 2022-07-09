@@ -4,7 +4,7 @@ import { DataProcessingUtils } from 'lattice-fabricate';
 import { Info } from 'luxon';
 
 import QuestionTypes from '../constants/questionTypes';
-import { QUESTION, SURVEY } from '../../../core/edm/constants/EntityTemplateNames';
+import { QUESTION, SURVEY } from '../../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 
 const { TEXT_ENTRY, MULTIPLE_CHOICE } = QuestionTypes;
@@ -27,21 +27,26 @@ const aboutSchema = {
       type: 'object',
       title: 'About',
       properties: {
+        // $FlowIgnore
         [getEntityAddressKey(0, SURVEY, NAME_FQN)]: {
           type: 'string',
           title: 'Questionnaire Title',
         },
+        // $FlowIgnore
         [getEntityAddressKey(0, SURVEY, DESCRIPTION_FQN)]: {
           type: 'string',
           title: 'Description'
         },
+        // $FlowIgnore
         [getEntityAddressKey(0, SURVEY, ACTIVE_FQN)]: {
           type: 'boolean',
           default: true
         }
       },
       required: [
+        // $FlowIgnore
         getEntityAddressKey(0, SURVEY, DESCRIPTION_FQN),
+        // $FlowIgnore
         getEntityAddressKey(0, SURVEY, NAME_FQN)
       ]
     }
@@ -51,14 +56,17 @@ const aboutSchema = {
 const aboutUiSchema = {
   [getPageSectionKey(1, 1)]: {
     classNames: 'column-span-12 grid-container',
+    // $FlowIgnore
     [getEntityAddressKey(0, SURVEY, NAME_FQN)]: {
       classNames: 'column-span-12',
       'ui:autofocus': true
     },
+    // $FlowIgnore
     [getEntityAddressKey(0, SURVEY, DESCRIPTION_FQN)]: {
       classNames: 'column-span-12',
       'ui:widget': 'textarea',
     },
+    // $FlowIgnore
     [getEntityAddressKey(0, SURVEY, ACTIVE_FQN)]: {
       classNames: 'hidden'
     }
@@ -75,6 +83,7 @@ const questionsSchema = {
       items: {
         type: 'object',
         properties: {
+          // $FlowIgnore
           [getEntityAddressKey(-1, QUESTION, TITLE_FQN)]: {
             title: 'Question',
             type: 'string'
@@ -101,6 +110,7 @@ const questionsSchema = {
                   questionType: {
                     enum: [MULTIPLE_CHOICE]
                   },
+                  // $FlowIgnore
                   [getEntityAddressKey(-1, QUESTION, VALUES_FQN)]: {
                     type: 'array',
                     title: 'Answer choices',
@@ -112,12 +122,14 @@ const questionsSchema = {
                     minItems: 2
                   },
                 },
+                // $FlowIgnore
                 required: [getEntityAddressKey(-1, QUESTION, VALUES_FQN)]
               }
             ]
           }
         },
         required: [
+          // $FlowIgnore
           getEntityAddressKey(-1, QUESTION, TITLE_FQN),
           'questionType'
         ]
@@ -136,6 +148,7 @@ const questionsUiSchema = {
     },
     items: {
       classNames: 'grid-container',
+      // $FlowIgnore
       [getEntityAddressKey(-1, QUESTION, TITLE_FQN)]: {
         classNames: 'column-span-12',
         'ui:autofocus': true
@@ -144,6 +157,7 @@ const questionsUiSchema = {
         classNames: 'column-span-12',
         'ui:widget': 'RadioWidget',
       },
+      // $FlowIgnore
       [getEntityAddressKey(-1, QUESTION, VALUES_FQN)]: {
         classNames: 'column-span-12',
         'ui:options': {

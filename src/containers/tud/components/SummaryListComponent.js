@@ -53,6 +53,7 @@ const SummaryListComponent = (
     <Grid container spacing={3}>
       <Grid item>
         <Typography variant="body1" gutterBottom>
+          {/* $FlowFixMe */}
           { formatAsDate(date) }
         </Typography>
       </Grid>

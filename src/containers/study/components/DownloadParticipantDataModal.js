@@ -115,6 +115,7 @@ const DownloadParticipantDataModal = (props :Props) => {
       participantId,
       startDate,
       endDate,
+      // $FlowFixMe
       dataType?.value || null,
       tudDataType?.value || null,
       filename

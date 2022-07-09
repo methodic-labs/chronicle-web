@@ -1,8 +1,6 @@
 // @flow
 
 import { Map, fromJS, getIn } from 'immutable';
-import { Constants } from 'lattice';
-import { ReduxConstants } from 'lattice-utils';
 import { RequestStates } from 'redux-reqseq';
 import type { SequenceAction } from 'redux-reqseq';
 
@@ -25,13 +23,12 @@ import {
   submitQuestionnaire
 } from './QuestionnaireActions';
 
+import { OPENLATTICE_ID_FQN, REQUEST_STATE } from '../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { RESET_REQUEST_STATE } from '../../core/redux/ReduxActions';
 import { QUESTIONNAIRE_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 
-const { OPENLATTICE_ID_FQN } = Constants;
 const { ACTIVE_FQN } = PROPERTY_TYPE_FQNS;
-const { REQUEST_STATE } = ReduxConstants;
 
 const {
   ANSWER_QUESTION_ID_MAP,

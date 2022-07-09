@@ -10,7 +10,6 @@ import {
   get,
   getIn
 } from 'immutable';
-import { Models } from 'lattice';
 import { DataProcessingUtils } from 'lattice-fabricate';
 import { DateTime } from 'luxon';
 
@@ -25,6 +24,7 @@ import * as NightTimeActivitySchema from '../schemas/NightTimeActivitySchema';
 import * as PreSurveySchema from '../schemas/PreSurveySchema';
 import * as PrimaryActivitySchema from '../schemas/PrimaryActivitySchema';
 import * as SurveyIntroSchema from '../schemas/SurveyIntroSchema';
+import { FQN } from '../../../common/utils';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { PAGE_NUMBERS, QUESTION_TITLE_LOOKUP } from '../constants/GeneralConstants';
 import { PRIMARY_ACTIVITIES, PROPERTY_CONSTS } from '../constants/SchemaConstants';
@@ -38,8 +38,6 @@ const {
   PRE_SURVEY_PAGE,
   SURVEY_INTRO_PAGE
 } = PAGE_NUMBERS;
-
-const { FQN } = Models;
 
 const {
   ACTIVITY_END_TIME,

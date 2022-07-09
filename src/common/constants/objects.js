@@ -11,11 +11,13 @@ import {
 import type {
   AppComponent,
   AppUsageFreqType,
+  DeleteTypesEnum,
   IOSSensorType,
   ParticipantDataType,
   ParticipationStatusesEnum,
   PermissionTypesEnum,
-  TimeUseDiaryDataType
+  TimeUseDiaryDataType,
+  UpdateTypesEnum,
 } from '../types';
 
 export const AppUsageFreqTypes :{| ...AppUsageFreqType |} = Object.freeze({
@@ -37,6 +39,13 @@ export const AppFeatures = {
   TIME_USE_DIARY: 'Time Use Diary',
   SURVEYS: 'Custom Surveys'
 };
+
+export const DeleteTypes :{| ...DeleteTypesEnum |} = Object.freeze({
+  HARD: 'Hard',
+  Hard: 'Hard',
+  SOFT: 'Soft',
+  Soft: 'Soft',
+});
 
 export const IOSSensorTypes :{| ...IOSSensorType |} = Object.freeze({
   DEVICE_USAGE: 'deviceUsage',
@@ -79,4 +88,13 @@ export const TimeUseDiaryDataTypes :{| ...TimeUseDiaryDataType |} = Object.freez
   DAYTIME: 'DayTime',
   NIGHTTIME: 'NightTime',
   SUMMARIZED: 'Summarized',
+});
+
+export const UpdateTypes :{| ...UpdateTypesEnum |} = Object.freeze({
+  MERGE: 'Merge',
+  Merge: 'Merge',
+  PARTIAL_REPLACE: 'PartialReplace',
+  PartialReplace: 'PartialReplace',
+  REPLACE: 'Replace',
+  Replace: 'Replace',
 });

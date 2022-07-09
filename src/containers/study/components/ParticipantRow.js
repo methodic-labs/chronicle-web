@@ -5,9 +5,7 @@ import { useContext, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Set } from 'immutable';
 import {
-  Checkbox,
   Colors,
   IconButton,
   Menu,
@@ -35,7 +33,7 @@ const {
   TOGGLE_DOWNLOAD_MODAL,
   TOGGLE_ENROLLMENT_MODAL,
   TOGGLE_INFO_MODAL,
-  SELECT_CANDIDATE_IDS
+  // SELECT_CANDIDATE_IDS
 } = ParticipantsTableActions;
 
 const RowWrapper = styled.tr.attrs(() => ({ tabIndex: '1' }))`
@@ -68,7 +66,7 @@ const ParticipantRow = ({
   hasDeletePermission,
   hasTimeUseDiary,
   hasIOSSensorDataCollection,
-  isSelected,
+  // isSelected,
   participant,
   stats = {},
 } :{
@@ -76,7 +74,7 @@ const ParticipantRow = ({
   hasDeletePermission :boolean;
   hasTimeUseDiary :boolean;
   hasIOSSensorDataCollection :boolean;
-  isSelected :boolean;
+  // isSelected :boolean;
   participant :Participant;
   stats ?:ParticipantStats;
 }) => {

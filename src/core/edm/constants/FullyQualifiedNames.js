@@ -1,10 +1,9 @@
 /*
  * @flow
  */
+// DELETEME
 
-import { Models } from 'lattice';
-
-const { FQN } = Models;
+import { FQN } from '../../../common/utils';
 
 const PROPERTY_TYPE_FQNS = {
   // study

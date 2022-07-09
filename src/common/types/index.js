@@ -30,6 +30,15 @@ export type AuthorizationObject = {|
   };
 |};
 
+export type DeleteTypesEnum = {|
+  HARD :'Hard';
+  Hard :'Hard';
+  SOFT :'Soft';
+  Soft :'Soft';
+|};
+
+export type DeleteType = $Values<DeleteTypesEnum>;
+
 export type IOSSensorType = {|
   DEVICE_USAGE :'deviceUsage';
   KEYBOARD_METRICS :'keyboardMetrics';
@@ -126,6 +135,17 @@ export type TimeUseDiaryDataType = {|
   NIGHTTIME :'NightTime';
   SUMMARIZED :'Summarized';
 |};
+
+export type UpdateTypesEnum = {|
+  MERGE :'Merge';
+  Merge :'Merge';
+  PARTIAL_REPLACE :'PartialReplace';
+  PartialReplace :'PartialReplace';
+  REPLACE :'Replace';
+  Replace :'Replace';
+|};
+
+export type UpdateType = $Values<UpdateTypesEnum>;
 
 export type UserInfo = {
   email ?:string;

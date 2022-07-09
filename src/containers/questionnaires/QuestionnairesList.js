@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 import { Map } from 'immutable';
-import { Constants } from 'lattice';
 import { useDispatch } from 'react-redux';
 
 import ChangeActiveStatusModal from './components/ChangeActiveStatusModal';
@@ -12,11 +11,10 @@ import QuestionnaireDetailsModal from './components/QuestionnaireDetailsModal';
 import QuestionnaireListItem from './components/QuestionnaireListItem';
 import { LIST_ITEM_ACTIONS } from './constants/constants';
 
+import { OPENLATTICE_ID_FQN } from '../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { resetRequestState } from '../../core/redux/ReduxActions';
 import { CHANGE_ACTIVE_STATUS } from '../questionnaire/QuestionnaireActions';
-
-const { OPENLATTICE_ID_FQN } = Constants;
 
 const {
   ACTIVE_FQN,

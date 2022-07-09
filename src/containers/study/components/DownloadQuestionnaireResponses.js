@@ -8,7 +8,6 @@ import {
   Map,
   Set
 } from 'immutable';
-import { Constants } from 'lattice';
 import {
   Button,
   Colors,
@@ -25,6 +24,7 @@ import { createSelector } from 'reselect';
 import type { RequestState } from 'redux-reqseq';
 
 import QuestionnaireForm from '../../questionnaire/components/QuestionnaireForm';
+import { OPENLATTICE_ID_FQN } from '../../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { QUESTIONNAIRE_REDUX_CONSTANTS } from '../../../utils/constants/ReduxConstants';
 import {
@@ -48,7 +48,6 @@ const {
 } = QUESTIONNAIRE_REDUX_CONSTANTS;
 
 const { NAME_FQN, DATE_TIME_FQN } = PROPERTY_TYPE_FQNS;
-const { OPENLATTICE_ID_FQN } = Constants;
 
 const { APP_CONTENT_WIDTH } = Sizes;
 const { NEUTRAL } = Colors;

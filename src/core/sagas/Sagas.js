@@ -4,13 +4,9 @@
 
 import { all, fork } from '@redux-saga/core/effects';
 
-import * as DataSagas from './data/DataSagas';
-
 import * as AppSagas from '../../containers/app/sagas';
 import * as AuthSagas from '../auth/sagas';
 import * as DashboardSagas from '../../containers/dashboard/sagas';
-import * as EDMSagas from '../edm/EDMSagas';
-// import * as PermissionsSagas from '../permissions/sagas';
 import * as QuestionnaireSagas from '../../containers/questionnaire/QuestionnaireSagas';
 import * as RoutingSagas from '../router/RoutingSagas';
 import * as StudySagas from '../../containers/study/sagas';
@@ -32,11 +28,11 @@ export default function* sagas() :Generator<*, *, *> {
     fork(AppSagas.switchOrganizationWatcher),
 
     // DataSagas
-    fork(DataSagas.submitDataGraphWatcher),
-    fork(DataSagas.submitPartialReplaceWatcher),
+    // fork(DataSagas.submitDataGraphWatcher),
+    // fork(DataSagas.submitPartialReplaceWatcher),
 
     // EDMSagas
-    fork(EDMSagas.getEntityDataModelTypesWatcher),
+    // fork(EDMSagas.getEntityDataModelTypesWatcher),
 
     // RoutingSagas
     fork(RoutingSagas.goToRootWatcher),

@@ -8,7 +8,6 @@ import {
   getIn,
   setIn
 } from 'immutable';
-import { Constants } from 'lattice';
 import { DataProcessingUtils } from 'lattice-fabricate';
 import { LangUtils } from 'lattice-utils';
 import { DateTime, Info } from 'luxon';
@@ -17,11 +16,12 @@ import { v4 as uuid } from 'uuid';
 
 import QuestionTypes from '../constants/questionTypes';
 import {
+  OPENLATTICE_ID_FQN,
   PART_OF,
   QUESTION,
   STUDIES,
-  SURVEY
-} from '../../../core/edm/constants/EntityTemplateNames';
+  SURVEY,
+} from '../../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { QUESTIONNAIRE_SUMMARY } from '../constants/constants';
 
@@ -29,7 +29,6 @@ const { isNonEmptyString } = LangUtils;
 const { getEntityAddressKey, getPageSectionKey, processEntityData } = DataProcessingUtils;
 
 const { TEXT_ENTRY } = QuestionTypes;
-const { OPENLATTICE_ID_FQN } = Constants;
 
 const {
   DESCRIPTION,
@@ -54,9 +53,11 @@ const getQuestionnaireSummaryFromForm = (formData :Object = {}) => {
   const result = {};
 
   let psk = getPageSectionKey(1, 1);
+  // $FlowIgnore
   let eak = getEntityAddressKey(0, SURVEY, NAME_FQN);
   result[TITLE] = getIn(formData, [psk, eak]);
 
+  // $FlowIgnore
   eak = getEntityAddressKey(0, SURVEY, DESCRIPTION_FQN);
   result[DESCRIPTION] = getIn(formData, [psk, eak]);
 
@@ -138,7 +139,9 @@ const createPreviewQuestionEntities = (formData :Object) => {
   const psk = getPageSectionKey(2, 1);
   const questions :Object[] = get(formData, psk);
 
+  // $FlowIgnore
   const valuesEAK = getEntityAddressKey(-1, QUESTION, VALUES_FQN);
+  // $FlowIgnore
   const titleEAK = getEntityAddressKey(-1, QUESTION, TITLE_FQN);
 
   const questionEntities = List().withMutations((list) => {

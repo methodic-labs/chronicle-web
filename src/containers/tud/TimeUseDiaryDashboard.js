@@ -89,7 +89,9 @@ const TimeUseDiaryDashboard = ({
   const handleDownload = (date :?DateTime, dataType :DataType) => {
     const { selectedStartDate, selectedEndDate } = dates;
 
+    // $FlowFixMe
     const startDate = date || DateTime.fromISO(selectedStartDate);
+    // $FlowFixMe
     const endDate = date || DateTime.fromISO(selectedEndDate);
 
     const url = getTimeUseDiaryDataDownloadUrl(

@@ -40,6 +40,7 @@ const CreateStudyForm = ({
       const { features, ...rest } = formData.page1section1;
 
       const updated = {
+        // $FlowIgnore
         ...initialFormData?.page1section1,
         ...rest,
         modules: getStudyFeatures(features)
