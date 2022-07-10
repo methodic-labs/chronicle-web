@@ -43,6 +43,7 @@ import {
 
 import { BasicErrorComponent } from '../../common/components';
 import {
+  DEFAULT_LANGUAGE,
   LanguageCodes,
   PARTICIPANT_ID,
   STUDIES,
@@ -51,7 +52,6 @@ import {
 } from '../../common/constants';
 import { isFailure, isPending, useRequestState } from '../../common/utils';
 import { selectStudySettings } from '../../core/redux/selectors';
-import { DEFAULT_LANGUAGE_COOKIE } from '../../utils/constants/StorageConstants';
 import {
   GET_STUDY_SETTINGS,
   VERIFY_PARTICIPANT,
@@ -134,7 +134,7 @@ const TimeUseDiaryContainer = () => {
 
   // select default language
   useEffect(() => {
-    const defaultLngCode = Cookies.get(DEFAULT_LANGUAGE_COOKIE) || LanguageCodes.ENGLISH;
+    const defaultLngCode = Cookies.get(DEFAULT_LANGUAGE) || LanguageCodes.ENGLISH;
 
     const defaultLng = SUPPORTED_LANGUAGES.find((lng) => lng.code === defaultLngCode);
     if (defaultLng) {
@@ -186,7 +186,7 @@ const TimeUseDiaryContainer = () => {
   const changeLanguage = (lng :SelectLanguageOption) => {
     if (lng !== null) {
       i18n.changeLanguage(lng.value);
-      Cookies.set(DEFAULT_LANGUAGE_COOKIE, lng.value, {});
+      Cookies.set(DEFAULT_LANGUAGE, lng.value, {});
       setSelectedLanguage(lng);
     }
   };
