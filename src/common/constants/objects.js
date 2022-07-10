@@ -12,6 +12,7 @@ import type {
   AppComponent,
   AppUsageFreqType,
   DeleteTypesEnum,
+  EnrollmentStatusEnum,
   IOSSensorType,
   LanguageCodesEnum,
   ParticipantDataType,
@@ -46,6 +47,12 @@ export const DeleteTypes :{| ...DeleteTypesEnum |} = Object.freeze({
   Hard: 'Hard',
   SOFT: 'Soft',
   Soft: 'Soft',
+});
+
+export const EnrollmentStatuses :{|...EnrollmentStatusEnum |} = Object.freeze({
+  DELETE: 'DELETE',
+  ENROLLED: 'ENROLLED',
+  NOT_ENROLLED: 'NOT_ENROLLED'
 });
 
 export const IOSSensorTypes :{| ...IOSSensorType |} = Object.freeze({

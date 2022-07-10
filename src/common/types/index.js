@@ -39,6 +39,14 @@ export type DeleteTypesEnum = {|
 
 export type DeleteType = $Values<DeleteTypesEnum>;
 
+export type EnrollmentStatusEnum = {|
+  DELETE :'DELETE';
+  ENROLLED :'ENROLLED';
+  NOT_ENROLLED :'NOT_ENROLLED';
+|};
+
+export type EnrollmentStatus = $Values<EnrollmentStatusEnum>;
+
 export type IOSSensorType = {|
   DEVICE_USAGE :'deviceUsage';
   KEYBOARD_METRICS :'keyboardMetrics';

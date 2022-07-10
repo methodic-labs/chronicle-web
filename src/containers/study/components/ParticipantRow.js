@@ -16,8 +16,8 @@ import { DateTime } from 'luxon';
 
 import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 
-import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
+import { EnrollmentStatuses } from '../../../common/constants';
 import { formatDateTime } from '../../../common/utils';
 import type { Participant, ParticipantStats } from '../../../common/types';
 
