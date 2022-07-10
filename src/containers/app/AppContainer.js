@@ -25,13 +25,12 @@ import type { RequestState } from 'redux-reqseq';
 import { INITIALIZE_APPLICATION, initializeApplication } from './actions';
 
 import Auth0AdminRoute from '../../core/router/Auth0AdminRoute';
-import ContactSupportButton from '../shared/ContactSupportButton';
 import DashboardContainer from '../dashboard/DashboardContainer';
 import StudiesContainer from '../study/StudiesContainer';
 import StudyRouter from '../study/StudyRouter';
 import * as Routes from '../../core/router/Routes';
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
-import { BasicErrorComponent } from '../../common/components';
+import { BasicErrorComponent, ContactSupportButton } from '../../common/components';
 import { isNonEmptyString, useRequestState } from '../../common/utils';
 import { logout } from '../../core/auth/actions';
 import { getUserInfo, isAdmin } from '../../core/auth/utils';
