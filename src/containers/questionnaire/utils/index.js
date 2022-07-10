@@ -65,7 +65,7 @@
 // };
 //
 // // create data to prefill the form
-// const createInitialFormData = (answersById :Map, answerQuestionIdMap :Map, questions :List, answers :Map = Map()) => {
+// const createInitialFormData=(answersById :Map, answerQuestionIdMap :Map, questions :List, answers :Map = Map()) => {
 //   const pageSection = getPageSectionKey(1, 1);
 //   let result = {};
 //
@@ -81,7 +81,7 @@
 //   return result;
 // };
 //
-// const getCsvFileName = (questionnaireName :string, participantId :UUID) => `${questionnaireName}_${participantId}.csv`;
+// const getCsvFileName=(questionnaireName :string, participantId :UUID) => `${questionnaireName}_${participantId}.csv`;
 //
 // const createSchema = (schemaProperties :Object, uiSchemaOptions :Object) => {
 //   const schema = {
