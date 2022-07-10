@@ -8,7 +8,7 @@ import { initReactI18next } from 'react-i18next';
 
 import translations from './translations';
 
-import * as LanguageCodes from '../../utils/constants/LanguageCodes';
+import { LanguageCodes } from '../../common/constants';
 import { DEFAULT_LANGUAGE_COOKIE } from '../../utils/constants/StorageConstants';
 
 declare var __ENV_DEV__ :boolean;

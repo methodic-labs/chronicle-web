@@ -44,7 +44,14 @@ export type IOSSensorType = {|
   KEYBOARD_METRICS :'keyboardMetrics';
   MESSAGES_USAGE :'messagesUsage';
   PHONE_USAGE :'phoneUsage';
-|}
+|};
+
+export type LanguageCodesEnum = {|
+  ENGLISH :'en';
+  GERMAN :'de';
+  SPANISH :'es';
+  SWEDISH :'sv';
+|};
 
 export type ParticipantDataType = {|
   IOS_SENSOR :'IOSSensor';
@@ -52,7 +59,7 @@ export type ParticipantDataType = {|
   PREPROCESSED :'Preprocessed';
   APP_USAGE_SURVEY :'AppUsageSurvey';
   TIME_USE_DIARY :'TimeUseDiary';
-|}
+|};
 
 export type ParticipationStatusesEnum = {|
   ENROLLED :'ENROLLED';

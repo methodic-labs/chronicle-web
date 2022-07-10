@@ -41,9 +41,9 @@ import {
   selectTimeByPageAndKey
 } from './utils';
 
-import * as LanguageCodes from '../../utils/constants/LanguageCodes';
 import { BasicErrorComponent } from '../../common/components';
 import {
+  LanguageCodes,
   PARTICIPANT_ID,
   STUDIES,
   STUDY_ID,

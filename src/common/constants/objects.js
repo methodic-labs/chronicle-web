@@ -13,6 +13,7 @@ import type {
   AppUsageFreqType,
   DeleteTypesEnum,
   IOSSensorType,
+  LanguageCodesEnum,
   ParticipantDataType,
   ParticipationStatusesEnum,
   PermissionTypesEnum,
@@ -52,6 +53,13 @@ export const IOSSensorTypes :{| ...IOSSensorType |} = Object.freeze({
   KEYBOARD_METRICS: 'keyboardMetrics',
   MESSAGES_USAGE: 'messagesUsage',
   PHONE_USAGE: 'phoneUsage'
+});
+
+export const LanguageCodes :{| ...LanguageCodesEnum |} = Object.freeze({
+  ENGLISH: 'en',
+  GERMAN: 'de',
+  SPANISH: 'es',
+  SWEDISH: 'sv',
 });
 
 export const ParticipationStatuses :{| ...ParticipationStatusesEnum |} = Object.freeze({
