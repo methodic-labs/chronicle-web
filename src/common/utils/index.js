@@ -4,6 +4,7 @@
 
 export { default as FQN } from './FQN';
 export { default as Logger } from './Logger';
+export { default as copyToClipboard } from './copyToClipboard';
 export { default as formatAsDate } from './formatAsDate';
 export { default as formatDateTime } from './formatDateTime';
 export { default as getLocalStorage } from './getLocalStorage';

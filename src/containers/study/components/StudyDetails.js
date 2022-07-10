@@ -14,9 +14,8 @@ import {
   Typography
 } from 'lattice-ui-kit';
 
-import copyToClipboard from '../../../utils/copyToClipboard';
 import { AppFeatures } from '../../../common/constants';
-import { isNonEmptyString } from '../../../common/utils';
+import { copyToClipboard, isNonEmptyString } from '../../../common/utils';
 import type { Study } from '../../../common/types';
 
 const { NEUTRAL } = Colors;
