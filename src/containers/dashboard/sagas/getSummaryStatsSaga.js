@@ -8,7 +8,6 @@ import {
   takeLatest,
 } from '@redux-saga/core/effects';
 import { fromJS } from 'immutable';
-import { Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
@@ -16,6 +15,7 @@ import { countAllParticipantsWorker } from './countAllParticipantsSaga';
 import { countAllStudiesWorker } from './countAllStudiesSaga';
 
 import selectOrganizationCount from '../selectors/selectOrganizationCount';
+import { Logger } from '../../../common/utils';
 import {
   GET_SUMMARY_STATS,
   countAllParticipants,

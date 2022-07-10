@@ -11,7 +11,6 @@ import {
   AppHeaderWrapper,
   Spinner,
 } from 'lattice-ui-kit';
-import { ReduxConstants } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
@@ -26,10 +25,10 @@ import {
 
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import { BasicErrorComponent } from '../../common/components';
+import { REQUEST_STATE } from '../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../core/edm/constants/FullyQualifiedNames';
 import { QUESTIONNAIRE_REDUX_CONSTANTS } from '../../utils/constants/ReduxConstants';
 
-const { REQUEST_STATE } = ReduxConstants;
 const { NAME_FQN, DESCRIPTION_FQN } = PROPERTY_TYPE_FQNS;
 const { QUESTIONNAIRE_DATA } = QUESTIONNAIRE_REDUX_CONSTANTS;
 

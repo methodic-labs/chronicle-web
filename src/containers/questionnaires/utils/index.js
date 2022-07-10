@@ -9,7 +9,6 @@ import {
   setIn
 } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
-import { LangUtils } from 'lattice-utils';
 import { DateTime, Info } from 'luxon';
 import { RRule, RRuleSet } from 'rrule';
 import { v4 as uuid } from 'uuid';
@@ -22,10 +21,10 @@ import {
   STUDIES,
   SURVEY,
 } from '../../../common/constants';
+import { isNonEmptyString } from '../../../common/utils';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { QUESTIONNAIRE_SUMMARY } from '../constants/constants';
 
-const { isNonEmptyString } = LangUtils;
 const { getEntityAddressKey, getPageSectionKey, processEntityData } = DataProcessingUtils;
 
 const { TEXT_ENTRY } = QuestionTypes;

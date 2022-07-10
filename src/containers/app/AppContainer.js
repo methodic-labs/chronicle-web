@@ -12,7 +12,6 @@ import {
   AppNavigationWrapper,
   Spinner,
 } from 'lattice-ui-kit';
-import { LangUtils, useRequestState } from 'lattice-utils';
 import { useDispatch } from 'react-redux';
 import {
   NavLink,
@@ -33,13 +32,12 @@ import StudyRouter from '../study/StudyRouter';
 import * as Routes from '../../core/router/Routes';
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import { BasicErrorComponent } from '../../common/components';
+import { isNonEmptyString, useRequestState } from '../../common/utils';
 import { logout } from '../../core/auth/actions';
 import { getUserInfo, isAdmin } from '../../core/auth/utils';
 import { GOOGLE_MEASUREMENT_ID } from '../../core/tracking/google/GoogleAnalytics';
 
 declare var gtag :?Function;
-
-const { isNonEmptyString } = LangUtils;
 
 const AppContainer = () => {
   const dispatch = useDispatch();

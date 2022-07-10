@@ -4,20 +4,15 @@
 
 import { put, takeEvery } from '@redux-saga/core/effects';
 import { push } from 'connected-react-router';
-import { Logger } from 'lattice-utils';
 
-import {
-  GO_TO_ROOT,
-  GO_TO_ROUTE,
-  routingFailure,
-} from './RoutingActions';
+import { GO_TO_ROOT, GO_TO_ROUTE, routingFailure } from './RoutingActions';
 import type { RoutingAction } from './RoutingActions';
 
-import { Errors } from '../../utils';
+import { Logger } from '../../common/utils';
 
 const LOG = new Logger('RoutingSagas');
 
-const { ERR_INVALID_ROUTE } = Errors;
+const ERR_INVALID_ROUTE = 'invalid route: a route must be a non-empty string that starts with "/"';
 
 /*
  *

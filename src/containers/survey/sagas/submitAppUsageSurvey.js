@@ -3,14 +3,12 @@
  */
 
 import { call, put, takeEvery } from '@redux-saga/core/effects';
-import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as AppUsageSurveyApi from '../../../core/api/appusagesurvey';
+import { Logger, toSagaError } from '../../../common/utils';
 import { SUBMIT_APP_USAGE_SURVEY, submitAppUsageSurvey } from '../actions';
-
-const { toSagaError } = AxiosUtils;
 
 const LOG = new Logger('SurveySagas');
 

@@ -4,16 +4,14 @@
 
 import { call, put, takeEvery } from '@redux-saga/core/effects';
 import { fromJS } from 'immutable';
-import { AxiosUtils, Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as TimeUseDiaryApi from '../../../core/api/timeusediary';
 import { END_DATE, START_DATE, STUDY_ID } from '../../../common/constants';
+import { Logger, toSagaError } from '../../../common/utils';
 import { GET_TUD_SUBMISSIONS_BY_DATE_RANGE, getTimeUseDiarySubmissionsByDateRange } from '../actions';
-
-const { toSagaError } = AxiosUtils;
 
 const LOG = new Logger('TimeUseDiarySagas');
 

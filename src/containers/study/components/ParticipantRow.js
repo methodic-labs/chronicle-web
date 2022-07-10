@@ -12,16 +12,14 @@ import {
   MenuItem,
   Tag
 } from 'lattice-ui-kit';
-import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 
 import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 
 import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
+import { formatDateTime } from '../../../common/utils';
 import type { Participant, ParticipantStats } from '../../../common/types';
-
-const { formatDateTime } = DateTimeUtils;
 
 const { NEUTRAL } = Colors;
 

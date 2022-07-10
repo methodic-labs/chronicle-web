@@ -8,7 +8,6 @@ import {
   Box,
   Spinner
 } from 'lattice-ui-kit';
-import { ReduxUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
@@ -17,8 +16,7 @@ import SubmissionSuccessful from './components/SubmissionSuccessful';
 import SurveyForm from './components/SurveyForm';
 
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
-
-const { isPending } = ReduxUtils;
+import { isPending } from '../../common/utils';
 
 type Props = {
   data :Map;

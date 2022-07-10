@@ -16,7 +16,6 @@ import {
   Sizes,
   Spinner
 } from 'lattice-ui-kit';
-import { ReduxConstants } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { useDispatch, useSelector } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
@@ -24,7 +23,7 @@ import { createSelector } from 'reselect';
 import type { RequestState } from 'redux-reqseq';
 
 import QuestionnaireForm from '../../questionnaire/components/QuestionnaireForm';
-import { OPENLATTICE_ID_FQN } from '../../../common/constants';
+import { OPENLATTICE_ID_FQN, REQUEST_STATE } from '../../../common/constants';
 import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { QUESTIONNAIRE_REDUX_CONSTANTS } from '../../../utils/constants/ReduxConstants';
 import {
@@ -36,8 +35,6 @@ import {
   getStudyQuestionnaires
 } from '../../questionnaire/QuestionnaireActions';
 import { createInitialFormData } from '../../questionnaire/utils';
-
-const { REQUEST_STATE } = ReduxConstants;
 
 const {
   ANSWER_QUESTION_ID_MAP,

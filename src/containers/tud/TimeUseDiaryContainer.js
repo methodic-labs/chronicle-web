@@ -15,7 +15,6 @@ import {
   Spinner,
   Typography,
 } from 'lattice-ui-kit';
-import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -50,6 +49,7 @@ import {
   STUDY_ID,
   TIME_USE_DIARY,
 } from '../../common/constants';
+import { isFailure, isPending, useRequestState } from '../../common/utils';
 import { selectStudySettings } from '../../core/redux/selectors';
 import { DEFAULT_LANGUAGE_COOKIE } from '../../utils/constants/StorageConstants';
 import {
@@ -58,8 +58,6 @@ import {
   getStudySettings,
   verifyParticipant,
 } from '../study/actions';
-
-const { isPending, isFailure } = ReduxUtils;
 
 const {
   ACTIVITY_END_TIME,

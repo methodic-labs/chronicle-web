@@ -13,15 +13,13 @@ import {
   Tooltip,
   Typography
 } from 'lattice-ui-kit';
-import { LangUtils } from 'lattice-utils';
 
 import copyToClipboard from '../../../utils/copyToClipboard';
 import { AppFeatures } from '../../../common/constants';
+import { isNonEmptyString } from '../../../common/utils';
 import type { Study } from '../../../common/types';
 
 const { NEUTRAL } = Colors;
-
-const { isNonEmptyString } = LangUtils;
 
 const StyledTag = styled(Tag)`
   margin-left: 0;

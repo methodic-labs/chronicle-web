@@ -1,7 +1,6 @@
 // @flow
 
 import { call, put, takeEvery } from '@redux-saga/core/effects';
-import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
@@ -12,9 +11,8 @@ import {
   PARTICIPATION_STATUS,
   STUDY_ID
 } from '../../../common/constants';
+import { Logger, toSagaError } from '../../../common/utils';
 import { CHANGE_ENROLLMENT_STATUS, changeEnrollmentStatus } from '../actions';
-
-const { toSagaError } = AxiosUtils;
 
 const LOG = new Logger('StudySagas');
 

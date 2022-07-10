@@ -3,7 +3,6 @@
  */
 
 import { Map, OrderedMap } from 'immutable';
-import { LangUtils } from 'lattice-utils';
 
 import {
   AUTHORIZATIONS,
@@ -24,10 +23,9 @@ import {
   TIME_USE_DIARY_API,
   V3,
 } from '../../../common/constants';
+import { isNonEmptyString } from '../../../common/utils';
 import { TIME_USE_DIARY } from '../../../utils/constants/UrlConstants';
 import { getConfig } from '../../config/Configuration';
-
-const { isNonEmptyString } = LangUtils;
 
 /* eslint-disable key-spacing */
 const API_TO_PATH_MAP :Map<string, string> = OrderedMap({

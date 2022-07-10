@@ -1,23 +1,17 @@
 // @flow
+
 import { useEffect, useState } from 'react';
 
 import styled from 'styled-components';
-import {
-  Form,
-  Paged
-} from 'lattice-fabricate';
-import {
-  Button,
-  CardSegment,
-  Modal
-} from 'lattice-ui-kit';
-import { useRequestState } from 'lattice-utils';
+import { Form, Paged } from 'lattice-fabricate';
+import { Button, CardSegment, Modal } from 'lattice-ui-kit';
 import { useDispatch } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
 import NewQuestionnaireConfirmation from './NewQuestionnaireConfirmation';
 
+import { useRequestState } from '../../../common/utils';
 import { resetRequestState } from '../../../core/redux/ReduxActions';
 import { CREATE_QUESTIONNAIRE, createQuestionnaire } from '../../questionnaire/QuestionnaireActions';
 import { QUESTIONNAIRE_FORM_PAGES } from '../constants/constants';

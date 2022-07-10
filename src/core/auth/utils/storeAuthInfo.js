@@ -4,7 +4,6 @@
 
 import cookies from 'js-cookie';
 import decode from 'jwt-decode';
-import { LangUtils, Logger } from 'lattice-utils';
 import { v4 as uuid } from 'uuid';
 
 import getAuthTokenExpiration from './getAuthTokenExpiration';
@@ -17,11 +16,10 @@ import {
   AUTH_TOKEN_EXPIRED,
   CSRF_COOKIE,
 } from '../../../common/constants';
+import { Logger, isNonEmptyObject } from '../../../common/utils';
 import type { UserInfo } from '../../../common/types';
 
 const LOG = new Logger('storeAuthInfo');
-
-const { isNonEmptyObject } = LangUtils;
 
 export default function storeAuthInfo(authInfo :?Object) {
 

@@ -8,7 +8,6 @@ import {
   Spinner,
   Typography
 } from 'lattice-ui-kit';
-import { DateTimeUtils, ReduxUtils, useRequestState } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RequestState } from 'redux-reqseq';
@@ -28,20 +27,19 @@ import {
   END_DATE,
   START_DATE,
   STUDY_ID,
-  TIME_USE_DIARY
+  TIME_USE_DIARY,
 } from '../../common/constants';
-import { resetRequestStates } from '../../core/redux/actions';
-import { selectTimeUseDiarySubmissions } from '../../core/redux/selectors';
-import type { Study } from '../../common/types';
-
-const { formatAsDate } = DateTimeUtils;
-
-const {
+import {
+  formatAsDate,
   isFailure,
   isPending,
   isStandby,
   isSuccess,
-} = ReduxUtils;
+  useRequestState,
+} from '../../common/utils';
+import { resetRequestStates } from '../../core/redux/actions';
+import { selectTimeUseDiarySubmissions } from '../../core/redux/selectors';
+import type { Study } from '../../common/types';
 
 const TimeUseDiaryDashboard = ({
   study,

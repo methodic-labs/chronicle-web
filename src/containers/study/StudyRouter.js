@@ -5,7 +5,6 @@
 import { useEffect, useMemo } from 'react';
 
 import { Box } from 'lattice-ui-kit';
-import { ReduxUtils, RoutingUtils, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import type { RequestState } from 'redux-reqseq';
@@ -18,17 +17,17 @@ import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
 import * as Routes from '../../core/router/Routes';
 import { BasicErrorComponent, Spinner, TabLink } from '../../common/components';
 import { AppComponents, STUDIES } from '../../common/constants';
-import { resetRequestStates } from '../../core/redux/actions';
-import { selectStudy } from '../../core/redux/selectors';
-import type { Study, UUID } from '../../common/types';
-
-const {
+import {
+  getParamFromMatch,
   isFailure,
   isPending,
   isStandby,
   isSuccess,
-} = ReduxUtils;
-const { getParamFromMatch } = RoutingUtils;
+  useRequestState,
+} from '../../common/utils';
+import { resetRequestStates } from '../../core/redux/actions';
+import { selectStudy } from '../../core/redux/selectors';
+import type { Study, UUID } from '../../common/types';
 
 const StudyRouter = () => {
 

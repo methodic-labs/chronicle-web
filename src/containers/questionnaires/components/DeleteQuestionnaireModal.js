@@ -4,15 +4,13 @@ import { useEffect } from 'react';
 
 import styled from 'styled-components';
 import { ActionModal } from 'lattice-ui-kit';
-import { ReduxConstants } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
+import { REQUEST_STATE } from '../../../common/constants';
 import { resetRequestState } from '../../../core/redux/ReduxActions';
 import { DELETE_QUESTIONNAIRE, deleteQuestionnaire } from '../../questionnaire/QuestionnaireActions';
-
-const { REQUEST_STATE } = ReduxConstants;
 
 const Wrapper = styled.div`
   max-width: 500px;

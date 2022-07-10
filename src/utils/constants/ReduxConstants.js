@@ -1,8 +1,4 @@
 // @flow
-import { ReduxConstants } from 'lattice-utils';
-import { RequestStates } from 'redux-reqseq';
-
-const { REQUEST_STATE } = ReduxConstants;
 
 const STUDIES_REDUX_CONSTANTS = {
   NOTIFICATIONS_EKID: 'notificationsEKID',
@@ -53,10 +49,7 @@ const REDUCERS = {
   TUD: 'tud',
 };
 
-const RS_INITIAL_STATE = { [REQUEST_STATE]: RequestStates.STANDBY };
-
 export {
-  RS_INITIAL_STATE,
   APP_REDUX_CONSTANTS,
   DASHBOARD_REDUX_CONSTANTS,
   PERMISSIONS_REDUX_CONSTANTS,

@@ -1,10 +1,10 @@
 // @flow
 
 import { put, takeLatest } from '@redux-saga/core/effects';
-import { Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
+import { Logger } from '../../../common/utils';
 import { COUNT_ALL_PARTICIPANTS, countAllParticipants } from '../actions';
 import type { WorkerResponse } from '../../../common/types';
 
