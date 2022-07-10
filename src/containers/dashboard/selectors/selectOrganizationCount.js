@@ -2,8 +2,8 @@
 
 import { Map, getIn } from 'immutable';
 
-import { APP_REDUX_CONSTANTS, REDUCERS } from '../../../utils/constants/ReduxConstants';
+import { ORGANIZATIONS } from '../../../common/constants';
 
 export default function selectOrganizationCount() {
-  return (state :Map) :Number => getIn(state, [REDUCERS.APP, APP_REDUX_CONSTANTS.ORGS], Map()).size;
+  return (state :Map) :Number => getIn(state, [ORGANIZATIONS, ORGANIZATIONS], Map()).size;
 }

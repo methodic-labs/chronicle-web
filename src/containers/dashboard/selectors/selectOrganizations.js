@@ -2,8 +2,8 @@
 
 import { Map, getIn } from 'immutable';
 
-import { APP_REDUX_CONSTANTS, REDUCERS } from '../../../utils/constants/ReduxConstants';
+import { ORGANIZATIONS } from '../../../common/constants';
 
 export default function selectOrganizations() {
-  return (state :Map) :Map => getIn(state, [REDUCERS.APP, APP_REDUX_CONSTANTS.ORGS], Map());
+  return (state :Map) :Map => getIn(state, [ORGANIZATIONS, ORGANIZATIONS], Map());
 }
