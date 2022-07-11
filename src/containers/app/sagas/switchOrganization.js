@@ -7,17 +7,14 @@ import {
   put,
   takeEvery,
 } from '@redux-saga/core/effects';
-import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import { initializeApplicationWorker } from './initializeApplication';
 
-import { storeOrganizationId } from '../../../common/utils';
+import { Logger, storeOrganizationId, toSagaError } from '../../../common/utils';
 import { goToRoot } from '../../../core/router/RoutingActions';
 import { SWITCH_ORGANIZATION, initializeApplication, switchOrganization } from '../actions';
-
-const { toSagaError } = AxiosUtils;
 
 const LOG = new Logger('AppSagas');
 

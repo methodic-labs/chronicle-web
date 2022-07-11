@@ -6,11 +6,10 @@ import Auth0Lock from 'auth0-lock';
 import isEmpty from 'lodash/isEmpty';
 import qs from 'qs';
 import { Map } from 'immutable';
-import { LangUtils, Logger } from 'lattice-utils';
 
 import { clearAuthInfo, getAuthToken, hasAuthTokenExpired } from './utils';
 
-const { isNonEmptyString } = LangUtils;
+import { Logger, isNonEmptyString } from '../../common/utils';
 
 const LOG = new Logger('Auth0');
 

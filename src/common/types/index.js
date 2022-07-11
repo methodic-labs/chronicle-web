@@ -30,12 +30,36 @@ export type AuthorizationObject = {|
   };
 |};
 
+export type DeleteTypesEnum = {|
+  HARD :'Hard';
+  Hard :'Hard';
+  SOFT :'Soft';
+  Soft :'Soft';
+|};
+
+export type DeleteType = $Values<DeleteTypesEnum>;
+
+export type EnrollmentStatusEnum = {|
+  DELETE :'DELETE';
+  ENROLLED :'ENROLLED';
+  NOT_ENROLLED :'NOT_ENROLLED';
+|};
+
+export type EnrollmentStatus = $Values<EnrollmentStatusEnum>;
+
 export type IOSSensorType = {|
   DEVICE_USAGE :'deviceUsage';
   KEYBOARD_METRICS :'keyboardMetrics';
   MESSAGES_USAGE :'messagesUsage';
   PHONE_USAGE :'phoneUsage';
-|}
+|};
+
+export type LanguageCodesEnum = {|
+  ENGLISH :'en';
+  GERMAN :'de';
+  SPANISH :'es';
+  SWEDISH :'sv';
+|};
 
 export type ParticipantDataType = {|
   IOS_SENSOR :'IOSSensor';
@@ -43,7 +67,7 @@ export type ParticipantDataType = {|
   PREPROCESSED :'Preprocessed';
   APP_USAGE_SURVEY :'AppUsageSurvey';
   TIME_USE_DIARY :'TimeUseDiary';
-|}
+|};
 
 export type ParticipationStatusesEnum = {|
   ENROLLED :'ENROLLED';
@@ -126,6 +150,17 @@ export type TimeUseDiaryDataType = {|
   NIGHTTIME :'NightTime';
   SUMMARIZED :'Summarized';
 |};
+
+export type UpdateTypesEnum = {|
+  MERGE :'Merge';
+  Merge :'Merge';
+  PARTIAL_REPLACE :'PartialReplace';
+  PartialReplace :'PartialReplace';
+  REPLACE :'Replace';
+  Replace :'Replace';
+|};
+
+export type UpdateType = $Values<UpdateTypesEnum>;
 
 export type UserInfo = {
   email ?:string;

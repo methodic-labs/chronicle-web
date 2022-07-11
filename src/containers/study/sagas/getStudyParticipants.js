@@ -4,16 +4,14 @@
 
 import { call, put, takeEvery } from '@redux-saga/core/effects';
 import { Map } from 'immutable';
-import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as StudyApi from '../../../core/api/study';
 import { CANDIDATE, ID } from '../../../common/constants';
+import { Logger, toSagaError } from '../../../common/utils';
 import { GET_STUDY_PARTICIPANTS, getStudyParticipants } from '../actions';
 import type { WorkerResponse } from '../../../common/types';
-
-const { toSagaError } = AxiosUtils;
 
 const LOG = new Logger('StudySagas');
 

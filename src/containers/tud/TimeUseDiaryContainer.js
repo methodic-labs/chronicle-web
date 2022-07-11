@@ -15,7 +15,6 @@ import {
   Spinner,
   Typography,
 } from 'lattice-ui-kit';
-import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -42,24 +41,23 @@ import {
   selectTimeByPageAndKey
 } from './utils';
 
-import * as LanguageCodes from '../../utils/constants/LanguageCodes';
 import { BasicErrorComponent } from '../../common/components';
 import {
+  DEFAULT_LANGUAGE,
+  LanguageCodes,
   PARTICIPANT_ID,
   STUDIES,
   STUDY_ID,
   TIME_USE_DIARY,
 } from '../../common/constants';
+import { isFailure, isPending, useRequestState } from '../../common/utils';
 import { selectStudySettings } from '../../core/redux/selectors';
-import { DEFAULT_LANGUAGE_COOKIE } from '../../utils/constants/StorageConstants';
 import {
   GET_STUDY_SETTINGS,
   VERIFY_PARTICIPANT,
   getStudySettings,
   verifyParticipant,
 } from '../study/actions';
-
-const { isPending, isFailure } = ReduxUtils;
 
 const {
   ACTIVITY_END_TIME,
@@ -136,7 +134,7 @@ const TimeUseDiaryContainer = () => {
 
   // select default language
   useEffect(() => {
-    const defaultLngCode = Cookies.get(DEFAULT_LANGUAGE_COOKIE) || LanguageCodes.ENGLISH;
+    const defaultLngCode = Cookies.get(DEFAULT_LANGUAGE) || LanguageCodes.ENGLISH;
 
     const defaultLng = SUPPORTED_LANGUAGES.find((lng) => lng.code === defaultLngCode);
     if (defaultLng) {
@@ -188,7 +186,7 @@ const TimeUseDiaryContainer = () => {
   const changeLanguage = (lng :SelectLanguageOption) => {
     if (lng !== null) {
       i18n.changeLanguage(lng.value);
-      Cookies.set(DEFAULT_LANGUAGE_COOKIE, lng.value, {});
+      Cookies.set(DEFAULT_LANGUAGE, lng.value, {});
       setSelectedLanguage(lng);
     }
   };

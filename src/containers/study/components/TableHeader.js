@@ -1,26 +1,18 @@
 // @flow
-import { useContext, useState } from 'react';
+
+import { useContext } from 'react';
 
 import styled from 'styled-components';
-import { faAngleDown, faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Map, Set } from 'immutable';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Grid,
-  Menu,
-  MenuItem,
-  SearchInput
-} from 'lattice-ui-kit';
+import { Button, Grid, SearchInput } from 'lattice-ui-kit';
 
 import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
 
 const {
-  SELECT_CANDIDATE_IDS,
+  // SELECT_CANDIDATE_IDS,
   TOGGLE_ADD_PARTICIPANT_MODAL,
 } = ParticipantsTableActions;
 
@@ -29,28 +21,28 @@ const AddParticipantsButton = styled(Button)`
   margin-bottom: 5px;
 `;
 
-const BulkActionsButton = styled(Button)`
-  margin-left: 20px;
-`;
+// const BulkActionsButton = styled(Button)`
+//   margin-left: 20px;
+// `;
 
 const TableHeader = ({
   handleOnChange,
-  selectedParticipants,
-  filteredParticipants
+  // selectedParticipants,
+  // filteredParticipants
 } :{
   handleOnChange :(SyntheticInputEvent<HTMLInputElement>) => void;
-  selectedParticipants :number;
-  filteredParticipants :Map;
+  // selectedParticipants :number;
+  // filteredParticipants :Map;
 }) => {
   const dispatch = useContext(ParticipantsTableDispatch);
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  // const [anchorEl, setAnchorEl] = useState(null);
 
-  const candidateIds :Set = filteredParticipants.keySeq().toSet();
+  // const candidateIds :Set = filteredParticipants.keySeq().toSet();
 
-  const checkBoxLabel = selectedParticipants === 0
-    ? `${filteredParticipants.size} participants`
-    : `${selectedParticipants} selected`;
+  // const checkBoxLabel = selectedParticipants === 0
+  //   ? `${filteredParticipants.size} participants`
+  //   : `${selectedParticipants} selected`;
   return (
     <Grid container spacing={2}>
       <Grid container spacing={2} item xs={12} sm={6} md={9}>

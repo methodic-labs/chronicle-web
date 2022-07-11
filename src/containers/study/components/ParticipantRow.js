@@ -5,25 +5,21 @@ import { useContext, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Set } from 'immutable';
 import {
-  Checkbox,
   Colors,
   IconButton,
   Menu,
   MenuItem,
   Tag
 } from 'lattice-ui-kit';
-import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 
 import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 
-import EnrollmentStatuses from '../../../utils/constants/EnrollmentStatus';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
+import { EnrollmentStatuses } from '../../../common/constants';
+import { formatDateTime } from '../../../common/utils';
 import type { Participant, ParticipantStats } from '../../../common/types';
-
-const { formatDateTime } = DateTimeUtils;
 
 const { NEUTRAL } = Colors;
 
@@ -35,7 +31,7 @@ const {
   TOGGLE_DOWNLOAD_MODAL,
   TOGGLE_ENROLLMENT_MODAL,
   TOGGLE_INFO_MODAL,
-  SELECT_CANDIDATE_IDS
+  // SELECT_CANDIDATE_IDS
 } = ParticipantsTableActions;
 
 const RowWrapper = styled.tr.attrs(() => ({ tabIndex: '1' }))`
@@ -68,7 +64,7 @@ const ParticipantRow = ({
   hasDeletePermission,
   hasTimeUseDiary,
   hasIOSSensorDataCollection,
-  isSelected,
+  // isSelected,
   participant,
   stats = {},
 } :{
@@ -76,7 +72,7 @@ const ParticipantRow = ({
   hasDeletePermission :boolean;
   hasTimeUseDiary :boolean;
   hasIOSSensorDataCollection :boolean;
-  isSelected :boolean;
+  // isSelected :boolean;
   participant :Participant;
   stats ?:ParticipantStats;
 }) => {

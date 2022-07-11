@@ -2,15 +2,12 @@
  * @flow
  */
 
-import { LangUtils } from 'lattice-utils';
-
 import getLocalStorage from './getLocalStorage';
+import isNonEmptyString from './isNonEmptyString';
 
 import { getUserInfo } from '../../core/auth/utils';
 import { ORGANIZATION_ID_MAP } from '../constants';
 import type { UUID, UserInfo } from '../types';
-
-const { isNonEmptyString } = LangUtils;
 
 export default function storeOrganizationId(organizationId :UUID) {
 

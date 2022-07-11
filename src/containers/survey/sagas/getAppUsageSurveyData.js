@@ -4,7 +4,6 @@
 
 import { call, put, takeEvery } from '@redux-saga/core/effects';
 import { List, Map, fromJS } from 'immutable';
-import { AxiosUtils, Logger } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
@@ -18,10 +17,9 @@ import {
   TIMESTAMP,
   TIMEZONE,
 } from '../../../common/constants';
+import { Logger, toSagaError } from '../../../common/utils';
 import { GET_APP_USAGE_SURVEY_DATA, getAppUsageSurveyData } from '../actions';
 import type { WorkerResponse } from '../../../common/types';
-
-const { toSagaError } = AxiosUtils;
 
 const LOG = new Logger('SurveySagas');
 

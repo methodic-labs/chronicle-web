@@ -1,23 +1,13 @@
 // @flow
 
-import FS from 'file-saver';
-import Papa from 'papaparse';
 import isEqual from 'lodash/isEqual';
-import {
-  List,
-  Map,
-  OrderedSet,
-  get,
-  getIn
-} from 'immutable';
-import { Models } from 'lattice';
+import { Map, get, getIn } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
 import { DateTime } from 'luxon';
 
 import createEnglishTranslationLookup from './createEnglishTranslationLookup';
 import translateToEnglish from './translateToEnglish';
 
-import DataTypes from '../constants/DataTypes';
 import TranslationKeys from '../constants/TranslationKeys';
 import * as ContextualSchema from '../schemas/ContextualSchema';
 import * as DaySpanSchema from '../schemas/DaySpanSchema';
@@ -25,10 +15,8 @@ import * as NightTimeActivitySchema from '../schemas/NightTimeActivitySchema';
 import * as PreSurveySchema from '../schemas/PreSurveySchema';
 import * as PrimaryActivitySchema from '../schemas/PrimaryActivitySchema';
 import * as SurveyIntroSchema from '../schemas/SurveyIntroSchema';
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
 import { PAGE_NUMBERS, QUESTION_TITLE_LOOKUP } from '../constants/GeneralConstants';
 import { PRIMARY_ACTIVITIES, PROPERTY_CONSTS } from '../constants/SchemaConstants';
-import type { DataType } from '../constants/DataTypes';
 
 const { READING, MEDIA_USE } = PRIMARY_ACTIVITIES;
 
@@ -39,52 +27,19 @@ const {
   SURVEY_INTRO_PAGE
 } = PAGE_NUMBERS;
 
-const { FQN } = Models;
-
 const {
   ACTIVITY_END_TIME,
   ACTIVITY_NAME,
   ACTIVITY_START_TIME,
-  ADULT_MEDIA,
-  BG_AUDIO_DAY,
-  BG_AUDIO_NIGHT,
-  BG_TV_DAY,
-  BG_TV_NIGHT,
-  CAREGIVER,
   CLOCK_FORMAT,
   DAY_END_TIME,
-  DAY_OF_WEEK,
   DAY_START_TIME,
   FAMILY_ID,
   HAS_FOLLOWUP_QUESTIONS,
-  NON_TYPICAL_DAY_REASON,
-  NON_TYPICAL_SLEEP_PATTERN,
   OTHER_ACTIVITY,
-  PRIMARY_BOOK_TITLE,
-  PRIMARY_BOOK_TYPE,
-  PRIMARY_MEDIA_ACTIVITY,
-  PRIMARY_MEDIA_AGE,
-  PRIMARY_MEDIA_NAME,
   SECONDARY_ACTIVITY,
-  SECONDARY_BOOK_TITLE,
-  SECONDARY_BOOK_TYPE,
-  SECONDARY_MEDIA_ACTIVITY,
-  SECONDARY_MEDIA_AGE,
-  SECONDARY_MEDIA_NAME,
-  SLEEP_ARRANGEMENT,
-  SLEEP_PATTERN,
-  TODAY_WAKEUP_TIME,
-  TYPICAL_DAY_FLAG,
-  WAKE_UP_COUNT,
   WAVE_ID,
 } = PROPERTY_CONSTS;
-
-const {
-  DATETIME_END_FQN,
-  DATETIME_START_FQN,
-  DATE_TIME_FQN,
-  PERSON_ID,
-} = PROPERTY_TYPE_FQNS;
 
 const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
 
@@ -423,177 +378,177 @@ const createSubmitRequestBody = (
   return result;
 };
 
-function getAnswerString(
-  questionAnswerId :Map,
-  answersMap :Map,
-  property :string
-) {
-  return answersMap.get(questionAnswerId.get(property), List()).toJS();
-}
+// function getAnswerString(
+//   questionAnswerId :Map,
+//   answersMap :Map,
+//   property :string
+// ) {
+//   return answersMap.get(questionAnswerId.get(property), List()).toJS();
+// }
 
-function getTimeRangeValue(values :Map, timeRangeId :UUID, key :FQN) {
-  const dateVal = values.getIn([timeRangeId, key, 0]);
-  return DateTime.fromISO(dateVal);
-}
+// function getTimeRangeValue(values :Map, timeRangeId :UUID, key :FQN) {
+//   const dateVal = values.getIn([timeRangeId, key, 0]);
+//   return DateTime.fromISO(dateVal);
+// }
 
-function exportRawDataToCsvFile(
-  dataType :DataType,
-  outputFileName :string,
-  submissionMetadata :Map, // { submissionId: {participantId: _, date: }}
-  answersMap :Map, // { answerId -> answer value }
-  nonTimeRangeQuestionAnswerMap :Map, // submissionId -> question code -> answerID
-  timeRangeQuestionAnswerMap :Map, // submissionId -> timeRangeId -> question code -> answerId
-  submissionTimeRangeValues :Map // submission -> timeRangeId -> { start: <val>, end: <val>}
-) {
+// function exportRawDataToCsvFile(
+//   dataType :DataType,
+//   outputFileName :string,
+//   submissionMetadata :Map, // { submissionId: {participantId: _, date: }}
+//   answersMap :Map, // { answerId -> answer value }
+//   nonTimeRangeQuestionAnswerMap :Map, // submissionId -> question code -> answerID
+//   timeRangeQuestionAnswerMap :Map, // submissionId -> timeRangeId -> question code -> answerId
+//   submissionTimeRangeValues :Map // submission -> timeRangeId -> { start: <val>, end: <val>}
+// ) {
+//
+//   let csvData :Object[] = [];
+//   submissionMetadata.forEach((metadata :Map, submissionId :UUID) => {
+//     const questionAnswerId = nonTimeRangeQuestionAnswerMap.get(submissionId);
+//     const timeRangeQuestions=timeRangeQuestionAnswerMap.get(submissionId); //timeRangeId->questioncode->answerId
+//     const timeRangeValues = submissionTimeRangeValues.get(submissionId); // timeRangeId => { start: <?>, end: <?>}
+//
+//     const csvMetadata = {};
+//     csvMetadata.Participant_ID = String(metadata.getIn([PERSON_ID, 0]));
+//     csvMetadata.Family_ID = getAnswerString(questionAnswerId, answersMap, FAMILY_ID);
+//     csvMetadata.Wave_Id = getAnswerString(questionAnswerId, answersMap, WAVE_ID);
+//     csvMetadata.Timestamp = DateTime
+//       .fromISO((metadata.getIn([DATE_TIME_FQN, 0])))
+//       .toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
+//     csvMetadata.Day = getAnswerString(questionAnswerId, answersMap, DAY_OF_WEEK);
+//     csvMetadata.Typical_Day = getAnswerString(questionAnswerId, answersMap, TYPICAL_DAY_FLAG);
+//     csvMetadata.Non_Typical_Reason = getAnswerString(questionAnswerId, answersMap, NON_TYPICAL_DAY_REASON);
+//
+//     const nightTimeData = {};
+//
+//     const yesterdayWakeupTime = DateTime
+//       .fromISO(answersMap.getIn([questionAnswerId.get(DAY_START_TIME), 0]))
+//       .minus({ days: 1 });
+//     const yesterdayBedtime = DateTime
+//       .fromISO(answersMap.getIn([questionAnswerId.get(DAY_END_TIME), 0]))
+//       .minus({ days: 1 });
+//     const todayWakeUpTime = DateTime
+//       .fromISO(answersMap.getIn([questionAnswerId.get(TODAY_WAKEUP_TIME), 0]));
+//     const dayTimeHours = yesterdayBedtime.diff(yesterdayWakeupTime, 'hours').toObject().hours;
+//     const sleepHours = todayWakeUpTime.diff(yesterdayBedtime, 'hours').toObject().hours;
+//
+//     nightTimeData.Wakeup_Yesterday = yesterdayWakeupTime.toLocaleString(DateTime.TIME_24_SIMPLE);
+//     nightTimeData.Bedtime_Yesterday = yesterdayBedtime.toLocaleString(DateTime.TIME_24_SIMPLE);
+//     nightTimeData.Wakeup_Today = todayWakeUpTime.toLocaleString(DateTime.TIME_24_SIMPLE);
+//     nightTimeData.Daytime_Hours = dayTimeHours;
+//     nightTimeData.Sleep_Hours = sleepHours;
+//     nightTimeData.Typical_Sleep_Pattern = getAnswerString(questionAnswerId, answersMap, SLEEP_PATTERN);
+//     nightTimeData.Non_Typical_Sleep_Pattern=getAnswerString(questionAnswerId, answersMap, NON_TYPICAL_SLEEP_PATTERN);
+//     nightTimeData.Sleeping_Arrangement = getAnswerString(questionAnswerId, answersMap, SLEEP_ARRANGEMENT);
+//     nightTimeData.Wake_Up_Count = getAnswerString(questionAnswerId, answersMap, WAKE_UP_COUNT);
+//     nightTimeData.Background_TV_Night = getAnswerString(questionAnswerId, answersMap, BG_TV_NIGHT);
+//     nightTimeData.Background_Audio_Night = getAnswerString(questionAnswerId, answersMap, BG_AUDIO_NIGHT);
+//
+//     if (dataType === DataTypes.NIGHTTIME) {
+//       csvData.push({ ...csvMetadata, ...nightTimeData });
+//       return;
+//     }
+//
+//     let submissionData = [];
+//     timeRangeQuestions.forEach((questions :Map, timeRangeId :UUID) => {
+//       const activitiesData = {};
+//
+//       activitiesData.Counter = 0;
+//       activitiesData.Primary_Activity = getAnswerString(questions, answersMap, ACTIVITY_NAME);
+//       activitiesData.Activity_Start = getTimeRangeValue(
+//         timeRangeValues, timeRangeId, DATETIME_START_FQN
+//       );
+//       activitiesData.Activity_End = getTimeRangeValue(
+//         timeRangeValues, timeRangeId, DATETIME_END_FQN
+//       );
+//       const duration = activitiesData.Activity_End.diff(activitiesData.Activity_Start, 'minutes').toObject().minutes;
+//       activitiesData['Duration(Min)'] = duration;
+//       activitiesData.Caregiver = getAnswerString(questions, answersMap, CAREGIVER);
+//       activitiesData.Primary_Media_Activity = getAnswerString(questions, answersMap, PRIMARY_MEDIA_ACTIVITY);
+//       activitiesData.Primary_Media_Age = getAnswerString(questions, answersMap, PRIMARY_MEDIA_AGE);
+//       activitiesData.Primary_Media_Name = getAnswerString(questions, answersMap, PRIMARY_MEDIA_NAME);
+//       activitiesData.Primary_Book_Type = getAnswerString(questions, answersMap, PRIMARY_BOOK_TYPE);
+//       activitiesData.Primary_Book_Title = getAnswerString(questions, answersMap, PRIMARY_BOOK_TITLE);
+//       activitiesData.Secondary_Media_Activity = getAnswerString(questions, answersMap, SECONDARY_MEDIA_ACTIVITY);
+//       activitiesData.Secondary_Media_Age = getAnswerString(questions, answersMap, SECONDARY_MEDIA_AGE);
+//       activitiesData.Secondary_Media_Name = getAnswerString(questions, answersMap, SECONDARY_MEDIA_NAME);
+//       activitiesData.Secondary_Book_Type = getAnswerString(questions, answersMap, SECONDARY_BOOK_TYPE);
+//       activitiesData.Secondary_Book_Title = getAnswerString(questions, answersMap, SECONDARY_BOOK_TITLE);
+//       activitiesData.Secondary_Activity = getAnswerString(questions, answersMap, SECONDARY_ACTIVITY);
+//       activitiesData.Background_TV_Day = getAnswerString(questions, answersMap, BG_TV_DAY);
+//       activitiesData.Background_Audio_Day = getAnswerString(questions, answersMap, BG_AUDIO_DAY);
+//       activitiesData.Adult_Media_Use = getAnswerString(questions, answersMap, ADULT_MEDIA);
+//
+//       submissionData.push(activitiesData);
+//     });
+//
+//     // sort
+//     submissionData = submissionData.sort((row1 :Object, row2 :Object) => {
+//       if (row1.Activity_Start > row2.Activity_Start) return 1;
+//       if (row1.Activity_Start < row2.Activity_Start) return -1;
+//       return 0;
+//     }).map((row :Object, index :number) => ({
+//       ...csvMetadata,
+//       ...row,
+//       Activity_Start: row.Activity_Start.toLocaleString(DateTime.TIME_24_SIMPLE),
+//       Activity_End: row.Activity_End.toLocaleString(DateTime.TIME_24_SIMPLE),
+//       Counter: index + 1,
+//     }));
+//
+//     csvData = csvData.concat(submissionData);
+//   });
+//
+//   const csv = Papa.unparse(csvData);
+//   const blob = new Blob([csv], {
+//     type: 'text/csv'
+//   });
+//
+//   FS.saveAs(blob, outputFileName);
+// }
 
-  let csvData :Object[] = [];
-  submissionMetadata.forEach((metadata :Map, submissionId :UUID) => {
-    const questionAnswerId = nonTimeRangeQuestionAnswerMap.get(submissionId);
-    const timeRangeQuestions = timeRangeQuestionAnswerMap.get(submissionId); // timeRangeId -> question code -> answerId
-    const timeRangeValues = submissionTimeRangeValues.get(submissionId); // timeRangeId => { start: <?>, end: <?>}
+// function exportSummarizedDataToCsvFile(
+//   summaryData :Map,
+//   submissionMetadata :Map,
+//   csvHeaders :OrderedSet,
+//   fileName :string
+// ) {
+//
+//   const csvData :Object[] = [];
+//
+//   summaryData.forEach((submissionSummary :Map, submissionId :UUID) => {
+//     const rowData :Object = {};
+//     rowData.participantId = submissionMetadata.getIn([submissionId, PERSON_ID, 0]);
+//     rowData.Timestamp = DateTime
+//       .fromISO((submissionMetadata.getIn([submissionId, DATE_TIME_FQN, 0])))
+//       .toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
+//     csvHeaders.forEach((header :string) => {
+//       if (submissionSummary.has(header)) {
+//         rowData[header] = submissionSummary.get(header);
+//       }
+//     });
+//     csvData.push(rowData);
+//
+//   });
+//
+//   const csv = Papa.unparse(csvData);
+//   const blob = new Blob([csv], {
+//     type: 'text/csv'
+//   });
+//
+//   FS.saveAs(blob, fileName);
+// }
 
-    const csvMetadata = {};
-    csvMetadata.Participant_ID = String(metadata.getIn([PERSON_ID, 0]));
-    csvMetadata.Family_ID = getAnswerString(questionAnswerId, answersMap, FAMILY_ID);
-    csvMetadata.Wave_Id = getAnswerString(questionAnswerId, answersMap, WAVE_ID);
-    csvMetadata.Timestamp = DateTime
-      .fromISO((metadata.getIn([DATE_TIME_FQN, 0])))
-      .toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
-    csvMetadata.Day = getAnswerString(questionAnswerId, answersMap, DAY_OF_WEEK);
-    csvMetadata.Typical_Day = getAnswerString(questionAnswerId, answersMap, TYPICAL_DAY_FLAG);
-    csvMetadata.Non_Typical_Reason = getAnswerString(questionAnswerId, answersMap, NON_TYPICAL_DAY_REASON);
-
-    const nightTimeData = {};
-
-    const yesterdayWakeupTime = DateTime
-      .fromISO(answersMap.getIn([questionAnswerId.get(DAY_START_TIME), 0]))
-      .minus({ days: 1 });
-    const yesterdayBedtime = DateTime
-      .fromISO(answersMap.getIn([questionAnswerId.get(DAY_END_TIME), 0]))
-      .minus({ days: 1 });
-    const todayWakeUpTime = DateTime
-      .fromISO(answersMap.getIn([questionAnswerId.get(TODAY_WAKEUP_TIME), 0]));
-    const dayTimeHours = yesterdayBedtime.diff(yesterdayWakeupTime, 'hours').toObject().hours;
-    const sleepHours = todayWakeUpTime.diff(yesterdayBedtime, 'hours').toObject().hours;
-
-    nightTimeData.Wakeup_Yesterday = yesterdayWakeupTime.toLocaleString(DateTime.TIME_24_SIMPLE);
-    nightTimeData.Bedtime_Yesterday = yesterdayBedtime.toLocaleString(DateTime.TIME_24_SIMPLE);
-    nightTimeData.Wakeup_Today = todayWakeUpTime.toLocaleString(DateTime.TIME_24_SIMPLE);
-    nightTimeData.Daytime_Hours = dayTimeHours;
-    nightTimeData.Sleep_Hours = sleepHours;
-    nightTimeData.Typical_Sleep_Pattern = getAnswerString(questionAnswerId, answersMap, SLEEP_PATTERN);
-    nightTimeData.Non_Typical_Sleep_Pattern = getAnswerString(questionAnswerId, answersMap, NON_TYPICAL_SLEEP_PATTERN);
-    nightTimeData.Sleeping_Arrangement = getAnswerString(questionAnswerId, answersMap, SLEEP_ARRANGEMENT);
-    nightTimeData.Wake_Up_Count = getAnswerString(questionAnswerId, answersMap, WAKE_UP_COUNT);
-    nightTimeData.Background_TV_Night = getAnswerString(questionAnswerId, answersMap, BG_TV_NIGHT);
-    nightTimeData.Background_Audio_Night = getAnswerString(questionAnswerId, answersMap, BG_AUDIO_NIGHT);
-
-    if (dataType === DataTypes.NIGHTTIME) {
-      csvData.push({ ...csvMetadata, ...nightTimeData });
-      return;
-    }
-
-    let submissionData = [];
-    timeRangeQuestions.forEach((questions :Map, timeRangeId :UUID) => {
-      const activitiesData = {};
-
-      activitiesData.Counter = 0;
-      activitiesData.Primary_Activity = getAnswerString(questions, answersMap, ACTIVITY_NAME);
-      activitiesData.Activity_Start = getTimeRangeValue(
-        timeRangeValues, timeRangeId, DATETIME_START_FQN
-      );
-      activitiesData.Activity_End = getTimeRangeValue(
-        timeRangeValues, timeRangeId, DATETIME_END_FQN
-      );
-      const duration = activitiesData.Activity_End.diff(activitiesData.Activity_Start, 'minutes').toObject().minutes;
-      activitiesData['Duration(Min)'] = duration;
-      activitiesData.Caregiver = getAnswerString(questions, answersMap, CAREGIVER);
-      activitiesData.Primary_Media_Activity = getAnswerString(questions, answersMap, PRIMARY_MEDIA_ACTIVITY);
-      activitiesData.Primary_Media_Age = getAnswerString(questions, answersMap, PRIMARY_MEDIA_AGE);
-      activitiesData.Primary_Media_Name = getAnswerString(questions, answersMap, PRIMARY_MEDIA_NAME);
-      activitiesData.Primary_Book_Type = getAnswerString(questions, answersMap, PRIMARY_BOOK_TYPE);
-      activitiesData.Primary_Book_Title = getAnswerString(questions, answersMap, PRIMARY_BOOK_TITLE);
-      activitiesData.Secondary_Media_Activity = getAnswerString(questions, answersMap, SECONDARY_MEDIA_ACTIVITY);
-      activitiesData.Secondary_Media_Age = getAnswerString(questions, answersMap, SECONDARY_MEDIA_AGE);
-      activitiesData.Secondary_Media_Name = getAnswerString(questions, answersMap, SECONDARY_MEDIA_NAME);
-      activitiesData.Secondary_Book_Type = getAnswerString(questions, answersMap, SECONDARY_BOOK_TYPE);
-      activitiesData.Secondary_Book_Title = getAnswerString(questions, answersMap, SECONDARY_BOOK_TITLE);
-      activitiesData.Secondary_Activity = getAnswerString(questions, answersMap, SECONDARY_ACTIVITY);
-      activitiesData.Background_TV_Day = getAnswerString(questions, answersMap, BG_TV_DAY);
-      activitiesData.Background_Audio_Day = getAnswerString(questions, answersMap, BG_AUDIO_DAY);
-      activitiesData.Adult_Media_Use = getAnswerString(questions, answersMap, ADULT_MEDIA);
-
-      submissionData.push(activitiesData);
-    });
-
-    // sort
-    submissionData = submissionData.sort((row1 :Object, row2 :Object) => {
-      if (row1.Activity_Start > row2.Activity_Start) return 1;
-      if (row1.Activity_Start < row2.Activity_Start) return -1;
-      return 0;
-    }).map((row :Object, index :number) => ({
-      ...csvMetadata,
-      ...row,
-      Activity_Start: row.Activity_Start.toLocaleString(DateTime.TIME_24_SIMPLE),
-      Activity_End: row.Activity_End.toLocaleString(DateTime.TIME_24_SIMPLE),
-      Counter: index + 1,
-    }));
-
-    csvData = csvData.concat(submissionData);
-  });
-
-  const csv = Papa.unparse(csvData);
-  const blob = new Blob([csv], {
-    type: 'text/csv'
-  });
-
-  FS.saveAs(blob, outputFileName);
-}
-
-function exportSummarizedDataToCsvFile(
-  summaryData :Map,
-  submissionMetadata :Map,
-  csvHeaders :OrderedSet,
-  fileName :string
-) {
-
-  const csvData :Object[] = [];
-
-  summaryData.forEach((submissionSummary :Map, submissionId :UUID) => {
-    const rowData :Object = {};
-    rowData.participantId = submissionMetadata.getIn([submissionId, PERSON_ID, 0]);
-    rowData.Timestamp = DateTime
-      .fromISO((submissionMetadata.getIn([submissionId, DATE_TIME_FQN, 0])))
-      .toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
-    csvHeaders.forEach((header :string) => {
-      if (submissionSummary.has(header)) {
-        rowData[header] = submissionSummary.get(header);
-      }
-    });
-    csvData.push(rowData);
-
-  });
-
-  const csv = Papa.unparse(csvData);
-  const blob = new Blob([csv], {
-    type: 'text/csv'
-  });
-
-  FS.saveAs(blob, fileName);
-}
-
-const getOutputFileName = (date :?string, startDate :?string, endDate :?string, dataType :DataType) => {
-  const prefix = 'TimeUseDiary';
-
-  if (date) {
-    return `${prefix}_${dataType}_${date}`;
-  }
-  if (startDate && endDate) {
-    return `${prefix}_${dataType}_${startDate}-${endDate}`;
-  }
-
-  return prefix;
-};
+// const getOutputFileName = (date :?string, startDate :?string, endDate :?string, dataType :DataType) => {
+//   const prefix = 'TimeUseDiary';
+//
+//   if (date) {
+//     return `${prefix}_${dataType}_${date}`;
+//   }
+//   if (startDate && endDate) {
+//     return `${prefix}_${dataType}_${startDate}-${endDate}`;
+//   }
+//
+//   return prefix;
+// };
 
 export {
   applyCustomValidation,
@@ -604,10 +559,10 @@ export {
   getIs12HourFormatSelected,
   getIsNightActivityPage,
   getIsSummaryPage,
-  getOutputFileName,
+  // getOutputFileName,
   pageHasFollowupQuestions,
   selectPrimaryActivityByPage,
   selectTimeByPageAndKey,
-  exportRawDataToCsvFile,
-  exportSummarizedDataToCsvFile,
+  // exportRawDataToCsvFile,
+  // exportSummarizedDataToCsvFile,
 };

@@ -8,13 +8,13 @@ import {
   takeLatest,
 } from '@redux-saga/core/effects';
 import { List, Map } from 'immutable';
-import { Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import { getOrgStudiesTableDataWorker } from './getOrgStudiesTableDataSaga';
 
 import selectOrganizations from '../selectors/selectOrganizations';
+import { Logger } from '../../../common/utils';
 import { GET_ALL_STUDIES_TABLE_DATA, getAllStudiesTableData, getOrgStudiesTableData } from '../actions';
 import type { WorkerResponse } from '../../../common/types';
 

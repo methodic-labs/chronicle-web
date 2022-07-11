@@ -17,7 +17,6 @@ import {
   MenuItem,
   Typography
 } from 'lattice-ui-kit';
-import { useBoolean, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
@@ -26,6 +25,7 @@ import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from './actions';
 import { DeleteStudyModal, StudyDetails, StudyDetailsModal } from './components';
 
 import * as Routes from '../../core/router/Routes';
+import { useBoolean, useRequestState } from '../../common/utils';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectMyKeys } from '../../core/redux/selectors';
 import type { Study, UUID } from '../../common/types';

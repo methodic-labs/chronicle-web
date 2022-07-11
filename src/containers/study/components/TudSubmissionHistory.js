@@ -2,26 +2,19 @@
 
 import { OrderedSet } from 'immutable';
 import {
-  // $FlowFixMe
   Box,
-  // $FlowFixMe
   List,
-  // $FlowFixMe
   ListItem,
-  // $FlowFixMe
   ListItemText,
-  // $FlowFixMe
   ListSubheader,
   Modal,
   Typography
 } from 'lattice-ui-kit';
-import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { useSelector } from 'react-redux';
 
+import { formatDateTime } from '../../../common/utils';
 import { selectTudSubmissionDates } from '../../tud/TimeUseDiarySelectors';
-
-const { formatDateTime } = DateTimeUtils;
 
 type Props = {
   handleOnClose :() => void;

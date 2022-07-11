@@ -5,11 +5,11 @@
 import qs from 'qs';
 import { call, put, take } from '@redux-saga/core/effects';
 import { push } from 'connected-react-router';
-import { LangUtils, Logger } from 'lattice-utils';
 import { v4 as uuid } from 'uuid';
 import type { Saga } from '@redux-saga/core';
 
 import * as Auth0 from '../Auth0';
+import { Logger, isNonEmptyString } from '../../../common/utils';
 import { syncUser } from '../../api/principal';
 import { configure, getConfig } from '../../config/Configuration';
 import { AUTH_ATTEMPT, authFailure, authSuccess } from '../actions';
@@ -22,8 +22,6 @@ import {
 } from '../utils';
 
 const LOG = new Logger('AuthSagas');
-
-const { isNonEmptyString } = LangUtils;
 
 export default function* authAttemptWatcher() :Saga<void> {
 

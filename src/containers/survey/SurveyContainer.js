@@ -15,7 +15,6 @@ import {
   CardSegment,
   Spinner
 } from 'lattice-ui-kit';
-import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -33,16 +32,16 @@ import {
   DATA_COLLECTION,
   STUDIES,
 } from '../../common/constants';
-import { selectAppUsageSurveyData, selectStudySettings } from '../../core/redux/selectors';
-import { GET_STUDY_SETTINGS, getStudySettings } from '../study/actions';
-import type { AppUsageFreqType } from '../../common/types';
-
-const {
+import {
+  isFailure,
   isPending,
   isStandby,
   isSuccess,
-  isFailure
-} = ReduxUtils;
+  useRequestState,
+} from '../../common/utils';
+import { selectAppUsageSurveyData, selectStudySettings } from '../../core/redux/selectors';
+import { GET_STUDY_SETTINGS, getStudySettings } from '../study/actions';
+import type { AppUsageFreqType } from '../../common/types';
 
 const SurveyContainer = () => {
   const dispatch = useDispatch();

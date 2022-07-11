@@ -4,13 +4,13 @@
 import { useRef } from 'react';
 
 import { ActionModal } from 'lattice-ui-kit';
-import { useRequestState } from 'lattice-utils';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
 import CreateStudyForm from './CreateStudyForm';
 
 import { STUDIES } from '../../../common/constants';
+import { useRequestState } from '../../../common/utils';
 import { CREATE_STUDY, UPDATE_STUDY } from '../actions';
 import type { Study } from '../../../common/types';
 

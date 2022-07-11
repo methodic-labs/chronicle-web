@@ -15,8 +15,6 @@
 .*/node_modules/.*
 <PROJECT_ROOT>/build/.*
 <PROJECT_ROOT>/config/.*
-!<PROJECT_ROOT>/node_modules/lattice
-!<PROJECT_ROOT>/node_modules/lattice-sagas
 !<PROJECT_ROOT>/node_modules/redux-reqseq
 .*/node_modules/immutable/.*
 
@@ -26,6 +24,3 @@
 [options]
 esproposal.optional_chaining=enable
 react.runtime=automatic
-
-[untyped]
-<PROJECT_ROOT>/node_modules/lattice-ui-kit

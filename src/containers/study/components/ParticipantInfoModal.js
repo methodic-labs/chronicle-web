@@ -11,7 +11,7 @@ import {
   Typography
 } from 'lattice-ui-kit';
 
-import copyToClipboard from '../../../utils/copyToClipboard';
+import { copyToClipboard } from '../../../common/utils';
 import { getAppUsageLink, getParticipantLoginLink, getTimeUseDiaryLink } from '../utils';
 
 const Grid = styled.div`

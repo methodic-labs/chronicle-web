@@ -4,13 +4,13 @@ import { useRef } from 'react';
 
 import { Map } from 'immutable';
 import { ActionModal } from 'lattice-ui-kit';
-import { useRequestState } from 'lattice-utils';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
 import AddParticipantForm from './AddParticipantForm';
 
 import { STUDIES } from '../../../common/constants';
+import { useRequestState } from '../../../common/utils';
 import { REGISTER_PARTICIPANT } from '../actions';
 import type { Study } from '../../../common/types';
 

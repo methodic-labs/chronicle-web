@@ -2,9 +2,8 @@
  * @flow
  */
 
-import { LangUtils, Logger } from 'lattice-utils';
-
-const { isNonEmptyString } = LangUtils;
+import Logger from './Logger';
+import isNonEmptyString from './isNonEmptyString';
 
 const LOG = new Logger('getLocalStorage');
 

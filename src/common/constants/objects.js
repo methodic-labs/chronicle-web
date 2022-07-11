@@ -11,11 +11,15 @@ import {
 import type {
   AppComponent,
   AppUsageFreqType,
+  DeleteTypesEnum,
+  EnrollmentStatusEnum,
   IOSSensorType,
+  LanguageCodesEnum,
   ParticipantDataType,
   ParticipationStatusesEnum,
   PermissionTypesEnum,
-  TimeUseDiaryDataType
+  TimeUseDiaryDataType,
+  UpdateTypesEnum,
 } from '../types';
 
 export const AppUsageFreqTypes :{| ...AppUsageFreqType |} = Object.freeze({
@@ -38,11 +42,31 @@ export const AppFeatures = {
   SURVEYS: 'Custom Surveys'
 };
 
+export const DeleteTypes :{| ...DeleteTypesEnum |} = Object.freeze({
+  HARD: 'Hard',
+  Hard: 'Hard',
+  SOFT: 'Soft',
+  Soft: 'Soft',
+});
+
+export const EnrollmentStatuses :{|...EnrollmentStatusEnum |} = Object.freeze({
+  DELETE: 'DELETE',
+  ENROLLED: 'ENROLLED',
+  NOT_ENROLLED: 'NOT_ENROLLED'
+});
+
 export const IOSSensorTypes :{| ...IOSSensorType |} = Object.freeze({
   DEVICE_USAGE: 'deviceUsage',
   KEYBOARD_METRICS: 'keyboardMetrics',
   MESSAGES_USAGE: 'messagesUsage',
   PHONE_USAGE: 'phoneUsage'
+});
+
+export const LanguageCodes :{| ...LanguageCodesEnum |} = Object.freeze({
+  ENGLISH: 'en',
+  GERMAN: 'de',
+  SPANISH: 'es',
+  SWEDISH: 'sv',
 });
 
 export const ParticipationStatuses :{| ...ParticipationStatusesEnum |} = Object.freeze({
@@ -79,4 +103,13 @@ export const TimeUseDiaryDataTypes :{| ...TimeUseDiaryDataType |} = Object.freez
   DAYTIME: 'DayTime',
   NIGHTTIME: 'NightTime',
   SUMMARIZED: 'Summarized',
+});
+
+export const UpdateTypes :{| ...UpdateTypesEnum |} = Object.freeze({
+  MERGE: 'Merge',
+  Merge: 'Merge',
+  PARTIAL_REPLACE: 'PartialReplace',
+  PartialReplace: 'PartialReplace',
+  REPLACE: 'Replace',
+  Replace: 'Replace',
 });
