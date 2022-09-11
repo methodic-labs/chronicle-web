@@ -69,7 +69,7 @@
     "reselect": "~4.0.0",
     "rrule": "~2.6.0",
     "styled-components": "~5.3.0",
-    "uuid": "~8.3.2",
+    "uuid": "~9.0.0",
     "validator": "~13.7.0"
   },
   "devDependencies": {
