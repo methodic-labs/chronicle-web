@@ -30,6 +30,7 @@ import TimeUseDiaryContainer from './containers/tud/TimeUseDiaryContainer';
 import initializeReduxStore from './core/redux/ReduxStore';
 import initializeRouterHistory from './core/router/RouterHistory';
 import * as Routes from './core/router/Routes';
+import { DeviceUsageSurveyContainer } from './containers/deviceusagesurvey';
 import { getAuthToken, getCSRFToken } from './core/auth/utils';
 import { configure } from './core/config/Configuration';
 
@@ -111,6 +112,7 @@ else {
     auth0Domain: __AUTH0_DOMAIN__,
     authToken: getAuthToken(),
     csrfToken: getCSRFToken(),
+    baseUrl: 'production',
   });
 
   const routerHistory = initializeRouterHistory();
@@ -130,7 +132,7 @@ else {
                       <Route path={Routes.TUD} component={TimeUseDiaryContainer} />
                       <Route path={Routes.SURVEY} component={SurveyContainer} />
                       <Route path={Routes.QUESTIONNAIRE} component={QuestionnaireContainer} />
-                      <Route path={Routes.TUD} component={TimeUseDiaryContainer} />
+                      <Route path={Routes.DEVICE_USAGE_SURVEY} component={DeviceUsageSurveyContainer} />
                       <AuthRoute path={Routes.ROOT} component={AppContainer} />
                     </Switch>
                   </ConnectedRouter>

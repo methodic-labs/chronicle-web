@@ -5,11 +5,12 @@
 import { all, fork } from '@redux-saga/core/effects';
 
 import * as AppSagas from '../../containers/app/sagas';
+import * as AppUsageSurveySagas from '../../containers/survey/sagas';
 import * as AuthSagas from '../auth/sagas';
 import * as DashboardSagas from '../../containers/dashboard/sagas';
+import * as DeviceUsageSurveySagas from '../../containers/deviceusagesurvey/sagas';
 import * as RoutingSagas from '../router/RoutingSagas';
 import * as StudySagas from '../../containers/study/sagas';
-import * as SurveySagas from '../../containers/survey/sagas';
 import * as TimeUseDiarySagas from '../../containers/tud/sagas';
 
 export default function* sagas() :Generator<*, *, *> {
@@ -52,8 +53,11 @@ export default function* sagas() :Generator<*, *, *> {
     fork(StudySagas.updateStudyWatcher),
 
     // apps usage survey
-    fork(SurveySagas.getAppUsageSurveyDataWatcher),
-    fork(SurveySagas.submitAppUsageSurveyWatcher),
+    fork(AppUsageSurveySagas.getAppUsageSurveyDataWatcher),
+    fork(AppUsageSurveySagas.submitAppUsageSurveyWatcher),
+
+    // device usage survey
+    fork(DeviceUsageSurveySagas.getDeviceUsageSurveyDataWatcher),
 
     // questionnaire
     // fork(QuestionnaireSagas.changeActiveStatusWatcher),

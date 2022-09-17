@@ -9,6 +9,7 @@ export {
 };
 
 const DASHBOARD :'/dashboard' = '/dashboard';
+const DEVICE_USAGE_SURVEY :'/device-usage-survey' = '/device-usage-survey';
 const LOGIN :'/login' = '/login';
 const NO_ROUTE :'#' = '#';
 const QUESTIONNAIRE :'/questionnaire' = '/questionnaire';
@@ -31,6 +32,7 @@ const STUDY_TUD :'/studies/:studyId/time-use-diary' = `${STUDY}${TUD}`;
 
 export {
   DASHBOARD,
+  DEVICE_USAGE_SURVEY,
   LOGIN,
   NO_ROUTE,
   PARTICIPANTS,
