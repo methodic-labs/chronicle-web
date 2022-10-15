@@ -13,10 +13,11 @@ const getParticipantLoginLink = (studyId :UUID, participantId :string) => (
   + `&participantId=${participantId}`
 );
 
-const getTimeUseDiaryLink = (studyId :UUID, participantId :string) => (
+const getTimeUseDiaryLink = (studyId :UUID, participantId :string, activityDay :string) => (
   `${getBaseUrl()}/#/time-use-diary`
   + `?studyId=${studyId}`
   + `&participantId=${participantId}`
+  + `&day=${activityDay}`
 );
 
 const getAppUsageLink = (studyId :UUID, participantId :string) => (
