@@ -6,10 +6,6 @@ import {
 } from 'immutable';
 import { DateTime } from 'luxon';
 
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
-
-const { USER_FQN } = PROPERTY_TYPE_FQNS;
-
 const getAppNameFromUserAppsEntity = (entity :Map) => {
   const titleFQNValues :List = entity.getIn(['entityDetails', 'ol.title'], List());
   if (titleFQNValues.isEmpty()) return '';
@@ -66,9 +62,9 @@ const createSurveyFormSchema = (userApps :Map) => {
   };
 };
 
-const createInitialFormData = (userApps :Map) => userApps
-  .map((app) => app.getIn(['associationDetails', USER_FQN], List()))
-  .toJS();
+// const createInitialFormData = (userApps :Map) => userApps
+//   .map((app) => app.getIn(['associationDetails', USER_FQN], List()))
+//   .toJS();
 
 const createSubmissionData = (formData :Object, userApps :Map) => {
   const unknown = "I don't know";
@@ -113,7 +109,6 @@ const getMinimumDate = (dates :List) => dates
 
 export {
   createHourlySurveySubmissionData,
-  createInitialFormData,
   createSubmissionData,
   createSurveyFormSchema,
   getAppNameFromUserAppsEntity,

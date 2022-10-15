@@ -37,6 +37,7 @@ export default function getParticipantDataDownloadUrl(
 
   result.searchParams.set(PARTICIPANT_ID, participantId);
   result.searchParams.set(CSRF_TOKEN, getCSRFToken() || '');
+  // $FlowFixMe
   result.searchParams.set(DATA_TYPE, `${dataType}`);
 
   if (startDate) {
@@ -47,6 +48,7 @@ export default function getParticipantDataDownloadUrl(
   }
 
   if (dataType === ParticipantDataTypes.TIME_USE_DIARY && timeUseDiaryDataType) {
+    // $FlowFixMe
     result.searchParams.set(DATA_TYPE, `${timeUseDiaryDataType}`);
   }
 

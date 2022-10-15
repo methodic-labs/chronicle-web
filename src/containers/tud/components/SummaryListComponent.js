@@ -8,14 +8,13 @@ import {
   Grid,
   Typography
 } from 'lattice-ui-kit';
-import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 
 import DataTypes from '../constants/DataTypes';
+import { formatAsDate } from '../../../common/utils';
 import type { DataType } from '../constants/DataTypes';
 
 const { NEUTRAL } = Colors;
-const { formatAsDate } = DateTimeUtils;
 
 const Wrapper = styled.div`
   align-items: center;
@@ -53,6 +52,7 @@ const SummaryListComponent = (
     <Grid container spacing={3}>
       <Grid item>
         <Typography variant="body1" gutterBottom>
+          {/* $FlowFixMe */}
           { formatAsDate(date) }
         </Typography>
       </Grid>

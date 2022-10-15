@@ -11,8 +11,9 @@ import {
   Typography
 } from 'lattice-ui-kit';
 
-import copyToClipboard from '../../../utils/copyToClipboard';
+import { copyToClipboard } from '../../../common/utils';
 import { getAppUsageLink, getParticipantLoginLink, getTimeUseDiaryLink } from '../utils';
+import { TODAY, YESTERDAY } from '../../../common/constants';
 
 const Grid = styled.div`
   align-items: center;
@@ -43,7 +44,6 @@ const ParticipantInfoModal = ({
 
   const renderParticipantInfo = () => {
     const enrollmentLink = getParticipantLoginLink(studyId, participantId);
-    const timeUseDiaryLink = getTimeUseDiaryLink(studyId, participantId);
     const appUsageLink = getAppUsageLink(studyId, participantId);
 
     const participantDetails = [
@@ -53,20 +53,26 @@ const ParticipantInfoModal = ({
 
     if (hasTimeUseDiary) {
       participantDetails.push({
-        name: 'Time Use Diary Link',
-        value: timeUseDiaryLink
+        name: 'Morning Time Use Diary Link (Activities Yesterday)',
+        value: getTimeUseDiaryLink(studyId, participantId, YESTERDAY),
+      });
+      participantDetails.push({
+        name: 'Evening Time Use Diary Link (Activities Today)',
+        value: getTimeUseDiaryLink(studyId, participantId, TODAY),
       });
     }
 
     if (hasAndroidDataCollection || hasIOSSensorDataCollection) {
       participantDetails.push({
-        name: 'Enrollment Link', value: enrollmentLink
+        name: 'Enrollment Link',
+        value: enrollmentLink,
       });
     }
 
     if (hasAndroidDataCollection) {
       participantDetails.push({
-        name: 'App Usage Link', value: appUsageLink
+        name: 'App Usage Link',
+        value: appUsageLink,
       });
     }
 

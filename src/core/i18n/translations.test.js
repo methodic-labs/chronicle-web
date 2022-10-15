@@ -26,7 +26,8 @@ const getInterpolationValues = (obj :Object) => {
 
   Object.entries(obj).forEach(([key :string, value :string | Array | Object]) => {
     if (typeof value === 'string') {
-      const matches = matchAll(value, regexp).toArray();
+      // 2022-10-14 - CHRONICLE-84 - activityDay english-only for now
+      const matches = matchAll(value, regexp).toArray().filter((i) => i !== 'activityDay');
       lookup[key] = matches;
     }
   });

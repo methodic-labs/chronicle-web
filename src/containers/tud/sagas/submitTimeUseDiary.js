@@ -3,7 +3,6 @@
  */
 
 import { call, put, takeEvery } from '@redux-saga/core/effects';
-import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
@@ -17,10 +16,9 @@ import {
   TRANSLATION_DATA,
   WAVE_ID,
 } from '../../../common/constants';
+import { Logger, toSagaError } from '../../../common/utils';
 import { SUBMIT_TIME_USE_DIARY, submitTimeUseDiary } from '../actions';
 import { createSubmitRequestBody } from '../utils';
-
-const { toSagaError } = AxiosUtils;
 
 const LOG = new Logger('TimeUseDiarySagas');
 

@@ -15,7 +15,6 @@ import {
   Spinner,
   Typography,
 } from 'lattice-ui-kit';
-import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -42,24 +41,25 @@ import {
   selectTimeByPageAndKey
 } from './utils';
 
-import * as LanguageCodes from '../../utils/constants/LanguageCodes';
 import { BasicErrorComponent } from '../../common/components';
 import {
+  DEFAULT_LANGUAGE,
+  LanguageCodes,
   PARTICIPANT_ID,
   STUDIES,
   STUDY_ID,
   TIME_USE_DIARY,
+  TODAY,
+  YESTERDAY,
 } from '../../common/constants';
+import { isFailure, isPending, useRequestState } from '../../common/utils';
 import { selectStudySettings } from '../../core/redux/selectors';
-import { DEFAULT_LANGUAGE_COOKIE } from '../../utils/constants/StorageConstants';
 import {
   GET_STUDY_SETTINGS,
   VERIFY_PARTICIPANT,
   getStudySettings,
   verifyParticipant,
 } from '../study/actions';
-
-const { isPending, isFailure } = ReduxUtils;
 
 const {
   ACTIVITY_END_TIME,
@@ -74,17 +74,19 @@ const TimeUseDiaryContainer = () => {
   const queryParams = qs.parse(location.search, { ignoreQueryPrefix: true });
 
   const {
+    day,
     familyId,
     organizationId,
     participantId,
     studyId,
     waveId,
   } :{
-    familyId :string,
-    organizationId :UUID,
-    participantId :string,
-    studyId :UUID,
-    waveId :string,
+    day :string;
+    familyId :string;
+    organizationId :UUID;
+    participantId :string;
+    studyId :UUID;
+    waveId :string;
     // $FlowFixMe
   } = queryParams;
 
@@ -93,9 +95,7 @@ const TimeUseDiaryContainer = () => {
   const { i18n, t } = useTranslation();
 
   const studySettings = useSelector(selectStudySettings(studyId));
-  const initFormSchema = createFormSchema({}, 0, t, studySettings);
 
-  const [formSchema, setFormSchema] = useState(initFormSchema); // {schema, uiSchema}
   const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState({});
@@ -114,6 +114,19 @@ const TimeUseDiaryContainer = () => {
   const submitTimeUseDiaryRS :?RequestState = useRequestState([TIME_USE_DIARY, SUBMIT_TIME_USE_DIARY]);
   const verifyParticipantRS :?RequestState = useRequestState([STUDIES, VERIFY_PARTICIPANT]);
   const getStudySettingsRS :?RequestState = useRequestState([STUDIES, GET_STUDY_SETTINGS]);
+
+  let activityDay = day;
+  if (day !== TODAY && day !== YESTERDAY) {
+    activityDay = YESTERDAY;
+  }
+
+  // 2022-10-14 - today/yesterday is only enabled for english
+  if (selectedLanguage?.value !== LanguageCodes.ENGLISH) {
+    activityDay = YESTERDAY;
+  }
+
+  const initFormSchema = createFormSchema({}, 0, t, studySettings, activityDay);
+  const [formSchema, setFormSchema] = useState(initFormSchema); // {schema, uiSchema}
 
   useEffect(() => {
     dispatch(
@@ -136,7 +149,7 @@ const TimeUseDiaryContainer = () => {
 
   // select default language
   useEffect(() => {
-    const defaultLngCode = Cookies.get(DEFAULT_LANGUAGE_COOKIE) || LanguageCodes.ENGLISH;
+    const defaultLngCode = Cookies.get(DEFAULT_LANGUAGE) || LanguageCodes.ENGLISH;
 
     const defaultLng = SUPPORTED_LANGUAGES.find((lng) => lng.code === defaultLngCode);
     if (defaultLng) {
@@ -149,9 +162,9 @@ const TimeUseDiaryContainer = () => {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    const newSchema = createFormSchema(formData, page, t, studySettings);
+    const newSchema = createFormSchema(formData, page, t, studySettings, activityDay);
     setFormSchema(newSchema);
-  }, [page, selectedLanguage?.value, t]);
+  }, [page, selectedLanguage?.value, t, activityDay]);
   /* eslint-enable */
 
   const refreshProgress = (currFormData) => {
@@ -188,7 +201,7 @@ const TimeUseDiaryContainer = () => {
   const changeLanguage = (lng :SelectLanguageOption) => {
     if (lng !== null) {
       i18n.changeLanguage(lng.value);
-      Cookies.set(DEFAULT_LANGUAGE_COOKIE, lng.value, {});
+      Cookies.set(DEFAULT_LANGUAGE, lng.value, {});
       setSelectedLanguage(lng);
     }
   };
@@ -294,6 +307,7 @@ const TimeUseDiaryContainer = () => {
                       page={page}
                       render={(pagedProps) => (
                         <QuestionnaireForm
+                            activityDay={activityDay}
                             familyId={familyId}
                             formSchema={formSchema}
                             initialFormData={formData}

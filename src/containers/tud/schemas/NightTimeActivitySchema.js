@@ -98,7 +98,7 @@ const createSchema = (pageNum :number, trans :TranslationFunction, studySettings
         }
       }
     }
-  }
+  };
 };
 
 const createUiSchema = (pageNum :number, trans :(string, ?Object) => Object) => ({

@@ -2,12 +2,9 @@
  * @flow
  */
 
-import { LangUtils } from 'lattice-utils';
-
 import { AUTH0_USER_INFO } from '../../../common/constants';
+import { isNonEmptyObject } from '../../../common/utils';
 import type { UserInfo } from '../../../common/types';
-
-const { isNonEmptyObject } = LangUtils;
 
 export default function getUserInfo() :?UserInfo {
 

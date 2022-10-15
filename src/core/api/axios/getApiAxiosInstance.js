@@ -3,15 +3,13 @@
  */
 
 import { Map } from 'immutable';
-import { LangUtils } from 'lattice-utils';
 import type { Axios } from 'axios';
 
 import getApiBaseUrl from './getApiBaseUrl';
 import newAxiosInstance from './newAxiosInstance';
 
+import { isNonEmptyString } from '../../../common/utils';
 import { getConfig } from '../../config/Configuration';
-
-const { isNonEmptyString } = LangUtils;
 
 let baseUrlToAxiosInstanceMap :Map<string, Axios> = Map();
 

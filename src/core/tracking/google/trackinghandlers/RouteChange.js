@@ -4,8 +4,8 @@
 
 import _isFunction from 'lodash/isFunction';
 import { Map } from 'immutable';
-import { Logger } from 'lattice-utils';
 
+import { Logger } from '../../../../common/utils';
 import { getUserInfo, isAuthenticated } from '../../../auth/utils';
 import { GOOGLE_MEASUREMENT_ID } from '../GoogleAnalytics';
 

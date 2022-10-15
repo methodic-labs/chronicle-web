@@ -11,7 +11,6 @@ import {
   Spinner,
   Typography,
 } from 'lattice-ui-kit';
-import { useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
@@ -22,6 +21,7 @@ import { CREATE_STUDY, GET_ORG_STUDIES } from './actions';
 
 import { BasicErrorComponent } from '../../common/components';
 import { STUDIES } from '../../common/constants';
+import { useRequestState } from '../../common/utils';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectStudies } from '../../core/redux/selectors';
 

@@ -3,15 +3,13 @@
  */
 
 import { call, put, takeEvery } from '@redux-saga/core/effects';
-import { AxiosUtils, Logger } from 'lattice-utils';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import * as AuthorizationsApi from '../../api/authorizations';
+import { Logger, toSagaError } from '../../../common/utils';
 import { GET_AUTHORIZATIONS, getAuthorizations } from '../actions';
 import type { WorkerResponse } from '../../../common/types';
-
-const { toSagaError } = AxiosUtils;
 
 const LOG = new Logger('PermissionsSagas');
 

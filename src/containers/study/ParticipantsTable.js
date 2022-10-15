@@ -34,7 +34,7 @@ const TableWrapper = styled.div`
   > div > div:last-child {
     position: sticky;
     left: 0;
-    z-index: 501
+    z-index: 501;
   }
 
   table {
@@ -61,14 +61,14 @@ const TableWrapper = styled.div`
       z-index: 501;
     }
 
-    // TODO: uncomment this after introducing checkboxes
-    // th:nth-child(2),
-    // td:nth-child(2) {
-    //   position: sticky;
-    //   left: 50px;
-    //   background: white;
-    //   z-index: 500;
-    // }
+    ${'' /* TODO: uncomment this after introducing checkboxes
+    th:nth-child(2),
+    td:nth-child(2) {
+      position: sticky;
+      left: 50px;
+      background: white;
+      z-index: 500;
+    } */}
 
     th:last-child,
     td:last-child {

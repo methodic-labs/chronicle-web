@@ -13,15 +13,12 @@ import {
   Tooltip,
   Typography
 } from 'lattice-ui-kit';
-import { LangUtils } from 'lattice-utils';
 
-import copyToClipboard from '../../../utils/copyToClipboard';
 import { AppFeatures } from '../../../common/constants';
+import { copyToClipboard, isNonEmptyString } from '../../../common/utils';
 import type { Study } from '../../../common/types';
 
 const { NEUTRAL } = Colors;
-
-const { isNonEmptyString } = LangUtils;
 
 const StyledTag = styled(Tag)`
   margin-left: 0;
@@ -117,7 +114,7 @@ const StudyDetails = ({
         <Box mt={1} />
         <Grid container spacing={2}>
           {
-            Object.values(AppFeatures).map((feature) => (
+            Object.values(AppFeatures).map((feature :any) => (
               <Grid item key={feature}>
                 <Chip label={feature} color={features.includes(feature) ? 'primary' : 'default'} />
               </Grid>

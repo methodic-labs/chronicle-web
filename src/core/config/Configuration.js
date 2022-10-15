@@ -5,12 +5,10 @@
 import _isBoolean from 'lodash/isBoolean';
 import isURL from 'validator/lib/isURL';
 import { Map, fromJS } from 'immutable';
-import { LangUtils, Logger } from 'lattice-utils';
 
-import * as Auth0 from '../auth/Auth0';
 import Icon from '../../assets/svg/icons/ol-icon.svg';
-
-const { isNonEmptyObject, isNonEmptyString } = LangUtils;
+import * as Auth0 from '../auth/Auth0';
+import { Logger, isNonEmptyObject, isNonEmptyString } from '../../common/utils';
 
 type Config = {
   auth0ClientId ?:string;

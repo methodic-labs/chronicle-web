@@ -1,6 +1,7 @@
 // @flow
 
 const PROPERTY_CONSTS = {
+  ACTIVITY_DAY: 'activityDay',
   ACTIVITY_END_TIME: 'endTime',
   ACTIVITY_NAME: 'primaryActivity',
   ACTIVITY_START_TIME: 'startTime',
@@ -31,6 +32,7 @@ const PROPERTY_CONSTS = {
   SECONDARY_MEDIA_NAME: 'secondaryMediaName',
   SLEEP_ARRANGEMENT: 'sleepArrangement',
   SLEEP_PATTERN: 'typicalSleepPattern',
+  TODAY_BED_TIME: 'todayBedTime',
   TODAY_WAKEUP_TIME: 'todayWakeUpTime',
   TYPICAL_DAY_FLAG: 'typicalDay',
   WAKE_UP_COUNT: 'wakeUpCount',

@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 
 import { Map } from 'immutable';
 import { Box } from 'lattice-ui-kit';
-import { ReduxUtils } from 'lattice-utils';
 import type { RequestState } from 'redux-reqseq';
 
 import HourlySurveyInstructions from './HourlySurveyInstructions';
@@ -12,6 +11,7 @@ import SelectAppUsageTimeSlots from './SelectAppUsageTimeSlots';
 import SelectAppsByUser from './SelectAppsByUser';
 import SurveyButtons from './SurveyButtons';
 
+import { isFailure } from '../../../common/utils';
 import { SURVEY_STEPS } from '../constants';
 
 const {
@@ -21,8 +21,6 @@ const {
   RESOLVE_OTHER_APPS,
   INTRO
 } = SURVEY_STEPS;
-
-const { isFailure } = ReduxUtils;
 
 type Props = {
   data :Map;

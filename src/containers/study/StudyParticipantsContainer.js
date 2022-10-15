@@ -10,7 +10,6 @@ import {
   Card,
   CardSegment,
 } from 'lattice-ui-kit';
-import { useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RequestState } from 'redux-reqseq';
 
@@ -40,6 +39,7 @@ import {
   STUDIES,
   STUDY_ID
 } from '../../common/constants';
+import { useRequestState } from '../../common/utils';
 import { resetRequestStates } from '../../core/redux/actions';
 import {
   selectMyKeys,

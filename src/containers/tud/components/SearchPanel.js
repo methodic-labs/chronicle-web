@@ -7,11 +7,10 @@ import {
   Label,
   Typography
 } from 'lattice-ui-kit';
-import { ReduxUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import type { RequestState } from 'redux-reqseq';
 
-const { isPending } = ReduxUtils;
+import { isPending } from '../../../common/utils';
 
 const SearchGrid = styled.div`
   align-items: end;

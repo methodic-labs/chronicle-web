@@ -4,13 +4,11 @@
 
 import axios from 'axios';
 import isURL from 'validator/lib/isURL';
-import { LangUtils } from 'lattice-utils';
 import type { Axios } from 'axios';
 
 import { ERR_INVALID_URL } from '../../../common/constants';
+import { isNonEmptyString } from '../../../common/utils';
 import { getConfig } from '../../config/Configuration';
-
-const { isNonEmptyString } = LangUtils;
 
 export default function newAxiosInstance(baseUrl :string) :Axios {
 

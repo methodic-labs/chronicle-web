@@ -6,16 +6,15 @@ import {
   ModalFooter,
   Typography,
 } from 'lattice-ui-kit';
-import { ReduxUtils } from 'lattice-utils';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
-const {
+import {
   isFailure,
   isPending,
   isStandby,
   isSuccess,
-} = ReduxUtils;
+} from '../../../common/utils';
 
 const DeleteParticipantModal = ({
   handleOnClose,

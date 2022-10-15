@@ -11,7 +11,6 @@ import {
   Card,
   CardSegment,
 } from 'lattice-ui-kit';
-import { ReduxUtils } from 'lattice-utils';
 import { useDispatch } from 'react-redux';
 import type { RequestState } from 'redux-reqseq';
 
@@ -26,8 +25,7 @@ import { SURVEY_STEPS } from './constants';
 import { createHourlySurveySubmissionData } from './utils';
 
 import { BasicErrorComponent } from '../../common/components';
-
-const { isFailure, isSuccess, isPending } = ReduxUtils;
+import { isFailure, isPending, isSuccess } from '../../common/utils';
 
 const {
   SELECT_CHILD_APPS,
