@@ -17,6 +17,7 @@ import * as PrimaryActivitySchema from '../schemas/PrimaryActivitySchema';
 import * as SurveyIntroSchema from '../schemas/SurveyIntroSchema';
 import { PAGE_NUMBERS, QUESTION_TITLE_LOOKUP } from '../constants/GeneralConstants';
 import { PRIMARY_ACTIVITIES, PROPERTY_CONSTS } from '../constants/SchemaConstants';
+import { TODAY, YESTERDAY } from '../../../common/constants';
 
 const { READING, MEDIA_USE } = PRIMARY_ACTIVITIES;
 
@@ -38,6 +39,7 @@ const {
   HAS_FOLLOWUP_QUESTIONS,
   OTHER_ACTIVITY,
   SECONDARY_ACTIVITY,
+  TODAY_BED_TIME,
   WAVE_ID,
 } = PROPERTY_CONSTS;
 
@@ -103,7 +105,13 @@ const getSecondaryMediaSelected = (formData :Object, page :number) => getIn(
   formData, [getPageSectionKey(page, 0), SECONDARY_ACTIVITY], []
 ).includes(MEDIA_USE);
 
-const createFormSchema = (formData :Object, pageNum :number, trans :TranslationFunction, studySettings :Map) => {
+const createFormSchema = (
+  formData :Object,
+  pageNum :number,
+  trans :TranslationFunction,
+  studySettings :Map,
+  activityDay :string,
+) => {
 
   const is12hourFormat = getIs12HourFormatSelected(formData);
 
@@ -122,7 +130,7 @@ const createFormSchema = (formData :Object, pageNum :number, trans :TranslationF
   // case 1:
   if (pageNum === PRE_SURVEY_PAGE) {
     return {
-      schema: PreSurveySchema.createSchema(trans),
+      schema: PreSurveySchema.createSchema(trans, activityDay),
       uiSchema: PreSurveySchema.createUiSchema(trans)
     };
   }
@@ -130,7 +138,7 @@ const createFormSchema = (formData :Object, pageNum :number, trans :TranslationF
   // case 2:
   if (pageNum === DAY_SPAN_PAGE) {
     return {
-      schema: DaySpanSchema.createSchema(is12hourFormat, trans),
+      schema: DaySpanSchema.createSchema(trans, activityDay),
       uiSchema: DaySpanSchema.createUiSchema(is12hourFormat)
     };
   }
@@ -189,7 +197,7 @@ const createFormSchema = (formData :Object, pageNum :number, trans :TranslationF
   };
 };
 
-const createTimeUseSummary = (formData :Object, trans :TranslationFunction) => {
+const createTimeUseSummary = (formData :Object, trans :TranslationFunction, activityDay :string) => {
 
   const summary = [];
 
@@ -198,6 +206,7 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction) => {
   // get day duration (start and end)
   const dayStartTime :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_START_TIME, formData);
   const dayEndTime :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_END_TIME, formData);
+  const todayBedTime :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, TODAY_BED_TIME, formData);
 
   const formattedDayStartTime = is12hourFormat
     ? dayStartTime.toLocaleString(DateTime.TIME_SIMPLE)
@@ -207,11 +216,29 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction) => {
     ? dayEndTime.toLocaleString(DateTime.TIME_SIMPLE)
     : dayEndTime.toLocaleString(DateTime.TIME_24_SIMPLE);
 
+  const formattedTodayBedTime = is12hourFormat
+    ? todayBedTime.toLocaleString(DateTime.TIME_SIMPLE)
+    : todayBedTime.toLocaleString(DateTime.TIME_24_SIMPLE);
+
+  if (activityDay === TODAY) {
+    summary.push({
+      description: trans(TranslationKeys.CHILD_WENT_TO_BED_LAST_NIGHT),
+      key: `${formattedDayEndTime}-last-night`,
+      pageNum: DAY_SPAN_PAGE,
+      time: formattedDayEndTime,
+    });
+  }
+
   // add day start time
   summary.push({
+    key: `${formattedDayStartTime}-today`,
+    description: (
+      activityDay === TODAY
+        ? trans(TranslationKeys.CHILD_WOKE_UP_TODAY)
+        : trans(TranslationKeys.CHILD_WOKE_UP)
+    ),
+    pageNum: DAY_SPAN_PAGE,
     time: formattedDayStartTime,
-    description: trans(TranslationKeys.CHILD_WOKE_UP),
-    pageNum: DAY_SPAN_PAGE
   });
 
   const lastPage = Object.keys(formData).length - 1;
@@ -223,18 +250,21 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction) => {
     // skip page 0, 1, 2 and pages that have followup questions
     if (!(index === SURVEY_INTRO_PAGE || index === PRE_SURVEY_PAGE
         || index === DAY_SPAN_PAGE || hasFollowupQuestions)) {
-      // if last page
+      // if last page and activity day is "yesterday" (i.e. the original way)
       if (index === lastPage) {
-        summary.push({
-          time: `${formattedDayEndTime} - ${formattedDayStartTime}`,
-          description: trans(TranslationKeys.SLEEPING),
-          pageNum: Object.keys(formData).length - 1
-        });
+        if (activityDay === YESTERDAY) {
+          summary.push({
+            description: trans(TranslationKeys.SLEEPING),
+            key: `${formattedDayEndTime} - ${formattedDayStartTime}`,
+            pageNum: lastPage,
+            time: `${formattedDayEndTime} - ${formattedDayStartTime}`,
+          });
+        }
       }
       else {
         const startTime = selectTimeByPageAndKey(index, ACTIVITY_START_TIME, formData);
         const endTime = selectTimeByPageAndKey(index, ACTIVITY_END_TIME, formData);
-        const primaryActivity :string = selectPrimaryActivityByPage(index, formData);
+        const primaryActivity = selectPrimaryActivityByPage(index, formData);
 
         const startFormatted = is12hourFormat
           ? startTime.toLocaleString(DateTime.TIME_SIMPLE)
@@ -245,15 +275,25 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction) => {
           : endTime.toLocaleString(DateTime.TIME_24_SIMPLE);
 
         const entry = {
-          time: `${startFormatted} - ${endFormatted}`,
+          key: `${startFormatted} - ${endFormatted}`,
           description: primaryActivity,
-          pageNum: index
+          pageNum: index,
+          time: `${startFormatted} - ${endFormatted}`,
         };
 
         summary.push(entry);
       }
     }
   });
+
+  if (activityDay === TODAY) {
+    summary.push({
+      description: trans(TranslationKeys.CHILD_WENT_TO_BED_TONIGHT),
+      key: `${formattedTodayBedTime}-tonight`,
+      pageNum: DAY_SPAN_PAGE,
+      time: formattedTodayBedTime,
+    });
+  }
 
   return summary;
 };

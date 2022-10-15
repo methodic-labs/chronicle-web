@@ -1,11 +1,13 @@
 {
   "intro_text": "Vielen Dank, dass Sie sich die Zeit nehmen, um diesen Fragebogen auszufüllen! Zuerst werden wir Sie bitten, alles zu beschreiben, was Ihr Kind gestern gemacht hat und zwar von dem Moment an, als ihr Kind gestern morgen aufgewacht ist bis zu dem Moment, als Ihr Kind gestern Nacht schlafen gegangen ist. Dann werden wir danach fragen, wie Ihr Kind letzte Nacht geschlafen hat. Bitte beantworten Sie die Fragen so gut Sie können. Am Ende der Umfrage werden Sie die Möglichkeit haben, Veränderungen vorzunehmen, wenn Sie möchten.",
+  "intro_text_ctx": {},
   "choose_format": "Um zu beginnen, wählen Sie bitte aus, welches Uhrzeitenformat Sie bevorzugen.",
   "clock_formats": [
     "12-Stunden-Format",
     "24-Stunden-Format"
   ],
   "day_of_week": "Wir möchten Sie bitten, über den Tag Ihres Kindes nachdenken und das Zeittagebuch für gestern auszufüllen. Welcher Wochentag war gestern?",
+  "day_of_week_ctx": {},
   "weekday_options": [
     "Montag",
     "Dienstag",
@@ -38,8 +40,10 @@
   "button_close": "Schließen",
   "weekday": "Wochentag",
   "day_start_time": "Um wie viel Uhr ist Ihr Kind gestern morgen aufgewacht? Bitte überlegen Sie, wann Ihr Kind zu Tagesbeginn aufgewacht ist, anstatt wann es nachts aufgewacht ist und  und wieder eingeschlafen.",
+  "day_start_time_ctx": {},
   "day_end_time": "Um wie viel Uhr ist Ihr Kind gestern Abend eingeschlafen? Bitte überlegen Sie, wann Ihr Kind zunächst am Abend eingeschlafen ist. Später im Fragebogen werden wir Sie danach fragen, wie oft Ihr Kind nachts aufgewacht ist.",
   "today_wakeup_time": "Um wie viel Uhr ist Ihr Kind heute morgen aufgewacht?",
+  "today_bed_time": "",
   "default_time": "Bitte geben Sie Uhrzeiten an, indem Sie sie im Kasten unten eintippen (z.B. 7:00 Uhr) oder auf den Uhrzeiten-Button klicken.",
   "primary_activities": {
     "childcare": "Die Schule/Kinderbetreuung besuchen",
@@ -141,6 +145,9 @@
   "error_end_past_bedtime": "Die letzte Aktivität des Tages sollte um {{time}} enden, da Sie angegeben haben, dass Ihr Kind dann zu Bett ging.",
   "summary_title": "Hier ist eine Zusammenfassung darüber, wie Ihr Kind seinen Tag verbracht hat. Bitte stellen Sie sicher, dass diese Information korrekt ist, bevor Sie den Fragebogen absenden.",
   "button_edit": "Bearbeiten",
+  "child_went_to_bed_last_night": "",
+  "child_went_to_bed_tonight": "",
+  "child_woke_up_today": "",
   "child_woke_up": "Kind wachte auf",
   "sleeping": "Schlafen",
   "change_language_warning": "Sind Sie sicher, dass Sie die Sprache ändern wollen? Das wird alle Ihre Änderungen löschen, die Sie bis jetzt vorgenommen haben.",

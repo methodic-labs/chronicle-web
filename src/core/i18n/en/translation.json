@@ -1,11 +1,21 @@
 {
-  "intro_text": "Thank you for taking the time to complete this survey! First, we will ask you to describe everything your child did yesterday, starting when your child woke up yesterday morning and ending when they went to bed last night. Then, we will ask how your child slept last night. Please answer the questions to the best of your ability. At the end of the survey, you will be able to make changes if you want.",
+  "intro_text": "Thank you for taking the time to complete this survey! First, we will ask you to describe everything your child did {{activityDay}}, starting when your child woke up $t(intro_text_ctx.child_woke_up) and ending when they went to bed $t(intro_text_ctx.child_to_bed). Then, we will ask how your child slept last night. Please answer the questions to the best of your ability. At the end of the survey, you will be able to make changes if you want.",
+  "intro_text_ctx": {
+    "child_to_bed_today": "tonight",
+    "child_to_bed_yesterday": "last night",
+    "child_woke_up_today": "this morning",
+    "child_woke_up_yesterday": "yesterday morning"
+  },
   "choose_format": "To get started, please select your preferred clock format.",
   "clock_formats": [
     "12-hour clock format",
     "24-hour clock format"
   ],
-  "day_of_week": "We would like you to think about your child's day and complete the time use diary for yesterday. What day of the week was yesterday?",
+  "day_of_week": "We would like you to think about your child's day and complete the time use diary for {{activityDay}}. What day of the week $t(day_of_week_ctx.what_dow)?",
+  "day_of_week_ctx": {
+    "what_dow_today": "is today",
+    "what_dow_yesterday": "was yesterday"
+  },
   "weekday_options": [
     "Monday",
     "Tuesday",
@@ -15,14 +25,14 @@
     "Saturday",
     "Sunday"
   ],
-  "typical_day": "An important part of this project is to find out how children spend their time during the week. Was yesterday a typical {{day}} for you and your child? A non-typical day would include a school closing, being on vacation, or being home sick.",
+  "typical_day": "An important part of this project is to find out how children spend their time during the week. Was {{activityDay}} a typical {{day}} for you and your child? A non-typical day would include a school closing, being on vacation, or being home sick.",
   "typical_day_choices": [
-    "Yes, yesterday was typical.",
-    "No, yesterday was non-typical."
+    "Yes, {{activityDay}} was typical.",
+    "No, {{activityDay}} was non-typical."
   ],
   "yes": "Yes",
   "no": "No",
-  "non_typical_day": "What made yesterday a non-typical day?",
+  "non_typical_day": "What made {{activityDay}} a non-typical day?",
   "choose_applicable": "Please choose all that apply",
   "non_typical_day_reasons": [
     "My child was sick.",
@@ -37,9 +47,14 @@
   "button_cancel": "Cancel",
   "button_close": "Close",
   "weekday": "weekday",
-  "day_start_time": "What time did your child wake up yesterday morning? Please think about when your child woke up for the day, rather than waking up in the middle of the night and going back to sleep.",
+  "day_start_time": "What time did your child wake up $t(day_start_time_ctx.wake_up)? Please think about when your child woke up for the day, rather than waking up in the middle of the night and going back to sleep.",
+  "day_start_time_ctx": {
+    "wake_up_today": "this morning",
+    "wake_up_yesterday": "yesterday morning"
+  },
   "day_end_time": "What time did your child fall asleep last night? Please think about when your child first fell asleep for the night. Later in the survey, we will ask about how often your child woke up in the middle of the night.",
   "today_wakeup_time": "What time did your child wake up this morning?",
+  "today_bed_time": "What time did your child go to bed tonight?",
   "default_time": "Please enter time by typing in the box below (e.g., 07:00) or clicking on the clock button.",
   "primary_activities": {
     "childcare": "Attending school/childcare",
@@ -83,8 +98,8 @@
   "book_type": "Specifically, what type(s) of book did your child read?",
   "book_title": "What was the name of the book? If you don't know the exact name, you can give a general description (e.g., a book about unicorns).",
   "media_activity": "Specifically, what did your child do while using screen media?",
-  "media_age": "Would you describe the program (e.g., TV show, app) as for your child’s age, for older children, for younger children, or for adults?",
-  "media_name": "What was the name of the media program (e.g., name of the show or app)? If you don’t know the exact name, you can give a general description (e.g., a drawing app, a movie about unicorns).",
+  "media_age": "Would you describe the program (e.g., TV show, app) as for your child's age, for older children, for younger children, or for adults?",
+  "media_name": "What was the name of the media program (e.g., name of the show or app)? If you don't know the exact name, you can give a general description (e.g., a drawing app, a movie about unicorns).",
   "media_age_options": [
     "Child's age",
     "Older children",
@@ -141,6 +156,9 @@
   "error_end_past_bedtime": "The last activity of the day should end at {{time}} since you indicated the child went to bed then",
   "summary_title": "Here is a summary of how your child spent their day. Please make sure this information is correct before submitting survey.",
   "button_edit": "Edit",
+  "child_went_to_bed_last_night": "Child went to bed last night",
+  "child_went_to_bed_tonight": "Child went to bed tonight",
+  "child_woke_up_today": "Child woke up today",
   "child_woke_up": "Child woke up",
   "sleeping": "Sleeping",
   "change_language_warning": "Are you sure you want to change language? This will undo all the changes you have made so far.",
