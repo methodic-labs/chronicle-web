@@ -1,16 +1,16 @@
 {
   "intro_text": "Thank you for taking the time to complete this survey! First, we will ask you to describe everything your child did {{activityDay}}, starting when your child woke up $t(intro_text_ctx.child_woke_up) and ending when they went to bed $t(intro_text_ctx.child_to_bed). Then, we will ask how your child slept last night. Please answer the questions to the best of your ability. At the end of the survey, you will be able to make changes if you want.",
-  "choose_format": "To get started, please select your preferred clock format.",
-  "clock_formats": [
-    "12-hour clock format",
-    "24-hour clock format"
-  ],
   "intro_text_ctx": {
     "child_to_bed_today": "tonight",
     "child_to_bed_yesterday": "last night",
     "child_woke_up_today": "this morning",
     "child_woke_up_yesterday": "yesterday morning"
   },
+  "choose_format": "To get started, please select your preferred clock format.",
+  "clock_formats": [
+    "12-hour clock format",
+    "24-hour clock format"
+  ],
   "day_of_week": "We would like you to think about your child's day and complete the time use diary for {{activityDay}}. What day of the week $t(day_of_week_ctx.what_dow)?",
   "day_of_week_ctx": {
     "what_dow_today": "is today",
