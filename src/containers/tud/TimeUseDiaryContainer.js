@@ -81,7 +81,7 @@ const TimeUseDiaryContainer = () => {
     studyId,
     waveId,
   } :{
-    day :String;
+    day :string;
     familyId :string;
     organizationId :UUID;
     participantId :string;
