@@ -107,6 +107,7 @@ export const TIME_USE_DIARY_API :'TimeUseDiaryApi' = 'TimeUseDiaryApi';
 export const TIME_USE_DIARY_PATH :'time-use-diary' = 'time-use-diary';
 export const TIME_USE_DIARY_SUBMISSIONS :'timeUseDiarySubmissions' = 'timeUseDiarySubmissions';
 export const TITLE :'title' = 'title';
+export const TODAY :'today' = 'today';
 export const TRANSLATION_DATA :'translationData' = 'translationData';
 export const TUD_FIRST_DATE :'tudFirstDate' = 'tudFirstDate';
 export const TUD_LAST_DATE :'tudLastDate' = 'tudLastDate';
@@ -115,6 +116,7 @@ export const V3 :'v3' = 'v3';
 export const VERIFY :'verify' = 'verify';
 export const VERSION :'version' = 'version';
 export const WAVE_ID :'waveId' = 'waveId';
+export const YESTERDAY :'yesterday' = 'yesterday';
 
 // NOTE - inlining constants from lattice temporarily, need to be removed
 export const OPENLATTICE_ID_FQN :'openlattice.@id' = 'openlattice.@id';

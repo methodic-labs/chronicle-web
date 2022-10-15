@@ -21,6 +21,9 @@ export default {
   CAREGIVER_OPTIONS: 'caregiver_options',
   CHANGE_LANGUAGE: 'change_language',
   CHANGE_LANGUAGE_WARNING: 'change_language_warning',
+  CHILD_WENT_TO_BED_LAST_NIGHT: 'child_went_to_bed_last_night',
+  CHILD_WENT_TO_BED_TONIGHT: 'child_went_to_bed_tonight',
+  CHILD_WOKE_UP_TODAY: 'child_woke_up_today',
   CHILD_WOKE_UP: 'child_woke_up',
   CHOOSE_APPLICABLE: 'choose_applicable',
   CHOOSE_FORMAT: 'choose_format',
@@ -67,6 +70,7 @@ export default {
   SUBMISSION_SUCCESS: 'submission_success',
   SUBMISSION_SUCCESS_TITLE: 'submission_success_title',
   SUMMARY_TITLE: 'summary_title',
+  TODAY_BED_TIME: 'today_bed_time',
   TODAY_WAKEUP_TIME: 'today_wakeup_time',
   TYPICAL_DAY: 'typical_day',
   TYPICAL_DAY_CHOICES: 'typical_day_choices',
@@ -75,5 +79,4 @@ export default {
   WEEKDAY: 'weekday',
   WEEKDAY_OPTIONS: 'weekday_options',
   YES: 'yes',
-  YESTERDAY: 'yesterday',
 };
