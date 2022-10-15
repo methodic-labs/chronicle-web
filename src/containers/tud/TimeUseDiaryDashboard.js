@@ -94,8 +94,8 @@ const TimeUseDiaryDashboard = ({
 
     const url = getTimeUseDiaryDataDownloadUrl(
       study.id,
-      startDate.startOf('day').toISO(),
-      endDate.endOf('day').toISO(),
+      startDate.startOf('day'),
+      endDate.endOf('day'),
       dataType,
     );
 
