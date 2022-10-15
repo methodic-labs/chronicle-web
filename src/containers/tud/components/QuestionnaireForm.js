@@ -149,7 +149,7 @@ const forceFormDataStateUpdate = (formRef :Object, pagedData :Object = {}, page 
   }
 };
 
-const updateTypicalDayLabel = (formData :Object, page :number, trans :(string, ?Object) => string) => {
+const updateTypicalDayLabel = (formData :Object, page :number, trans :TranslationFunction, activityDay :string) => {
   const psk = getPageSectionKey(page, 0);
   const dayOfWeek = getIn(formData, [psk, DAY_OF_WEEK]);
   if (dayOfWeek) {
@@ -157,7 +157,7 @@ const updateTypicalDayLabel = (formData :Object, page :number, trans :(string, ?
     const label = typicalDayInput?.previousSibling;
     if (label) {
       // $FlowFixMe
-      label.innerHTML = trans(TranslationKeys.TYPICAL_DAY, { day: dayOfWeek });
+      label.innerHTML = trans(TranslationKeys.TYPICAL_DAY, { activityDay, day: dayOfWeek });
     }
   }
 };
@@ -196,6 +196,7 @@ type TudActivities = {|
 |};
 
 type Props = {
+  activityDay :string;
   familyId :?string;
   formSchema :Object;
   initialFormData :Object;
@@ -216,6 +217,7 @@ type Props = {
 };
 
 const QuestionnaireForm = ({
+  activityDay,
   familyId,
   formSchema,
   initialFormData,
@@ -317,7 +319,7 @@ const QuestionnaireForm = ({
     updatePrimaryActivityQuestion(formData, page, trans);
 
     if (page === PRE_SURVEY_PAGE) {
-      updateTypicalDayLabel(formData, page, trans);
+      updateTypicalDayLabel(formData, page, trans, activityDay);
     }
 
     if (schemaHasFollowupQuestions(currentSchema, page)) {
@@ -355,6 +357,7 @@ const QuestionnaireForm = ({
       {
         isSummaryPage ? (
           <TimeUseSummary
+              activityDay={activityDay}
               formData={pagedData}
               goToPage={setPage} />
         ) : (
@@ -368,7 +371,7 @@ const QuestionnaireForm = ({
               )
             }
             {
-              page === SURVEY_INTRO_PAGE && <SurveyIntro />
+              page === SURVEY_INTRO_PAGE && <SurveyIntro activityDay={activityDay} />
             }
             <Form
                 formData={initialFormData}

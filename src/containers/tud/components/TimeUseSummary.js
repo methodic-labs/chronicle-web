@@ -46,16 +46,17 @@ const EditIcon = (
   <FontAwesomeIcon icon={faPencilAlt} />
 );
 
-type Props = {
+const TimeUseSummary = ({
+  activityDay,
+  formData,
+  goToPage,
+} :{
+  activityDay :string;
   formData :Object;
   goToPage :(pageNum :number) => void;
-};
-
-const TimeUseSummary = ({ formData, goToPage } :Props) => {
+}) => {
   const { t } = useTranslation();
-
-  const summary = createTimeUseSummary(formData, t);
-
+  const summary = createTimeUseSummary(formData, t, activityDay);
   return (
     <div>
       <Heading>
@@ -63,12 +64,11 @@ const TimeUseSummary = ({ formData, goToPage } :Props) => {
       </Heading>
       {
         summary.map((item) => (
-          <Wrapper key={item.time}>
+          <Wrapper key={item.key}>
             <ItemSummary>
               <Description>
                 {item.time}
               </Description>
-
               <Description>
                 {item.description}
               </Description>
