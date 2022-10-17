@@ -47,14 +47,22 @@
   "button_cancel": "Cancel",
   "button_close": "Close",
   "weekday": "weekday",
-  "day_start_time": "What time did your child wake up $t(day_start_time_ctx.wake_up)? Please think about when your child woke up for the day, rather than waking up in the middle of the night and going back to sleep.",
+  "bed_time_before_activity_day": "$t(bed_time_last_night)",
+  "bed_time_last_night": "What time did your child fall asleep last night? Please think about when your child first fell asleep for the night. Later in the survey, we will ask about how often your child woke up in the middle of the night.",
+  "bed_time_tonight": "What time did your child go to bed tonight?",
+  "wake_up_time_after_activity_day": "$t(wake_up_time_this_morning)",
+  "wake_up_time_this_morning": "What time did your child wake up this morning?",
+  "wake_up_time_yesterday_morning": "What time did your child wake up yesterday morning? Please think about when your child woke up for the day, rather than waking up in the middle of the night and going back to sleep.",
+  "day_start_time": "$t(day_start_time_ctx.wake_up_time)",
   "day_start_time_ctx": {
-    "wake_up_today": "this morning",
-    "wake_up_yesterday": "yesterday morning"
+    "wake_up_time_today": "$t(wake_up_time_this_morning)",
+    "wake_up_time_yesterday": "$t(wake_up_time_yesterday_morning)"
   },
-  "day_end_time": "What time did your child fall asleep last night? Please think about when your child first fell asleep for the night. Later in the survey, we will ask about how often your child woke up in the middle of the night.",
-  "today_wakeup_time": "What time did your child wake up this morning?",
-  "today_bed_time": "What time did your child go to bed tonight?",
+  "day_end_time": "$t(day_end_time_ctx.bed_time)",
+  "day_end_time_ctx": {
+    "bed_time_today": "$t(bed_time_tonight)",
+    "bed_time_yesterday": "$t(bed_time_last_night)"
+  },
   "default_time": "Please enter time by typing in the box below (e.g., 07:00) or clicking on the clock button.",
   "primary_activities": {
     "childcare": "Attending school/childcare",

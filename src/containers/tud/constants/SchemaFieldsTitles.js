@@ -20,21 +20,20 @@ const SCHEMA_FIELDS_TITLES = {
      + ' than waking up in the middle of the night and going back to sleep.',
   [PROPERTY_CONSTS.PRIMARY_MEDIA_ACTIVITY]: 'Specifically, what did your child do while using screen media?',
   [PROPERTY_CONSTS.PRIMARY_MEDIA_AGE]: 'Would you describe the program (e.g., TV show, app) as for your'
-    + ' child’s age, for older children, for younger children, or for adults?',
+    + ' child\'s age, for older children, for younger children, or for adults?',
   [PROPERTY_CONSTS.PRIMARY_MEDIA_NAME]: 'What was the name of the media program (e.g., name of the show or app)?'
-    + ' If you don’t know the exact name, you can give a general'
+    + ' If you don\'t know the exact name, you can give a general'
     + ' description (e.g., a drawing app, a movie about unicorns).',
   [PROPERTY_CONSTS.SECONDARY_MEDIA_ACTIVITY]: 'Specifically, what did your child do while using screen media?',
   [PROPERTY_CONSTS.SECONDARY_MEDIA_AGE]: 'Would you describe the program (e.g., TV show, app) as for your'
-    + ' child’s age, for older children, for younger children, or for adults?',
+    + ' child\'s age, for older children, for younger children, or for adults?',
   [PROPERTY_CONSTS.SECONDARY_MEDIA_NAME]: 'What was the name of the media program (e.g., name of the show or app)?'
-      + ' If you don’t know the exact name, you can give a general'
+      + ' If you don\'t know the exact name, you can give a general'
       + ' description (e.g., a drawing app, a movie about unicorns).',
   [PROPERTY_CONSTS.NON_TYPICAL_DAY_REASON]: 'What made yesterday a non-typical day?',
   [PROPERTY_CONSTS.NON_TYPICAL_SLEEP_PATTERN]: 'What made your child\'s sleeping pattern non-typical?',
   [PROPERTY_CONSTS.SLEEP_ARRANGEMENT]: 'Last night, what was your child\'s sleeping arrangement?',
   [PROPERTY_CONSTS.SLEEP_PATTERN]: 'Last night, was your child\'s sleep pattern typical?',
-  [PROPERTY_CONSTS.TODAY_WAKEUP_TIME]: 'What time did your child wake up this morning?',
   [PROPERTY_CONSTS.TYPICAL_DAY_FLAG]: 'An important part of this project is to find out how children spend their time '
       + 'during the week. Was yesterday a typical weekday for you and your child? A non-typical day would include '
       + 'a school closing, being on vacation, or being home sick.',

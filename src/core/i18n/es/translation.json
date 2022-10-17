@@ -39,11 +39,22 @@
   "button_cancel": "Cancelar",
   "button_close": "Cerrar",
   "weekday": "Día entre semana",
-  "day_start_time": "¿A qué hora se despertó su hijo ayer por la mañana? Por favor, piense en cuando se despertó totalmente su hijo para comenzar el día, no tanto si se despertó en mitad de la noche y se volvió a dormir.",
-  "day_start_time_ctx": {},
-  "day_end_time": "¿A qué hora se quedó dormido su hijo la pasada noche? Por favor, piense en cuando su hijo se quedó dormido por primera vez por la noche. Más tarde en el cuestionario le preguntaremos por cuántas veces se despertó su hijo en mitad de la noche.",
-  "today_wakeup_time": "¿A qué hora se despertó su hijo esta mañana?",
-  "today_bed_time": "",
+  "bed_time_before_activity_day": "$t(bed_time_last_night)",
+  "bed_time_last_night": "¿A qué hora se quedó dormido su hijo la pasada noche? Por favor, piense en cuando su hijo se quedó dormido por primera vez por la noche. Más tarde en el cuestionario le preguntaremos por cuántas veces se despertó su hijo en mitad de la noche.",
+  "bed_time_tonight": "",
+  "wake_up_time_after_activity_day": "$t(wake_up_time_this_morning)",
+  "wake_up_time_this_morning": "¿A qué hora se despertó su hijo esta mañana?",
+  "wake_up_time_yesterday_morning": "¿A qué hora se despertó su hijo ayer por la mañana? Por favor, piense en cuando se despertó totalmente su hijo para comenzar el día, no tanto si se despertó en mitad de la noche y se volvió a dormir.",
+  "day_start_time": "$t(day_start_time_ctx.wake_up_time)",
+  "day_start_time_ctx": {
+    "wake_up_time_today": "$t(wake_up_time_this_morning)",
+    "wake_up_time_yesterday": "$t(wake_up_time_yesterday_morning)"
+  },
+  "day_end_time": "$t(day_end_time_ctx.bed_time)",
+  "day_end_time_ctx": {
+    "bed_time_today": "$t(bed_time_tonight)",
+    "bed_time_yesterday": "$t(bed_time_last_night)"
+  },
   "default_time": "Por favor, introduzca la hora escribiendo en el recuadro de abajo (ej., 07:00 AM) or dando a click en el botón del reloj.",
   "primary_activities": {
     "childcare": "Ir al colegio/guardería",
