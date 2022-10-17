@@ -7,10 +7,10 @@ import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
 import { TODAY } from '../../../common/constants';
 
 const {
+  BED_TIME_BEFORE_ACTIVITY_DAY,
   DAY_END_TIME,
   DAY_START_TIME,
-  TODAY_BED_TIME,
-  TODAY_WAKEUP_TIME,
+  WAKE_UP_TIME_AFTER_ACTIVITY_DAY,
 } = PROPERTY_CONSTS;
 
 const { DAY_SPAN_PAGE } = PAGE_NUMBERS;
@@ -27,31 +27,30 @@ const createSchema = (trans :TranslationFunction, activityDay :string) => {
           type: 'object',
           title: '',
           properties: {
-            [DAY_END_TIME]: {
-              type: 'string',
-              title: trans(TranslationKeys.DAY_END_TIME),
+            [BED_TIME_BEFORE_ACTIVITY_DAY]: {
+              default: '19:00',
               description: trans(TranslationKeys.DEFAULT_TIME),
-              default: '19:00'
+              title: trans(TranslationKeys.BED_TIME_BEFORE_ACTIVITY_DAY),
+              type: 'string',
             },
             [DAY_START_TIME]: {
-              type: 'string',
+              default: '07:00',
+              description: trans(TranslationKeys.DEFAULT_TIME),
               title: trans(TranslationKeys.DAY_START_TIME, { context: activityDay }),
-              description: trans(TranslationKeys.DEFAULT_TIME),
-              default: '07:00'
-            },
-            [TODAY_BED_TIME]: {
               type: 'string',
-              title: trans(TranslationKeys.TODAY_BED_TIME, { context: activityDay }),
+            },
+            [DAY_END_TIME]: {
+              default: '19:00',
               description: trans(TranslationKeys.DEFAULT_TIME),
-              default: '19:00'
+              title: trans(TranslationKeys.DAY_END_TIME, { context: activityDay }),
+              type: 'string',
             },
           },
-          required: [DAY_END_TIME, DAY_START_TIME, TODAY_BED_TIME]
+          required: [BED_TIME_BEFORE_ACTIVITY_DAY, DAY_START_TIME, DAY_END_TIME],
         }
       }
     };
   }
-
   return {
     type: 'object',
     title: '',
@@ -68,18 +67,18 @@ const createSchema = (trans :TranslationFunction, activityDay :string) => {
           },
           [DAY_END_TIME]: {
             type: 'string',
-            title: trans(TranslationKeys.DAY_END_TIME),
+            title: trans(TranslationKeys.DAY_END_TIME, { context: activityDay }),
             description: trans(TranslationKeys.DEFAULT_TIME),
             default: '19:00'
           },
-          [TODAY_WAKEUP_TIME]: {
+          [WAKE_UP_TIME_AFTER_ACTIVITY_DAY]: {
             type: 'string',
-            title: trans(TranslationKeys.TODAY_WAKEUP_TIME),
+            title: trans(TranslationKeys.WAKE_UP_TIME_AFTER_ACTIVITY_DAY),
             description: trans(TranslationKeys.DEFAULT_TIME),
             default: '07:00'
           }
         },
-        required: [DAY_START_TIME, DAY_END_TIME, TODAY_WAKEUP_TIME]
+        required: [DAY_START_TIME, DAY_END_TIME, WAKE_UP_TIME_AFTER_ACTIVITY_DAY]
       }
     }
   };
@@ -104,7 +103,7 @@ const createUiSchema = (is12hourFormat :boolean) => ({
         ampm: is12hourFormat
       }
     },
-    [TODAY_BED_TIME]: {
+    [BED_TIME_BEFORE_ACTIVITY_DAY]: {
       classNames: 'column-span-12',
       'ui:widget': 'TimeWidget',
       'ui:placeholder': 'HH:MM AM',
@@ -112,7 +111,7 @@ const createUiSchema = (is12hourFormat :boolean) => ({
         ampm: is12hourFormat
       }
     },
-    [TODAY_WAKEUP_TIME]: {
+    [WAKE_UP_TIME_AFTER_ACTIVITY_DAY]: {
       classNames: 'column-span-12',
       'ui:widget': 'TimeWidget',
       'ui:placeholder': 'HH:MM AM',
