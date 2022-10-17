@@ -1,6 +1,7 @@
 // @flow
 
 const PROPERTY_CONSTS = {
+  ACTIVITY_DATE: 'activityDate',
   ACTIVITY_DAY: 'activityDay',
   ACTIVITY_END_TIME: 'endTime',
   ACTIVITY_NAME: 'primaryActivity',

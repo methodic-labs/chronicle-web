@@ -38,7 +38,8 @@ import {
   getIs12HourFormatSelected,
   getIsNightActivityPage,
   getIsSummaryPage,
-  selectTimeByPageAndKey
+  selectTimeByPageAndKey,
+  updateActivityDateAndDay,
 } from './utils';
 
 import { BasicErrorComponent } from '../../common/components';
@@ -191,6 +192,13 @@ const TimeUseDiaryContainer = () => {
       setIsNightActivityPage(getIsNightActivityPage(formSchema.schema, page, t, studySettings));
     }
   }, [page, formSchema, studySettings]);
+  /* eslint-enable */
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    updateActivityDateAndDay(formData, activityDay);
+    setFormData(formData);
+  }, [activityDay]);
   /* eslint-enable */
 
   const onPageChange = (currPage, currFormData) => {

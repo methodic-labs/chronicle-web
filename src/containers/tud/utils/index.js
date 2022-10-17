@@ -1,6 +1,7 @@
 // @flow
 
 import isEqual from 'lodash/isEqual';
+import _set from 'lodash/set';
 import { Map, get, getIn } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
 import { DateTime } from 'luxon';
@@ -29,6 +30,8 @@ const {
 } = PAGE_NUMBERS;
 
 const {
+  ACTIVITY_DATE,
+  ACTIVITY_DAY,
   ACTIVITY_END_TIME,
   ACTIVITY_NAME,
   ACTIVITY_START_TIME,
@@ -359,10 +362,23 @@ const createSubmitRequestBody = (
 ) => {
   let result = [];
 
+  const activityDate = formData[getPageSectionKey(0, 0)][ACTIVITY_DATE];
+  result.push({
+    code: ACTIVITY_DATE,
+    response: [activityDate],
+  });
+
+  const activityDay = formData[getPageSectionKey(0, 0)][ACTIVITY_DAY];
+  result.push({
+    code: ACTIVITY_DAY,
+    response: [activityDay],
+  });
+
+  const activityDateTime :DateTime = DateTime.fromISO(activityDate);
+
   // create english translation lookup
   const englishTranslationLookup = createEnglishTranslationLookup(translationData, language);
 
-  const dateYesterday :DateTime = DateTime.local().minus({ days: 1 });
   const entriesToOmit = [ACTIVITY_START_TIME, ACTIVITY_END_TIME, HAS_FOLLOWUP_QUESTIONS, OTHER_ACTIVITY, CLOCK_FORMAT];
 
   Object.entries(formData).forEach(([psk :string, pageData :Object]) => {
@@ -377,10 +393,10 @@ const createSubmitRequestBody = (
 
       if (startTime && endTime) {
         startTime = DateTime.fromISO(startTime);
-        startTime = dateYesterday.set({ hour: startTime.hour, minute: startTime.minute });
+        startTime = activityDateTime.set({ hour: startTime.hour, minute: startTime.minute });
 
         endTime = DateTime.fromISO(endTime);
-        endTime = dateYesterday.set({ hour: endTime.hour, minute: endTime.minute });
+        endTime = activityDateTime.set({ hour: endTime.hour, minute: endTime.minute });
       }
 
       // $FlowFixMe
@@ -596,6 +612,15 @@ const createSubmitRequestBody = (
 //   return prefix;
 // };
 
+const updateActivityDateAndDay = (formData :Object, activityDay :string) => {
+  const psk = getPageSectionKey(0, 0);
+  const activityDate = activityDay === TODAY
+    ? DateTime.local().toISODate()
+    : DateTime.local().minus({ days: 1 }).toISODate();
+  _set(formData, [psk, ACTIVITY_DATE], activityDate);
+  _set(formData, [psk, ACTIVITY_DAY], activityDay);
+};
+
 export {
   applyCustomValidation,
   createFormSchema,
@@ -605,10 +630,8 @@ export {
   getIs12HourFormatSelected,
   getIsNightActivityPage,
   getIsSummaryPage,
-  // getOutputFileName,
   pageHasFollowupQuestions,
   selectPrimaryActivityByPage,
   selectTimeByPageAndKey,
-  // exportRawDataToCsvFile,
-  // exportSummarizedDataToCsvFile,
+  updateActivityDateAndDay,
 };
