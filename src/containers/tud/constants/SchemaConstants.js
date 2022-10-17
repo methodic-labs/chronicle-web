@@ -1,11 +1,13 @@
 // @flow
 
 const PROPERTY_CONSTS = {
+  ACTIVITY_DATE: 'activityDate',
   ACTIVITY_DAY: 'activityDay',
   ACTIVITY_END_TIME: 'endTime',
   ACTIVITY_NAME: 'primaryActivity',
   ACTIVITY_START_TIME: 'startTime',
   ADULT_MEDIA: 'adultMedia',
+  BED_TIME_BEFORE_ACTIVITY_DAY: 'bedTimeBeforeActivityDay',
   BG_AUDIO_DAY: 'bgAudioDay',
   BG_AUDIO_NIGHT: 'bgAudioNight',
   BG_TV_DAY: 'bgTvDay',
@@ -15,6 +17,7 @@ const PROPERTY_CONSTS = {
   DAY_END_TIME: 'dayEndTime',
   DAY_OF_WEEK: 'dayOfWeek',
   DAY_START_TIME: 'dayStartTime',
+  FAMILY_ID: 'familyId',
   HAS_FOLLOWUP_QUESTIONS: 'followUpCompleted',
   NON_TYPICAL_DAY_REASON: 'nonTypicalDayReason',
   NON_TYPICAL_SLEEP_PATTERN: 'nonTypicalSleepReason',
@@ -32,11 +35,9 @@ const PROPERTY_CONSTS = {
   SECONDARY_MEDIA_NAME: 'secondaryMediaName',
   SLEEP_ARRANGEMENT: 'sleepArrangement',
   SLEEP_PATTERN: 'typicalSleepPattern',
-  TODAY_BED_TIME: 'todayBedTime',
-  TODAY_WAKEUP_TIME: 'todayWakeUpTime',
   TYPICAL_DAY_FLAG: 'typicalDay',
   WAKE_UP_COUNT: 'wakeUpCount',
-  FAMILY_ID: 'familyId',
+  WAKE_UP_TIME_AFTER_ACTIVITY_DAY: 'wakeUpTimeAfterActivityDay',
   WAVE_ID: 'waveId',
 };
 

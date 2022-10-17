@@ -39,11 +39,22 @@
   "button_cancel": "Abbrechen",
   "button_close": "Schließen",
   "weekday": "Wochentag",
-  "day_start_time": "Um wie viel Uhr ist Ihr Kind gestern morgen aufgewacht? Bitte überlegen Sie, wann Ihr Kind zu Tagesbeginn aufgewacht ist, anstatt wann es nachts aufgewacht ist und  und wieder eingeschlafen.",
-  "day_start_time_ctx": {},
-  "day_end_time": "Um wie viel Uhr ist Ihr Kind gestern Abend eingeschlafen? Bitte überlegen Sie, wann Ihr Kind zunächst am Abend eingeschlafen ist. Später im Fragebogen werden wir Sie danach fragen, wie oft Ihr Kind nachts aufgewacht ist.",
-  "today_wakeup_time": "Um wie viel Uhr ist Ihr Kind heute morgen aufgewacht?",
-  "today_bed_time": "",
+  "bed_time_before_activity_day": "$t(bed_time_last_night)",
+  "bed_time_last_night": "Um wie viel Uhr ist Ihr Kind gestern Abend eingeschlafen? Bitte überlegen Sie, wann Ihr Kind zunächst am Abend eingeschlafen ist. Später im Fragebogen werden wir Sie danach fragen, wie oft Ihr Kind nachts aufgewacht ist.",
+  "bed_time_tonight": "",
+  "wake_up_time_after_activity_day": "$t(wake_up_time_this_morning)",
+  "wake_up_time_this_morning": "Um wie viel Uhr ist Ihr Kind heute morgen aufgewacht?",
+  "wake_up_time_yesterday_morning": "Um wie viel Uhr ist Ihr Kind gestern morgen aufgewacht? Bitte überlegen Sie, wann Ihr Kind zu Tagesbeginn aufgewacht ist, anstatt wann es nachts aufgewacht ist und  und wieder eingeschlafen.",
+  "day_start_time": "$t(day_start_time_ctx.wake_up_time)",
+  "day_start_time_ctx": {
+    "wake_up_time_today": "$t(wake_up_time_this_morning)",
+    "wake_up_time_yesterday": "$t(wake_up_time_yesterday_morning)"
+  },
+  "day_end_time": "$t(day_end_time_ctx.bed_time)",
+  "day_end_time_ctx": {
+    "bed_time_today": "$t(bed_time_tonight)",
+    "bed_time_yesterday": "$t(bed_time_last_night)"
+  },
   "default_time": "Bitte geben Sie Uhrzeiten an, indem Sie sie im Kasten unten eintippen (z.B. 7:00 Uhr) oder auf den Uhrzeiten-Button klicken.",
   "primary_activities": {
     "childcare": "Die Schule/Kinderbetreuung besuchen",

@@ -1,6 +1,7 @@
 // @flow
 
 import isEqual from 'lodash/isEqual';
+import _set from 'lodash/set';
 import { Map, get, getIn } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
 import { DateTime } from 'luxon';
@@ -29,9 +30,12 @@ const {
 } = PAGE_NUMBERS;
 
 const {
+  ACTIVITY_DATE,
+  ACTIVITY_DAY,
   ACTIVITY_END_TIME,
   ACTIVITY_NAME,
   ACTIVITY_START_TIME,
+  BED_TIME_BEFORE_ACTIVITY_DAY,
   CLOCK_FORMAT,
   DAY_END_TIME,
   DAY_START_TIME,
@@ -39,7 +43,7 @@ const {
   HAS_FOLLOWUP_QUESTIONS,
   OTHER_ACTIVITY,
   SECONDARY_ACTIVITY,
-  TODAY_BED_TIME,
+  WAKE_UP_TIME_AFTER_ACTIVITY_DAY,
   WAVE_ID,
 } = PROPERTY_CONSTS;
 
@@ -206,7 +210,6 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
   // get day duration (start and end)
   const dayStartTime :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_START_TIME, formData);
   const dayEndTime :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_END_TIME, formData);
-  const todayBedTime :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, TODAY_BED_TIME, formData);
 
   const formattedDayStartTime = is12hourFormat
     ? dayStartTime.toLocaleString(DateTime.TIME_SIMPLE)
@@ -216,16 +219,22 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
     ? dayEndTime.toLocaleString(DateTime.TIME_SIMPLE)
     : dayEndTime.toLocaleString(DateTime.TIME_24_SIMPLE);
 
-  const formattedTodayBedTime = is12hourFormat
-    ? todayBedTime.toLocaleString(DateTime.TIME_SIMPLE)
-    : todayBedTime.toLocaleString(DateTime.TIME_24_SIMPLE);
+  const btbad :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, BED_TIME_BEFORE_ACTIVITY_DAY, formData);
+  const formattedBTBAD = is12hourFormat
+    ? btbad.toLocaleString(DateTime.TIME_SIMPLE)
+    : btbad.toLocaleString(DateTime.TIME_24_SIMPLE);
+
+  const wutaad :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, WAKE_UP_TIME_AFTER_ACTIVITY_DAY, formData);
+  const formattedWUTAAD = is12hourFormat
+    ? wutaad.toLocaleString(DateTime.TIME_SIMPLE)
+    : wutaad.toLocaleString(DateTime.TIME_24_SIMPLE);
 
   if (activityDay === TODAY) {
     summary.push({
       description: trans(TranslationKeys.CHILD_WENT_TO_BED_LAST_NIGHT),
-      key: `${formattedDayEndTime}-last-night`,
+      key: `${formattedBTBAD}-last-night`,
       pageNum: DAY_SPAN_PAGE,
-      time: formattedDayEndTime,
+      time: formattedBTBAD,
     });
   }
 
@@ -255,9 +264,9 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
         if (activityDay === YESTERDAY) {
           summary.push({
             description: trans(TranslationKeys.SLEEPING),
-            key: `${formattedDayEndTime} - ${formattedDayStartTime}`,
+            key: `${formattedDayEndTime} - ${formattedWUTAAD}`,
             pageNum: lastPage,
-            time: `${formattedDayEndTime} - ${formattedDayStartTime}`,
+            time: `${formattedDayEndTime} - ${formattedWUTAAD}`,
           });
         }
       }
@@ -289,9 +298,9 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
   if (activityDay === TODAY) {
     summary.push({
       description: trans(TranslationKeys.CHILD_WENT_TO_BED_TONIGHT),
-      key: `${formattedTodayBedTime}-tonight`,
+      key: `${formattedDayEndTime}-tonight`,
       pageNum: DAY_SPAN_PAGE,
-      time: formattedTodayBedTime,
+      time: formattedDayEndTime,
     });
   }
 
@@ -353,10 +362,23 @@ const createSubmitRequestBody = (
 ) => {
   let result = [];
 
+  const activityDate = formData[getPageSectionKey(0, 0)][ACTIVITY_DATE];
+  result.push({
+    code: ACTIVITY_DATE,
+    response: [activityDate],
+  });
+
+  const activityDay = formData[getPageSectionKey(0, 0)][ACTIVITY_DAY];
+  result.push({
+    code: ACTIVITY_DAY,
+    response: [activityDay],
+  });
+
+  const activityDateTime :DateTime = DateTime.fromISO(activityDate);
+
   // create english translation lookup
   const englishTranslationLookup = createEnglishTranslationLookup(translationData, language);
 
-  const dateYesterday :DateTime = DateTime.local().minus({ days: 1 });
   const entriesToOmit = [ACTIVITY_START_TIME, ACTIVITY_END_TIME, HAS_FOLLOWUP_QUESTIONS, OTHER_ACTIVITY, CLOCK_FORMAT];
 
   Object.entries(formData).forEach(([psk :string, pageData :Object]) => {
@@ -371,10 +393,10 @@ const createSubmitRequestBody = (
 
       if (startTime && endTime) {
         startTime = DateTime.fromISO(startTime);
-        startTime = dateYesterday.set({ hour: startTime.hour, minute: startTime.minute });
+        startTime = activityDateTime.set({ hour: startTime.hour, minute: startTime.minute });
 
         endTime = DateTime.fromISO(endTime);
-        endTime = dateYesterday.set({ hour: endTime.hour, minute: endTime.minute });
+        endTime = activityDateTime.set({ hour: endTime.hour, minute: endTime.minute });
       }
 
       // $FlowFixMe
@@ -590,6 +612,15 @@ const createSubmitRequestBody = (
 //   return prefix;
 // };
 
+const updateActivityDateAndDay = (formData :Object, activityDay :string) => {
+  const psk = getPageSectionKey(0, 0);
+  const activityDate = activityDay === TODAY
+    ? DateTime.local().toISODate()
+    : DateTime.local().minus({ days: 1 }).toISODate();
+  _set(formData, [psk, ACTIVITY_DATE], activityDate);
+  _set(formData, [psk, ACTIVITY_DAY], activityDay);
+};
+
 export {
   applyCustomValidation,
   createFormSchema,
@@ -599,10 +630,8 @@ export {
   getIs12HourFormatSelected,
   getIsNightActivityPage,
   getIsSummaryPage,
-  // getOutputFileName,
   pageHasFollowupQuestions,
   selectPrimaryActivityByPage,
   selectTimeByPageAndKey,
-  // exportRawDataToCsvFile,
-  // exportSummarizedDataToCsvFile,
+  updateActivityDateAndDay,
 };
