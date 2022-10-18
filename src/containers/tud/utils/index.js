@@ -365,12 +365,14 @@ const createSubmitRequestBody = (
   const activityDate = formData[getPageSectionKey(0, 0)][ACTIVITY_DATE];
   result.push({
     code: ACTIVITY_DATE,
+    question: ACTIVITY_DATE,
     response: [activityDate],
   });
 
   const activityDay = formData[getPageSectionKey(0, 0)][ACTIVITY_DAY];
   result.push({
     code: ACTIVITY_DAY,
+    question: ACTIVITY_DAY,
     response: [activityDay],
   });
 
