@@ -24,8 +24,8 @@ function* getTimeUseDiarySubmissionsByDateRangeWorker(action :SequenceAction) :S
     const response = yield call(
       TimeUseDiaryApi.getTimeUseDiarySubmissionsByDateRange,
       value[STUDY_ID],
-      DateTime.fromISO(value[START_DATE]).startOf('day').toISO(),
-      DateTime.fromISO(value[END_DATE]).endOf('day').toISO(),
+      encodeURIComponent(DateTime.fromISO(value[START_DATE]).startOf('day').toISO()),
+      encodeURIComponent(DateTime.fromISO(value[END_DATE]).endOf('day').toISO()),
     );
     const submissions = fromJS(response)
       .mapKeys((date) => DateTime.fromISO(date))
