@@ -22,7 +22,8 @@ import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
 import {
   applyCustomValidation,
   selectPrimaryActivityByPage,
-  selectTimeByPageAndKey
+  selectTimeByPageAndKey,
+  updateActivityDateAndDay,
 } from '../utils';
 import {
   FAMILY_ID,
@@ -326,6 +327,7 @@ const QuestionnaireForm = ({
       updateFormSchema(formData, currentSchema, currentUiSchema);
     }
 
+    updateActivityDateAndDay(formData, activityDay);
     updateSurveyProgress(formData);
   };
 
