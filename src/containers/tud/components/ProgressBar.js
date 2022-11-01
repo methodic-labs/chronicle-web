@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import styled from 'styled-components';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { withStyles } from '@material-ui/core/styles';
 import { Colors, Typography, LinearProgress } from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
