@@ -1,28 +1,21 @@
-// @flow
 import { DataProcessingUtils } from 'lattice-fabricate';
 import { DateTime } from 'luxon';
 
+import { ACTIVITY_END_TIME, ACTIVITY_NAME, ACTIVITY_START_TIME } from '../../../common/constants';
+import { DAY_SPAN_PAGE } from '../constants';
 import TranslationKeys from '../constants/TranslationKeys';
-import { PAGE_NUMBERS } from '../constants/GeneralConstants';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
+import isFirstActivityPage from '../utils/isFirstActivityPage';
 
 const { getPageSectionKey } = DataProcessingUtils;
 
-const { DAY_SPAN_PAGE, FIRST_ACTIVITY_PAGE } = PAGE_NUMBERS;
-
-const {
-  ACTIVITY_END_TIME,
-  ACTIVITY_NAME,
-  ACTIVITY_START_TIME,
-} = PROPERTY_CONSTS;
-
 const createSchema = (
-  pageNum :number,
-  prevActivity :string,
-  currentActivity :string,
-  prevEndTime :DateTime,
-  is12hourFormat :boolean,
-  trans :(string, ?Object) => string
+  pageNum,
+  prevActivity,
+  currentActivity,
+  prevEndTime,
+  is12hourFormat,
+  activityDay,
+  trans,
 ) => ({
   type: 'object',
   title: '',
@@ -33,7 +26,7 @@ const createSchema = (
       properties: {
         [ACTIVITY_NAME]: {
           type: 'string',
-          title: (pageNum === FIRST_ACTIVITY_PAGE
+          title: (isFirstActivityPage(pageNum, activityDay)
             ? trans(TranslationKeys.PRIMARY_ACTIVITY, { time: prevEndTime.toLocaleString(DateTime.TIME_SIMPLE) })
             : trans(TranslationKeys.NEXT_ACTIVITY, {
               time: prevEndTime.toLocaleString(DateTime.TIME_SIMPLE),
@@ -65,7 +58,7 @@ const createSchema = (
   },
 });
 
-const createUiSchema = (pageNum :number, is12hourFormat :boolean) => ({
+const createUiSchema = (pageNum, is12hourFormat) => ({
   [getPageSectionKey(pageNum, 0)]: {
     classNames: 'column-span-12 grid-container',
     [ACTIVITY_NAME]: {
