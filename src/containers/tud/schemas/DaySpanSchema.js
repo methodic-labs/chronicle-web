@@ -1,19 +1,15 @@
 // @flow
 import { DataProcessingUtils } from 'lattice-fabricate';
 
-import TranslationKeys from '../constants/TranslationKeys';
-import { PAGE_NUMBERS } from '../constants/GeneralConstants';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
-import { TODAY } from '../../../common/constants';
-
-const {
+import {
   BED_TIME_BEFORE_ACTIVITY_DAY,
   DAY_END_TIME,
   DAY_START_TIME,
-  WAKE_UP_TIME_AFTER_ACTIVITY_DAY,
-} = PROPERTY_CONSTS;
-
-const { DAY_SPAN_PAGE } = PAGE_NUMBERS;
+  TODAY,
+  WAKE_UP_TIME_AFTER_ACTIVITY_DAY
+} from '../../../common/constants';
+import { DAY_SPAN_PAGE } from '../constants';
+import TranslationKeys from '../constants/TranslationKeys';
 
 const { getPageSectionKey } = DataProcessingUtils;
 

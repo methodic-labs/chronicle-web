@@ -1,20 +1,12 @@
 // @flow
 
 import { DataProcessingUtils } from 'lattice-fabricate';
+import { DAY_OF_WEEK, NON_TYPICAL_DAY_REASON, TYPICAL_DAY_FLAG } from '../../../common/constants';
 
+import { PRE_SURVEY_PAGE } from '../constants';
 import TranslationKeys from '../constants/TranslationKeys';
-import { PAGE_NUMBERS } from '../constants/GeneralConstants';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
 
 const { getPageSectionKey } = DataProcessingUtils;
-
-const { PRE_SURVEY_PAGE } = PAGE_NUMBERS;
-
-const {
-  DAY_OF_WEEK,
-  NON_TYPICAL_DAY_REASON,
-  TYPICAL_DAY_FLAG
-} = PROPERTY_CONSTS;
 
 const createSchema = (trans :TranslationFunction, activityDay :string) => ({
   type: 'object',

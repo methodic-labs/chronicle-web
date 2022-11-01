@@ -1,17 +1,15 @@
 // @flow
 
-import TranslationKeys from '../constants/TranslationKeys';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
-
-const {
+import {
   PRIMARY_BOOK_TITLE,
   PRIMARY_BOOK_TYPE,
   PRIMARY_MEDIA_ACTIVITY,
   PRIMARY_MEDIA_AGE,
   PRIMARY_MEDIA_NAME,
-} = PROPERTY_CONSTS;
+} from '../../../common/constants';
+import TranslationKeys from '../constants/TranslationKeys';
 
-const createSchema = (selectedActivity :string, trans :(string, ?Object) => Object) => {
+const createSchema = (selectedActivity :string, trans :TranslationFunction) => {
 
   const primaryActivities :Object = trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
   // translate to find which activity this is
@@ -73,7 +71,7 @@ const createSchema = (selectedActivity :string, trans :(string, ?Object) => Obje
   }
 };
 
-const createUiSchema = (trans :(string, ?Object) => Object) => ({
+const createUiSchema = (trans :TranslationFunction) => ({
   [PRIMARY_MEDIA_ACTIVITY]: {
     classNames: 'column-span-12',
     'ui:widget': 'checkboxes',
