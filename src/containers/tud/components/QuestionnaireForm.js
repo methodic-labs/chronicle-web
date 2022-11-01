@@ -1,6 +1,5 @@
 // @flow
 
-import styled from 'styled-components';
 import { getIn, merge, setIn } from 'immutable';
 import { DataProcessingUtils, Form } from 'lattice-fabricate';
 import { Button } from 'lattice-ui-kit';
@@ -8,54 +7,47 @@ import { set, unset } from 'lodash';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
+import styled from 'styled-components';
+
 import type { RequestState } from 'redux-reqseq';
 
-import ContextualQuestionsIntro from './ContextualQuestionsIntro';
-import SurveyIntro from './SurveyIntro';
-import TimeUseSummary from './TimeUseSummary';
-
-import TranslationKeys from '../constants/TranslationKeys';
-import * as SecondaryFollowUpSchema from '../schemas/SecondaryFollowUpSchema';
-import { submitTimeUseDiary } from '../actions';
-import { PAGE_NUMBERS } from '../constants/GeneralConstants';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
 import {
-  applyCustomValidation,
-  selectPrimaryActivityByPage,
-  selectTimeByPageAndKey,
-  updateActivityDateAndDay,
-} from '../utils';
-import {
-  FAMILY_ID,
-  FORM_DATA,
-  LANGUAGE,
-  ORGANIZATION_ID,
-  PARTICIPANT_ID,
-  STUDY_ID,
-  TRANSLATION_DATA,
-  WAVE_ID,
-} from '../../../common/constants';
-
-const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
-
-const {
   ACTIVITY_END_TIME,
   ACTIVITY_START_TIME,
   DAY_END_TIME,
   DAY_OF_WEEK,
   DAY_START_TIME,
+  FAMILY_ID,
+  FORM_DATA,
   HAS_FOLLOWUP_QUESTIONS,
+  LANGUAGE,
+  ORGANIZATION_ID,
+  PARTICIPANT_ID,
   SECONDARY_ACTIVITY,
   SLEEP_ARRANGEMENT,
+  STUDY_ID,
+  TRANSLATION_DATA,
   TYPICAL_DAY_FLAG,
-} = PROPERTY_CONSTS;
+  WAVE_ID,
+} from '../../../common/constants';
+import { submitTimeUseDiary } from '../actions';
+import { DAY_SPAN_PAGE } from '../constants';
+import TranslationKeys from '../constants/TranslationKeys';
+import * as SecondaryFollowUpSchema from '../schemas/SecondaryFollowUpSchema';
+import {
+  applyCustomValidation,
+  getDateTimeFromData,
+  isFirstActivityPage,
+  selectPrimaryActivityByPage,
+  updateActivityDateAndDay
+} from '../utils';
+import isIntroPage from '../utils/isIntroPage';
+import isPreSurveyPage from '../utils/isPreSurveyPage';
+import ContextualQuestionsIntro from './ContextualQuestionsIntro';
+import SurveyIntro from './SurveyIntro';
+import TimeUseSummary from './TimeUseSummary';
 
-const {
-  DAY_SPAN_PAGE,
-  FIRST_ACTIVITY_PAGE,
-  PRE_SURVEY_PAGE,
-  SURVEY_INTRO_PAGE,
-} = PAGE_NUMBERS;
+const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
 
 const ButtonRow = styled.div`
   align-items: center;
@@ -76,7 +68,7 @@ const ButtonRow = styled.div`
 
 const removeExtraData = (formRef :Object, pagedData, page :number) => {
   const psk = getPageSectionKey(page, 0);
-  const dayEndTime :?DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_END_TIME, pagedData);
+  const dayEndTime :?DateTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, pagedData);
   const formData :Object = formRef?.current?.state?.formData || {};
 
   const currEndTime = formData[psk]?.[ACTIVITY_END_TIME];
@@ -119,13 +111,17 @@ const removeExtraData = (formRef :Object, pagedData, page :number) => {
  * to update the form data state accordingly through the schema's property default value,
  * hence the need for this function.
  */
-const forceFormDataStateUpdate = (formRef :Object, pagedData :Object = {}, page :number) => {
+const forceFormDataStateUpdate = (formRef, pagedData = {}, page, activityDay) => {
   const psk = getPageSectionKey(page, 0);
-  const prevEndTime = selectTimeByPageAndKey(
-    page - 1, (page === FIRST_ACTIVITY_PAGE ? DAY_START_TIME : ACTIVITY_END_TIME), pagedData
+  const prevEndTime = getDateTimeFromData(
+    page - 1,
+    (isFirstActivityPage(page, activityDay) ? DAY_START_TIME : ACTIVITY_END_TIME),
+    pagedData,
   );
-  const activityStartTime = selectTimeByPageAndKey(
-    page - 1, (page === FIRST_ACTIVITY_PAGE ? DAY_START_TIME : ACTIVITY_START_TIME), pagedData
+  const activityStartTime = getDateTimeFromData(
+    page - 1,
+    (isFirstActivityPage(page, activityDay) ? DAY_START_TIME : ACTIVITY_START_TIME),
+    pagedData,
   );
 
   // current page already contains form data
@@ -276,7 +272,7 @@ const QuestionnaireForm = ({
       return;
     }
 
-    forceFormDataStateUpdate(formRef, pagedData, page);
+    forceFormDataStateUpdate(formRef, pagedData, page, activityDay);
     validateAndSubmit();
   };
 
@@ -319,7 +315,7 @@ const QuestionnaireForm = ({
   const onChange = ({ formData, schema: currentSchema, uiSchema: currentUiSchema }) => {
     updatePrimaryActivityQuestion(formData, page, trans);
 
-    if (page === PRE_SURVEY_PAGE) {
+    if (isPreSurveyPage(page)) {
       updateTypicalDayLabel(formData, page, trans, activityDay);
     }
 
@@ -352,7 +348,7 @@ const QuestionnaireForm = ({
 
   const schemaHasFollowup = schemaHasFollowupQuestions(schema, page);
   const prevActivity = selectPrimaryActivityByPage(page - 1, pagedData);
-  const prevEndTime = selectTimeByPageAndKey(page - 1, ACTIVITY_START_TIME, pagedData);
+  const prevEndTime = getDateTimeFromData(page - 1, ACTIVITY_START_TIME, pagedData);
 
   return (
     <>
@@ -373,7 +369,7 @@ const QuestionnaireForm = ({
               )
             }
             {
-              page === SURVEY_INTRO_PAGE && <SurveyIntro activityDay={activityDay} />
+              isIntroPage(page) && <SurveyIntro activityDay={activityDay} />
             }
             <Form
                 formData={initialFormData}

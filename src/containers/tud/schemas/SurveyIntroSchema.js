@@ -2,11 +2,10 @@
 
 import { DataProcessingUtils } from 'lattice-fabricate';
 
+import { ACTIVITY_DATE, ACTIVITY_DAY, CLOCK_FORMAT } from '../../../common/constants';
 import TranslationKeys from '../constants/TranslationKeys';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
 
 const { getPageSectionKey } = DataProcessingUtils;
-const { ACTIVITY_DATE, ACTIVITY_DAY, CLOCK_FORMAT } = PROPERTY_CONSTS;
 
 const createSchema = (trans :TranslationFunction) => ({
   type: 'object',

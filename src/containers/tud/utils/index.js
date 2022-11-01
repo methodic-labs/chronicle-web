@@ -1,35 +1,14 @@
 // @flow
 
-import isEqual from 'lodash/isEqual';
-import _set from 'lodash/set';
-import { Map, get, getIn } from 'immutable';
+import { get, getIn, Map } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
+import _set from 'lodash/set';
 import { DateTime } from 'luxon';
 
 import createEnglishTranslationLookup from './createEnglishTranslationLookup';
 import translateToEnglish from './translateToEnglish';
 
-import TranslationKeys from '../constants/TranslationKeys';
-import * as ContextualSchema from '../schemas/ContextualSchema';
-import * as DaySpanSchema from '../schemas/DaySpanSchema';
-import * as NightTimeActivitySchema from '../schemas/NightTimeActivitySchema';
-import * as PreSurveySchema from '../schemas/PreSurveySchema';
-import * as PrimaryActivitySchema from '../schemas/PrimaryActivitySchema';
-import * as SurveyIntroSchema from '../schemas/SurveyIntroSchema';
-import { PAGE_NUMBERS, QUESTION_TITLE_LOOKUP } from '../constants/GeneralConstants';
-import { PRIMARY_ACTIVITIES, PROPERTY_CONSTS } from '../constants/SchemaConstants';
-import { TODAY, YESTERDAY } from '../../../common/constants';
-
-const { READING, MEDIA_USE } = PRIMARY_ACTIVITIES;
-
-const {
-  DAY_SPAN_PAGE,
-  FIRST_ACTIVITY_PAGE,
-  PRE_SURVEY_PAGE,
-  SURVEY_INTRO_PAGE
-} = PAGE_NUMBERS;
-
-const {
+import {
   ACTIVITY_DATE,
   ACTIVITY_DAY,
   ACTIVITY_END_TIME,
@@ -43,17 +22,41 @@ const {
   HAS_FOLLOWUP_QUESTIONS,
   OTHER_ACTIVITY,
   SECONDARY_ACTIVITY,
+  TODAY,
   WAKE_UP_TIME_AFTER_ACTIVITY_DAY,
   WAVE_ID,
-} = PROPERTY_CONSTS;
+  YESTERDAY,
+} from '../../../common/constants';
+import { DAY_SPAN_PAGE, INTRO_PAGE, PRE_SURVEY_PAGE } from '../constants';
+import { QUESTION_TITLE_LOOKUP } from '../constants/GeneralConstants';
+import { PRIMARY_ACTIVITIES } from '../constants/SchemaConstants';
+import TranslationKeys from '../constants/TranslationKeys';
+import * as ContextualSchema from '../schemas/ContextualSchema';
+import * as DaySpanSchema from '../schemas/DaySpanSchema';
+import * as NightTimeActivitySchema from '../schemas/NightTimeActivitySchema';
+import * as PreSurveySchema from '../schemas/PreSurveySchema';
+import * as PrimaryActivitySchema from '../schemas/PrimaryActivitySchema';
+import * as SurveyIntroSchema from '../schemas/SurveyIntroSchema';
+import getDateTimeFromData from './getDateTimeFromData';
+import getFirstActivityPage from './getFirstActivityPage';
+import isDaySpanPage from './isDaySpanPage';
+import isFirstActivityPage from './isFirstActivityPage';
+import isIntroPage from './isIntroPage';
+import isNightActivityPage from './isNightActivityPage';
+import isPreSurveyPage from './isPreSurveyPage';
+import pageHasFollowUpQuestions from './pageHasFollowUpQuestions';
+
+export { default as getDateTimeFromData } from './getDateTimeFromData';
+export { default as getFirstActivityPage } from './getFirstActivityPage';
+export { default as isFirstActivityPage } from './isFirstActivityPage';
+export { default as isNightActivityPage } from './isNightActivityPage';
+export { default as isIntroPage } from './isIntroPage';
+export { default as isSummaryPage } from './isSummaryPage';
+export { default as pageHasFollowUpQuestions } from './pageHasFollowUpQuestions';
+
+const { READING, MEDIA_USE } = PRIMARY_ACTIVITIES;
 
 const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
-
-const selectTimeByPageAndKey = (pageNum :number, key :string, formData :Object) => {
-  const psk = getPageSectionKey(pageNum, 0);
-  const result = getIn(formData, [psk, key]);
-  return DateTime.fromISO(result);
-};
 
 const selectPrimaryActivityByPage = (pageNum :number, formData :Object) :string => {
   const psk = getPageSectionKey(pageNum, 0);
@@ -62,43 +65,8 @@ const selectPrimaryActivityByPage = (pageNum :number, formData :Object) :string 
   return activityName;
 };
 
-const pageHasFollowupQuestions = (formData :Object, pageNum :number) => getIn(
-  formData, [getPageSectionKey(pageNum, 0), HAS_FOLLOWUP_QUESTIONS], false
-);
-
-/*
- * Return true if the current page should display a summary of activities
- * Summary page is displayed after night activity page, hence page - 2 accounts for the night activity page
- */
-const getIsSummaryPage = (formData :Object, page :number) => {
-  const prevEndTime = selectTimeByPageAndKey(page - 2, ACTIVITY_END_TIME, formData);
-  const dayEndTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_END_TIME, formData);
-
-  return prevEndTime.isValid && dayEndTime.isValid
-    && prevEndTime.equals(dayEndTime)
-    && pageHasFollowupQuestions(formData, page - 2);
-};
-
-/*
- * Return true if the schema is the night activity schema
- */
-const getIsNightActivityPage = (schema :Object, page :number, trans :TranslationFunction, studySettings :Map) => {
-  const nightSchema = NightTimeActivitySchema.createSchema(page, trans, studySettings);
-
-  return isEqual(schema, nightSchema);
-};
-
-const getIsDayTimeCompleted = (formData :Object, page :number) => {
-  const prevEndTime = selectTimeByPageAndKey(page - 1, ACTIVITY_END_TIME, formData);
-  const dayEndTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_END_TIME, formData);
-
-  return prevEndTime.isValid && dayEndTime.isValid
-    && prevEndTime.equals(dayEndTime)
-    && pageHasFollowupQuestions(formData, page - 1);
-};
-
 const getIs12HourFormatSelected = (formData :Object) :boolean => getIn(
-  formData, [getPageSectionKey(SURVEY_INTRO_PAGE, 0), CLOCK_FORMAT]
+  formData, [getPageSectionKey(INTRO_PAGE, 0), CLOCK_FORMAT]
 ) === 12;
 
 const getSecondaryReadingSelected = (formData :Object, page :number) => getIn(
@@ -125,40 +93,46 @@ const createFormSchema = (
   const enableChangesForSherbrookeUniversity = studySettings
     .getIn(['TimeUseDiary', 'enableChangesForSherbrookeUniversity']) || false;
 
-  if (pageNum === SURVEY_INTRO_PAGE) {
+  if (isIntroPage(pageNum)) {
     return {
       schema: SurveyIntroSchema.createSchema(trans),
       uiSchema: SurveyIntroSchema.uiSchema
     };
   }
-  // case 1:
-  if (pageNum === PRE_SURVEY_PAGE) {
+
+  if (isPreSurveyPage(pageNum)) {
     return {
       schema: PreSurveySchema.createSchema(trans, activityDay),
       uiSchema: PreSurveySchema.createUiSchema(trans)
     };
   }
 
-  // case 2:
-  if (pageNum === DAY_SPAN_PAGE) {
+  if (isDaySpanPage(pageNum)) {
     return {
       schema: DaySpanSchema.createSchema(trans, activityDay),
       uiSchema: DaySpanSchema.createUiSchema(is12hourFormat)
     };
   }
 
-  const prevStartTime = selectTimeByPageAndKey(pageNum - 1, ACTIVITY_START_TIME, formData);
+  if (isNightActivityPage(pageNum, activityDay, formData)) {
+    return {
+      schema: NightTimeActivitySchema.createSchema(pageNum, trans, studySettings),
+      uiSchema: NightTimeActivitySchema.createUiSchema(pageNum, trans),
+    };
+  }
 
-  const prevEndTime = pageNum === FIRST_ACTIVITY_PAGE
-    ? selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_START_TIME, formData)
-    : selectTimeByPageAndKey(pageNum - 1, ACTIVITY_END_TIME, formData);
+  const prevStartTime = getDateTimeFromData(pageNum - 1, ACTIVITY_START_TIME, formData);
+
+  const prevEndTime = isFirstActivityPage(pageNum, activityDay)
+    ? getDateTimeFromData(DAY_SPAN_PAGE, DAY_START_TIME, formData)
+    : getDateTimeFromData(pageNum - 1, ACTIVITY_END_TIME, formData);
 
   const currentActivity = selectPrimaryActivityByPage(pageNum, formData);
   const prevActivity = selectPrimaryActivityByPage(pageNum - 1, formData);
 
   let shouldDisplayFollowup = prevActivity
-    && pageNum > FIRST_ACTIVITY_PAGE
-    && !pageHasFollowupQuestions(formData, pageNum - 1);
+    && pageNum > getFirstActivityPage(pageNum, activityDay)
+    && !pageHasFollowUpQuestions(pageNum - 1, formData);
 
   if (enableChangesForSherbrookeUniversity) {
     if (prevActivity === PRIMARY_ACTIVITIES.CHILDCARE) {
@@ -169,13 +143,7 @@ const createFormSchema = (
   let schema;
   let uiSchema;
 
-  const isDaytimeCompleted = getIsDayTimeCompleted(formData, pageNum);
-
-  if (isDaytimeCompleted) {
-    schema = NightTimeActivitySchema.createSchema(pageNum, trans, studySettings);
-    uiSchema = NightTimeActivitySchema.createUiSchema(pageNum, trans);
-  }
-  else if (shouldDisplayFollowup) {
+  if (shouldDisplayFollowup) {
     schema = ContextualSchema.createSchema(
       pageNum,
       prevActivity,
@@ -190,7 +158,13 @@ const createFormSchema = (
   }
   else {
     schema = PrimaryActivitySchema.createSchema(
-      pageNum, prevActivity, currentActivity, prevEndTime, is12hourFormat, trans
+      pageNum,
+      prevActivity,
+      currentActivity,
+      prevEndTime,
+      is12hourFormat,
+      activityDay,
+      trans,
     );
     uiSchema = PrimaryActivitySchema.createUiSchema(pageNum, is12hourFormat);
   }
@@ -208,8 +182,8 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
   const is12hourFormat = getIs12HourFormatSelected(formData);
 
   // get day duration (start and end)
-  const dayStartTime :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_START_TIME, formData);
-  const dayEndTime :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_END_TIME, formData);
+  const dayStartTime :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_START_TIME, formData);
+  const dayEndTime :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, formData);
 
   const formattedDayStartTime = is12hourFormat
     ? dayStartTime.toLocaleString(DateTime.TIME_SIMPLE)
@@ -219,12 +193,12 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
     ? dayEndTime.toLocaleString(DateTime.TIME_SIMPLE)
     : dayEndTime.toLocaleString(DateTime.TIME_24_SIMPLE);
 
-  const btbad :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, BED_TIME_BEFORE_ACTIVITY_DAY, formData);
+  const btbad :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, BED_TIME_BEFORE_ACTIVITY_DAY, formData);
   const formattedBTBAD = is12hourFormat
     ? btbad.toLocaleString(DateTime.TIME_SIMPLE)
     : btbad.toLocaleString(DateTime.TIME_24_SIMPLE);
 
-  const wutaad :DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, WAKE_UP_TIME_AFTER_ACTIVITY_DAY, formData);
+  const wutaad :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, WAKE_UP_TIME_AFTER_ACTIVITY_DAY, formData);
   const formattedWUTAAD = is12hourFormat
     ? wutaad.toLocaleString(DateTime.TIME_SIMPLE)
     : wutaad.toLocaleString(DateTime.TIME_24_SIMPLE);
@@ -250,49 +224,62 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
     time: formattedDayStartTime,
   });
 
-  const lastPage = Object.keys(formData).length - 1;
+  const pages = Object.keys(formData).sort((psk1, psk2) => {
+    const { page: pageStr1 } = parsePageSectionKey(psk1);
+    const p1 = parseInt(pageStr1, 10);
+    const { page: pageStr2 } = parsePageSectionKey(psk2);
+    const p2 = parseInt(pageStr2, 10);
+    return p1 - p2;
+  });
 
-  // omit the last 'page' since it covers nighttime
-  Object.keys(formData).forEach((key, index) => {
-    const hasFollowupQuestions = pageHasFollowupQuestions(formData, index);
+  pages.forEach((key) => {
+    const { page: pageStr } = parsePageSectionKey(key);
+    const page = parseInt(pageStr, 10);
 
-    // skip page 0, 1, 2 and pages that have followup questions
-    if (!(index === SURVEY_INTRO_PAGE || index === PRE_SURVEY_PAGE
-        || index === DAY_SPAN_PAGE || hasFollowupQuestions)) {
-      // if last page and activity day is "yesterday" (i.e. the original way)
-      if (index === lastPage) {
-        if (activityDay === YESTERDAY) {
-          summary.push({
-            description: trans(TranslationKeys.SLEEPING),
-            key: `${formattedDayEndTime} - ${formattedWUTAAD}`,
-            pageNum: lastPage,
-            time: `${formattedDayEndTime} - ${formattedWUTAAD}`,
-          });
-        }
-      }
-      else {
-        const startTime = selectTimeByPageAndKey(index, ACTIVITY_START_TIME, formData);
-        const endTime = selectTimeByPageAndKey(index, ACTIVITY_END_TIME, formData);
-        const primaryActivity = selectPrimaryActivityByPage(index, formData);
-
-        const startFormatted = is12hourFormat
-          ? startTime.toLocaleString(DateTime.TIME_SIMPLE)
-          : startTime.toLocaleString(DateTime.TIME_24_SIMPLE);
-
-        const endFormatted = is12hourFormat
-          ? endTime.toLocaleString(DateTime.TIME_SIMPLE)
-          : endTime.toLocaleString(DateTime.TIME_24_SIMPLE);
-
-        const entry = {
-          key: `${startFormatted} - ${endFormatted}`,
-          description: primaryActivity,
-          pageNum: index,
-          time: `${startFormatted} - ${endFormatted}`,
-        };
-
-        summary.push(entry);
-      }
+    // skip these pages
+    if (
+      page === INTRO_PAGE
+      || page === PRE_SURVEY_PAGE
+      || page === DAY_SPAN_PAGE
+      || pageHasFollowUpQuestions(page, formData)
+    ) {
+      return;
     }
+
+    // only add entry for night activity page if activity day is "yesterday"
+    // (i.e. original logic before "yesterday"/"today" was introduced)
+    if (isNightActivityPage(page, activityDay, formData)) {
+      if (activityDay === YESTERDAY) {
+        summary.push({
+          description: trans(TranslationKeys.SLEEPING),
+          key: `${formattedDayEndTime} - ${formattedWUTAAD}`,
+          pageNum: page,
+          time: `${formattedDayEndTime} - ${formattedWUTAAD}`,
+        });
+      }
+      return;
+    }
+
+    const startTime = getDateTimeFromData(page, ACTIVITY_START_TIME, formData);
+    const endTime = getDateTimeFromData(page, ACTIVITY_END_TIME, formData);
+    const primaryActivity = selectPrimaryActivityByPage(page, formData);
+
+    const startFormatted = is12hourFormat
+      ? startTime.toLocaleString(DateTime.TIME_SIMPLE)
+      : startTime.toLocaleString(DateTime.TIME_24_SIMPLE);
+
+    const endFormatted = is12hourFormat
+      ? endTime.toLocaleString(DateTime.TIME_SIMPLE)
+      : endTime.toLocaleString(DateTime.TIME_24_SIMPLE);
+
+    const entry = {
+      key: `${startFormatted} - ${endFormatted}`,
+      description: primaryActivity,
+      pageNum: page,
+      time: `${startFormatted} - ${endFormatted}`,
+    };
+
+    summary.push(entry);
   });
 
   if (activityDay === TODAY) {
@@ -321,9 +308,9 @@ const applyCustomValidation = (
   const startTimeKey = pageNum === DAY_SPAN_PAGE ? DAY_START_TIME : ACTIVITY_START_TIME;
   const endTimeKey = pageNum === DAY_SPAN_PAGE ? DAY_END_TIME : ACTIVITY_END_TIME;
 
-  const currentStartTime = selectTimeByPageAndKey(pageNum, startTimeKey, formData);
-  const currentEndTime = selectTimeByPageAndKey(pageNum, endTimeKey, formData);
-  const dayEndTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_END_TIME, formData);
+  const currentStartTime = getDateTimeFromData(pageNum, startTimeKey, formData);
+  const currentEndTime = getDateTimeFromData(pageNum, endTimeKey, formData);
+  const dayEndTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, formData);
 
   const errorMsg = pageNum === DAY_SPAN_PAGE
     ? trans(TranslationKeys.ERROR_INVALID_BED_TIME, { time: formatTime(currentStartTime) })
@@ -388,7 +375,7 @@ const createSubmitRequestBody = (
     const parsed :Object = parsePageSectionKey(psk);
     const { page } :{ page :string } = parsed;
 
-    if (parseInt(page, 10) !== SURVEY_INTRO_PAGE) {
+    if (parseInt(page, 10) !== INTRO_PAGE) {
 
       let startTime = get(pageData, ACTIVITY_START_TIME);
       let endTime = get(pageData, ACTIVITY_END_TIME);
@@ -630,10 +617,6 @@ export {
   createTimeUseSummary,
   formatTime,
   getIs12HourFormatSelected,
-  getIsNightActivityPage,
-  getIsSummaryPage,
-  pageHasFollowupQuestions,
   selectPrimaryActivityByPage,
-  selectTimeByPageAndKey,
   updateActivityDateAndDay,
 };
