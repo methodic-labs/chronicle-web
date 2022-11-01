@@ -1,5 +1,9 @@
 // @flow
 
+import { useState } from 'react';
+
+import { faExclamationCircle } from '@fortawesome/pro-light-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getIn, merge, setIn } from 'immutable';
 import { DataProcessingUtils, Form } from 'lattice-fabricate';
 import { Button } from 'lattice-ui-kit';
@@ -54,6 +58,15 @@ const ButtonRow = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 30px;
+`;
+
+const NextButtonWrapper = styled.div`
+  align-items: center;
+  display: flex;
+
+  svg {
+    margin-right: 16px;
+  }
 `;
 
 /*
@@ -248,6 +261,8 @@ const QuestionnaireForm = ({
 
   const dispatch = useDispatch();
 
+  const [hasErrors, setHasErrors] = useState(false);
+
   const { schema, uiSchema } = formSchema;
 
   const activities :TudActivities = trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
@@ -350,6 +365,15 @@ const QuestionnaireForm = ({
   const prevActivity = selectPrimaryActivityByPage(page - 1, pagedData);
   const prevEndTime = getDateTimeFromData(page - 1, ACTIVITY_START_TIME, pagedData);
 
+  const onSubmit = () => {
+    setHasErrors(false);
+    onNext();
+  };
+
+  const onError = () => {
+    setHasErrors(true);
+  };
+
   return (
     <>
       {
@@ -376,7 +400,8 @@ const QuestionnaireForm = ({
                 hideSubmit
                 noPadding
                 onChange={onChange}
-                onSubmit={onNext}
+                onError={onError}
+                onSubmit={onSubmit}
                 ref={formRef}
                 schema={schema}
                 transformErrors={transformErrors}
@@ -386,21 +411,27 @@ const QuestionnaireForm = ({
           </>
         )
       }
-
       <ButtonRow>
         <Button
             disabled={page === 0 || submitRequestState === RequestStates.PENDING}
             onClick={onBack}>
           {trans(TranslationKeys.BTN_BACK)}
         </Button>
-        <Button
-            color="primary"
-            isLoading={submitRequestState === RequestStates.PENDING}
-            onClick={handleNext}>
+        <NextButtonWrapper>
           {
-            isSummaryPage ? trans(TranslationKeys.BTN_SUBMIT) : trans(TranslationKeys.BTN_NEXT)
+            hasErrors && (
+              <FontAwesomeIcon color="#ff3c5d" icon={faExclamationCircle} size="lg" />
+            )
           }
-        </Button>
+          <Button
+              color="primary"
+              isLoading={submitRequestState === RequestStates.PENDING}
+              onClick={handleNext}>
+            {
+              isSummaryPage ? trans(TranslationKeys.BTN_SUBMIT) : trans(TranslationKeys.BTN_NEXT)
+            }
+          </Button>
+        </NextButtonWrapper>
       </ButtonRow>
     </>
   );
