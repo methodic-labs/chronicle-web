@@ -43,6 +43,7 @@ import {
   DAY_END_TIME,
   DAY_START_TIME,
   DEFAULT_LANGUAGE,
+  LANGUAGE,
   LanguageCodes,
   PARTICIPANT_ID,
   STUDIES,
@@ -133,7 +134,7 @@ const TimeUseDiaryContainer = () => {
   }, [submitTimeUseDiaryRS]);
 
   const configuredLanguage :LanguageCode = studySettings.getIn(
-    [StudySettingTypes.TIME_USE_DIARY, DEFAULT_LANGUAGE]
+    [StudySettingTypes.TIME_USE_DIARY, LANGUAGE]
   ) || LanguageCodes.ENGLISH;
 
   // select default language
