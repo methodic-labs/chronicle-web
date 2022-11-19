@@ -61,6 +61,8 @@ export type LanguageCodesEnum = {|
   SWEDISH :'sv';
 |};
 
+export type LanguageCode = $Values<LanguageCodesEnum>;
+
 export type ParticipantDataType = {|
   IOS_SENSOR :'IOSSensor';
   USAGE_EVENTS :'UsageEvents';
@@ -144,6 +146,16 @@ export type Study = {
   updatedAt :string;
   version :string;
 };
+
+export type StudySettingTypesEnum = {|
+  DATA_COLLECTION :'DataCollection';
+  NOTIFICATIONS :'Notifications';
+  SENSOR :'Sensor';
+  SURVEY :'Survey';
+  TIME_USE_DIARY :'TimeUseDiary';
+|};
+
+export type StudySettingType = $Values<StudySettingTypesEnum>;
 
 export type TimeUseDiaryDataType = {|
   DAYTIME :'DayTime';
