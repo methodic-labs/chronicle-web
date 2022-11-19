@@ -112,7 +112,6 @@ else {
     auth0Domain: __AUTH0_DOMAIN__,
     authToken: getAuthToken(),
     csrfToken: getCSRFToken(),
-    baseUrl: 'production',
   });
 
   const routerHistory = initializeRouterHistory();
