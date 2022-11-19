@@ -43,9 +43,11 @@ import {
   DAY_END_TIME,
   DAY_START_TIME,
   DEFAULT_LANGUAGE,
+  LANGUAGE,
   LanguageCodes,
   PARTICIPANT_ID,
   STUDIES,
+  StudySettingTypes,
   STUDY_ID,
   TIME_USE_DIARY,
   TODAY,
@@ -60,6 +62,8 @@ import {
   VERIFY_PARTICIPANT,
 } from '../study/actions';
 import { DAY_SPAN_PAGE, INTRO_PAGE } from './constants';
+
+import type { LanguageCode } from '../../common/types';
 
 const TimeUseDiaryContainer = () => {
   const location = useLocation();
@@ -129,10 +133,13 @@ const TimeUseDiaryContainer = () => {
     }
   }, [submitTimeUseDiaryRS]);
 
+  const configuredLanguage :LanguageCode = studySettings.getIn(
+    [StudySettingTypes.TIME_USE_DIARY, LANGUAGE]
+  ) || LanguageCodes.ENGLISH;
+
   // select default language
   useEffect(() => {
-    const defaultLngCode = Cookies.get(DEFAULT_LANGUAGE) || LanguageCodes.ENGLISH;
-
+    const defaultLngCode = Cookies.get(DEFAULT_LANGUAGE) || configuredLanguage;
     const defaultLng = SUPPORTED_LANGUAGES.find((lng) => lng.code === defaultLngCode);
     if (defaultLng) {
       setSelectedLanguage({
@@ -140,7 +147,7 @@ const TimeUseDiaryContainer = () => {
         value: defaultLng.code
       });
     }
-  }, []);
+  }, [configuredLanguage]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
