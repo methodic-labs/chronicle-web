@@ -1,15 +1,13 @@
 // @flow
 
-import TranslationKeys from '../constants/TranslationKeys';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
-
-const {
+import {
   SECONDARY_BOOK_TITLE,
   SECONDARY_BOOK_TYPE,
   SECONDARY_MEDIA_ACTIVITY,
   SECONDARY_MEDIA_AGE,
   SECONDARY_MEDIA_NAME,
-} = PROPERTY_CONSTS;
+} from '../../../common/constants';
+import TranslationKeys from '../constants/TranslationKeys';
 
 const createSchema = (selectedActivity :string, trans :TranslationFunction) => {
   const primaryActivities :Object = trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });

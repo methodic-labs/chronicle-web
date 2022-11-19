@@ -3,9 +3,26 @@
 import { useEffect, useState } from 'react';
 
 import styled from 'styled-components';
-// $FlowFixMe
-import { Typography, LinearProgress } from 'lattice-ui-kit';
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { withStyles } from '@material-ui/core/styles';
+import { Colors, Typography, LinearProgress } from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
+
+const { NEUTRAL } = Colors;
+
+const TimeUseDiaryProgress = withStyles(() => ({
+  root: {
+    height: 12,
+    borderRadius: 6,
+  },
+  bar: {
+    borderRadius: 6,
+  },
+  colorPrimary: {
+    backgroundColor: NEUTRAL.N50,
+  },
+}))(LinearProgress);
 
 const Grid = styled.div`
   align-items: center;
@@ -95,7 +112,7 @@ const ProgressBar = (props :Props) => {
 
   return (
     <Wrapper>
-      <LinearProgress variant="determinate" value={completedRatio * 100} />
+      <TimeUseDiaryProgress variant="determinate" value={completedRatio * 100} />
       <Grid completedRatio={completedRatio}>
         <ProgressLabelWrapper>
           <Typography

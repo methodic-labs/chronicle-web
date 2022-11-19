@@ -2,20 +2,18 @@
 
 import { Map } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
-
-import TranslationKeys from '../constants/TranslationKeys';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
-
-const { getPageSectionKey } = DataProcessingUtils;
-
-const {
+import {
   BG_AUDIO_NIGHT,
   BG_TV_NIGHT,
   NON_TYPICAL_SLEEP_PATTERN,
   SLEEP_ARRANGEMENT,
   SLEEP_PATTERN,
   WAKE_UP_COUNT,
-} = PROPERTY_CONSTS;
+} from '../../../common/constants';
+
+import TranslationKeys from '../constants/TranslationKeys';
+
+const { getPageSectionKey } = DataProcessingUtils;
 
 const createSchema = (pageNum :number, trans :TranslationFunction, studySettings :Map) => {
 
@@ -101,7 +99,7 @@ const createSchema = (pageNum :number, trans :TranslationFunction, studySettings
   };
 };
 
-const createUiSchema = (pageNum :number, trans :(string, ?Object) => Object) => ({
+const createUiSchema = (pageNum :number, trans :TranslationFunction) => ({
   [getPageSectionKey(pageNum, 0)]: {
     classNames: 'column-span-12 grid-container',
     'ui:order': [SLEEP_PATTERN, NON_TYPICAL_SLEEP_PATTERN, SLEEP_ARRANGEMENT, WAKE_UP_COUNT, BG_TV_NIGHT,

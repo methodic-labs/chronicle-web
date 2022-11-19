@@ -1,14 +1,10 @@
 // @flow
 
+import { getIn } from 'immutable';
 import isPlainObject from 'lodash/isPlainObject';
 import set from 'lodash/set';
-import { getIn } from 'immutable';
 
-import JSONKEY_ID_LOOKUP from '../constants/JsonKeyAnswerIdMapping';
-import TranslationKeys from '../constants/TranslationKeys';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
-
-const {
+import {
   ACTIVITY_NAME,
   ADULT_MEDIA,
   BG_AUDIO_DAY,
@@ -27,7 +23,9 @@ const {
   SLEEP_ARRANGEMENT,
   SLEEP_PATTERN,
   TYPICAL_DAY_FLAG,
-} = PROPERTY_CONSTS;
+} from '../../../common/constants';
+import JSONKEY_ID_LOOKUP from '../constants/JsonKeyAnswerIdMapping';
+import TranslationKeys from '../constants/TranslationKeys';
 
 // create object { ol.id -> value -> english }
 const createEnglishTranslationLookup = (translationData :Object, language :string) => {

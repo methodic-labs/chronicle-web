@@ -2,12 +2,9 @@
 
 import { Map } from 'immutable';
 
-import * as SecondaryFollowUpSchema from './SecondaryFollowUpSchema';
-
+import { OTHER_ACTIVITY, SECONDARY_ACTIVITY } from '../../../common/constants';
 import TranslationKeys from '../constants/TranslationKeys';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
-
-const { OTHER_ACTIVITY, SECONDARY_ACTIVITY } = PROPERTY_CONSTS;
+import * as SecondaryFollowUpSchema from './SecondaryFollowUpSchema';
 
 const getSecondaryActivityOptions = (primaryActivity :string, trans :TranslationFunction, studySettings :Map) => {
 
@@ -140,7 +137,7 @@ const createSchema = (primaryActivity :string, trans :TranslationFunction, study
   };
 };
 
-const createUiSchema = (trans :(string, ?Object) => Object) => ({
+const createUiSchema = (trans :TranslationFunction) => ({
   [SECONDARY_ACTIVITY]: {
     classNames: 'column-span-12',
     'ui:widget': 'checkboxes'

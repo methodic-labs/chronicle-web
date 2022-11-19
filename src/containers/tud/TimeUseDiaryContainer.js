@@ -1,10 +1,6 @@
-// @flow
-
 import { useEffect, useState } from 'react';
 
 import Cookies from 'js-cookie';
-import isEqual from 'lodash/isEqual';
-import qs from 'qs';
 import { Paged } from 'lattice-fabricate';
 import {
   AppContainerWrapper,
@@ -15,35 +11,37 @@ import {
   Spinner,
   Typography,
 } from 'lattice-ui-kit';
+import qs from 'qs';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
-import type { RequestState } from 'redux-reqseq';
 
+import { SUBMIT_TIME_USE_DIARY } from './actions';
 import ConfirmChangeLanguage from './components/ConfirmChangeLanguage';
 import HeaderComponent from './components/HeaderComponent';
 import ProgressBar from './components/ProgressBar';
 import QuestionnaireForm from './components/QuestionnaireForm';
-import SUPPORTED_LANGUAGES from './constants/SupportedLanguages';
 import SubmissionErrorModal from './components/SubmissionErrorModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
+import SUPPORTED_LANGUAGES from './constants/SupportedLanguages';
 import TranslationKeys from './constants/TranslationKeys';
-import { SUBMIT_TIME_USE_DIARY } from './actions';
-import { PAGE_NUMBERS } from './constants/GeneralConstants';
-import { PROPERTY_CONSTS } from './constants/SchemaConstants';
-import { usePrevious } from './hooks';
 import {
   createFormSchema,
+  getDateTimeFromData,
+  getFirstActivityPage,
   getIs12HourFormatSelected,
-  getIsNightActivityPage,
-  getIsSummaryPage,
-  selectTimeByPageAndKey,
+  isIntroPage,
+  isNightActivityPage,
+  isSummaryPage,
   updateActivityDateAndDay,
 } from './utils';
 
 import { BasicErrorComponent } from '../../common/components';
 import {
+  ACTIVITY_END_TIME,
+  DAY_END_TIME,
+  DAY_START_TIME,
   DEFAULT_LANGUAGE,
   LanguageCodes,
   PARTICIPANT_ID,
@@ -56,19 +54,12 @@ import {
 import { isFailure, isPending, useRequestState } from '../../common/utils';
 import { selectStudySettings } from '../../core/redux/selectors';
 import {
-  GET_STUDY_SETTINGS,
-  VERIFY_PARTICIPANT,
   getStudySettings,
+  GET_STUDY_SETTINGS,
   verifyParticipant,
+  VERIFY_PARTICIPANT,
 } from '../study/actions';
-
-const {
-  ACTIVITY_END_TIME,
-  DAY_END_TIME,
-  DAY_START_TIME
-} = PROPERTY_CONSTS;
-
-const { DAY_SPAN_PAGE, SURVEY_INTRO_PAGE } = PAGE_NUMBERS;
+import { DAY_SPAN_PAGE, INTRO_PAGE } from './constants';
 
 const TimeUseDiaryContainer = () => {
   const location = useLocation();
@@ -81,14 +72,6 @@ const TimeUseDiaryContainer = () => {
     participantId,
     studyId,
     waveId,
-  } :{
-    day :string;
-    familyId :string;
-    organizationId :UUID;
-    participantId :string;
-    studyId :UUID;
-    waveId :string;
-    // $FlowFixMe
   } = queryParams;
 
   const dispatch = useDispatch();
@@ -104,17 +87,15 @@ const TimeUseDiaryContainer = () => {
   const [currentTime, setCurrentTime] = useState();
   const [dayEndTime, setDayEndTime] = useState();
   const [dayStartTime, setDayStartTime] = useState();
-  const [isSummaryPage, setIsSummaryPage] = useState(false);
-  const [isNightActivityPage, setIsNightActivityPage] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [languageToChangeTo, setLanguageToChangeTo] = useState(null);
   const [isChangeLanguageModalVisible, setChangeLanguageModalVisible] = useState(false);
   const [shouldReset, setShouldReset] = useState(false);
 
   // selectors
-  const submitTimeUseDiaryRS :?RequestState = useRequestState([TIME_USE_DIARY, SUBMIT_TIME_USE_DIARY]);
-  const verifyParticipantRS :?RequestState = useRequestState([STUDIES, VERIFY_PARTICIPANT]);
-  const getStudySettingsRS :?RequestState = useRequestState([STUDIES, GET_STUDY_SETTINGS]);
+  const submitTimeUseDiaryRS = useRequestState([TIME_USE_DIARY, SUBMIT_TIME_USE_DIARY]);
+  const verifyParticipantRS = useRequestState([STUDIES, VERIFY_PARTICIPANT]);
+  const getStudySettingsRS = useRequestState([STUDIES, GET_STUDY_SETTINGS]);
 
   let activityDay = day;
   if (day !== TODAY && day !== YESTERDAY) {
@@ -169,30 +150,14 @@ const TimeUseDiaryContainer = () => {
   /* eslint-enable */
 
   const refreshProgress = (currFormData) => {
-    const dayStart = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_START_TIME, currFormData);
-    const dayEnd = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_END_TIME, currFormData);
-    const currentEnd = selectTimeByPageAndKey(page, ACTIVITY_END_TIME, currFormData);
+    const dayStart = getDateTimeFromData(DAY_SPAN_PAGE, DAY_START_TIME, currFormData);
+    const dayEnd = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, currFormData);
+    const currentEnd = getDateTimeFromData(page, ACTIVITY_END_TIME, currFormData);
 
     setDayStartTime(dayStart);
     setDayEndTime(dayEnd);
     setCurrentTime(currentEnd);
   };
-
-  /* eslint-disable react-hooks/exhaustive-deps */
-  useEffect(() => {
-    refreshProgress(formData);
-    setIsSummaryPage(getIsSummaryPage(formData, page));
-  }, [page]);
-  /* eslint-enable */
-
-  /* eslint-disable react-hooks/exhaustive-deps */
-  const prevSchema = usePrevious(formSchema.schema);
-  useEffect(() => {
-    if (!isEqual(prevSchema, formSchema.schema)) {
-      setIsNightActivityPage(getIsNightActivityPage(formSchema.schema, page, t, studySettings));
-    }
-  }, [page, formSchema, studySettings]);
-  /* eslint-enable */
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
@@ -206,7 +171,7 @@ const TimeUseDiaryContainer = () => {
     setFormData(currFormData);
   };
 
-  const changeLanguage = (lng :SelectLanguageOption) => {
+  const changeLanguage = (lng) => {
     if (lng !== null) {
       i18n.changeLanguage(lng.value);
       Cookies.set(DEFAULT_LANGUAGE, lng.value, {});
@@ -222,10 +187,10 @@ const TimeUseDiaryContainer = () => {
     }
   };
 
-  const onChangeLanguage = (lng :SelectLanguageOption) => {
+  const onChangeLanguage = (lng) => {
     if (lng.value === i18n.language) return;
 
-    if (page === SURVEY_INTRO_PAGE) {
+    if (isIntroPage(page)) {
       changeLanguage(lng);
       return;
     }
@@ -241,21 +206,22 @@ const TimeUseDiaryContainer = () => {
     });
   };
 
-  const updateSurveyProgress = (currFormData :Object) => {
+  const updateSurveyProgress = (currFormData) => {
     refreshProgress(currFormData);
     setFormData(currFormData);
   };
 
   const resetSurvey = (goToPage) => {
-    goToPage(SURVEY_INTRO_PAGE);
+    goToPage(INTRO_PAGE);
     setFormData({});
     setShouldReset(false);
   };
 
   const is12hourFormat = getIs12HourFormatSelected(formData);
-  const isDayActivityPage = page >= PAGE_NUMBERS.FIRST_ACTIVITY_PAGE
-    && !isSummaryPage
-    && !isNightActivityPage;
+  const isSummPage = isSummaryPage(page, activityDay, formData);
+  const isDayActivityPage = page >= getFirstActivityPage(activityDay)
+    && !isSummPage
+    && !isNightActivityPage(page, activityDay, formData);
 
   if (isPending(verifyParticipantRS) || isPending(getStudySettingsRS)) {
     return (
@@ -319,7 +285,7 @@ const TimeUseDiaryContainer = () => {
                             familyId={familyId}
                             formSchema={formSchema}
                             initialFormData={formData}
-                            isSummaryPage={isSummaryPage}
+                            isSummaryPage={isSummPage}
                             language={i18n.language}
                             organizationId={organizationId}
                             pagedProps={pagedProps}
