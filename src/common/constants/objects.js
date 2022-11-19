@@ -18,6 +18,7 @@ import type {
   ParticipantDataType,
   ParticipationStatusesEnum,
   PermissionTypesEnum,
+  StudySettingTypesEnum,
   TimeUseDiaryDataType,
   UpdateTypesEnum,
 } from '../types';
@@ -98,6 +99,14 @@ export const RS_INITIAL_STATE = {
   [ERROR]: false,
   [REQUEST_STATE]: RequestStates.STANDBY,
 };
+
+export const StudySettingTypes :{| ...StudySettingTypesEnum |} = Object.freeze({
+  DATA_COLLECTION: 'DataCollection',
+  NOTIFICATIONS: 'Notifications',
+  SENSOR: 'Sensor',
+  SURVEY: 'Survey',
+  TIME_USE_DIARY: 'TimeUseDiary',
+});
 
 export const TimeUseDiaryDataTypes :{| ...TimeUseDiaryDataType |} = Object.freeze({
   DAYTIME: 'DayTime',
