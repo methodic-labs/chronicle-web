@@ -12,14 +12,18 @@ import { DEFAULT_LANGUAGE, LanguageCodes } from '../../common/constants';
 
 declare var __ENV_DEV__ :boolean;
 
-const defaultLng = Cookies.get(DEFAULT_LANGUAGE) || LanguageCodes.ENGLISH;
+let defaultLanguageCookie = Cookies.get(DEFAULT_LANGUAGE);
+if (!defaultLanguageCookie || defaultLanguageCookie === 'null' || defaultLanguageCookie === 'undefined') {
+  defaultLanguageCookie = undefined;
+}
+const defaultLanguageCode = defaultLanguageCookie || LanguageCodes.ENGLISH;
 
 i18n
   .use(initReactI18next)
   .use(Backend)
   .use(LanguageDetector)
   .init({
-    lng: defaultLng,
+    lng: defaultLanguageCode,
     backend: {
       loadPath: (language) => translations[language]
     },

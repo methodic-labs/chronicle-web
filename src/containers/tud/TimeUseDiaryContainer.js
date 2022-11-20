@@ -133,21 +133,37 @@ const TimeUseDiaryContainer = () => {
     }
   }, [submitTimeUseDiaryRS]);
 
-  const configuredLanguage :LanguageCode = studySettings.getIn(
+  const changeLanguage = (lng) => {
+    if (lng !== null) {
+      i18n.changeLanguage(lng.value);
+      Cookies.set(DEFAULT_LANGUAGE, lng.value, {});
+      setSelectedLanguage(lng);
+    }
+  };
+
+  const configuredLanguageCode :LanguageCode = studySettings.getIn(
     [StudySettingTypes.TIME_USE_DIARY, LANGUAGE]
   ) || LanguageCodes.ENGLISH;
 
   // select default language
   useEffect(() => {
-    const defaultLngCode = Cookies.get(DEFAULT_LANGUAGE) || configuredLanguage;
-    const defaultLng = SUPPORTED_LANGUAGES.find((lng) => lng.code === defaultLngCode);
-    if (defaultLng) {
+    const defaultLanguageCookie = Cookies.get(DEFAULT_LANGUAGE);
+    let defaultLanguage = SUPPORTED_LANGUAGES.find((lng) => lng.code === defaultLanguageCookie);
+    const defaultLanguageCode = defaultLanguage?.code || configuredLanguageCode;
+    defaultLanguage = SUPPORTED_LANGUAGES.find((lng) => lng.code === defaultLanguageCode);
+    if (defaultLanguage) {
       setSelectedLanguage({
-        label: defaultLng.language,
-        value: defaultLng.code
+        label: defaultLanguage.language,
+        value: defaultLanguage.code
       });
+      if (defaultLanguage.code !== LanguageCodes.ENGLISH) {
+        changeLanguage({
+          label: defaultLanguage.language,
+          value: defaultLanguage.code
+        });
+      }
     }
-  }, [configuredLanguage]);
+  }, [configuredLanguageCode]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
@@ -176,14 +192,6 @@ const TimeUseDiaryContainer = () => {
   const onPageChange = (currPage, currFormData) => {
     setPage(currPage);
     setFormData(currFormData);
-  };
-
-  const changeLanguage = (lng) => {
-    if (lng !== null) {
-      i18n.changeLanguage(lng.value);
-      Cookies.set(DEFAULT_LANGUAGE, lng.value, {});
-      setSelectedLanguage(lng);
-    }
   };
 
   const onConfirmChangeLanguage = () => {
