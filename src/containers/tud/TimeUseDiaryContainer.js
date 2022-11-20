@@ -95,7 +95,6 @@ const TimeUseDiaryContainer = () => {
   const [languageToChangeTo, setLanguageToChangeTo] = useState(null);
   const [isChangeLanguageModalVisible, setChangeLanguageModalVisible] = useState(false);
   const [shouldReset, setShouldReset] = useState(false);
-  console.log('selectedLanguage', selectedLanguage);
 
   // selectors
   const submitTimeUseDiaryRS = useRequestState([TIME_USE_DIARY, SUBMIT_TIME_USE_DIARY]);
