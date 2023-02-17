@@ -16,7 +16,12 @@ import {
 import { DateTime } from 'luxon';
 
 import { AppFeatures } from '../../../common/constants';
-import { copyToClipboard, formatDateTime, isNonEmptyString } from '../../../common/utils';
+import {
+  copyToClipboard,
+  formatDateTime,
+  isNonEmptyObject,
+  isNonEmptyString,
+} from '../../../common/utils';
 
 import type { Study } from '../../../common/types';
 
@@ -26,26 +31,28 @@ const StyledTag = styled(Tag)`
   margin-left: 0;
 `;
 
+const getValue = (input :?string) => {
+  if (isNonEmptyString(input)) {
+    return input;
+  }
+  return '---';
+};
+
 const StudyDetails = ({
   hasAndroidDataCollection,
   hasIOSSensorDataCollection,
   hasQuestionnaires,
   hasTimeUseDiary,
+  limits,
   study,
 } :{
   hasAndroidDataCollection :boolean;
   hasIOSSensorDataCollection :boolean;
   hasQuestionnaires :boolean;
   hasTimeUseDiary :boolean;
+  limits :Object;
   study :Study;
 }) => {
-  const getValue = (input :?string) => {
-    if (isNonEmptyString(input)) {
-      return input;
-    }
-    return '---';
-  };
-
   const features = [];
   if (hasAndroidDataCollection) {
     features.push(AppFeatures.ANDROID);
@@ -67,8 +74,22 @@ const StudyDetails = ({
     { label: 'Title', value: study.title },
     { label: 'Description', value: getValue(study.description) },
     { label: 'Study Id', value: study.id, enableCopy: true },
-    { label: 'Study Start', value: formatDateTime(study.startedAt, DateTime.DATETIME_FULL) },
-    { label: 'Study End', value: formatDateTime(study.endedAt, DateTime.DATETIME_FULL) },
+    {
+      label: 'Maximum Participants',
+      value: getValue(`${limits.get('participantLimit')}`),
+    },
+    {
+      label: 'Study Created',
+      value: formatDateTime(study.createdAt, DateTime.DATETIME_FULL),
+    },
+    {
+      label: 'Study Data Collections Ends',
+      value: formatDateTime(limits.get('studyEnds'), DateTime.DATETIME_FULL),
+    },
+    {
+      label: 'Study Data Will Be Deleted After',
+      value: formatDateTime(limits.get('studyDataExpires'), DateTime.DATETIME_FULL),
+    },
     { label: 'Contact', value: getValue(study.contact) },
     { label: 'Group', value: getValue(study.group) },
     { label: 'Version', value: getValue(study.version) },

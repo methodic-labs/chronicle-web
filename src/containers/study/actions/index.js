@@ -29,6 +29,9 @@ const getParticipantStats :RequestSequence = newRequestSequence(GET_PARTICIPANT_
 const GET_STUDY :'GET_STUDY' = 'GET_STUDY';
 const getStudy :RequestSequence = newRequestSequence(GET_STUDY);
 
+const GET_STUDY_LIMITS :'GET_STUDY_LIMITS' = 'GET_STUDY_LIMITS';
+const getStudyLimits :RequestSequence = newRequestSequence(GET_STUDY_LIMITS);
+
 const GET_STUDY_PARTICIPANTS :'GET_STUDY_PARTICIPANTS' = 'GET_STUDY_PARTICIPANTS';
 const getStudyParticipants :RequestSequence = newRequestSequence(GET_STUDY_PARTICIPANTS);
 
@@ -62,6 +65,7 @@ export {
   GET_ORG_STUDIES,
   GET_PARTICIPANT_STATS,
   GET_STUDY,
+  GET_STUDY_LIMITS,
   GET_STUDY_PARTICIPANTS,
   GET_STUDY_SETTINGS,
   INITIALIZE_STUDY,
@@ -77,6 +81,7 @@ export {
   getOrgStudies,
   getParticipantStats,
   getStudy,
+  getStudyLimits,
   getStudyParticipants,
   getStudySettings,
   initializeStudy,
