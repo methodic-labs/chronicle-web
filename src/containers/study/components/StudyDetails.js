@@ -16,12 +16,7 @@ import {
 import { DateTime } from 'luxon';
 
 import { AppFeatures } from '../../../common/constants';
-import {
-  copyToClipboard,
-  formatDateTime,
-  isNonEmptyObject,
-  isNonEmptyString,
-} from '../../../common/utils';
+import { copyToClipboard, formatDateTime, isNonEmptyString } from '../../../common/utils';
 
 import type { Study } from '../../../common/types';
 
