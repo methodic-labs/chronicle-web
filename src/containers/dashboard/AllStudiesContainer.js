@@ -1,18 +1,17 @@
 // @flow
+
 import { useEffect } from 'react';
 
 import { Spinner } from 'lattice-ui-kit';
-import { ReduxUtils, useRequestState } from 'lattice-utils';
 import { useDispatch, useSelector } from 'react-redux';
 
 import StudiesTable from './components/StudiesTable';
 import selectAllStudiesTableData from './selectors/selectAllStudiesTableData';
 import { GET_ALL_STUDIES_TABLE_DATA, getAllStudiesTableData } from './actions';
 
+import { DASHBOARD } from '../../common/constants';
+import { isPending, isStandby, useRequestState } from '../../common/utils';
 import { resetRequestState } from '../../core/redux/ReduxActions';
-import { REDUCERS } from '../../utils/constants/ReduxConstants';
-
-const { isPending, isStandby } = ReduxUtils;
 
 const AllStudiesContainer = () => {
   const dispatch = useDispatch();
@@ -26,7 +25,7 @@ const AllStudiesContainer = () => {
 
   const data = useSelector(selectAllStudiesTableData());
 
-  const getAllStudiesTableDataRS = useRequestState([REDUCERS.DASHBOARD, GET_ALL_STUDIES_TABLE_DATA]);
+  const getAllStudiesTableDataRS = useRequestState([DASHBOARD, GET_ALL_STUDIES_TABLE_DATA]);
 
   if (isPending(getAllStudiesTableDataRS) || isStandby(getAllStudiesTableDataRS)) {
     return (

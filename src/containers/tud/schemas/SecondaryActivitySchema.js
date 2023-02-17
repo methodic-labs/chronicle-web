@@ -1,18 +1,91 @@
 // @flow
 
+import { Map } from 'immutable';
+
+import { OTHER_ACTIVITY, SECONDARY_ACTIVITY } from '../../../common/constants';
+import TranslationKeys from '../constants/TranslationKeys';
 import * as SecondaryFollowUpSchema from './SecondaryFollowUpSchema';
 
-import TranslationKeys from '../constants/TranslationKeys';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
+const getSecondaryActivityOptions = (primaryActivity :string, trans :TranslationFunction, studySettings :Map) => {
 
-const { OTHER_ACTIVITY, SECONDARY_ACTIVITY } = PROPERTY_CONSTS;
+  const primaryActivities :Object = trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
+  // $FlowIgnore
+  const primaryActivityOptions :string[] = Object.values(primaryActivities);
+  let secondaryActivityOptions :string[] = primaryActivityOptions.filter((activity) => activity !== primaryActivity);
 
-const createSchema = (primaryActivity :string, trans :TranslationFunction) => {
+  const enableChangesForSherbrookeUniversity = studySettings
+    .getIn(['TimeUseDiary', 'enableChangesForSherbrookeUniversity']) || false;
 
-  // $FlowFixMe
-  const activitiesList :string[] = Object.values(trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true }));
+  if (enableChangesForSherbrookeUniversity) {
+    switch (primaryActivity) {
+      case primaryActivities.childcare:
+      case primaryActivities.napping:
+        secondaryActivityOptions = [];
+        break;
+      case primaryActivities.eating:
+        secondaryActivityOptions = secondaryActivityOptions.filter((activity) => (
+          activity !== primaryActivities.childcare
+          && activity !== primaryActivities.napping
+          && activity !== primaryActivities.grooming
+          && activity !== primaryActivities.other
+        ));
+        break;
+      case primaryActivities.media_use:
+      case primaryActivities.reading:
+        secondaryActivityOptions = secondaryActivityOptions.filter((activity) => (
+          activity !== primaryActivities.childcare
+        ));
+        break;
+      case primaryActivities.indoor:
+        secondaryActivityOptions = secondaryActivityOptions.filter((activity) => (
+          activity !== primaryActivities.childcare
+          && activity !== primaryActivities.outdoor
+        ));
+        break;
+      case primaryActivities.outdoor:
+        secondaryActivityOptions = secondaryActivityOptions.filter((activity) => (
+          activity !== primaryActivities.childcare
+          && activity !== primaryActivities.indoor
+          && activity !== primaryActivities.grooming
+        ));
+        break;
+      case primaryActivities.grooming:
+        secondaryActivityOptions = secondaryActivityOptions.filter((activity) => (
+          activity !== primaryActivities.childcare
+          && activity !== primaryActivities.napping
+          && activity !== primaryActivities.eating
+        ));
+        break;
+      case primaryActivities.other:
+        secondaryActivityOptions = secondaryActivityOptions.filter((activity) => (
+          activity !== primaryActivities.childcare
+          && activity !== primaryActivities.outdoors
+        ));
+        break;
+      case primaryActivities.outdoors:
+        secondaryActivityOptions = secondaryActivityOptions.filter((activity) => (
+          activity !== primaryActivities.childcare
+          && activity !== primaryActivities.other
+        ));
+        break;
+      default:
+        break;
+    }
+  }
 
-  const secondaryActivityOptions :string[] = activitiesList.filter((activity :string) => activity !== primaryActivity);
+  return secondaryActivityOptions;
+};
+
+const createSchema = (primaryActivity :string, trans :TranslationFunction, studySettings :Map) => {
+
+  const secondaryActivityOptions = getSecondaryActivityOptions(primaryActivity, trans, studySettings);
+  if (secondaryActivityOptions.length === 0) {
+    return {
+      dependencies: {},
+      properties: {},
+      required: [],
+    };
+  }
 
   return {
     properties: {
@@ -25,7 +98,7 @@ const createSchema = (primaryActivity :string, trans :TranslationFunction) => {
         enum: [trans(TranslationKeys.YES), trans(TranslationKeys.NO), trans(TranslationKeys.DONT_KNOW)]
       }
     },
-    required: [OTHER_ACTIVITY],
+    required: secondaryActivityOptions.length === 0 ? [] : [OTHER_ACTIVITY],
     dependencies: {
       [OTHER_ACTIVITY]: {
         oneOf: [
@@ -64,7 +137,7 @@ const createSchema = (primaryActivity :string, trans :TranslationFunction) => {
   };
 };
 
-const createUiSchema = (trans :(string, ?Object) => Object) => ({
+const createUiSchema = (trans :TranslationFunction) => ({
   [SECONDARY_ACTIVITY]: {
     classNames: 'column-span-12',
     'ui:widget': 'checkboxes'

@@ -3,80 +3,78 @@
  */
 
 import { all, fork } from '@redux-saga/core/effects';
-import { AuthSagas } from 'lattice-auth';
 
-import * as DataSagas from './data/DataSagas';
-
-import * as AppSagas from '../../containers/app/AppSagas';
+import * as AppSagas from '../../containers/app/sagas';
+import * as AuthSagas from '../auth/sagas';
 import * as DashboardSagas from '../../containers/dashboard/sagas';
-import * as EDMSagas from '../edm/EDMSagas';
-import * as PermissionsSagas from '../permissions/PermissionsSagas';
-import * as QuestionnaireSagas from '../../containers/questionnaire/QuestionnaireSagas';
 import * as RoutingSagas from '../router/RoutingSagas';
-import * as StudiesSagas from '../../containers/studies/StudiesSagas';
-import * as SurveySagas from '../../containers/survey/SurveySagas';
-import * as TimeUseDiarySagas from '../../containers/tud/TimeUseDiarySagas';
+import * as StudySagas from '../../containers/study/sagas';
+import * as SurveySagas from '../../containers/survey/sagas';
+import * as TimeUseDiarySagas from '../../containers/tud/sagas';
 
 export default function* sagas() :Generator<*, *, *> {
 
   yield all([
-    // "lattice-auth" sagas
-    fork(AuthSagas.watchAuthAttempt),
-    fork(AuthSagas.watchAuthExpired),
-    fork(AuthSagas.watchAuthFailure),
-    fork(AuthSagas.watchAuthSuccess),
-    fork(AuthSagas.watchLogout),
+    // AuthSagas
+    fork(AuthSagas.authAttemptWatcher),
+    fork(AuthSagas.authExpiredWatcher),
+    fork(AuthSagas.authFailureWatcher),
+    fork(AuthSagas.authSuccessWatcher),
+    fork(AuthSagas.logoutWatcher),
 
     // AppSagas
-    fork(AppSagas.getAppSettingsWatcher),
-    fork(AppSagas.getConfigsWatcher),
     fork(AppSagas.initializeApplicationWatcher),
     fork(AppSagas.switchOrganizationWatcher),
 
     // DataSagas
-    fork(DataSagas.submitDataGraphWatcher),
-    fork(DataSagas.submitPartialReplaceWatcher),
+    // fork(DataSagas.submitDataGraphWatcher),
+    // fork(DataSagas.submitPartialReplaceWatcher),
 
     // EDMSagas
-    fork(EDMSagas.getEntityDataModelTypesWatcher),
+    // fork(EDMSagas.getEntityDataModelTypesWatcher),
 
     // RoutingSagas
     fork(RoutingSagas.goToRootWatcher),
     fork(RoutingSagas.goToRouteWatcher),
 
-    // studies sagas
-    fork(StudiesSagas.addStudyParticipantWatcher),
-    fork(StudiesSagas.changeEnrollmentStatusWatcher),
-    fork(StudiesSagas.createStudyWatcher),
-    fork(StudiesSagas.deleteStudyWatcher),
-    fork(StudiesSagas.deleteStudyParticipantWatcher),
-    fork(StudiesSagas.getStudiesWatcher),
-    fork(StudiesSagas.getStudyParticipantsWatcher),
-    fork(StudiesSagas.updateStudyWatcher),
+    // StudiesSagas
+    fork(StudySagas.changeEnrollmentStatusWatcher),
+    fork(StudySagas.createStudyWatcher),
+    fork(StudySagas.deleteStudyWatcher),
+    fork(StudySagas.deleteStudyParticipantsWatcher),
+    fork(StudySagas.getAllStudiesWatcher),
+    fork(StudySagas.getStudyWatcher),
+    fork(StudySagas.getStudyLimitsWatcher),
+    fork(StudySagas.getStudyParticipantsWatcher),
+    fork(StudySagas.getStudySettingsWatcher),
+    fork(StudySagas.initializeStudyWatcher),
+    fork(StudySagas.registerParticipantWatcher),
+    fork(StudySagas.verifyParticipantWatcher),
+    // fork(StudiesSagas.deleteStudyWatcher),
+    fork(StudySagas.updateStudyWatcher),
 
-    // survey
-    fork(SurveySagas.getChronicleUserAppsWatcher),
-    fork(SurveySagas.submitSurveyWatcher),
+    // apps usage survey
+    fork(SurveySagas.getAppUsageSurveyDataWatcher),
+    fork(SurveySagas.submitAppUsageSurveyWatcher),
 
     // questionnaire
-    fork(QuestionnaireSagas.changeActiveStatusWatcher),
-    fork(QuestionnaireSagas.createQuestionnaireWatcher),
-    fork(QuestionnaireSagas.deleteQuestionnaireWatcher),
-    fork(QuestionnaireSagas.downloadQuestionnaireResponsesWatcher),
-    fork(QuestionnaireSagas.getQuestionnaireResponsesWatcher),
-    fork(QuestionnaireSagas.getQuestionnaireWatcher),
-    fork(QuestionnaireSagas.getStudyQuestionnairesWatcher),
-    fork(QuestionnaireSagas.submitQuestionnaireWatcher),
+    // fork(QuestionnaireSagas.changeActiveStatusWatcher),
+    // fork(QuestionnaireSagas.createQuestionnaireWatcher),
+    // fork(QuestionnaireSagas.deleteQuestionnaireWatcher),
+    // fork(QuestionnaireSagas.downloadQuestionnaireResponsesWatcher),
+    // fork(QuestionnaireSagas.getQuestionnaireResponsesWatcher),
+    // fork(QuestionnaireSagas.getQuestionnaireWatcher),
+    // fork(QuestionnaireSagas.getStudyQuestionnairesWatcher),
+    // fork(QuestionnaireSagas.submitQuestionnaireWatcher),
 
     // permissions
-    fork(PermissionsSagas.getDeletePermissionWatcher),
+    // fork(PermissionsSagas.getDeletePermissionWatcher),
 
     // time use diary
-    fork(TimeUseDiarySagas.downloadAllTudDataWatcher),
-    fork(TimeUseDiarySagas.downloadDailyTudDataWatcher),
-    fork(TimeUseDiarySagas.getSubmissionsByDateWatcher),
-    fork(TimeUseDiarySagas.submitTudDataWatcher),
-    fork(TimeUseDiarySagas.verifyTudLinkWatcher),
+    fork(TimeUseDiarySagas.getTimeUseDiarySubmissionsByDateRangeWatcher),
+    fork(TimeUseDiarySagas.submitTimeUseDiaryWatcher),
+    // fork(TimeUseDiarySagas.downloadAllTudDataWatcher),
+    // fork(TimeUseDiarySagas.downloadDailyTudDataWatcher),
 
     fork(DashboardSagas.countAllParticipantsWatcher),
     fork(DashboardSagas.countAllStudiesWatcher),

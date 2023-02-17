@@ -2,128 +2,195 @@
  * @flow
  */
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import styled from 'styled-components';
-import { Button, Modal } from 'lattice-ui-kit';
+import {
+  Box,
+  Button,
+  DatePicker,
+  Input,
+  Modal,
+  Select,
+  Typography
+} from 'lattice-ui-kit';
 
-import DownloadQuestionnaireResponses from './DownloadQuestionnaireResponses';
-
-import ParticipantDataTypes from '../../../utils/constants/ParticipantDataTypes';
-import { getParticipantDataUrl } from '../../../utils/AppUtils';
+import getParticipantDataDownloadUrl from '../utils/getParticipantDataDownloadUrl';
+import { ParticipantDataTypes, TimeUseDiaryDataTypes } from '../../../common/constants';
 
 const {
-  APP_USAGE,
+  USAGE_EVENTS,
   PREPROCESSED,
-  QUESTIONNAIRE_RESPONSES,
-  RAW,
+  APP_USAGE_SURVEY,
+  TIME_USE_DIARY,
+  IOS_SENSOR
 } = ParticipantDataTypes;
 
-const ButtonGrid = styled.div`
-  display: grid;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  grid-template-columns: 1fr;
-  grid-gap: 10px;
-`;
+const {
+  DAYTIME,
+  NIGHTTIME,
+  SUMMARIZED
+} = TimeUseDiaryDataTypes;
+
+const dataTypeSelectorLabel = {
+  [USAGE_EVENTS]: 'Android Raw Data',
+  [IOS_SENSOR]: 'iOS Sensor Data',
+  [PREPROCESSED]: 'Preprocessed Data',
+  [APP_USAGE_SURVEY]: 'App Usage Survey Data',
+  [TIME_USE_DIARY]: 'Time Use Diary Data'
+};
+
+const timeUseDiaryDataTypeOptions = [
+  {
+    label: 'Day Time',
+    value: DAYTIME
+  },
+  {
+    label: 'Night Time',
+    value: NIGHTTIME
+  },
+  {
+    label: 'Summarized',
+    value: SUMMARIZED
+  }
+];
 
 type Props = {
   handleOnClose :() => void;
+  hasAndroidDataCollection :boolean;
+  hasIOSSensorDataCollection :boolean;
+  hasTimeUseDiary :boolean;
   isVisible :boolean;
-  participantEntityKeyId :UUID;
-  participantId :UUID;
-  selectedOrgId :UUID;
-  studyEntityKeyId :UUID;
+  participantId :string;
   studyId :UUID;
 }
 
 const DownloadParticipantDataModal = (props :Props) => {
   const {
     handleOnClose,
+    hasAndroidDataCollection,
+    hasIOSSensorDataCollection,
+    hasTimeUseDiary,
     isVisible,
-    participantEntityKeyId,
     participantId,
-    selectedOrgId,
-    studyEntityKeyId,
     studyId
   } = props;
 
-  const [questionnaireModalOpen, setQuestionnaireModalOpen] = useState(false);
+  const [dataType, setDataType] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [tudDataType, setTudDataType] = useState(null);
+  const [filename, setFilename] = useState(undefined);
+  const [isTudDataTypeSelectorVisible, setTudDataTypeSelectorVisible] = useState(false);
 
-  const handleOnClick = (event :SyntheticEvent<HTMLButtonElement>) => {
+  useEffect(() => {
+    setTudDataTypeSelectorVisible(dataType && dataType.value === TIME_USE_DIARY);
+  }, [dataType]);
+
+  const dataTypes = useMemo(() => {
+    const result = [];
+
+    if (hasAndroidDataCollection) {
+      result.push(USAGE_EVENTS);
+      result.push(PREPROCESSED);
+      result.push(APP_USAGE_SURVEY);
+    }
+    if (hasTimeUseDiary) {
+      result.push(TIME_USE_DIARY);
+    }
+
+    if (hasIOSSensorDataCollection) {
+      result.push(IOS_SENSOR);
+    }
+    return result;
+  }, [hasAndroidDataCollection, hasTimeUseDiary, hasIOSSensorDataCollection]);
+
+  const dataTypeSelectOptions = useMemo(() => dataTypes.map((type) => ({
+    value: type,
+    label: dataTypeSelectorLabel[type]
+  })), [dataTypes]);
+
+  const handleOnClick = () => {
+    const url = getParticipantDataDownloadUrl(
+      studyId,
+      participantId,
+      startDate,
+      endDate,
+      // $FlowFixMe
+      dataType?.value || null,
+      tudDataType?.value || null,
+      filename
+    );
+
+    window.open(url, '_blank');
+  };
+
+  const handleOnChange = (event :SyntheticInputEvent<HTMLInputElement>) => {
     const { currentTarget } = event;
-    const { name } = currentTarget;
-
-    let dataType;
-    switch (name) {
-      case PREPROCESSED:
-        dataType = PREPROCESSED;
-        break;
-      case APP_USAGE:
-        dataType = APP_USAGE;
-        break;
-      case QUESTIONNAIRE_RESPONSES:
-        dataType = QUESTIONNAIRE_RESPONSES;
-        break;
-      default:
-        dataType = RAW;
-        break;
-    }
-
-    if (dataType === QUESTIONNAIRE_RESPONSES) {
-      setQuestionnaireModalOpen(true);
-      return;
-    }
-
-    if (participantEntityKeyId != null) {
-      const downloadUrl = getParticipantDataUrl(dataType, participantEntityKeyId, studyId, selectedOrgId);
-      window.open(downloadUrl, '_blank');
-    }
+    const { value } = currentTarget;
+    setFilename(value);
   };
 
-  const handleOnCloseQuestionnaireModal = () => {
-    setQuestionnaireModalOpen(false);
-    handleOnClose();
-  };
+  const nonTudTypes = [USAGE_EVENTS, PREPROCESSED, APP_USAGE_SURVEY, IOS_SENSOR];
+  const isButtonEnabled = dataType && ((nonTudTypes.includes(dataType.value)) || tudDataType);
 
   const renderModalBody = () => (
-    <div>
-      <p>
-        What kind of data do you want to download?
-      </p>
-      <ButtonGrid>
-        <Button color="secondary" name={RAW} onClick={handleOnClick}>
-          Raw Data
-        </Button>
-
-        <Button color="secondary" name={PREPROCESSED} onClick={handleOnClick}>
-          Preprocessed Data
-        </Button>
-
-        <Button color="secondary" name={APP_USAGE} onClick={handleOnClick}>
-          App Usage
-        </Button>
-
-        <Button color="secondary" name={QUESTIONNAIRE_RESPONSES} onClick={handleOnClick}>
-          Questionnaire Responses
-        </Button>
-      </ButtonGrid>
-    </div>
+    <Box pb="10px">
+      <Box mb="20px">
+        <Typography>
+          What kind of data do you want to download?
+        </Typography>
+        <Select
+            options={dataTypeSelectOptions}
+            value={dataType}
+            onChange={(value) => setDataType(value)} />
+      </Box>
+      {
+        isTudDataTypeSelectorVisible && (
+          <Box mb="20px">
+            <Typography>
+              Select category
+            </Typography>
+            <Select
+                options={timeUseDiaryDataTypeOptions}
+                value={tudDataType}
+                onChange={(value) => setTudDataType(value)} />
+          </Box>
+        )
+      }
+      <Box mb="20px">
+        <Typography>
+          Select start date (optional)
+        </Typography>
+        <DatePicker
+            value={startDate}
+            onChange={(value) => setStartDate(value)} />
+      </Box>
+      <Box mb="20px">
+        <Typography>
+          Select end date (optional)
+        </Typography>
+        <DatePicker
+            value={endDate}
+            onChange={(value) => setEndDate(value)} />
+      </Box>
+      <Box mb="20px">
+        <Typography>
+          Enter download filename (optional)
+        </Typography>
+        <Input
+            onChange={handleOnChange}
+            inputProps={{ maxLength: 12 }}
+            value={filename} />
+      </Box>
+      <Button
+          color="primary"
+          disabled={!isButtonEnabled}
+          fullWidth
+          onClick={handleOnClick}>
+        Download
+      </Button>
+    </Box>
   );
-
-  if (questionnaireModalOpen) {
-    return (
-      <DownloadQuestionnaireResponses
-          isModalOpen={questionnaireModalOpen}
-          onCloseModal={handleOnCloseQuestionnaireModal}
-          participantEKID={participantEntityKeyId}
-          participantId={participantId}
-          studyEKID={studyEntityKeyId}
-          studyId={studyId} />
-    );
-  }
 
   return (
     <Modal

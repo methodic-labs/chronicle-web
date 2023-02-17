@@ -1,11 +1,13 @@
 {
   "intro_text": "Tack för att du tar dig tid att fylla i dagboken! Vi kommer först be dig att beskriva allt som barnet gjorde igår, starta med när barnet vaknade och avsluta med när barnet gick och la sig. Sedan kommer vi att fråga hur ditt barn sov i går natt. Försök att svara så bra du kan. I slutet av dagboken kommer du att kunna göra förändringar om du kom på att något blev fel.",
+  "intro_text_ctx": {},
   "choose_format": "Innan du startar, välj tidsinställning - antingen 24 timmar (det vanliga i Sverige) eller 12 timmar (vanligt t ex i USA).",
   "clock_formats": [
     "12-timmars klocka",
     "24-timmars klocka"
   ],
   "day_of_week": "Tänk på gårdagen och fundera på ditt barns dag när du fyller i dagboken. Vilken dag var det igår?",
+  "day_of_week_ctx": {},
   "weekday_options": [
     "måndag",
     "tisdag",
@@ -37,9 +39,22 @@
   "button_cancel": "Ångra",
   "button_close": "Stäng",
   "weekday": "dag",
-  "day_start_time": "Vilken tid vaknade barnet i går morse? Skriv den tiden då barnet vaknade för att gå upp, det vill säga inte om hen vaknade mitt i natten och sedan somnade om.",
-  "day_end_time": "Vilken tid somnade ditt barn i går kväll? Skriv den tiden då barnet somnade för natten. Senare i dagboken kommer vi fråga hur ofta ditt barn vaknade under natten.",
-  "today_wakeup_time": "Vilken tid vaknade barnet i morse?",
+  "bed_time_before_activity_day": "$t(bed_time_last_night)",
+  "bed_time_last_night": "Vilken tid somnade ditt barn i går kväll? Skriv den tiden då barnet somnade för natten. Senare i dagboken kommer vi fråga hur ofta ditt barn vaknade under natten.",
+  "bed_time_tonight": "",
+  "wake_up_time_after_activity_day": "$t(wake_up_time_this_morning)",
+  "wake_up_time_this_morning": "Vilken tid vaknade barnet i morse?",
+  "wake_up_time_yesterday_morning": "Vilken tid vaknade barnet i går morse? Skriv den tiden då barnet vaknade för att gå upp, det vill säga inte om hen vaknade mitt i natten och sedan somnade om.",
+  "day_start_time": "$t(day_start_time_ctx.wake_up_time)",
+  "day_start_time_ctx": {
+    "wake_up_time_today": "$t(wake_up_time_this_morning)",
+    "wake_up_time_yesterday": "$t(wake_up_time_yesterday_morning)"
+  },
+  "day_end_time": "$t(day_end_time_ctx.bed_time)",
+  "day_end_time_ctx": {
+    "bed_time_today": "$t(bed_time_tonight)",
+    "bed_time_yesterday": "$t(bed_time_last_night)"
+  },
   "default_time": "Fyll i tider genom att skriva tiden i rutan (tex 07:00) eller klicka på klockan för att välja rätt tid.",
   "primary_activities": {
     "childcare": "vara på skolan/förskolan",
@@ -141,6 +156,9 @@
   "error_end_past_bedtime": "Dagens sista aktivitet bör sluta klockan {{time}} eftersom du skrev att barnet gick och la sig då",
   "summary_title": "Här är en sammanfattning av vad ditt barn gjorde igår. Kolla igenom att allt stämmer innan du trycker på skicka in! Tack!",
   "button_edit": "Ändra",
+  "child_went_to_bed_last_night": "",
+  "child_went_to_bed_tonight": "",
+  "child_woke_up_today": "",
   "child_woke_up": "Barnet vaknade",
   "sleeping": "Sover",
   "change_language_warning": "Är du säker på att du vill ändra språk? Detta kommer att radera alla ändringar du gjort.",

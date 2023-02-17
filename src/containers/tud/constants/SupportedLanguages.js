@@ -1,5 +1,6 @@
 // @flow
-import * as LanguageCodes from '../../../utils/constants/LanguageCodes';
+
+import { LanguageCodes } from '../../../common/constants';
 
 export default [
   {

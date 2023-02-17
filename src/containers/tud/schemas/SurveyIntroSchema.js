@@ -2,11 +2,10 @@
 
 import { DataProcessingUtils } from 'lattice-fabricate';
 
+import { ACTIVITY_DATE, ACTIVITY_DAY, CLOCK_FORMAT } from '../../../common/constants';
 import TranslationKeys from '../constants/TranslationKeys';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
 
 const { getPageSectionKey } = DataProcessingUtils;
-const { CLOCK_FORMAT } = PROPERTY_CONSTS;
 
 const createSchema = (trans :TranslationFunction) => ({
   type: 'object',
@@ -16,6 +15,12 @@ const createSchema = (trans :TranslationFunction) => ({
       type: 'object',
       title: '',
       properties: {
+        [ACTIVITY_DATE]: {
+          type: 'string',
+        },
+        [ACTIVITY_DAY]: {
+          type: 'string',
+        },
         [CLOCK_FORMAT]: {
           title: trans(TranslationKeys.CHOOSE_FORMAT),
           type: 'number',
@@ -32,6 +37,12 @@ const createSchema = (trans :TranslationFunction) => ({
 const uiSchema = {
   [getPageSectionKey(0, 0)]: {
     classNames: 'column-span-12 grid-container',
+    [ACTIVITY_DATE]: {
+      classNames: 'hidden',
+    },
+    [ACTIVITY_DAY]: {
+      classNames: 'hidden',
+    },
     [CLOCK_FORMAT]: {
       classNames: 'column-span-12',
     },

@@ -2,17 +2,9 @@
 import {
   List,
   Map,
-  get,
+  Set,
 } from 'immutable';
-import { Constants } from 'lattice';
 import { DateTime } from 'luxon';
-
-import AppUsageFreqTypes from '../../../utils/constants/AppUsageFreqTypes';
-import { PROPERTY_TYPE_FQNS } from '../../../core/edm/constants/FullyQualifiedNames';
-import type { AppUsageFreqType } from '../../../utils/constants/AppUsageFreqTypes';
-
-const { OPENLATTICE_ID_FQN } = Constants;
-const { DATE_TIME_FQN, TITLE_FQN, USER_FQN } = PROPERTY_TYPE_FQNS;
 
 const getAppNameFromUserAppsEntity = (entity :Map) => {
   const titleFQNValues :List = entity.getIn(['entityDetails', 'ol.title'], List());
@@ -23,18 +15,12 @@ const getAppNameFromUserAppsEntity = (entity :Map) => {
   return titleFQNValues.first();
 };
 
-const getAppUsageDate = (appData :Map) => {
-  const date = appData.getIn(['associationDetails', DATE_TIME_FQN, 0]);
-  return DateTime.fromISO(date).toLocaleString(DateTime.TIME_SIMPLE);
-};
-
-const createSurveyFormSchema = (userApps :Map, appUsageFreqType :AppUsageFreqType) => {
-  const schemaProperties :Object = userApps.map((app) => ({
-    title: app.getIn(['entityDetails', TITLE_FQN, 0]),
-    description: appUsageFreqType === AppUsageFreqTypes.HOURLY ? getAppUsageDate(app) : 'Select all that apply',
+const createSurveyFormSchema = (userApps :Map) => {
+  const schemaProperties :Object = userApps.map((mappedValues) => ({
+    title: mappedValues.first().get('appLabel'),
+    description: 'Select all that apply',
     type: 'array',
     uniqueItems: true,
-    minItems: 1,
     items: {
       type: 'string',
       enum: ['Parent alone', 'Child alone', 'Parent and child together', 'Other family member']
@@ -76,33 +62,55 @@ const createSurveyFormSchema = (userApps :Map, appUsageFreqType :AppUsageFreqTyp
   };
 };
 
-const createInitialFormData = (userApps :Map) => userApps
-  .map((app) => app.getIn(['associationDetails', USER_FQN], List()))
-  .toJS();
+// const createInitialFormData = (userApps :Map) => userApps
+//   .map((app) => app.getIn(['associationDetails', USER_FQN], List()))
+//   .toJS();
 
-const createSubmissionData = (formData :Object) => {
-  const entities = Object.entries(formData).map(([entityKeyId, selectedUsers]) => ({
-    [OPENLATTICE_ID_FQN]: entityKeyId,
-    [USER_FQN.toString()]: selectedUsers
-  }));
+const createSubmissionData = (formData :Object, userApps :Map) => {
+  const unknown = "I don't know";
+  return List().withMutations((mutator) => {
+    userApps
+      .filter((mappedValues, appName) => appName in formData && formData[appName][0] !== unknown)
+      .forEach((usages, appName) => {
+        usages.forEach((usage) => {
+          const updated = usage.set('users', List(formData[appName]));
+          mutator.push(updated);
+        });
+      });
+  }).toJS();
+};
 
-  /* eslint-disable no-param-reassign */
-  return entities.reduce((result, entity) => {
-    const entityKeyId = get(entity, OPENLATTICE_ID_FQN);
-    delete entity[OPENLATTICE_ID_FQN];
-    result[entityKeyId] = entity;
-    return result;
-  }, {});
-  /* eslint-enable */
+const createHourlySurveySubmissionData = (data :Map, selectedApps :Set, timeRangeSelections :Map) => {
+  const user = 'Target Child';
+
+  return List().withMutations((mutator) => {
+    data.filter((v, k) => selectedApps.has(k)).valueSeq().forEach((mappedValues) => {
+      mappedValues.get('data').valueSeq().forEach((usages) => {
+        usages.forEach((usage) => {
+          const updated = usage.set('users', List([user]));
+          mutator.push(updated);
+        });
+      });
+    });
+
+    timeRangeSelections.forEach((selections, appName) => {
+      selections.forEach((timeRange) => {
+        data.getIn([appName, 'data', timeRange]).forEach((usage) => {
+          const updated = usage.set('users', List([user]));
+          mutator.push(updated);
+        });
+      });
+    });
+  }).toJS();
 };
 
 const getMinimumDate = (dates :List) => dates
   .map((date) => DateTime.fromISO(date)).filter((date) => date.isValid).min();
 
 export {
-  getMinimumDate,
-  createInitialFormData,
+  createHourlySurveySubmissionData,
   createSubmissionData,
   createSurveyFormSchema,
-  getAppNameFromUserAppsEntity
+  getAppNameFromUserAppsEntity,
+  getMinimumDate,
 };

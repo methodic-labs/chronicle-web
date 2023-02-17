@@ -1,6 +1,9 @@
 // @flow
 
-import styled from 'styled-components';
+import { useState } from 'react';
+
+import { faExclamationCircle } from '@fortawesome/pro-light-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getIn, merge, setIn } from 'immutable';
 import { DataProcessingUtils, Form } from 'lattice-fabricate';
 import { Button } from 'lattice-ui-kit';
@@ -8,49 +11,62 @@ import { set, unset } from 'lodash';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
+import styled from 'styled-components';
+
 import type { RequestState } from 'redux-reqseq';
 
-import ContextualQuestionsIntro from './ContextualQuestionsIntro';
-import SurveyIntro from './SurveyIntro';
-import TimeUseSummary from './TimeUseSummary';
-
-import TranslationKeys from '../constants/TranslationKeys';
-import * as SecondaryFollowUpSchema from '../schemas/SecondaryFollowUpSchema';
-import { submitTudData } from '../TimeUseDiaryActions';
-import { PAGE_NUMBERS } from '../constants/GeneralConstants';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
 import {
-  applyCustomValidation,
-  selectPrimaryActivityByPage,
-  selectTimeByPageAndKey
-} from '../utils';
-
-const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
-
-const {
   ACTIVITY_END_TIME,
   ACTIVITY_START_TIME,
   DAY_END_TIME,
   DAY_OF_WEEK,
   DAY_START_TIME,
+  FAMILY_ID,
+  FORM_DATA,
   HAS_FOLLOWUP_QUESTIONS,
+  LANGUAGE,
+  ORGANIZATION_ID,
+  PARTICIPANT_ID,
   SECONDARY_ACTIVITY,
   SLEEP_ARRANGEMENT,
+  STUDY_ID,
+  TRANSLATION_DATA,
   TYPICAL_DAY_FLAG,
-} = PROPERTY_CONSTS;
+  WAVE_ID,
+} from '../../../common/constants';
+import { submitTimeUseDiary } from '../actions';
+import { DAY_SPAN_PAGE } from '../constants';
+import TranslationKeys from '../constants/TranslationKeys';
+import * as SecondaryFollowUpSchema from '../schemas/SecondaryFollowUpSchema';
+import {
+  applyCustomValidation,
+  getDateTimeFromData,
+  isFirstActivityPage,
+  selectPrimaryActivityByPage,
+  updateActivityDateAndDay
+} from '../utils';
+import isIntroPage from '../utils/isIntroPage';
+import isPreSurveyPage from '../utils/isPreSurveyPage';
+import ContextualQuestionsIntro from './ContextualQuestionsIntro';
+import SurveyIntro from './SurveyIntro';
+import TimeUseSummary from './TimeUseSummary';
 
-const {
-  DAY_SPAN_PAGE,
-  FIRST_ACTIVITY_PAGE,
-  PRE_SURVEY_PAGE,
-  SURVEY_INTRO_PAGE,
-} = PAGE_NUMBERS;
+const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
 
 const ButtonRow = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
   margin-top: 30px;
+`;
+
+const NextButtonWrapper = styled.div`
+  align-items: center;
+  display: flex;
+
+  svg {
+    margin-right: 16px;
+  }
 `;
 
 /*
@@ -65,7 +81,7 @@ const ButtonRow = styled.div`
 
 const removeExtraData = (formRef :Object, pagedData, page :number) => {
   const psk = getPageSectionKey(page, 0);
-  const dayEndTime :?DateTime = selectTimeByPageAndKey(DAY_SPAN_PAGE, DAY_END_TIME, pagedData);
+  const dayEndTime :?DateTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, pagedData);
   const formData :Object = formRef?.current?.state?.formData || {};
 
   const currEndTime = formData[psk]?.[ACTIVITY_END_TIME];
@@ -108,13 +124,17 @@ const removeExtraData = (formRef :Object, pagedData, page :number) => {
  * to update the form data state accordingly through the schema's property default value,
  * hence the need for this function.
  */
-const forceFormDataStateUpdate = (formRef :Object, pagedData :Object = {}, page :number) => {
+const forceFormDataStateUpdate = (formRef, pagedData = {}, page, activityDay) => {
   const psk = getPageSectionKey(page, 0);
-  const prevEndTime = selectTimeByPageAndKey(
-    page - 1, (page === FIRST_ACTIVITY_PAGE ? DAY_START_TIME : ACTIVITY_END_TIME), pagedData
+  const prevEndTime = getDateTimeFromData(
+    page - 1,
+    (isFirstActivityPage(page, activityDay) ? DAY_START_TIME : ACTIVITY_END_TIME),
+    pagedData,
   );
-  const activityStartTime = selectTimeByPageAndKey(
-    page - 1, (page === FIRST_ACTIVITY_PAGE ? DAY_START_TIME : ACTIVITY_START_TIME), pagedData
+  const activityStartTime = getDateTimeFromData(
+    page - 1,
+    (isFirstActivityPage(page, activityDay) ? DAY_START_TIME : ACTIVITY_START_TIME),
+    pagedData,
   );
 
   // current page already contains form data
@@ -139,7 +159,7 @@ const forceFormDataStateUpdate = (formRef :Object, pagedData :Object = {}, page 
   }
 };
 
-const updateTypicalDayLabel = (formData :Object, page :number, trans :(string, ?Object) => string) => {
+const updateTypicalDayLabel = (formData :Object, page :number, trans :TranslationFunction, activityDay :string) => {
   const psk = getPageSectionKey(page, 0);
   const dayOfWeek = getIn(formData, [psk, DAY_OF_WEEK]);
   if (dayOfWeek) {
@@ -147,7 +167,7 @@ const updateTypicalDayLabel = (formData :Object, page :number, trans :(string, ?
     const label = typicalDayInput?.previousSibling;
     if (label) {
       // $FlowFixMe
-      label.innerHTML = trans(TranslationKeys.TYPICAL_DAY, { day: dayOfWeek });
+      label.innerHTML = trans(TranslationKeys.TYPICAL_DAY, { activityDay, day: dayOfWeek });
     }
   }
 };
@@ -186,6 +206,7 @@ type TudActivities = {|
 |};
 
 type Props = {
+  activityDay :string;
   familyId :?string;
   formSchema :Object;
   initialFormData :Object;
@@ -206,6 +227,7 @@ type Props = {
 };
 
 const QuestionnaireForm = ({
+  activityDay,
   familyId,
   formSchema,
   initialFormData,
@@ -239,6 +261,8 @@ const QuestionnaireForm = ({
 
   const dispatch = useDispatch();
 
+  const [hasErrors, setHasErrors] = useState(false);
+
   const { schema, uiSchema } = formSchema;
 
   const activities :TudActivities = trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
@@ -248,20 +272,22 @@ const QuestionnaireForm = ({
 
   const handleNext = () => {
     if (isSummaryPage) {
-      dispatch(submitTudData({
-        familyId,
-        formData: pagedData,
-        organizationId,
-        participantId,
-        studyId,
-        waveId,
-        language,
-        translationData
-      }));
+      dispatch(
+        submitTimeUseDiary({
+          [FAMILY_ID]: familyId,
+          [FORM_DATA]: pagedData,
+          [LANGUAGE]: language,
+          [ORGANIZATION_ID]: organizationId,
+          [PARTICIPANT_ID]: participantId,
+          [STUDY_ID]: studyId,
+          [TRANSLATION_DATA]: translationData,
+          [WAVE_ID]: waveId,
+        })
+      );
       return;
     }
 
-    forceFormDataStateUpdate(formRef, pagedData, page);
+    forceFormDataStateUpdate(formRef, pagedData, page, activityDay);
     validateAndSubmit();
   };
 
@@ -304,14 +330,15 @@ const QuestionnaireForm = ({
   const onChange = ({ formData, schema: currentSchema, uiSchema: currentUiSchema }) => {
     updatePrimaryActivityQuestion(formData, page, trans);
 
-    if (page === PRE_SURVEY_PAGE) {
-      updateTypicalDayLabel(formData, page, trans);
+    if (isPreSurveyPage(page)) {
+      updateTypicalDayLabel(formData, page, trans, activityDay);
     }
 
     if (schemaHasFollowupQuestions(currentSchema, page)) {
       updateFormSchema(formData, currentSchema, currentUiSchema);
     }
 
+    updateActivityDateAndDay(formData, activityDay);
     updateSurveyProgress(formData);
   };
 
@@ -336,13 +363,23 @@ const QuestionnaireForm = ({
 
   const schemaHasFollowup = schemaHasFollowupQuestions(schema, page);
   const prevActivity = selectPrimaryActivityByPage(page - 1, pagedData);
-  const prevEndTime = selectTimeByPageAndKey(page - 1, ACTIVITY_START_TIME, pagedData);
+  const prevEndTime = getDateTimeFromData(page - 1, ACTIVITY_START_TIME, pagedData);
+
+  const onSubmit = () => {
+    setHasErrors(false);
+    onNext();
+  };
+
+  const onError = () => {
+    setHasErrors(true);
+  };
 
   return (
     <>
       {
         isSummaryPage ? (
           <TimeUseSummary
+              activityDay={activityDay}
               formData={pagedData}
               goToPage={setPage} />
         ) : (
@@ -356,14 +393,15 @@ const QuestionnaireForm = ({
               )
             }
             {
-              page === SURVEY_INTRO_PAGE && <SurveyIntro />
+              isIntroPage(page) && <SurveyIntro activityDay={activityDay} />
             }
             <Form
                 formData={initialFormData}
                 hideSubmit
                 noPadding
                 onChange={onChange}
-                onSubmit={onNext}
+                onError={onError}
+                onSubmit={onSubmit}
                 ref={formRef}
                 schema={schema}
                 transformErrors={transformErrors}
@@ -373,21 +411,27 @@ const QuestionnaireForm = ({
           </>
         )
       }
-
       <ButtonRow>
         <Button
             disabled={page === 0 || submitRequestState === RequestStates.PENDING}
             onClick={onBack}>
           {trans(TranslationKeys.BTN_BACK)}
         </Button>
-        <Button
-            color="primary"
-            isLoading={submitRequestState === RequestStates.PENDING}
-            onClick={handleNext}>
+        <NextButtonWrapper>
           {
-            isSummaryPage ? trans(TranslationKeys.BTN_SUBMIT) : trans(TranslationKeys.BTN_NEXT)
+            hasErrors && (
+              <FontAwesomeIcon color="#ff3c5d" icon={faExclamationCircle} size="lg" />
+            )
           }
-        </Button>
+          <Button
+              color="primary"
+              isLoading={submitRequestState === RequestStates.PENDING}
+              onClick={handleNext}>
+            {
+              isSummaryPage ? trans(TranslationKeys.BTN_SUBMIT) : trans(TranslationKeys.BTN_NEXT)
+            }
+          </Button>
+        </NextButtonWrapper>
       </ButtonRow>
     </>
   );

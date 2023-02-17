@@ -22,7 +22,7 @@ module.exports = (env) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        favicon: `${SOURCE}/assets/images/ol_favicon.png`,
+        favicon: `${SOURCE}/assets/svg/icons/ol-icon.svg`,
         template: `${SOURCE}/index.html`,
       }),
       ...baseConfig.plugins

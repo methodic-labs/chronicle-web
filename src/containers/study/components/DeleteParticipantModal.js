@@ -1,57 +1,37 @@
 // @flow
 
 import {
-// $FlowFixMe
   Box,
   Modal,
   ModalFooter,
-  Spinner,
-  Typography
+  Typography,
 } from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
 import type { RequestState } from 'redux-reqseq';
 
-type Props = {
-  handleOnClose :() => void;
-  handleOnDeleteParticipant :() => void;
-  isVisible :boolean;
-  participantId :UUID;
-  requestState :?RequestState;
-}
+import {
+  isFailure,
+  isPending,
+  isStandby,
+  isSuccess,
+} from '../../../common/utils';
+
 const DeleteParticipantModal = ({
   handleOnClose,
   handleOnDeleteParticipant,
   isVisible,
   participantId,
-  requestState
-} :Props) => {
+  requestState,
+} :{
+  handleOnClose :() => void;
+  handleOnDeleteParticipant :() => void;
+  isVisible :boolean;
+  participantId :UUID;
+  requestState :?RequestState;
+}) => {
 
   const textPrimary = 'Delete';
   const textSecondary = 'Cancel';
-
-  const requestStateComponents = {
-    [RequestStates.STANDBY]: (
-      <Typography>
-        {`Are you sure you want to delete ${participantId}'s data? This action is permanent and cannot be undone.`}
-      </Typography>
-    ),
-    [RequestStates.PENDING]: (
-      <Box textAlign="center">
-        <Spinner size="2x" />
-        <Typography>Deleting participant&apos;s data. Please wait.</Typography>
-      </Box>
-    ),
-    [RequestStates.FAILURE]: (
-      <Typography>
-        Failed to delete participant. Please try again or contact support@openlattice.com.
-      </Typography>
-    ),
-    [RequestStates.SUCCESS]: (
-      <Typography>
-        Your request to delete participant&apos;s data has been successfully submitted.
-      </Typography>
-    )
-  };
 
   const renderFooter = () => {
     if (requestState === RequestStates.PENDING) {
@@ -81,6 +61,10 @@ const DeleteParticipantModal = ({
     );
   };
 
+  const areYouSure = (
+    `Are you sure you want to delete ${participantId}'s data? This action is permanent and cannot be undone.`
+  );
+
   return (
     <Modal
         isVisible={isVisible}
@@ -94,7 +78,25 @@ const DeleteParticipantModal = ({
         withFooter={renderFooter}>
       <Box maxWidth="500px">
         {
-          requestStateComponents[requestState || RequestStates.STANDBY]
+          (isStandby(requestState) || isPending(requestState)) && (
+            <Typography>
+              {areYouSure}
+            </Typography>
+          )
+        }
+        {
+          isSuccess(requestState) && (
+            <Typography>
+              Your request to delete participant&apos;s data has been successfully submitted.
+            </Typography>
+          )
+        }
+        {
+          isFailure(requestState) && (
+            <Typography>
+              Failed to delete participant. Please try again or contact support@openlattice.com.
+            </Typography>
+          )
         }
       </Box>
     </Modal>

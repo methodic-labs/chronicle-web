@@ -1,21 +1,16 @@
 // @flow
 
+import styled from 'styled-components';
+import {
+  Button,
+  DatePicker,
+  Label,
+  Typography
+} from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
-
-import { ReduxUtils } from 'lattice-utils';
-
 import type { RequestState } from 'redux-reqseq';
 
-import {
-  Typography,
-  Button,
-  Label,
-  DatePicker
-} from 'lattice-ui-kit';
-
-import styled from 'styled-components';
-
-const { isPending } = ReduxUtils;
+import { isPending } from '../../../common/utils';
 
 const SearchGrid = styled.div`
   align-items: end;
@@ -50,16 +45,17 @@ const SearchPanel = (props :Props) => {
           <Label subtle> Start Date </Label>
           <DatePicker
               value={startDate}
-              onChange={(value) => onSetDate('startDate', value)} />
+              onChange={(value) => onSetDate('selectedStartDate', value)} />
         </div>
         <div>
           <Label subtle> End Date </Label>
           <DatePicker
               value={endDate}
-              onChange={(value) => onSetDate('endDate', value)} />
+              onChange={(value) => onSetDate('selectedEndDate', value)} />
         </div>
         <div />
         <Button
+            disabled={!endDate || !startDate}
             isLoading={isPending(getSubmissionsRS)}
             onClick={onGetSubmissions}>
           Search

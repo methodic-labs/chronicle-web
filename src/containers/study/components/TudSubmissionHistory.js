@@ -2,41 +2,34 @@
 
 import { OrderedSet } from 'immutable';
 import {
-  // $FlowFixMe
   Box,
-  // $FlowFixMe
   List,
-  // $FlowFixMe
   ListItem,
-  // $FlowFixMe
   ListItemText,
-  // $FlowFixMe
   ListSubheader,
   Modal,
   Typography
 } from 'lattice-ui-kit';
-import { DateTimeUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { useSelector } from 'react-redux';
 
+import { formatDateTime } from '../../../common/utils';
 import { selectTudSubmissionDates } from '../../tud/TimeUseDiarySelectors';
-
-const { formatDateTime } = DateTimeUtils;
 
 type Props = {
   handleOnClose :() => void;
   isVisible :boolean;
-  participantEntityKeyId :UUID;
+  candidateId :UUID;
   participantId :UUID;
 }
 
 const TudSubmissionHistory = ({
   handleOnClose,
   isVisible,
-  participantEntityKeyId,
+  candidateId,
   participantId
 } :Props) => {
-  const data :OrderedSet = useSelector(selectTudSubmissionDates(participantEntityKeyId));
+  const data :OrderedSet = useSelector(selectTudSubmissionDates(candidateId));
 
   return (
     <Modal

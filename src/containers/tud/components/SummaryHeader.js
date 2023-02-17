@@ -1,39 +1,45 @@
 // @flow
 
 import styled from 'styled-components';
-import { List } from 'immutable';
-import { Typography } from 'lattice-ui-kit';
-import type { RequestState } from 'redux-reqseq';
+import { Colors, Typography } from 'lattice-ui-kit';
+import { DateTime } from 'luxon';
 
 import DownloadAllButton from './DownloadAllButton';
 
 import type { DataType } from '../constants/DataTypes';
 
+const { NEUTRAL } = Colors;
+
 const Wrapper = styled.div`
+  align-items: flex-end;
+  background: white;
+  border-bottom: 1px solid ${NEUTRAL.N100};
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
   grid-gap: 30px;
+  grid-template-columns: auto auto 1fr auto;
   margin-bottom: 10px;
+  padding-bottom: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 `;
 
-// TODO: Add additional button to download summarized
-
 type Props = {
-  onDownloadData :(entity :?List, date :?string, dataType :DataType) => void;
-  downloadAllDataRS :?RequestState;
+  onDownloadData :(date :?DateTime, dataType :DataType) => void;
 }
 
-const SummaryHeader = ({ onDownloadData, downloadAllDataRS } :Props) => (
+const SummaryHeader = ({ onDownloadData } :Props) => (
   <Wrapper>
-    <Typography variant="overline" display="block" gutterBottom>
+    <Typography variant="overline" display="block">
       Date
     </Typography>
 
-    <Typography variant="overline" display="block" gutterBottom>
+    <Typography variant="overline" display="block">
       Number of Submissions
     </Typography>
     <div />
-    <DownloadAllButton downloadAllDataRS={downloadAllDataRS} onDownloadData={onDownloadData} />
+    <DownloadAllButton
+        onDownloadData={onDownloadData} />
   </Wrapper>
 );
 

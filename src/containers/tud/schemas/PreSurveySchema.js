@@ -1,22 +1,14 @@
 // @flow
 
 import { DataProcessingUtils } from 'lattice-fabricate';
+import { DAY_OF_WEEK, NON_TYPICAL_DAY_REASON, TYPICAL_DAY_FLAG } from '../../../common/constants';
 
+import { PRE_SURVEY_PAGE } from '../constants';
 import TranslationKeys from '../constants/TranslationKeys';
-import { PAGE_NUMBERS } from '../constants/GeneralConstants';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
 
 const { getPageSectionKey } = DataProcessingUtils;
 
-const { PRE_SURVEY_PAGE } = PAGE_NUMBERS;
-
-const {
-  DAY_OF_WEEK,
-  NON_TYPICAL_DAY_REASON,
-  TYPICAL_DAY_FLAG
-} = PROPERTY_CONSTS;
-
-const createSchema = (trans :(string, ?Object) => string) => ({
+const createSchema = (trans :TranslationFunction, activityDay :string) => ({
   type: 'object',
   title: '',
   properties: {
@@ -25,16 +17,16 @@ const createSchema = (trans :(string, ?Object) => string) => ({
       title: '',
       properties: {
         [DAY_OF_WEEK]: {
-          title: trans(TranslationKeys.DAY_OF_WEEK),
+          title: trans(TranslationKeys.DAY_OF_WEEK, { activityDay, context: activityDay }),
           // $FlowFixMe
           enum: trans(TranslationKeys.WEEKDAY_OPTIONS, { returnObjects: true }),
           type: 'string'
         },
         [TYPICAL_DAY_FLAG]: {
-          title: trans(TranslationKeys.TYPICAL_DAY, { day: trans(TranslationKeys.WEEKDAY) }),
+          title: trans(TranslationKeys.TYPICAL_DAY, { activityDay, day: trans(TranslationKeys.WEEKDAY) }),
           type: 'string',
           enum: [trans(TranslationKeys.YES), trans(TranslationKeys.NO)],
-          enumNames: trans(TranslationKeys.TYPICAL_DAY_CHOICES, { returnObjects: true })
+          enumNames: trans(TranslationKeys.TYPICAL_DAY_CHOICES, { activityDay, returnObjects: true })
         }
       },
       dependencies: {
@@ -53,7 +45,7 @@ const createSchema = (trans :(string, ?Object) => string) => ({
                   enum: [trans(TranslationKeys.NO)]
                 },
                 [NON_TYPICAL_DAY_REASON]: {
-                  title: trans(TranslationKeys.NON_TYPICAL_DAY),
+                  title: trans(TranslationKeys.NON_TYPICAL_DAY, { activityDay }),
                   type: 'array',
                   items: {
                     type: 'string',

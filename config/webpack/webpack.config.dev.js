@@ -18,13 +18,17 @@ module.exports = (env) => {
   return {
     ...baseConfig,
     devServer: {
-      contentBase: BUILD,
+      devMiddleware: {
+        publicPath: baseConfig.output.publicPath,
+      },
       historyApiFallback: {
         index: baseConfig.output.publicPath,
       },
       hot: true,
       port: DEV_SERVER_PORT,
-      publicPath: baseConfig.output.publicPath,
+      static: {
+        directory: BUILD,
+      },
     },
     devtool: false,
     output: {
@@ -33,7 +37,7 @@ module.exports = (env) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        favicon: `${SOURCE}/assets/images/ol_favicon.png`,
+        favicon: `${SOURCE}/assets/svg/icons/ol-icon.svg`,
         template: `${SOURCE}/index.html`,
       }),
       ...baseConfig.plugins

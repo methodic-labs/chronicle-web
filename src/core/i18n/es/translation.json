@@ -1,11 +1,13 @@
 {
   "intro_text": "¡Gracias por tormarse el tiempo de completar el cuestionario! En primer lugar, le vamos a pedir que describa todo lo que hizo su hijo ayer, comenzando por cuando su hijo se despertó ayer por la mañana y terminando por cuando se acostó por la noche. Luego, le preguntaremos por cómo durmió su hijo anoche. Responda a las preguntas lo mejor que pueda. Al final de la encuesta, podrá realizar cambios si lo desea.",
+  "intro_text_ctx": {},
   "choose_format": "Para comenzar, seleccione por favor el formato de reloj que prefiera.",
   "clock_formats": [
     "Formato de reloj de 12 horas",
     "Formato de reloj de 24 horas"
   ],
   "day_of_week": "Nos gustaría que pensara cómo es un día de su hijo y que completara este Diario de Uso del Tiempo pensando en qué hizo ayer. ¿Qué día de la semana fue ayer?",
+  "day_of_week_ctx": {},
   "weekday_options": [
     "Lunes",
     "Martes",
@@ -37,9 +39,22 @@
   "button_cancel": "Cancelar",
   "button_close": "Cerrar",
   "weekday": "Día entre semana",
-  "day_start_time": "¿A qué hora se despertó su hijo ayer por la mañana? Por favor, piense en cuando se despertó totalmente su hijo para comenzar el día, no tanto si se despertó en mitad de la noche y se volvió a dormir.",
-  "day_end_time": "¿A qué hora se quedó dormido su hijo la pasada noche? Por favor, piense en cuando su hijo se quedó dormido por primera vez por la noche. Más tarde en el cuestionario le preguntaremos por cuántas veces se despertó su hijo en mitad de la noche.",
-  "today_wakeup_time": "¿A qué hora se despertó su hijo esta mañana?",
+  "bed_time_before_activity_day": "$t(bed_time_last_night)",
+  "bed_time_last_night": "¿A qué hora se quedó dormido su hijo la pasada noche? Por favor, piense en cuando su hijo se quedó dormido por primera vez por la noche. Más tarde en el cuestionario le preguntaremos por cuántas veces se despertó su hijo en mitad de la noche.",
+  "bed_time_tonight": "",
+  "wake_up_time_after_activity_day": "$t(wake_up_time_this_morning)",
+  "wake_up_time_this_morning": "¿A qué hora se despertó su hijo esta mañana?",
+  "wake_up_time_yesterday_morning": "¿A qué hora se despertó su hijo ayer por la mañana? Por favor, piense en cuando se despertó totalmente su hijo para comenzar el día, no tanto si se despertó en mitad de la noche y se volvió a dormir.",
+  "day_start_time": "$t(day_start_time_ctx.wake_up_time)",
+  "day_start_time_ctx": {
+    "wake_up_time_today": "$t(wake_up_time_this_morning)",
+    "wake_up_time_yesterday": "$t(wake_up_time_yesterday_morning)"
+  },
+  "day_end_time": "$t(day_end_time_ctx.bed_time)",
+  "day_end_time_ctx": {
+    "bed_time_today": "$t(bed_time_tonight)",
+    "bed_time_yesterday": "$t(bed_time_last_night)"
+  },
   "default_time": "Por favor, introduzca la hora escribiendo en el recuadro de abajo (ej., 07:00 AM) or dando a click en el botón del reloj.",
   "primary_activities": {
     "childcare": "Ir al colegio/guardería",
@@ -141,6 +156,9 @@
   "error_end_past_bedtime": "La última actividad del día debe terminar a las {{time}} ya que indicaste que el niño se fue a la cama en ese momento",
   "summary_title": "Aquí hay un resumen de cómo su hijo pasó el día. Asegúrese de que esta información sea correcta antes de enviar la encuesta.",
   "button_edit": "Editar",
+  "child_went_to_bed_last_night": "",
+  "child_went_to_bed_tonight": "",
+  "child_woke_up_today": "",
   "child_woke_up": "El niño de despertó",
   "sleeping": "Dormir",
   "change_language_warning": "¿Está seguro que quiere cambiar el idioma? Esto deshará todos los cambios que ha hecho hasta el momento.",

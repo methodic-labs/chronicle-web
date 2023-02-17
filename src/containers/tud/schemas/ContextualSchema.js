@@ -1,18 +1,15 @@
 // @flow
 
-import merge from 'lodash/merge';
+import { Map } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
+import merge from 'lodash/merge';
 import { DateTime } from 'luxon';
 
 import * as FollowupSchema from './FollowupSchema';
 import * as SecondaryActivitySchema from './SecondaryActivitySchema';
 import * as SecondaryFollowUpSchema from './SecondaryFollowUpSchema';
 
-import TranslationKeys from '../constants/TranslationKeys';
-import { PROPERTY_CONSTS } from '../constants/SchemaConstants';
-
-const { getPageSectionKey } = DataProcessingUtils;
-const {
+import {
   ACTIVITY_END_TIME,
   ACTIVITY_NAME,
   ACTIVITY_START_TIME,
@@ -33,7 +30,10 @@ const {
   SECONDARY_MEDIA_ACTIVITY,
   SECONDARY_MEDIA_AGE,
   SECONDARY_MEDIA_NAME,
-} = PROPERTY_CONSTS;
+} from '../../../common/constants';
+import TranslationKeys from '../constants/TranslationKeys';
+
+const { getPageSectionKey } = DataProcessingUtils;
 
 const createSchema = (
   pageNum :number,
@@ -42,7 +42,8 @@ const createSchema = (
   prevEndTime :DateTime,
   isSecondaryReadingSelected :boolean,
   isSecondaryMediaSelected :boolean,
-  trans :(string, ?Object) => Object
+  trans :TranslationFunction,
+  studySettings :Map,
 ) => {
 
   const psk = getPageSectionKey(pageNum, 0);
@@ -53,7 +54,7 @@ const createSchema = (
   const secondaryMediaSchema = SecondaryFollowUpSchema.createSchema(activities.media_use, trans);
 
   const followupSchema = FollowupSchema.createSchema(selectedActivity, trans);
-  const secondaryActivitySchema = SecondaryActivitySchema.createSchema(selectedActivity, trans);
+  const secondaryActivitySchema = SecondaryActivitySchema.createSchema(selectedActivity, trans, studySettings);
 
   const schema = {
     type: 'object',
@@ -94,6 +95,7 @@ const createSchema = (
             minItems: 1
           },
           ...followupSchema.properties,
+          // $FlowFixMe
           ...secondaryActivitySchema.properties,
           [BG_TV_DAY]: {
             type: 'string',
@@ -144,9 +146,20 @@ const createSchema = (
 const createUiSchema = (pageNum :number, trans :(string, ?Object) => Object) => {
 
   const primaryFollowupOrder = [
-    PRIMARY_BOOK_TYPE, PRIMARY_BOOK_TITLE, PRIMARY_MEDIA_ACTIVITY, PRIMARY_MEDIA_AGE, PRIMARY_MEDIA_NAME];
+    PRIMARY_BOOK_TYPE,
+    PRIMARY_BOOK_TITLE,
+    PRIMARY_MEDIA_ACTIVITY,
+    PRIMARY_MEDIA_AGE,
+    PRIMARY_MEDIA_NAME,
+  ];
+
   const secondaryFollowupOrder = [
-    SECONDARY_BOOK_TYPE, SECONDARY_BOOK_TITLE, SECONDARY_MEDIA_ACTIVITY, SECONDARY_MEDIA_AGE, SECONDARY_MEDIA_NAME];
+    SECONDARY_BOOK_TYPE,
+    SECONDARY_BOOK_TITLE,
+    SECONDARY_MEDIA_ACTIVITY,
+    SECONDARY_MEDIA_AGE,
+    SECONDARY_MEDIA_NAME,
+  ];
 
   return {
     [getPageSectionKey(pageNum, 0)]: {

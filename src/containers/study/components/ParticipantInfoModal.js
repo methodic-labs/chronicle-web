@@ -4,18 +4,16 @@ import styled from 'styled-components';
 import { faCopy } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  // $FlowFixMe
   Box,
   IconButton,
   Modal,
-  // $FlowFixMe
   Tooltip,
   Typography
 } from 'lattice-ui-kit';
 
-import copyToClipboard from '../../../utils/copyToClipboard';
-import { useHasQuestionnairesModule } from '../../shared/hooks';
+import { copyToClipboard } from '../../../common/utils';
 import { getAppUsageLink, getParticipantLoginLink, getTimeUseDiaryLink } from '../utils';
+import { TODAY, YESTERDAY } from '../../../common/constants';
 
 const Grid = styled.div`
   align-items: center;
@@ -26,37 +24,55 @@ const Grid = styled.div`
 
 type Props = {
   handleOnClose :() => void;
+  hasAndroidDataCollection :boolean;
+  hasIOSSensorDataCollection :boolean;
+  hasTimeUseDiary :boolean;
   isVisible :boolean;
-  orgId :UUID;
   participantId :UUID;
   studyId :UUID;
 }
 
 const ParticipantInfoModal = ({
   handleOnClose,
+  hasAndroidDataCollection,
+  hasIOSSensorDataCollection,
+  hasTimeUseDiary,
   isVisible,
-  orgId,
   participantId,
-  studyId
+  studyId,
 } :Props) => {
 
-  const hasQuestionnaireModule = useHasQuestionnairesModule();
-
   const renderParticipantInfo = () => {
-    const participantLoginLink = getParticipantLoginLink(orgId, studyId, participantId);
-    const timeUseDiaryLink = getTimeUseDiaryLink(orgId, studyId, participantId);
-    const appUsageLink = getAppUsageLink(orgId, studyId, participantId);
+    const enrollmentLink = getParticipantLoginLink(studyId, participantId);
+    const appUsageLink = getAppUsageLink(studyId, participantId);
 
     const participantDetails = [
       { name: 'Participant ID', value: participantId },
-      { name: 'Study ID', value: studyId },
-      { name: 'Enrollment Link', value: participantLoginLink },
-      { name: 'App Usage Link', value: appUsageLink }
+      { name: 'Study ID', value: studyId }
     ];
-    if (hasQuestionnaireModule) {
+
+    if (hasTimeUseDiary) {
       participantDetails.push({
-        name: 'Time Use Diary Link',
-        value: timeUseDiaryLink
+        name: 'Morning Time Use Diary Link (Activities Yesterday)',
+        value: getTimeUseDiaryLink(studyId, participantId, YESTERDAY),
+      });
+      participantDetails.push({
+        name: 'Evening Time Use Diary Link (Activities Today)',
+        value: getTimeUseDiaryLink(studyId, participantId, TODAY),
+      });
+    }
+
+    if (hasAndroidDataCollection || hasIOSSensorDataCollection) {
+      participantDetails.push({
+        name: 'Enrollment Link',
+        value: enrollmentLink,
+      });
+    }
+
+    if (hasAndroidDataCollection) {
+      participantDetails.push({
+        name: 'App Usage Link',
+        value: appUsageLink,
       });
     }
 

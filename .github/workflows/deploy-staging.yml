@@ -35,19 +35,19 @@ jobs:
       - name: aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.DEPLOYER_AWS_REGION }}
+          aws-access-key-id: ${{ secrets.GH_ACTIONS_RELEASE_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.GH_ACTIONS_RELEASE_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.GH_ACTIONS_RELEASE_AWS_REGION }}
 
       - name: deploy to s3
         run: |
-          aws s3 rm --recursive s3://staging.openlattice.com/chronicle/
-          aws s3 cp --recursive build/ s3://staging.openlattice.com/chronicle/
+          aws s3 rm --recursive s3://app.staging.getmethodic.com/chronicle/
+          aws s3 cp --recursive build/ s3://app.staging.getmethodic.com/chronicle/
 
       - name: clear cloudflare cache
         run: |
-          curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
-            -H "X-Auth-Email: ${{ secrets.CLOUDFLARE_EMAIL }}" \
-            -H "X-Auth-Key: ${{ secrets.CLOUDFLARE_API_KEY }}" \
+          curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${{ secrets.METHODIC_CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            -H "X-Auth-Email: ${{ secrets.METHODIC_CLOUDFLARE_EMAIL }}" \
+            -H "X-Auth-Key: ${{ secrets.METHODIC_CLOUDFLARE_API_KEY }}" \
             -H "Content-Type: application/json" \
-            --data '{"files":["https://staging.openlattice.com/chronicle"]}'
+            --data '{"files":["https://app.staging.getmethodic.com/chronicle"]}'
