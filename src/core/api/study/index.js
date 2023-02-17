@@ -10,6 +10,7 @@ export { default as getAllStudies } from './getAllStudies';
 export { default as getOrgStudies } from './getOrgStudies';
 export { default as getParticipantStats } from './getParticipantStats';
 export { default as getStudy } from './getStudy';
+export { default as getStudyLimits } from './getStudyLimits';
 export { default as getStudyParticipants } from './getStudyParticipants';
 export { default as getStudySettings } from './getStudySettings';
 export { default as registerParticipant } from './registerParticipant';

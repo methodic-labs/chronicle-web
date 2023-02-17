@@ -8,6 +8,7 @@ export * from './deleteStudyParticipants';
 export * from './getAllStudies';
 export * from './getOrgStudies';
 export * from './getStudy';
+export * from './getStudyLimits';
 export * from './getStudyParticipants';
 export * from './getStudySettings';
 export * from './initializeStudy';

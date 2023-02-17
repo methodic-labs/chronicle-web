@@ -27,7 +27,7 @@ import { DeleteStudyModal, StudyDetails, StudyDetailsModal } from './components'
 import * as Routes from '../../core/router/Routes';
 import { useBoolean, useRequestState } from '../../common/utils';
 import { resetRequestStates } from '../../core/redux/actions';
-import { selectMyKeys } from '../../core/redux/selectors';
+import { selectMyKeys, selectStudyLimits } from '../../core/redux/selectors';
 import type { Study, UUID } from '../../common/types';
 
 const { NEUTRAL } = Colors;
@@ -99,6 +99,8 @@ const StudyContainer = ({
   const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
   const isOwner :boolean = myKeys.has(List([study.id]));
 
+  const limits = useSelector(selectStudyLimits(study.id));
+
   const handleOnClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -136,6 +138,7 @@ const StudyContainer = ({
               hasIOSSensorDataCollection={hasIOSSensorDataCollection}
               hasQuestionnaires={hasQuestionnaires}
               hasTimeUseDiary={hasTimeUseDiary}
+              limits={limits}
               study={study} />
           <IconButton
               aria-controls="actions_menu"
