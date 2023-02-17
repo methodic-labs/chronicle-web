@@ -13,9 +13,11 @@ import {
   Tooltip,
   Typography
 } from 'lattice-ui-kit';
+import { DateTime } from 'luxon';
 
 import { AppFeatures } from '../../../common/constants';
-import { copyToClipboard, isNonEmptyString } from '../../../common/utils';
+import { copyToClipboard, formatDateTime, isNonEmptyString } from '../../../common/utils';
+
 import type { Study } from '../../../common/types';
 
 const { NEUTRAL } = Colors;
@@ -65,6 +67,8 @@ const StudyDetails = ({
     { label: 'Title', value: study.title },
     { label: 'Description', value: getValue(study.description) },
     { label: 'Study Id', value: study.id, enableCopy: true },
+    { label: 'Study Start', value: formatDateTime(study.startedAt, DateTime.DATETIME_FULL) },
+    { label: 'Study End', value: formatDateTime(study.endedAt, DateTime.DATETIME_FULL) },
     { label: 'Contact', value: getValue(study.contact) },
     { label: 'Group', value: getValue(study.group) },
     { label: 'Version', value: getValue(study.version) },
