@@ -11,6 +11,7 @@ import deleteStudyReducer from './deleteStudyReducer';
 import getAllStudiesReducer from './getAllStudiesReducer';
 import getOrgStudiesReducer from './getOrgStudiesReducer';
 import getParticipantStatsReducer from './getParticipantStatsReducer';
+import getStudyLimitsReducer from './getStudyLimitsReducer';
 import getStudyParticipantsReducer from './getStudyParticipantsReducer';
 import getStudySettingsReducer from './getStudySettingsReducer';
 import initializeStudyReducer from './initializeStudyReducer';
@@ -35,6 +36,7 @@ import {
   GET_ALL_STUDIES,
   GET_ORG_STUDIES,
   GET_PARTICIPANT_STATS,
+  GET_STUDY_LIMITS,
   GET_STUDY_PARTICIPANTS,
   GET_STUDY_SETTINGS,
   INITIALIZE_STUDY,
@@ -49,6 +51,7 @@ import {
   getAllStudies,
   getOrgStudies,
   getParticipantStats,
+  getStudyLimits,
   getStudyParticipants,
   getStudySettings,
   initializeStudy,
@@ -66,6 +69,7 @@ const INITIAL_STATE :Map = fromJS({
   [GET_ALL_STUDIES]: RS_INITIAL_STATE,
   [GET_ORG_STUDIES]: RS_INITIAL_STATE,
   [GET_PARTICIPANT_STATS]: RS_INITIAL_STATE,
+  [GET_STUDY_LIMITS]: RS_INITIAL_STATE,
   [GET_STUDY_PARTICIPANTS]: RS_INITIAL_STATE,
   [GET_STUDY_SETTINGS]: RS_INITIAL_STATE,
   [INITIALIZE_STUDY]: RS_INITIAL_STATE,
@@ -118,6 +122,10 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case getParticipantStats.case(action.type): {
       return getParticipantStatsReducer(state, action);
+    }
+
+    case getStudyLimits.case(action.type): {
+      return getStudyLimitsReducer(state, action);
     }
 
     case getStudyParticipants.case(action.type): {
