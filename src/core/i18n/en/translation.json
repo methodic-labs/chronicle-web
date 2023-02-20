@@ -9,6 +9,8 @@
     "12-hour clock format",
     "24-hour clock format"
   ],
+  "today": "today",
+  "yesterday": "yesterday",
   "day_of_week": "We would like you to think about your child's day and complete the time use diary for {{activityDay}}. What day of the week $t(day_of_week_ctx.what_dow)?",
   "day_of_week_ctx": {
     "what_dow_today": "is today",
