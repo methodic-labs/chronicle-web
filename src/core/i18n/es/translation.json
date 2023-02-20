@@ -6,6 +6,8 @@
     "Formato de reloj de 12 horas",
     "Formato de reloj de 24 horas"
   ],
+  "today": "",
+  "yesterday": "",
   "day_of_week": "Nos gustaría que pensara cómo es un día de su hijo y que completara este Diario de Uso del Tiempo pensando en qué hizo ayer. ¿Qué día de la semana fue ayer?",
   "day_of_week_ctx": {},
   "weekday_options": [

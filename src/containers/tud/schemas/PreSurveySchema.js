@@ -17,16 +17,22 @@ const createSchema = (trans :TranslationFunction, activityDay :string) => ({
       title: '',
       properties: {
         [DAY_OF_WEEK]: {
-          title: trans(TranslationKeys.DAY_OF_WEEK, { activityDay, context: activityDay }),
+          title: trans(TranslationKeys.DAY_OF_WEEK, { activityDay: trans(activityDay), context: activityDay }),
           // $FlowFixMe
           enum: trans(TranslationKeys.WEEKDAY_OPTIONS, { returnObjects: true }),
           type: 'string'
         },
         [TYPICAL_DAY_FLAG]: {
-          title: trans(TranslationKeys.TYPICAL_DAY, { activityDay, day: trans(TranslationKeys.WEEKDAY) }),
+          title: trans(TranslationKeys.TYPICAL_DAY, {
+            activityDay: trans(activityDay),
+            day: trans(TranslationKeys.WEEKDAY),
+          }),
           type: 'string',
           enum: [trans(TranslationKeys.YES), trans(TranslationKeys.NO)],
-          enumNames: trans(TranslationKeys.TYPICAL_DAY_CHOICES, { activityDay, returnObjects: true })
+          enumNames: trans(TranslationKeys.TYPICAL_DAY_CHOICES, {
+            activityDay: trans(activityDay),
+            returnObjects: true,
+          })
         }
       },
       dependencies: {
@@ -45,7 +51,7 @@ const createSchema = (trans :TranslationFunction, activityDay :string) => ({
                   enum: [trans(TranslationKeys.NO)]
                 },
                 [NON_TYPICAL_DAY_REASON]: {
-                  title: trans(TranslationKeys.NON_TYPICAL_DAY, { activityDay }),
+                  title: trans(TranslationKeys.NON_TYPICAL_DAY, { activityDay: trans(activityDay) }),
                   type: 'array',
                   items: {
                     type: 'string',

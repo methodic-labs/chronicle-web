@@ -77,6 +77,7 @@ export default {
   SUBMISSION_SUCCESS: 'submission_success',
   SUBMISSION_SUCCESS_TITLE: 'submission_success_title',
   SUMMARY_TITLE: 'summary_title',
+  TODAY: 'today',
   TYPICAL_DAY: 'typical_day',
   TYPICAL_DAY_CHOICES: 'typical_day_choices',
   WAKE_UP_COUNT: 'wake_up_count',
@@ -87,4 +88,5 @@ export default {
   WEEKDAY: 'weekday',
   WEEKDAY_OPTIONS: 'weekday_options',
   YES: 'yes',
+  YESTERDAY: 'yesterday',
 };
