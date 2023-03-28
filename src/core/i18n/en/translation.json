@@ -48,7 +48,7 @@
   "button_close": "Close",
   "weekday": "weekday",
   "bed_time_before_activity_day": "$t(bed_time_last_night)",
-  "bed_time_last_night": "What time did your child fall asleep last night? Please think about when your child first fell asleep for the night. Later in the survey, we will ask about how often your child woke up in the middle of the night.",
+  "bed_time_last_night": "What time did your child go to bed last night? Please think about when your child first went to bed for the night. Later in the survey, we will ask about how often your child woke up in the middle of the night.",
   "bed_time_tonight": "What time did your child go to bed tonight?",
   "wake_up_time_after_activity_day": "$t(wake_up_time_this_morning)",
   "wake_up_time_this_morning": "What time did your child wake up this morning?",
