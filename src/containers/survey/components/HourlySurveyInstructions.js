@@ -26,7 +26,8 @@ const HourlySurveyInstructions = (props :Props) => {
   if (noApps) {
     return (
       <Box textAlign="center">
-        No apps found. Please try refreshing page.
+        There is no recorded app usage without a known user today.
+        Thank you for your participation, the survey is not needed today.
       </Box>
     );
   }
