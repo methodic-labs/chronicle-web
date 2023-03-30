@@ -9,6 +9,7 @@ export { default as selectParticipantStats } from './selectParticipantStats';
 export { default as selectSelectedOrgId } from './selectSelectedOrgId';
 export { default as selectStudies } from './selectStudies';
 export { default as selectStudy } from './selectStudy';
+export { default as selectStudyLimits } from './selectStudyLimits';
 export { default as selectStudyParticipants } from './selectStudyParticipants';
 export { default as selectStudySettings } from './selectStudySettings';
 export { default as selectTimeUseDiarySubmissions } from './selectTimeUseDiarySubmissions';

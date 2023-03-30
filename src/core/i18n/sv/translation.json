@@ -6,6 +6,8 @@
     "12-timmars klocka",
     "24-timmars klocka"
   ],
+  "today": "",
+  "yesterday": "",
   "day_of_week": "Tänk på gårdagen och fundera på ditt barns dag när du fyller i dagboken. Vilken dag var det igår?",
   "day_of_week_ctx": {},
   "weekday_options": [

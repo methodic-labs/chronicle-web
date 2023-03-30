@@ -167,7 +167,7 @@ const updateTypicalDayLabel = (formData :Object, page :number, trans :Translatio
     const label = typicalDayInput?.previousSibling;
     if (label) {
       // $FlowFixMe
-      label.innerHTML = trans(TranslationKeys.TYPICAL_DAY, { activityDay, day: dayOfWeek });
+      label.innerHTML = trans(TranslationKeys.TYPICAL_DAY, { activityDay: trans(activityDay), day: dayOfWeek });
     }
   }
 };

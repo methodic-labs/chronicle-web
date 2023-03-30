@@ -106,8 +106,8 @@ const TimeUseDiaryContainer = () => {
     activityDay = YESTERDAY;
   }
 
-  // 2022-10-14 - today/yesterday is only enabled for english
-  if (selectedLanguage?.value !== LanguageCodes.ENGLISH) {
+  // 2022-10-14 - today/yesterday is only enabled for english, german
+  if (selectedLanguage?.value !== LanguageCodes.ENGLISH && selectedLanguage?.value !== LanguageCodes.GERMAN) {
     activityDay = YESTERDAY;
   }
 

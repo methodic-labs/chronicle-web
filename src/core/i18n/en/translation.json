@@ -9,6 +9,8 @@
     "12-hour clock format",
     "24-hour clock format"
   ],
+  "today": "today",
+  "yesterday": "yesterday",
   "day_of_week": "We would like you to think about your child's day and complete the time use diary for {{activityDay}}. What day of the week $t(day_of_week_ctx.what_dow)?",
   "day_of_week_ctx": {
     "what_dow_today": "is today",
@@ -46,7 +48,7 @@
   "button_close": "Close",
   "weekday": "weekday",
   "bed_time_before_activity_day": "$t(bed_time_last_night)",
-  "bed_time_last_night": "What time did your child fall asleep last night? Please think about when your child first fell asleep for the night. Later in the survey, we will ask about how often your child woke up in the middle of the night.",
+  "bed_time_last_night": "What time did your child go to bed last night? Please think about when your child first went to bed for the night. Later in the survey, we will ask about how often your child woke up in the middle of the night.",
   "bed_time_tonight": "What time did your child go to bed tonight?",
   "wake_up_time_after_activity_day": "$t(wake_up_time_this_morning)",
   "wake_up_time_this_morning": "What time did your child wake up this morning?",

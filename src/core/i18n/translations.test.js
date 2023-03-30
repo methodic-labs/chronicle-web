@@ -9,6 +9,7 @@ import Translations from './translations';
 
 import SupportedLanguages from '../../containers/tud/constants/SupportedLanguages';
 import TranslationKeys from '../../containers/tud/constants/TranslationKeys';
+import { LanguageCodes } from '../../common/constants';
 
 const getArrayValueSizes = (obj :Object) => {
   const sizes = {};
@@ -20,18 +21,31 @@ const getArrayValueSizes = (obj :Object) => {
   return sizes;
 };
 
-const getInterpolationValues = (obj :Object) => {
+const getInterpolationValues = (obj :Object, exclude :string[]) => {
   const lookup = {};
   const regexp = /\{\{(.*?)\}\}/g;
 
   Object.entries(obj).forEach(([key :string, value :string | Array | Object]) => {
     if (typeof value === 'string') {
-      // 2022-10-14 - CHRONICLE-84 - activityDay english-only for now
-      const matches = matchAll(value, regexp).toArray().filter((i) => i !== 'activityDay');
+      let matches = matchAll(value, regexp).toArray();
+      if (exclude.length > 0) {
+        matches = matches.filter((m) => !exclude.includes(m));
+      }
       lookup[key] = matches;
     }
+    else if (Array.isArray(value)) {
+      value.forEach((v, i) => {
+        if (typeof v === 'string') {
+          let matches = matchAll(v, regexp).toArray();
+          // 2023-02-16 - activityDay is english-, german-only for now
+          if (exclude.length > 0) {
+            matches = matches.filter((m) => !exclude.includes(m));
+          }
+          lookup[`${key}[${i}]`] = matches;
+        }
+      });
+    }
   });
-
   return lookup;
 };
 
@@ -89,13 +103,22 @@ describe('Translation files structure', () => {
     });
   });
 
-  test('should not modify interpolation values', () => {
-    const { en, ...others } = Translations;
+  describe('should not modify interpolation values', () => {
+    test(LanguageCodes.GERMAN, () => {
+      expect(getInterpolationValues(Translations[LanguageCodes.GERMAN], []))
+        .toStrictEqual(getInterpolationValues(Translations[LanguageCodes.ENGLISH], []));
+    });
 
-    const englishInterpolation = getInterpolationValues(en);
+    // 2023-02-16 - activityDay is english-, german-only for now
+    test(LanguageCodes.SPANISH, () => {
+      expect(getInterpolationValues(Translations[LanguageCodes.SPANISH], ['activityDay']))
+        .toStrictEqual(getInterpolationValues(Translations[LanguageCodes.ENGLISH], ['activityDay']));
+    });
 
-    Object.values(others).forEach((lng :Object) => {
-      expect(getInterpolationValues(lng)).toStrictEqual(englishInterpolation);
+    // 2023-02-16 - activityDay is english-, german-only for now
+    test(LanguageCodes.SWEDISH, () => {
+      expect(getInterpolationValues(Translations[LanguageCodes.SWEDISH], ['activityDay']))
+        .toStrictEqual(getInterpolationValues(Translations[LanguageCodes.ENGLISH], ['activityDay']));
     });
   });
 });
