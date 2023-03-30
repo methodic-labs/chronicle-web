@@ -93,7 +93,8 @@ const SurveyForm = ({
           ? (
             <StyledCardSegment noBleed>
               <NoAppsFound>
-                No apps found. Please try refreshing the page.
+                There is no recorded app usage without a known user today.
+                Thank you for your participation, the survey is not needed today.
               </NoAppsFound>
             </StyledCardSegment>
           ) : (
