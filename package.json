@@ -36,7 +36,7 @@
     "@fortawesome/pro-solid-svg-icons": "~5.15.4",
     "@fortawesome/react-fontawesome": "~0.1.16",
     "@nivo/core": "~0.79.0",
-    "@nivo/line": "~0.79.0",
+    "@nivo/line": "~0.83.0",
     "@nivo/tooltip": "~0.79.0",
     "@redux-saga/core": "~1.2.0",
     "auth0-lock": "~11.33.3",
