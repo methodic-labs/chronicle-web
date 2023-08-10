@@ -14,10 +14,32 @@ import {
   TUD_UNIQUE_DATES
 } from '../../../common/constants';
 
+const comparator = (a, b) => {
+  if (a === b) {
+    return 0;
+  }
+  const isDefined1 = a !== null && a !== undefined;
+  const isDefined2 = b !== null && b !== undefined;
+  if (isDefined1 && !isDefined2) {
+    return 1;
+  }
+  if (isDefined2 && !isDefined1) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  if (a < b) {
+    return -1;
+  }
+  return 0;
+};
+
 const TUD_COLUMNS = [
   {
     key: TUD_FIRST_DATE,
     label: 'TUD First Submission',
+    comparator,
     cellStyle: {
       fontWeight: 500,
     }
@@ -25,13 +47,15 @@ const TUD_COLUMNS = [
   {
     key: TUD_LAST_DATE,
     label: 'TUD Last Submission',
+    comparator,
     cellStyle: {
       fontWeight: 500,
     }
   },
   {
     key: TUD_UNIQUE_DATES,
-    label: 'TUD Unique Submission Days',
+    label: 'TUD Unique Days',
+    sortable: false,
     cellStyle: {
       fontWeight: 500,
     }
@@ -42,6 +66,7 @@ const IOS_COLUMNS = [
   {
     key: IOS_FIRST_DATE,
     label: 'iOS First Data',
+    comparator,
     cellStyle: {
       fontWeight: 500,
     }
@@ -49,6 +74,7 @@ const IOS_COLUMNS = [
   {
     key: IOS_LAST_DATE,
     label: 'iOS Last Data',
+    comparator,
     cellStyle: {
       fontWeight: 500,
     }
@@ -56,6 +82,7 @@ const IOS_COLUMNS = [
   {
     key: IOS_UNIQUE_DATES,
     label: 'iOS Data Unique Days',
+    sortable: false,
     cellStyle: {
       fontWeight: 500,
     }
@@ -66,6 +93,7 @@ const ANDROID_COLUMNS = [
   {
     key: ANDROID_FIRST_DATE,
     label: 'Android First Data',
+    comparator,
     cellStyle: {
       fontWeight: 500,
     }
@@ -73,6 +101,7 @@ const ANDROID_COLUMNS = [
   {
     key: ANDROID_LAST_DATE,
     label: 'Android Last Data',
+    comparator,
     cellStyle: {
       fontWeight: 500,
     }
@@ -90,6 +119,7 @@ const ANDROID_COLUMNS = [
 const PARTICIPANT_ID_COLUMN = {
   key: PARTICIPANT_ID,
   label: 'Participant Id',
+  comparator,
   cellStyle: {
     fontWeight: 500,
     width: '150px'
