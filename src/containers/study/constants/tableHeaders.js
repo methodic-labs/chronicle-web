@@ -18,12 +18,12 @@ const comparator = (a, b) => {
   if (a === b) {
     return 0;
   }
-  const isDefined1 = a !== null && a !== undefined;
-  const isDefined2 = b !== null && b !== undefined;
-  if (isDefined1 && !isDefined2) {
+  const isDefinedA = a !== null && a !== undefined;
+  const isDefinedB = b !== null && b !== undefined;
+  if (isDefinedA && !isDefinedB) {
     return 1;
   }
-  if (isDefined2 && !isDefined1) {
+  if (isDefinedB && !isDefinedA) {
     return -1;
   }
   if (a > b) {
