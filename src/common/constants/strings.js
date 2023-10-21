@@ -102,6 +102,7 @@ export const PRIMARY_BOOK_TYPE :'primaryBookType' = 'primaryBookType';
 export const PRIMARY_DEVICE_TYPE :'primaryDeviceType' = 'primaryDeviceType';
 export const PRIMARY_MEDIA_ACTIVITY :'primaryMediaActivity' = 'primaryMediaActivity';
 export const PRIMARY_MEDIA_AGE :'primaryMediaAge' = 'primaryMediaAge';
+export const PRIMARY_MEDIA_LANGUAGE :'primaryMediaLanguage' = 'primaryMediaLanguage';
 export const PRIMARY_MEDIA_NAME :'primaryMediaName' = 'primaryMediaName';
 export const PRINCIPAL :'principal' = 'principal';
 export const PRINCIPAL_API :'PrincipalApi' = 'PrincipalApi';

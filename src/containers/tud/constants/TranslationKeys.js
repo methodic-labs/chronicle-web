@@ -58,6 +58,7 @@ export default {
   MEDIA_ACTIVITY_OPTIONS: 'media_activity_options',
   MEDIA_AGE: 'media_age',
   MEDIA_AGE_OPTIONS: 'media_age_options',
+  MEDIA_LANGUAGE_NON_ENGLISH: 'media_language_non_english',
   MEDIA_NAME: 'media_name',
   NEXT_ACTIVITY: 'next_activity',
   NIGHTTIME_ACTIVITY_TITLE: 'nighttime_activity_title',
