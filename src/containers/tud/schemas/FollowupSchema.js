@@ -1,6 +1,7 @@
 import {
   PRIMARY_BOOK_TITLE,
   PRIMARY_BOOK_TYPE,
+  PRIMARY_DEVICE_TYPE,
   PRIMARY_MEDIA_ACTIVITY,
   PRIMARY_MEDIA_AGE,
   PRIMARY_MEDIA_NAME,
@@ -56,8 +57,19 @@ const createSchema = (selectedActivity, translate, studySettings, activityDay) =
               title: translate(TranslationKeys.MEDIA_NAME),
               type: 'string',
             },
+            [PRIMARY_DEVICE_TYPE]: {
+              description: translate(TranslationKeys.CHOOSE_APPLICABLE),
+              items: {
+                enum: translate(TranslationKeys.DEVICE_TYPE_OPTIONS, { returnObjects: true }),
+                type: 'string',
+              },
+              minItems: 1,
+              title: translate(TranslationKeys.DEVICE_TYPE),
+              type: 'array',
+              uniqueItems: true,
+            },
           },
-          required: [PRIMARY_MEDIA_ACTIVITY, PRIMARY_MEDIA_AGE],
+          required: [PRIMARY_MEDIA_ACTIVITY, PRIMARY_DEVICE_TYPE],
         };
       }
       return {
@@ -113,6 +125,10 @@ const createUiSchema = (translate) => ({
   },
   [PRIMARY_BOOK_TITLE]: {
     classNames: 'column-span-12',
+  },
+  [PRIMARY_DEVICE_TYPE]: {
+    classNames: 'column-span-12',
+    'ui:widget': 'checkboxes',
   },
   [PRIMARY_MEDIA_AGE]: {
     classNames: 'column-span-12',

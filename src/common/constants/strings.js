@@ -99,6 +99,7 @@ export const PARTICIPATION_STATUS :'participationStatus' = 'participationStatus'
 export const PERMISSIONS :'permissions' = 'permissions';
 export const PRIMARY_BOOK_TITLE :'primaryBookTitle' = 'primaryBookTitle';
 export const PRIMARY_BOOK_TYPE :'primaryBookType' = 'primaryBookType';
+export const PRIMARY_DEVICE_TYPE :'primaryDeviceType' = 'primaryDeviceType';
 export const PRIMARY_MEDIA_ACTIVITY :'primaryMediaActivity' = 'primaryMediaActivity';
 export const PRIMARY_MEDIA_AGE :'primaryMediaAge' = 'primaryMediaAge';
 export const PRIMARY_MEDIA_NAME :'primaryMediaName' = 'primaryMediaName';

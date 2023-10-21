@@ -19,6 +19,7 @@ import {
   OTHER_ACTIVITY,
   PRIMARY_BOOK_TITLE,
   PRIMARY_BOOK_TYPE,
+  PRIMARY_DEVICE_TYPE,
   PRIMARY_MEDIA_ACTIVITY,
   PRIMARY_MEDIA_AGE,
   PRIMARY_MEDIA_NAME,
@@ -205,6 +206,7 @@ const createUiSchema = (pageNum, translate, studySettings, activityDay) => {
     PRIMARY_MEDIA_ACTIVITY,
     PRIMARY_MEDIA_AGE,
     PRIMARY_MEDIA_NAME,
+    PRIMARY_DEVICE_TYPE,
   ];
 
   const secondaryFollowupOrder = [
