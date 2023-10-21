@@ -42,6 +42,8 @@ export default {
   DAY_START_TIME: 'day_start_time',
   DEFAULT_END_TIME: 'default_end_time',
   DEFAULT_TIME: 'default_time',
+  DEVICE_TYPE: 'device_type',
+  DEVICE_TYPE_OPTIONS: 'device_type_options',
   DONT_KNOW: 'dont_know',
   ERROR_END_PAST_BEDTIME: 'error_end_past_bedtime',
   ERROR_INVALID_BED_TIME: 'error_invalid_bedtime',
