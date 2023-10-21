@@ -167,9 +167,15 @@ const createFormSchema = (
       isSecondaryReadingSelected,
       isSecondaryMediaSelected,
       trans,
-      studySettings
+      studySettings,
+      activityDay,
     );
-    uiSchema = ContextualSchema.createUiSchema(pageNum, trans);
+    uiSchema = ContextualSchema.createUiSchema(
+      pageNum,
+      trans,
+      studySettings,
+      activityDay,
+    );
   }
   else {
     schema = PrimaryActivitySchema.createSchema(
