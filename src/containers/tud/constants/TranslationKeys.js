@@ -31,6 +31,8 @@ export default {
   CHOOSE_APPLICABLE: 'choose_applicable',
   CHOOSE_FORMAT: 'choose_format',
   CLOCK_FORMATS: 'clock_formats',
+  COLLABORATOR: 'collaborator',
+  COLLABORATOR_OPTIONS: 'collaborator_options',
   CONTEXTUAL_TEXT: 'contextual_text',
   DAY_END_TIME_CTX: 'day_end_time_ctx',
   DAY_END_TIME: 'day_end_time',

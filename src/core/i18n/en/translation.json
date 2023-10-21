@@ -89,6 +89,13 @@
     "A sibling",
     "Another child"
   ],
+  "collaborator": "Who (if anyone) was your child talking to or interacting with during this activity?",
+  "collaborator_options": [
+    "No one, engaging independently",
+    "A parent or another caregiver/adult",
+    "A sibling or another peer/child",
+    "Both adult(s) and child(ren)"
+  ],
   "bg_tv_day": "Was there TV in the background while your child was {{activity}}? For example, maybe a parent was watching TV while your child did something else in the room.",
   "bg_audio_day": "Was there audio in the background (e.g., music, podcast) while your child was {{activity}}? For example, maybe a parent was listening to music while your child did something else in the room.",
   "adult_media": "Was an adult using a mobile device (phone, tablet, laptop) while your child was {{activity}}? For example, maybe a parent was sending text messages while your child did something else in the room.",
