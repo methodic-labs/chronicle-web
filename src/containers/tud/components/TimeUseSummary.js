@@ -1,10 +1,8 @@
-// @flow
-
-import styled from 'styled-components';
 import { faPencilAlt } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Colors } from 'lattice-ui-kit';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 
 import TranslationKeys from '../constants/TranslationKeys';
 import { createTimeUseSummary } from '../utils';
@@ -50,13 +48,10 @@ const TimeUseSummary = ({
   activityDay,
   formData,
   goToPage,
-} :{
-  activityDay :string;
-  formData :Object;
-  goToPage :(pageNum :number) => void;
+  studySettings,
 }) => {
   const { t } = useTranslation();
-  const summary = createTimeUseSummary(formData, t, activityDay);
+  const summary = createTimeUseSummary(formData, t, activityDay, studySettings);
   return (
     <div>
       <Heading>

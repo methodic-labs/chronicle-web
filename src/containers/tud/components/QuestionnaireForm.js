@@ -205,27 +205,6 @@ type TudActivities = {|
   outdoors :'string';
 |};
 
-type Props = {
-  activityDay :string;
-  familyId :?string;
-  formSchema :Object;
-  initialFormData :Object;
-  isSummaryPage :boolean;
-  language :string;
-  organizationId :UUID;
-  pagedProps :Object;
-  participantId :string;
-  resetSurvey :(Function) => void;
-  shouldReset :boolean;
-  studyId :UUID;
-  submitRequestState :?RequestState;
-  trans :(string, ?Object) => Object;
-  translationData :Object;
-  updateFormState :(newSchema :Object, uiSchema :Object, formData :Object) => void;
-  updateSurveyProgress :(formData :Object) => void;
-  waveId :?string;
-};
-
 const QuestionnaireForm = ({
   activityDay,
   familyId,
@@ -239,13 +218,34 @@ const QuestionnaireForm = ({
   resetSurvey,
   shouldReset,
   studyId,
+  studySettings,
   submitRequestState,
   trans,
   translationData,
   updateFormState,
   updateSurveyProgress,
   waveId,
-} :Props) => {
+} :{
+  activityDay :string;
+  familyId :?string;
+  formSchema :Object;
+  initialFormData :Object;
+  isSummaryPage :boolean;
+  language :string;
+  organizationId :UUID;
+  pagedProps :Object;
+  participantId :string;
+  resetSurvey :(Function) => void;
+  shouldReset :boolean;
+  studyId :UUID;
+  studySettings :Object;
+  submitRequestState :?RequestState;
+  trans :(string, ?Object) => Object;
+  translationData :Object;
+  updateFormState :(newSchema :Object, uiSchema :Object, formData :Object) => void;
+  updateSurveyProgress :(formData :Object) => void;
+  waveId :?string;
+}) => {
 
   const {
     formRef,
@@ -381,7 +381,8 @@ const QuestionnaireForm = ({
           <TimeUseSummary
               activityDay={activityDay}
               formData={pagedData}
-              goToPage={setPage} />
+              goToPage={setPage}
+              studySettings={studySettings} />
         ) : (
           <>
             {
@@ -407,7 +408,6 @@ const QuestionnaireForm = ({
                 transformErrors={transformErrors}
                 uiSchema={uiSchema}
                 validate={validate} />
-
           </>
         )
       }
