@@ -4,6 +4,8 @@ import {
   PRIMARY_DEVICE_TYPE,
   PRIMARY_MEDIA_ACTIVITY,
   PRIMARY_MEDIA_AGE,
+  PRIMARY_MEDIA_LANGUAGE,
+  PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH,
   PRIMARY_MEDIA_NAME,
 } from '../../../common/constants';
 import TranslationKeys from '../constants/TranslationKeys';
@@ -41,6 +43,38 @@ const createSchema = (selectedActivity, translate, studySettings, activityDay) =
     case primaryActivities.media_use:
       if (enableChangesForOSU) {
         return {
+          dependencies: {
+            [PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH]: {
+              oneOf: [
+                {
+                  properties: {
+                    [PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH]: {
+                      enum: [translate(TranslationKeys.NO)],
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    [PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH]: {
+                      enum: [translate(TranslationKeys.YES)],
+                    },
+                    [PRIMARY_MEDIA_LANGUAGE]: {
+                      description: translate(TranslationKeys.CHOOSE_APPLICABLE, { returnObjects: true }),
+                      items: {
+                        enum: translate(TranslationKeys.LANGUAGE_OPTIONS, { returnObjects: true }),
+                        type: 'string',
+                      },
+                      minItems: 1,
+                      title: translate(TranslationKeys.LANGUAGE, { activityDay: translate(activityDay) }),
+                      type: 'array',
+                      uniqueItems: true,
+                    },
+                  },
+                  required: [PRIMARY_MEDIA_LANGUAGE]
+                },
+              ],
+            },
+          },
           properties: {
             [PRIMARY_MEDIA_ACTIVITY]: {
               description: translate(TranslationKeys.CHOOSE_APPLICABLE),
@@ -67,6 +101,11 @@ const createSchema = (selectedActivity, translate, studySettings, activityDay) =
               title: translate(TranslationKeys.DEVICE_TYPE),
               type: 'array',
               uniqueItems: true,
+            },
+            [PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH]: {
+              enum: [translate(TranslationKeys.YES), translate(TranslationKeys.NO)],
+              title: translate(TranslationKeys.MEDIA_LANGUAGE_NON_ENGLISH),
+              type: 'string',
             },
           },
           required: [PRIMARY_MEDIA_ACTIVITY, PRIMARY_DEVICE_TYPE],
@@ -111,17 +150,17 @@ const createUiSchema = (translate) => ({
     classNames: 'column-span-12',
     'ui:widget': 'checkboxes',
     'ui:options': {
+      otherText: translate(TranslationKeys.OTHER),
       withOther: true,
-      otherText: translate(TranslationKeys.OTHER)
-    }
+    },
   },
   [PRIMARY_BOOK_TYPE]: {
     classNames: 'column-span-12',
     'ui:widget': 'checkboxes',
     'ui:options': {
+      otherText: translate(TranslationKeys.OTHER),
       withOther: true,
-      otherText: translate(TranslationKeys.OTHER)
-    }
+    },
   },
   [PRIMARY_BOOK_TITLE]: {
     classNames: 'column-span-12',
@@ -132,11 +171,23 @@ const createUiSchema = (translate) => ({
   },
   [PRIMARY_MEDIA_AGE]: {
     classNames: 'column-span-12',
-    'ui:widget': 'radio'
+    'ui:widget': 'radio',
   },
   [PRIMARY_MEDIA_NAME]: {
-    classNames: 'column-span-12'
-  }
+    classNames: 'column-span-12',
+  },
+  [PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH]: {
+    classNames: 'column-span-12',
+    'ui:widget': 'radio',
+  },
+  [PRIMARY_MEDIA_LANGUAGE]: {
+    classNames: 'column-span-12',
+    'ui:widget': 'checkboxes',
+    'ui:options': {
+      otherText: translate(TranslationKeys.OTHER),
+      withOther: true,
+    },
+  },
 });
 
 export {

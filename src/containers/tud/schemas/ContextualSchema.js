@@ -22,6 +22,8 @@ import {
   PRIMARY_DEVICE_TYPE,
   PRIMARY_MEDIA_ACTIVITY,
   PRIMARY_MEDIA_AGE,
+  PRIMARY_MEDIA_LANGUAGE,
+  PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH,
   PRIMARY_MEDIA_NAME,
   SECONDARY_ACTIVITY,
   SECONDARY_BOOK_TITLE,
@@ -65,6 +67,7 @@ const createSchema = (
       properties: {
         [psk]: {
           dependencies: {
+            ...followupSchema.dependencies,
             ...secondaryActivitySchema.dependencies,
           },
           properties: {
@@ -207,6 +210,8 @@ const createUiSchema = (pageNum, translate, studySettings, activityDay) => {
     PRIMARY_MEDIA_AGE,
     PRIMARY_MEDIA_NAME,
     PRIMARY_DEVICE_TYPE,
+    PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH,
+    PRIMARY_MEDIA_LANGUAGE,
   ];
 
   const secondaryFollowupOrder = [

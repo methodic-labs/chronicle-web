@@ -54,6 +54,8 @@ export default {
   ERROR_SUBMIT: 'error_submit',
   INTRO_TEXT_CTX: 'intro_text_ctx',
   INTRO_TEXT: 'intro_text',
+  LANGUAGE: 'language',
+  LANGUAGE_OPTIONS: 'language_options',
   MEDIA_ACTIVITY: 'media_activity',
   MEDIA_ACTIVITY_OPTIONS: 'media_activity_options',
   MEDIA_AGE: 'media_age',

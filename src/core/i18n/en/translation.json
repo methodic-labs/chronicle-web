@@ -144,6 +144,18 @@
     "Gaming device"
   ],
   "media_language_non_english": "Was the media entirely in a language other than English?",
+  "language": "What language(s)?",
+  "language_options": [
+    "Spanish",
+    "Somali",
+    "Nepali",
+    "Arabic",
+    "French",
+    "Hindi",
+    "Telgu",
+    "Chinese",
+    "German"
+  ],
   "no_one": "No one",
   "bg_tv_night": "Was there a TV playing in the room while your child slept at night?",
   "bg_audio_night": "Was there music or other audio playing in the room while your child slept at night?",
