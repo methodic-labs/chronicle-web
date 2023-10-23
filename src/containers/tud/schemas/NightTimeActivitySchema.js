@@ -1,4 +1,5 @@
 import { DataProcessingUtils } from 'lattice-fabricate';
+
 import {
   BG_AUDIO_NIGHT,
   BG_TV_NIGHT,
@@ -7,12 +8,12 @@ import {
   SLEEP_PATTERN,
   WAKE_UP_COUNT,
 } from '../../../common/constants';
-
 import TranslationKeys from '../constants/TranslationKeys';
+import getEnableChangesForOhioStateUniversity from '../utils/getEnableChangesForOhioStateUniversity';
 
 const { getPageSectionKey } = DataProcessingUtils;
 
-const createSchema = (pageNum, translate, studySettings) => {
+const createSchema = (pageNum, translate, studySettings, activityDay) => {
 
   let sleepingOptions = translate(TranslationKeys.SLEEP_ARRANGEMENT_OPTIONS, { returnObjects: true });
 
@@ -20,6 +21,37 @@ const createSchema = (pageNum, translate, studySettings) => {
     .getIn(['TimeUseDiary', 'enableChangesForSherbrookeUniversity']) || false;
   if (enableChangesForSherbrookeUniversity) {
     sleepingOptions = sleepingOptions.map((o) => o.replace('Crib/cot/bed', 'Bed'));
+  }
+
+  const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
+  if (enableChangesForOSU) {
+    return {
+      properties: {
+        [getPageSectionKey(pageNum, 0)]: {
+          properties: {
+            [SLEEP_PATTERN]: {
+              enum: [
+                translate(TranslationKeys.YES),
+                translate(TranslationKeys.NO),
+                translate(TranslationKeys.DONT_KNOW),
+              ],
+              title: translate(TranslationKeys.SLEEP_PATTERN),
+              type: 'string',
+            },
+            [WAKE_UP_COUNT]: {
+              enum: translate(TranslationKeys.WAKE_UP_COUNT_OPTIONS, { returnObjects: true }),
+              title: translate(TranslationKeys.WAKE_UP_COUNT),
+              type: 'string',
+            },
+          },
+          required: [SLEEP_PATTERN, WAKE_UP_COUNT],
+          title: '',
+          type: 'object',
+        },
+      },
+      title: translate(TranslationKeys.NIGHTTIME_ACTIVITY_TITLE),
+      type: 'object',
+    };
   }
 
   return {
@@ -84,7 +116,7 @@ const createSchema = (pageNum, translate, studySettings) => {
             enum: translate(TranslationKeys.BG_MEDIA_OPTIONS, { returnObjects: true }),
             title: translate(TranslationKeys.BG_AUDIO_NIGHT),
             type: 'string',
-          }
+          },
         },
         required: [SLEEP_PATTERN, SLEEP_ARRANGEMENT, WAKE_UP_COUNT, BG_TV_NIGHT, BG_AUDIO_NIGHT],
         title: '',

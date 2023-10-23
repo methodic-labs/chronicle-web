@@ -124,7 +124,7 @@ const createFormSchema = (
 
   if (isNightActivityPage(pageNum, formData, activityDay)) {
     return {
-      schema: NightTimeActivitySchema.createSchema(pageNum, trans, studySettings),
+      schema: NightTimeActivitySchema.createSchema(pageNum, trans, studySettings, activityDay),
       uiSchema: NightTimeActivitySchema.createUiSchema(pageNum, trans),
     };
   }

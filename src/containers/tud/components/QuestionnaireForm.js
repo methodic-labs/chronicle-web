@@ -34,7 +34,7 @@ import {
   PRIMARY_MEDIA_LANGUAGE,
   PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH,
   SECONDARY_ACTIVITY,
-  SLEEP_ARRANGEMENT,
+  SLEEP_PATTERN,
   STUDY_ID,
   TRANSLATION_DATA,
   TYPICAL_DAY_FLAG,
@@ -108,7 +108,7 @@ const removeExtraData = (formRef, pagedData, page) => {
     let toRemoveStartIndex = page + 1;
     // if the next page has night activity page data, skip
     const nextPageData = formData[getPageSectionKey(toRemoveStartIndex, 0)] || {};
-    if (Object.keys(nextPageData).includes(SLEEP_ARRANGEMENT)) {
+    if (Object.keys(nextPageData).includes(SLEEP_PATTERN)) {
       toRemoveStartIndex += 1;
     }
 
@@ -160,7 +160,7 @@ const forceFormDataStateUpdate = (formRef, pagedData = {}, page, activityDay) =>
     }
 
     // current page is night activity page
-    else if (!Object.keys(sectionData).includes(SLEEP_ARRANGEMENT)) {
+    else if (!Object.keys(sectionData).includes(SLEEP_PATTERN)) {
       _set(formData, [psk, ACTIVITY_START_TIME], formattedEndTime);
     }
   }
