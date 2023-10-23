@@ -16,6 +16,7 @@ import styled from 'styled-components';
 
 import {
   ACTIVITY_END_TIME,
+  ACTIVITY_SELECT_PAGE,
   ACTIVITY_START_TIME,
   DAY_END_TIME,
   DAY_OF_WEEK,
@@ -28,6 +29,8 @@ import {
   OTHER_ACTIVITY,
   PARTICIPANT_ID,
   PRIMARY_ACTIVITY,
+  PRIMARY_BOOK_LANGUAGE,
+  PRIMARY_BOOK_LANGUAGE_NON_ENGLISH,
   PRIMARY_MEDIA_LANGUAGE,
   PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH,
   SECONDARY_ACTIVITY,
@@ -196,6 +199,9 @@ const schemaHasFollowupQuestions = (schema = {}, page) => {
 
 const onChangePrimaryActivity = (data, page) => {
   const psk1 = getPageSectionKey(page, 0);
+  if (_get(data, [psk1, ACTIVITY_SELECT_PAGE]) !== true) {
+    return;
+  }
   const psk2 = getPageSectionKey(page + 1, 0);
   if (!_has(data, psk2)) {
     return;
@@ -209,10 +215,8 @@ const onChangePrimaryActivity = (data, page) => {
   ) {
     return;
   }
-  // primary activity has changed, reset secondary activities
-  if (_has(data, [psk2, SECONDARY_ACTIVITY])) {
-    _set(data, [psk2, SECONDARY_ACTIVITY], []);
-  }
+  // primary activity has changed, restart next page
+  _unset(data, psk2);
 };
 
 const onToggleYesNo = (data, page) => {
@@ -221,8 +225,12 @@ const onToggleYesNo = (data, page) => {
   if (otherActivityYesNo.toLowerCase() !== 'yes' && _has(data, [psk, SECONDARY_ACTIVITY])) {
     _set(data, [psk, SECONDARY_ACTIVITY], []);
   }
-  const nonEnglishYesNo = _get(data, [psk, PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH], 'no');
-  if (nonEnglishYesNo.toLowerCase() !== 'yes' && _has(data, [psk, PRIMARY_MEDIA_LANGUAGE])) {
+  const bookNonEnglishYesNo = _get(data, [psk, PRIMARY_BOOK_LANGUAGE_NON_ENGLISH], 'no');
+  if (bookNonEnglishYesNo.toLowerCase() !== 'yes' && _has(data, [psk, PRIMARY_BOOK_LANGUAGE])) {
+    _set(data, [psk, PRIMARY_BOOK_LANGUAGE], []);
+  }
+  const mediaNonEnglishYesNo = _get(data, [psk, PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH], 'no');
+  if (mediaNonEnglishYesNo.toLowerCase() !== 'yes' && _has(data, [psk, PRIMARY_MEDIA_LANGUAGE])) {
     _set(data, [psk, PRIMARY_MEDIA_LANGUAGE], []);
   }
 };

@@ -144,6 +144,7 @@
     "Gaming device"
   ],
   "media_language_non_english": "Was the media entirely in a language other than English?",
+  "book_language_non_english": "Was/Were the book(s) entirely in a language other than English?",
   "language": "What language(s)?",
   "language_options": [
     "Spanish",

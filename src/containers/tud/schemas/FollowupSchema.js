@@ -1,4 +1,6 @@
 import {
+  PRIMARY_BOOK_LANGUAGE,
+  PRIMARY_BOOK_LANGUAGE_NON_ENGLISH,
   PRIMARY_BOOK_TITLE,
   PRIMARY_BOOK_TYPE,
   PRIMARY_DEVICE_TYPE,
@@ -19,6 +21,65 @@ const createSchema = (selectedActivity, translate, studySettings, activityDay) =
   // translate to find which activity this is
   switch (selectedActivity) {
     case primaryActivities.reading: {
+      if (enableChangesForOSU) {
+        return {
+          dependencies: {
+            [PRIMARY_BOOK_LANGUAGE_NON_ENGLISH]: {
+              oneOf: [
+                {
+                  properties: {
+                    [PRIMARY_BOOK_LANGUAGE_NON_ENGLISH]: {
+                      enum: [translate(TranslationKeys.NO)],
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    [PRIMARY_BOOK_LANGUAGE_NON_ENGLISH]: {
+                      enum: [translate(TranslationKeys.YES)],
+                    },
+                    [PRIMARY_BOOK_LANGUAGE]: {
+                      description: translate(TranslationKeys.CHOOSE_APPLICABLE, { returnObjects: true }),
+                      items: {
+                        enum: translate(TranslationKeys.LANGUAGE_OPTIONS, { returnObjects: true }),
+                        type: 'string',
+                      },
+                      minItems: 1,
+                      title: translate(TranslationKeys.LANGUAGE, { activityDay: translate(activityDay) }),
+                      type: 'array',
+                      uniqueItems: true,
+                    },
+                  },
+                  required: [PRIMARY_BOOK_LANGUAGE]
+                },
+              ],
+            },
+          },
+          properties: {
+            [PRIMARY_BOOK_TYPE]: {
+              description: translate(TranslationKeys.CHOOSE_APPLICABLE),
+              items: {
+                enum: translate(TranslationKeys.BOOK_TYPE_OPTIONS, { returnObjects: true }),
+                type: 'string',
+              },
+              minItems: 1,
+              title: translate(TranslationKeys.BOOK_TYPE),
+              type: 'array',
+              uniqueItems: true,
+            },
+            [PRIMARY_BOOK_TITLE]: {
+              title: translate(TranslationKeys.BOOK_TITLE),
+              type: 'string',
+            },
+            [PRIMARY_BOOK_LANGUAGE_NON_ENGLISH]: {
+              enum: [translate(TranslationKeys.YES), translate(TranslationKeys.NO)],
+              title: translate(TranslationKeys.BOOK_LANGUAGE_NON_ENGLISH),
+              type: 'string',
+            },
+          },
+          required: [PRIMARY_BOOK_TYPE],
+        };
+      }
       return {
         properties: {
           [PRIMARY_BOOK_TYPE]: {
@@ -164,6 +225,18 @@ const createUiSchema = (translate) => ({
   },
   [PRIMARY_BOOK_TITLE]: {
     classNames: 'column-span-12',
+  },
+  [PRIMARY_BOOK_LANGUAGE_NON_ENGLISH]: {
+    classNames: 'column-span-12',
+    'ui:widget': 'radio',
+  },
+  [PRIMARY_BOOK_LANGUAGE]: {
+    classNames: 'column-span-12',
+    'ui:widget': 'checkboxes',
+    'ui:options': {
+      otherText: translate(TranslationKeys.OTHER),
+      withOther: true,
+    },
   },
   [PRIMARY_DEVICE_TYPE]: {
     classNames: 'column-span-12',

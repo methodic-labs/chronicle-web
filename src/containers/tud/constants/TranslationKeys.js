@@ -11,6 +11,7 @@ export default {
   BG_MEDIA_OPTIONS: 'bg_media_options',
   BG_TV_DAY: 'bg_tv_day',
   BG_TV_NIGHT: 'bg_tv_night',
+  BOOK_LANGUAGE_NON_ENGLISH: 'book_language_non_english',
   BOOK_TITLE: 'book_title',
   BOOK_TYPE: 'book_type',
   BOOK_TYPE_OPTIONS: 'book_type_options',
