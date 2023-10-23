@@ -277,8 +277,8 @@ const QuestionnaireForm = ({
 
   const activities = trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
 
-  const readingSchema = SecondaryFollowUpSchema.createSchema(activities.reading, trans);
-  const mediaUseSchema = SecondaryFollowUpSchema.createSchema(activities.media_use, trans);
+  const readingSchema = SecondaryFollowUpSchema.createSchema(activities.reading, trans, studySettings, activityDay);
+  const mediaUseSchema = SecondaryFollowUpSchema.createSchema(activities.media_use, trans, studySettings, activityDay);
 
   const handleNext = () => {
     if (isSummaryPage) {

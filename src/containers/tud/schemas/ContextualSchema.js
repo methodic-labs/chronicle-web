@@ -53,11 +53,6 @@ const createSchema = (
 
   const psk = getPageSectionKey(pageNum, 0);
 
-  const activities = translate(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
-
-  const secondaryReadingSchema = SecondaryFollowUpSchema.createSchema(activities.reading, translate);
-  const secondaryMediaSchema = SecondaryFollowUpSchema.createSchema(activities.media_use, translate);
-
   const followupSchema = FollowupSchema.createSchema(selectedActivity, translate, studySettings, activityDay);
   const secondaryActivitySchema = SecondaryActivitySchema.createSchema(selectedActivity, translate, studySettings);
 
@@ -192,12 +187,20 @@ const createSchema = (
     };
   }
 
+  const activities = translate(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
+
   if (isSecondaryReadingSelected) {
-    merge(schema[psk], secondaryReadingSchema);
+    merge(
+      schema[psk],
+      SecondaryFollowUpSchema.createSchema(activities.reading, translate, studySettings, activityDay),
+    );
   }
 
   if (isSecondaryMediaSelected) {
-    merge(schema[psk], secondaryMediaSchema);
+    merge(
+      schema[psk],
+      SecondaryFollowUpSchema.createSchema(activities.media_use, translate, studySettings, activityDay),
+    );
   }
 
   return schema;
