@@ -219,18 +219,19 @@ const onChangePrimaryActivity = (data, page) => {
   _unset(data, psk2);
 };
 
-const onToggleYesNo = (data, page) => {
+const onToggleYesNo = (data, page, translate) => {
   const psk = getPageSectionKey(page, 0);
-  const otherActivityYesNo = _get(data, [psk, OTHER_ACTIVITY], 'no');
-  if (otherActivityYesNo.toLowerCase() !== 'yes' && _has(data, [psk, SECONDARY_ACTIVITY])) {
+  const yes = translate(TranslationKeys.YES);
+  const otherActivityYesNo = _get(data, [psk, OTHER_ACTIVITY]);
+  if (otherActivityYesNo !== yes && _has(data, [psk, SECONDARY_ACTIVITY])) {
     _set(data, [psk, SECONDARY_ACTIVITY], []);
   }
-  const bookNonEnglishYesNo = _get(data, [psk, PRIMARY_BOOK_LANGUAGE_NON_ENGLISH], 'no');
-  if (bookNonEnglishYesNo.toLowerCase() !== 'yes' && _has(data, [psk, PRIMARY_BOOK_LANGUAGE])) {
+  const bookNonEnglishYesNo = _get(data, [psk, PRIMARY_BOOK_LANGUAGE_NON_ENGLISH]);
+  if (bookNonEnglishYesNo !== yes && _has(data, [psk, PRIMARY_BOOK_LANGUAGE])) {
     _set(data, [psk, PRIMARY_BOOK_LANGUAGE], []);
   }
-  const mediaNonEnglishYesNo = _get(data, [psk, PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH], 'no');
-  if (mediaNonEnglishYesNo.toLowerCase() !== 'yes' && _has(data, [psk, PRIMARY_MEDIA_LANGUAGE])) {
+  const mediaNonEnglishYesNo = _get(data, [psk, PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH]);
+  if (mediaNonEnglishYesNo !== yes && _has(data, [psk, PRIMARY_MEDIA_LANGUAGE])) {
     _set(data, [psk, PRIMARY_MEDIA_LANGUAGE], []);
   }
 };
@@ -339,7 +340,7 @@ const QuestionnaireForm = ({
 
   const onChange = ({ formData, schema: currentSchema, uiSchema: currentUiSchema }) => {
     onChangePrimaryActivity(formData, page);
-    onToggleYesNo(formData, page);
+    onToggleYesNo(formData, page, trans);
     updatePrimaryActivityQuestion(formData, page, trans);
 
     if (isPreSurveyPage(page)) {
