@@ -13,6 +13,7 @@ import {
   ACTIVITY_DAY,
   ACTIVITY_END_TIME,
   ACTIVITY_NAME,
+  ACTIVITY_SELECT_PAGE,
   ACTIVITY_START_TIME,
   BED_TIME_BEFORE_ACTIVITY_DAY,
   CLOCK_FORMAT,
@@ -407,7 +408,14 @@ const createSubmitRequestBody = (
   // create english translation lookup
   const englishTranslationLookup = createEnglishTranslationLookup(translationData, language);
 
-  const entriesToOmit = [ACTIVITY_START_TIME, ACTIVITY_END_TIME, HAS_FOLLOWUP_QUESTIONS, OTHER_ACTIVITY, CLOCK_FORMAT];
+  const entriesToOmit = [
+    ACTIVITY_END_TIME,
+    ACTIVITY_SELECT_PAGE,
+    ACTIVITY_START_TIME,
+    CLOCK_FORMAT,
+    HAS_FOLLOWUP_QUESTIONS,
+    OTHER_ACTIVITY,
+  ];
 
   Object.entries(formData).forEach(([psk :string, pageData :Object]) => {
 
