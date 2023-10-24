@@ -197,7 +197,7 @@ const createFormSchema = (
   };
 };
 
-const createTimeUseSummary = (formData :Object, trans :TranslationFunction, activityDay :string, studySettings :Object) => {
+const createTimeUseSummary = (formData, trans, activityDay, studySettings) => {
 
   const summary = [];
 
@@ -222,8 +222,8 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
   });
 
   // get day duration (start and end)
-  const dayStartTime :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_START_TIME, formData);
-  const dayEndTime :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, formData);
+  const dayStartTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_START_TIME, formData);
+  const dayEndTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, formData);
 
   const formattedDayStartTime = is12hourFormat
     ? dayStartTime.toLocaleString(DateTime.TIME_SIMPLE)
@@ -233,12 +233,12 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
     ? dayEndTime.toLocaleString(DateTime.TIME_SIMPLE)
     : dayEndTime.toLocaleString(DateTime.TIME_24_SIMPLE);
 
-  const btbad :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, BED_TIME_BEFORE_ACTIVITY_DAY, formData);
+  const btbad = getDateTimeFromData(DAY_SPAN_PAGE, BED_TIME_BEFORE_ACTIVITY_DAY, formData);
   const formattedBTBAD = is12hourFormat
     ? btbad.toLocaleString(DateTime.TIME_SIMPLE)
     : btbad.toLocaleString(DateTime.TIME_24_SIMPLE);
 
-  let wutaad :DateTime;
+  let wutaad;
   if (enableChangesForOSU) {
     wutaad = getDateTimeFromData(wakeUpPage, WAKE_UP_TIME_AFTER_ACTIVITY_DAY, formData);
   }
