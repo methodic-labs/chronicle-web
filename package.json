@@ -42,7 +42,7 @@
     "auth0-lock": "~11.33.3",
     "axios": "~0.26.0",
     "connected-react-router": "~6.9.1",
-    "jwt-decode": "~3.1.0",
+    "jwt-decode": "~4.0.0",
     "file-saver": "~2.0.5",
     "history": "~4.10.0",
     "i18next": "~20.2.2",
