@@ -1,4 +1,3 @@
-// @flow
 import { DataProcessingUtils } from 'lattice-fabricate';
 
 import {
@@ -13,74 +12,105 @@ import TranslationKeys from '../constants/TranslationKeys';
 
 const { getPageSectionKey } = DataProcessingUtils;
 
-const createSchema = (trans :TranslationFunction, activityDay :string) => {
+const createSchema = (
+  translate,
+  activityDay,
+  enableChangesForOhioStateUniversity,
+) => {
   if (activityDay === TODAY) {
     return {
-      type: 'object',
-      title: '',
       properties: {
         [getPageSectionKey(DAY_SPAN_PAGE, 0)]: {
-          type: 'object',
-          title: '',
           properties: {
             [BED_TIME_BEFORE_ACTIVITY_DAY]: {
               default: '19:00',
-              description: trans(TranslationKeys.DEFAULT_TIME),
-              title: trans(TranslationKeys.BED_TIME_BEFORE_ACTIVITY_DAY),
+              description: translate(TranslationKeys.DEFAULT_TIME),
+              title: translate(TranslationKeys.BED_TIME_BEFORE_ACTIVITY_DAY),
               type: 'string',
             },
             [DAY_START_TIME]: {
               default: '07:00',
-              description: trans(TranslationKeys.DEFAULT_TIME),
-              title: trans(TranslationKeys.DAY_START_TIME, { context: activityDay }),
+              description: translate(TranslationKeys.DEFAULT_TIME),
+              title: translate(TranslationKeys.DAY_START_TIME, { context: activityDay }),
               type: 'string',
             },
             [DAY_END_TIME]: {
               default: '19:00',
-              description: trans(TranslationKeys.DEFAULT_TIME),
-              title: trans(TranslationKeys.DAY_END_TIME, { context: activityDay }),
+              description: translate(TranslationKeys.DEFAULT_TIME),
+              title: translate(TranslationKeys.DAY_END_TIME, { context: activityDay }),
               type: 'string',
             },
           },
           required: [BED_TIME_BEFORE_ACTIVITY_DAY, DAY_START_TIME, DAY_END_TIME],
+          title: '',
+          type: 'object',
         }
-      }
+      },
+      title: '',
+      type: 'object',
+    };
+  }
+  if (enableChangesForOhioStateUniversity) {
+    return {
+      properties: {
+        [getPageSectionKey(DAY_SPAN_PAGE, 0)]: {
+          properties: {
+            [DAY_START_TIME]: {
+              default: '07:00',
+              description: translate(TranslationKeys.DEFAULT_TIME),
+              title: translate(TranslationKeys.DAY_START_TIME, { context: activityDay }),
+              type: 'string',
+            },
+            [DAY_END_TIME]: {
+              default: '19:00',
+              description: translate(TranslationKeys.DEFAULT_TIME),
+              title: translate(TranslationKeys.DAY_END_TIME, { context: activityDay }),
+              type: 'string',
+            },
+          },
+          required: [DAY_START_TIME, DAY_END_TIME],
+          title: '',
+          type: 'object',
+        },
+      },
+      title: '',
+      type: 'object',
     };
   }
   return {
-    type: 'object',
-    title: '',
     properties: {
       [getPageSectionKey(DAY_SPAN_PAGE, 0)]: {
-        type: 'object',
-        title: '',
         properties: {
           [DAY_START_TIME]: {
+            default: '07:00',
+            description: translate(TranslationKeys.DEFAULT_TIME),
+            title: translate(TranslationKeys.DAY_START_TIME, { context: activityDay }),
             type: 'string',
-            title: trans(TranslationKeys.DAY_START_TIME, { context: activityDay }),
-            description: trans(TranslationKeys.DEFAULT_TIME),
-            default: '07:00'
           },
           [DAY_END_TIME]: {
+            default: '19:00',
+            description: translate(TranslationKeys.DEFAULT_TIME),
+            title: translate(TranslationKeys.DAY_END_TIME, { context: activityDay }),
             type: 'string',
-            title: trans(TranslationKeys.DAY_END_TIME, { context: activityDay }),
-            description: trans(TranslationKeys.DEFAULT_TIME),
-            default: '19:00'
           },
           [WAKE_UP_TIME_AFTER_ACTIVITY_DAY]: {
+            default: '07:00',
+            description: translate(TranslationKeys.DEFAULT_TIME),
+            title: translate(TranslationKeys.WAKE_UP_TIME_AFTER_ACTIVITY_DAY),
             type: 'string',
-            title: trans(TranslationKeys.WAKE_UP_TIME_AFTER_ACTIVITY_DAY),
-            description: trans(TranslationKeys.DEFAULT_TIME),
-            default: '07:00'
-          }
+          },
         },
-        required: [DAY_START_TIME, DAY_END_TIME, WAKE_UP_TIME_AFTER_ACTIVITY_DAY]
-      }
-    }
+        required: [DAY_START_TIME, DAY_END_TIME, WAKE_UP_TIME_AFTER_ACTIVITY_DAY],
+        title: '',
+        type: 'object',
+      },
+    },
+    title: '',
+    type: 'object',
   };
 };
 
-const createUiSchema = (is12hourFormat :boolean) => ({
+const createUiSchema = (is12hourFormat) => ({
   [getPageSectionKey(DAY_SPAN_PAGE, 0)]: {
     classNames: 'column-span-12 grid-container',
     [DAY_START_TIME]: {
