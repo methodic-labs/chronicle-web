@@ -1,6 +1,4 @@
-// @flow
-
-import { get, getIn, Map } from 'immutable';
+import { get, getIn } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
 import _set from 'lodash/set';
 import { DateTime } from 'luxon';
@@ -65,31 +63,31 @@ const { READING, MEDIA_USE } = PRIMARY_ACTIVITIES;
 
 const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
 
-const selectPrimaryActivityByPage = (pageNum :number, formData :Object) :string => {
+const selectPrimaryActivityByPage = (pageNum, formData) => {
   const psk = getPageSectionKey(pageNum, 0);
 
   const activityName = getIn(formData, [psk, ACTIVITY_NAME]);
   return activityName;
 };
 
-const getIs12HourFormatSelected = (formData :Object) :boolean => getIn(
+const getIs12HourFormatSelected = (formData) => getIn(
   formData, [getPageSectionKey(INTRO_PAGE, 0), CLOCK_FORMAT]
 ) === 12;
 
-const getSecondaryReadingSelected = (formData :Object, page :number) => getIn(
+const getSecondaryReadingSelected = (formData, page) => getIn(
   formData, [getPageSectionKey(page, 0), SECONDARY_ACTIVITY], []
 ).includes(READING);
 
-const getSecondaryMediaSelected = (formData :Object, page :number) => getIn(
+const getSecondaryMediaSelected = (formData, page) => getIn(
   formData, [getPageSectionKey(page, 0), SECONDARY_ACTIVITY], []
 ).includes(MEDIA_USE);
 
 const createFormSchema = (
-  formData :Object,
-  pageNum :number,
-  trans :TranslationFunction,
-  studySettings :Map,
-  activityDay :string,
+  formData,
+  pageNum,
+  trans,
+  studySettings,
+  activityDay,
 ) => {
 
   const is12hourFormat = getIs12HourFormatSelected(formData);
@@ -334,13 +332,13 @@ const createTimeUseSummary = (formData, trans, activityDay, studySettings) => {
   return summary;
 };
 
-const formatTime = (time :DateTime) => time.toLocaleString(DateTime.TIME_SIMPLE);
+const formatTime = (time) => time.toLocaleString(DateTime.TIME_SIMPLE);
 
 const applyCustomValidation = (
-  formData :Object,
-  errors :Object,
-  pageNum :number,
-  trans :TranslationFunction
+  formData,
+  errors,
+  pageNum,
+  trans,
 ) => {
   const psk = getPageSectionKey(pageNum, 0);
 
@@ -369,7 +367,7 @@ const applyCustomValidation = (
   return errors;
 };
 
-const stringifyValue = (value :any) => {
+const stringifyValue = (value) => {
   if (typeof value === 'boolean') {
     if (value) {
       return 'true';
@@ -381,11 +379,11 @@ const stringifyValue = (value :any) => {
 
 // TODO: omit first page (clock format select) from form
 const createSubmitRequestBody = (
-  formData :Object,
-  familyId :?string,
-  waveId :?string,
-  language :string,
-  translationData :Object
+  formData,
+  familyId,
+  waveId,
+  language,
+  translationData
 ) => {
   let result = [];
 
@@ -403,7 +401,7 @@ const createSubmitRequestBody = (
     response: [activityDay],
   });
 
-  const activityDateTime :DateTime = DateTime.fromISO(activityDate);
+  const activityDateTime = DateTime.fromISO(activityDate);
 
   // create english translation lookup
   const englishTranslationLookup = createEnglishTranslationLookup(translationData, language);
@@ -417,10 +415,10 @@ const createSubmitRequestBody = (
     OTHER_ACTIVITY,
   ];
 
-  Object.entries(formData).forEach(([psk :string, pageData :Object]) => {
+  Object.entries(formData).forEach(([psk, pageData]) => {
 
-    const parsed :Object = parsePageSectionKey(psk);
-    const { page } :{ page :string } = parsed;
+    const parsed = parsePageSectionKey(psk);
+    const { page } = parsed;
 
     if (parseInt(page, 10) !== INTRO_PAGE) {
 
@@ -648,7 +646,7 @@ const createSubmitRequestBody = (
 //   return prefix;
 // };
 
-const updateActivityDateAndDay = (formData :Object, activityDay :string) => {
+const updateActivityDateAndDay = (formData, activityDay) => {
   const psk = getPageSectionKey(0, 0);
   const activityDate = activityDay === TODAY
     ? DateTime.local().toISODate()
@@ -665,5 +663,5 @@ export {
   formatTime,
   getIs12HourFormatSelected,
   selectPrimaryActivityByPage,
-  updateActivityDateAndDay,
+  updateActivityDateAndDay
 };
