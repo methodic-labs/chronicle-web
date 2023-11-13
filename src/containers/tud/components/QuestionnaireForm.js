@@ -1,5 +1,3 @@
-// @flow
-
 import { useState } from 'react';
 
 import { faExclamationCircle } from '@fortawesome/pro-light-svg-icons';
@@ -7,16 +5,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getIn, merge, setIn } from 'immutable';
 import { DataProcessingUtils, Form } from 'lattice-fabricate';
 import { Button } from 'lattice-ui-kit';
-import { set, unset } from 'lodash';
+import _get from 'lodash/get';
+import _has from 'lodash/has';
+import _set from 'lodash/set';
+import _unset from 'lodash/unset';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 import styled from 'styled-components';
 
-import type { RequestState } from 'redux-reqseq';
-
 import {
   ACTIVITY_END_TIME,
+  ACTIVITY_SELECT_PAGE,
   ACTIVITY_START_TIME,
   DAY_END_TIME,
   DAY_OF_WEEK,
@@ -26,14 +26,21 @@ import {
   HAS_FOLLOWUP_QUESTIONS,
   LANGUAGE,
   ORGANIZATION_ID,
+  OTHER_ACTIVITY,
   PARTICIPANT_ID,
+  PRIMARY_ACTIVITY,
+  PRIMARY_BOOK_LANGUAGE,
+  PRIMARY_BOOK_LANGUAGE_NON_ENGLISH,
+  PRIMARY_MEDIA_LANGUAGE,
+  PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH,
   SECONDARY_ACTIVITY,
-  SLEEP_ARRANGEMENT,
+  SLEEP_PATTERN,
   STUDY_ID,
   TRANSLATION_DATA,
   TYPICAL_DAY_FLAG,
   WAVE_ID,
 } from '../../../common/constants';
+import { isNonEmptyString } from '../../../common/utils';
 import { submitTimeUseDiary } from '../actions';
 import { DAY_SPAN_PAGE } from '../constants';
 import TranslationKeys from '../constants/TranslationKeys';
@@ -79,29 +86,29 @@ const NextButtonWrapper = styled.div`
   (and it should be nightActivity data otherwise it also needs to be deleted)
  */
 
-const removeExtraData = (formRef :Object, pagedData, page :number) => {
+const removeExtraData = (formRef, pagedData, page) => {
   const psk = getPageSectionKey(page, 0);
-  const dayEndTime :?DateTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, pagedData);
-  const formData :Object = formRef?.current?.state?.formData || {};
+  const dayEndTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, pagedData);
+  const formData = formRef?.current?.state?.formData || {};
 
   const currEndTime = formData[psk]?.[ACTIVITY_END_TIME];
 
   if (dayEndTime && currEndTime) {
-    const currEndDateTime :DateTime = DateTime.fromSQL(currEndTime);
+    const currEndDateTime = DateTime.fromSQL(currEndTime);
     if (!currEndDateTime.equals(dayEndTime)) {
       return;
     }
 
     const pages = Object.keys(formData)
       .map((key) => {
-        const parsed :Object = parsePageSectionKey(key);
+        const parsed = parsePageSectionKey(key);
         return Number(parsed.page);
       });
 
     let toRemoveStartIndex = page + 1;
     // if the next page has night activity page data, skip
     const nextPageData = formData[getPageSectionKey(toRemoveStartIndex, 0)] || {};
-    if (Object.keys(nextPageData).includes(SLEEP_ARRANGEMENT)) {
+    if (Object.keys(nextPageData).includes(SLEEP_PATTERN)) {
       toRemoveStartIndex += 1;
     }
 
@@ -110,7 +117,7 @@ const removeExtraData = (formRef :Object, pagedData, page :number) => {
       .map((index) => getPageSectionKey(index, 0));
 
     toRemovePsks.forEach((toRemovePsk) => {
-      unset(formData, toRemovePsk);
+      _unset(formData, toRemovePsk);
     });
   }
 };
@@ -147,19 +154,19 @@ const forceFormDataStateUpdate = (formRef, pagedData = {}, page, activityDay) =>
 
     // current page contains followup questions for selected primary activity
     if (Object.keys(sectionData).includes(HAS_FOLLOWUP_QUESTIONS)) {
-      set(formData, [psk, ACTIVITY_END_TIME], formattedEndTime);
-      set(formData, [psk, ACTIVITY_START_TIME], formattedStartTime);
+      _set(formData, [psk, ACTIVITY_END_TIME], formattedEndTime);
+      _set(formData, [psk, ACTIVITY_START_TIME], formattedStartTime);
       removeExtraData(formRef, pagedData, page);
     }
 
     // current page is night activity page
-    else if (!Object.keys(sectionData).includes(SLEEP_ARRANGEMENT)) {
-      set(formData, [psk, ACTIVITY_START_TIME], formattedEndTime);
+    else if (!Object.keys(sectionData).includes(SLEEP_PATTERN)) {
+      _set(formData, [psk, ACTIVITY_START_TIME], formattedEndTime);
     }
   }
 };
 
-const updateTypicalDayLabel = (formData :Object, page :number, trans :TranslationFunction, activityDay :string) => {
+const updateTypicalDayLabel = (formData, page, trans, activityDay) => {
   const psk = getPageSectionKey(page, 0);
   const dayOfWeek = getIn(formData, [psk, DAY_OF_WEEK]);
   if (dayOfWeek) {
@@ -172,11 +179,10 @@ const updateTypicalDayLabel = (formData :Object, page :number, trans :Translatio
   }
 };
 
-const updatePrimaryActivityQuestion = (formData :Object, page :number, trans :(string, ?Object) => string) => {
+const updatePrimaryActivityQuestion = (formData, page, trans) => {
   const currentActivity = selectPrimaryActivityByPage(page, formData);
   if (currentActivity) {
     const endTimeInput = document.getElementById(`root_${getPageSectionKey(page, 0)}_endTime`);
-
     const label = endTimeInput?.parentNode?.parentNode?.parentNode?.firstChild;
     if (label) {
       // $FlowFixMe
@@ -185,45 +191,49 @@ const updatePrimaryActivityQuestion = (formData :Object, page :number, trans :(s
   }
 };
 
-const schemaHasFollowupQuestions = (schema :Object = {}, page :number) => {
+const schemaHasFollowupQuestions = (schema = {}, page) => {
   const psk = getPageSectionKey(page, 0);
   const properties = schema?.properties?.[psk]?.properties ?? {};
-
   return Object.keys(properties).includes(HAS_FOLLOWUP_QUESTIONS);
 };
 
-type TudActivities = {|
-  childcare :'string';
-  napping :'string';
-  eating :'string';
-  media_use :'string';
-  reading :'string';
-  indoor :'string';
-  outdoor :'string';
-  grooming :'string';
-  other :'string';
-  outdoors :'string';
-|};
+const onChangePrimaryActivity = (data, page) => {
+  const psk1 = getPageSectionKey(page, 0);
+  if (_get(data, [psk1, ACTIVITY_SELECT_PAGE]) !== true) {
+    return;
+  }
+  const psk2 = getPageSectionKey(page + 1, 0);
+  if (!_has(data, psk2)) {
+    return;
+  }
+  const newPrimaryActivity = _get(data, [psk1, PRIMARY_ACTIVITY]);
+  const previousPrimaryActivity = _get(data, [psk2, PRIMARY_ACTIVITY]);
+  if (
+    !isNonEmptyString(newPrimaryActivity)
+    || !isNonEmptyString(previousPrimaryActivity)
+    || newPrimaryActivity === previousPrimaryActivity
+  ) {
+    return;
+  }
+  // primary activity has changed, restart next page
+  _unset(data, psk2);
+};
 
-type Props = {
-  activityDay :string;
-  familyId :?string;
-  formSchema :Object;
-  initialFormData :Object;
-  isSummaryPage :boolean;
-  language :string;
-  organizationId :UUID;
-  pagedProps :Object;
-  participantId :string;
-  resetSurvey :(Function) => void;
-  shouldReset :boolean;
-  studyId :UUID;
-  submitRequestState :?RequestState;
-  trans :(string, ?Object) => Object;
-  translationData :Object;
-  updateFormState :(newSchema :Object, uiSchema :Object, formData :Object) => void;
-  updateSurveyProgress :(formData :Object) => void;
-  waveId :?string;
+const onToggleYesNo = (data, page, translate) => {
+  const psk = getPageSectionKey(page, 0);
+  const yes = translate(TranslationKeys.YES);
+  const otherActivityYesNo = _get(data, [psk, OTHER_ACTIVITY]);
+  if (otherActivityYesNo !== yes && _has(data, [psk, SECONDARY_ACTIVITY])) {
+    _set(data, [psk, SECONDARY_ACTIVITY], []);
+  }
+  const bookNonEnglishYesNo = _get(data, [psk, PRIMARY_BOOK_LANGUAGE_NON_ENGLISH]);
+  if (bookNonEnglishYesNo !== yes && _has(data, [psk, PRIMARY_BOOK_LANGUAGE])) {
+    _set(data, [psk, PRIMARY_BOOK_LANGUAGE], []);
+  }
+  const mediaNonEnglishYesNo = _get(data, [psk, PRIMARY_MEDIA_LANGUAGE_NON_ENGLISH]);
+  if (mediaNonEnglishYesNo !== yes && _has(data, [psk, PRIMARY_MEDIA_LANGUAGE])) {
+    _set(data, [psk, PRIMARY_MEDIA_LANGUAGE], []);
+  }
 };
 
 const QuestionnaireForm = ({
@@ -239,13 +249,14 @@ const QuestionnaireForm = ({
   resetSurvey,
   shouldReset,
   studyId,
+  studySettings,
   submitRequestState,
   trans,
   translationData,
   updateFormState,
   updateSurveyProgress,
   waveId,
-} :Props) => {
+}) => {
 
   const {
     formRef,
@@ -265,10 +276,10 @@ const QuestionnaireForm = ({
 
   const { schema, uiSchema } = formSchema;
 
-  const activities :TudActivities = trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
+  const activities = trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
 
-  const readingSchema = SecondaryFollowUpSchema.createSchema(activities.reading, trans);
-  const mediaUseSchema = SecondaryFollowUpSchema.createSchema(activities.media_use, trans);
+  const readingSchema = SecondaryFollowUpSchema.createSchema(activities.reading, trans, studySettings, activityDay);
+  const mediaUseSchema = SecondaryFollowUpSchema.createSchema(activities.media_use, trans, studySettings, activityDay);
 
   const handleNext = () => {
     if (isSummaryPage) {
@@ -328,6 +339,8 @@ const QuestionnaireForm = ({
   };
 
   const onChange = ({ formData, schema: currentSchema, uiSchema: currentUiSchema }) => {
+    onChangePrimaryActivity(formData, page);
+    onToggleYesNo(formData, page, trans);
     updatePrimaryActivityQuestion(formData, page, trans);
 
     if (isPreSurveyPage(page)) {
@@ -381,7 +394,8 @@ const QuestionnaireForm = ({
           <TimeUseSummary
               activityDay={activityDay}
               formData={pagedData}
-              goToPage={setPage} />
+              goToPage={setPage}
+              studySettings={studySettings} />
         ) : (
           <>
             {
@@ -407,7 +421,6 @@ const QuestionnaireForm = ({
                 transformErrors={transformErrors}
                 uiSchema={uiSchema}
                 validate={validate} />
-
           </>
         )
       }

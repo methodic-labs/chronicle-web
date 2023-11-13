@@ -83,6 +83,13 @@
     "Hermano",
     "Otro niño"
   ],
+  "collaborator": "Who (if anyone) was your child talking to or interacting with during this activity?",
+  "collaborator_options": [
+    "No one, engaging independently",
+    "A parent or another caregiver/adult",
+    "A sibling or another peer/child",
+    "Both adult(s) and child(ren)"
+  ],
   "bg_tv_day": "¿Había televisión de fondo mientras su hijo estaba {{activity}}? Por ejemplo, tal vez uno de los padres estaba viendo la televisión mientras su hijo hacía otra cosa en la habitación.",
   "bg_audio_day": "¿Había audio de fondo (p. ej., música, podcast) mientras su hijo estaba {{activity}}? Por ejemplo, tal vez uno de los padres estaba escuchando música mientras su hijo hacía otra cosa en la habitación.",
   "adult_media": "¿Estaba algún adulto usando un dispositivo móvil (teléfono, tableta, computadora portátil) mientras su hijo estaba {{activity}}? Por ejemplo, tal vez un padre estaba enviando mensajes de texto con el móvil mientras su hijo hacía otra cosa en la habitación.",
@@ -121,6 +128,28 @@
     "Libro impreso (de papel, cartón, etc.)",
     "Libro electrónico (eBook)",
     "Audiolibro"
+  ],
+  "device_type": "What device or devices was the child using?",
+  "device_type_options": [
+    "TV (including using streaming services viewed on a TV screen)",
+    "Tablet",
+    "Phone",
+    "Computer",
+    "Gaming device"
+  ],
+  "media_language_non_english": "Was the media entirely in a language other than English?",
+  "book_language_non_english": "Was/Were the book(s) entirely in a language other than English?",
+  "language": "What language(s)?",
+  "language_options": [
+    "Spanish",
+    "Somali",
+    "Nepali",
+    "Arabic",
+    "French",
+    "Hindi",
+    "Telgu",
+    "Chinese",
+    "German"
   ],
   "no_one": "Ninguno",
   "bg_tv_night": "¿Estaba la televisión encendidad en la habitación mientras su hijo dormía por la noche?",

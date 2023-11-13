@@ -1,14 +1,20 @@
-import { ACTIVITY_END_TIME, DAY_END_TIME, TODAY } from '../../../common/constants';
-import { DAY_SPAN_PAGE } from '../constants';
-import getDateTimeFromData from './getDateTimeFromData';
-import pageHasFollowUpQuestions from './pageHasFollowUpQuestions';
+import { YESTERDAY } from '../../../common/constants';
+import isDayComplete from './isDayComplete';
+import isNightActivityPage from './isNightActivityPage';
+import isWakeUpPage from './isWakeUpPage';
 
-export default function isSummaryPage(page, activityDay, data) {
-  const prevPage = activityDay === TODAY ? page - 1 : page - 2;
-  const prevEndTime = getDateTimeFromData(prevPage, ACTIVITY_END_TIME, data);
-  const dayEndTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, data);
-  return prevEndTime.isValid
-    && dayEndTime.isValid
-    && prevEndTime.equals(dayEndTime)
-    && pageHasFollowUpQuestions(prevPage, data);
+export default function isSummaryPage(page, data, activityDay, enableChangesForOhioStateUniversity) {
+  const previousPage = page - 1;
+  // if activity day is "yesterday", the previous page is either:
+  //   1. the night activity page
+  //   OR
+  //   2. the "what time did your child wake up this morning?" page
+  //      ONLY IF the "enableChangesForOhioStateUniversity" setting is true
+  if (activityDay === YESTERDAY) {
+    if (enableChangesForOhioStateUniversity) {
+      return isWakeUpPage(previousPage, data, activityDay, enableChangesForOhioStateUniversity);
+    }
+    return isNightActivityPage(previousPage, data, activityDay);
+  }
+  return isDayComplete(previousPage, data);
 }
