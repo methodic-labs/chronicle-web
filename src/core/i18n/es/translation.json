@@ -139,8 +139,8 @@
   ],
   "media_language_non_english": "¿Estaban los medios completamente en un idioma distinto al inglés?",
   "book_language_non_english": "¿Estaban los libros completamente en un idioma distinto al inglés?",
-  "idioma": "¿Qué idioma(s)?",
-  "Opciones de lenguaje": [
+  "language": "¿Qué idioma(s)?",
+  "language_options": [
     "Español",
     "Somalí",
     "Nepalí",
