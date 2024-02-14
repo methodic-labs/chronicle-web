@@ -1,31 +1,43 @@
-// @flow
-import { useEffect, useReducer } from 'react';
-
-import {
-  Map,
-  Set,
-} from 'immutable';
+import { Set, fromJS } from 'immutable';
 import {
   AppContainerWrapper,
   AppContentWrapper,
+  Box,
   Card,
   CardSegment,
+  DatePicker,
+  Spinner,
 } from 'lattice-ui-kit';
-import { useDispatch } from 'react-redux';
-import type { RequestState } from 'redux-reqseq';
+import { DateTime } from 'luxon';
+import { useEffect, useReducer, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { BasicErrorComponent } from '../../common/components';
+import { APP_USAGE_SURVEY, AppUsageFreqTypes } from '../../common/constants';
+import {
+  isFailure,
+  isPending,
+  isSuccess,
+  useRequestState
+} from '../../common/utils';
+import { selectAppUsageSurveyData } from '../../core/redux/selectors';
+import {
+  GET_APP_USAGE_SURVEY_DATA,
+  SUBMIT_APP_USAGE_SURVEY,
+  getAppUsageSurveyData,
+  submitAppUsageSurvey,
+} from './actions';
 import ConfirmSurveySubmissionModal from './components/ConfirmSurveySubmissionModal';
 import HourlySurvey from './components/HourlySurvey';
+import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch';
 import HourlyUsageSurveyAppBar from './components/HourlyUsageSurveyAppBar';
 import InstructionsModal from './components/InstructionsModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
-import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch';
-import { submitAppUsageSurvey } from './actions';
 import { SURVEY_STEPS } from './constants';
 import { createHourlySurveySubmissionData } from './utils';
 
-import { BasicErrorComponent } from '../../common/components';
-import { isFailure, isPending, isSuccess } from '../../common/utils';
+const SELECT_DATE_TEXT = 'Thank you for taking the time to complete this survey! Please select a date'
+  + ' for which to view app usage records.';
 
 const {
   SELECT_CHILD_APPS,
@@ -35,40 +47,37 @@ const {
   INTRO
 } = SURVEY_STEPS;
 
-const initialState = {
-  childOnlyApps: Set().asMutable(),
-  initialTimeRangeSelections: Map().asMutable(),
+const INITIAL_STATE = fromJS({
+  appsCount: 0,
+  appsData: {},
+  childOnlyApps: Set(),
+  initialTimeRangeSelections: {},
   isConfirmModalVisible: false,
+  isFinalStep: false,
   isInstructionsModalVisible: false,
   isSubmissionConfirmed: false,
-  isFinalStep: false,
-  otherTimeRangeSelections: Map().asMutable(),
-  sharedApps: Set().asMutable(),
+  otherTimeRangeSelections: {},
+  sharedApps: Set(),
+  sharedAppsOptionsCount: 0,
   step: 0,
   surveyStep: INTRO,
-  sharedAppsOptionsCount: 0,
-};
+});
 
 const reducer = (state, action) => {
 
-  const getNextStep = () => {
+  const getNextStep = (currentSurveyStep, sharedApps) => {
     let isFinalStep = false;
     let nextStep = '';
-    const {
-      surveyStep,
-      sharedApps,
-    } = state;
-    if (surveyStep === INTRO) {
+    if (currentSurveyStep === INTRO) {
       nextStep = SELECT_CHILD_APPS;
     }
-    if (surveyStep === SELECT_CHILD_APPS) {
+    if (currentSurveyStep === SELECT_CHILD_APPS) {
       nextStep = SELECT_SHARED_APPS;
       isFinalStep = true; // User might choose not to select anything from the shared apps page
       // in which case they should be able to submit the survey. However, if they select anything
       // we need to set isFinalStep = false so that they can move on to the next page
     }
-
-    if (surveyStep === SELECT_SHARED_APPS) {
+    if (currentSurveyStep === SELECT_SHARED_APPS) {
       if (sharedApps.isEmpty()) {
         // No shared apps selected: skip time-resolution steps
         isFinalStep = true;
@@ -77,26 +86,21 @@ const reducer = (state, action) => {
         nextStep = RESOLVE_SHARED_APPS;
       }
     }
-    if (surveyStep === RESOLVE_SHARED_APPS) {
+    if (currentSurveyStep === RESOLVE_SHARED_APPS) {
       nextStep = RESOLVE_OTHER_APPS;
       isFinalStep = true;
     }
-
     return { isFinalStep, nextStep };
   };
 
-  const getPrevStep = () => {
-    const {
-      surveyStep
-    } = state;
-
-    if (surveyStep === RESOLVE_OTHER_APPS) {
+  const getPrevStep = (currentSurveyStep) => {
+    if (currentSurveyStep === RESOLVE_OTHER_APPS) {
       return RESOLVE_SHARED_APPS;
     }
-    if (surveyStep === RESOLVE_SHARED_APPS) {
+    if (currentSurveyStep === RESOLVE_SHARED_APPS) {
       return SELECT_SHARED_APPS;
     }
-    if (surveyStep === SELECT_SHARED_APPS) {
+    if (currentSurveyStep === SELECT_SHARED_APPS) {
       return SELECT_CHILD_APPS;
     }
     return INTRO;
@@ -105,60 +109,43 @@ const reducer = (state, action) => {
   switch (action.type) {
     case ACTIONS.ASSIGN_USER: {
       const { appName } = action;
+      const appsCount = state.get('appsCount');
+      const childOnlyApps = state.get('childOnlyApps');
+      const sharedApps = state.get('sharedApps');
+      const surveyStep = state.get('surveyStep');
 
-      const {
-        childOnlyApps,
-        sharedApps,
-        appsCount,
-        surveyStep
-      } = state;
-
-      const selected = surveyStep === SELECT_CHILD_APPS ? childOnlyApps : sharedApps;
-
+      let selected = surveyStep === SELECT_CHILD_APPS ? Set(childOnlyApps) : Set(sharedApps);
       if (selected.has(appName)) {
-        selected.delete(appName);
+        selected = selected.delete(appName);
       }
       else {
-        selected.add(appName);
+        selected = selected.add(appName);
       }
 
       if (surveyStep === SELECT_CHILD_APPS) {
         // If user select all apps, enable submit
-        const isFinalStep = selected.size === appsCount;
-        return {
-          ...state,
-          childOnlyApps: selected,
-          isFinalStep
-        };
+        // const isFinalStep = selected.size === appsCount;
+        return state
+          .set('childOnlyApps', selected)
+          .set('isFinalStep', selected.size === appsCount);
       }
 
-      return {
-        ...state,
-        isFinalStep: selected.isEmpty(),
-        sharedApps: selected
-      };
+      return state
+        .set('isFinalStep', selected.isEmpty())
+        .set('sharedApps', selected);
     }
-
     case ACTIONS.TOGGLE_INSTRUCTIONS_MODAL: {
-      const { visible } = action;
-      return {
-        ...state,
-        isInstructionsModalVisible: visible
-      };
+      return state.set('isInstructionsModalVisible', action.visible);
     }
-
     case ACTIONS.SELECT_TIME_RANGE: {
       const { appName, timeRange } = action;
-      const {
-        initialTimeRangeSelections,
-        otherTimeRangeSelections,
-        sharedAppsOptionsCount,
-        surveyStep,
-      } = state;
+      const initialTimeRangeSelections = state.get('initialTimeRangeSelections');
+      const otherTimeRangeSelections = state.get('otherTimeRangeSelections');
+      const sharedAppsOptionsCount = state.get('sharedAppsOptionsCount');
+      const surveyStep = state.get('surveyStep');
+      let updatedValue = surveyStep === RESOLVE_SHARED_APPS ? initialTimeRangeSelections : otherTimeRangeSelections;
 
-      const updatedValue = surveyStep === RESOLVE_SHARED_APPS ? initialTimeRangeSelections : otherTimeRangeSelections;
-
-      updatedValue.update(
+      updatedValue = updatedValue.update(
         appName,
         Set(),
         (current) => (current.has(timeRange) ? current.delete(timeRange) : current.add(timeRange))
@@ -167,117 +154,122 @@ const reducer = (state, action) => {
       if (surveyStep === RESOLVE_SHARED_APPS) {
         // Here we count the number of selections so far and compare with the total number of
         // possible selections. If equal, indicate survey as done by setting isFinalStep = true
-        const currentSelectionsCount = updatedValue.keySeq().toSet().map((key) => updatedValue.get(key).size)
+        const currentSelectionsCount = updatedValue.keySeq().toSet()
+          .map((key) => updatedValue.get(key).size)
           .reduce((prev, next) => prev + next);
-
-        const isFinalStep = currentSelectionsCount === sharedAppsOptionsCount;
-        return {
-          ...state,
-          initialTimeRangeSelections: updatedValue,
-          isFinalStep
-        };
+        return state
+          .set('initialTimeRangeSelections', updatedValue)
+          .set('isFinalStep', currentSelectionsCount === sharedAppsOptionsCount);
       }
-      return {
-        ...state,
-        remainingTimeRangeOptions: updatedValue
-      };
+      return state.set('otherTimeRangeSelections', updatedValue);
     }
     case ACTIONS.NEXT_STEP: {
-      const {
-        surveyStep,
-        sharedAppsOptionsCount,
-        appsData,
-        sharedApps
-      } = state;
-      let optionsCount = sharedAppsOptionsCount;
+      const currentSurveyStep = state.get('surveyStep');
+      const sharedApps = state.get('sharedApps');
+      let sharedAppsOptionsCount = state.get('sharedAppsOptionsCount');
 
-      if (surveyStep === SELECT_SHARED_APPS) {
+      if (currentSurveyStep === SELECT_SHARED_APPS) {
         // When navigating away from the shared apps selection page,
         // we calculate total number of possible selections available for next step(s) of survey
-        optionsCount = sharedApps.asImmutable()
-          .map((app) => appsData.getIn([app, 'data']).size)
+        sharedAppsOptionsCount = sharedApps
+          .map((app) => state.getIn(['appsData', app, 'data'], Set()).size)
           .reduce((prev, next) => prev + next);
       }
 
-      const { isFinalStep, nextStep } = getNextStep();
-      return {
-        ...state,
-        isFinalStep,
-        step: state.step + 1,
-        surveyStep: nextStep,
-        sharedApps: sharedApps.asMutable(),
-        sharedAppsOptionsCount: optionsCount
-      };
+      const { isFinalStep, nextStep } = getNextStep(currentSurveyStep, sharedApps);
+      return state
+        .set('isFinalStep', isFinalStep)
+        .set('sharedAppsOptionsCount', sharedAppsOptionsCount)
+        .set('step', state.get('step') + 1)
+        .set('surveyStep', nextStep);
     }
     case ACTIONS.PREV_STEP: {
-      return {
-        ...state,
-        isFinalStep: false,
-        step: state.step - 1,
-        surveyStep: getPrevStep(),
-      };
+      const currentSurveyStep = state.get('surveyStep');
+      return state
+        .set('isFinalStep', false)
+        .set('step', state.get('step') - 1)
+        .set('surveyStep', getPrevStep(currentSurveyStep));
     }
     case ACTIONS.CONFIRM_SUBMIT: {
-      return {
-        ...state,
-        isSubmissionConfirmed: true,
-        isConfirmModalVisible: false
-      };
+      return state
+        .set('isConfirmModalVisible', false)
+        .set('isSubmissionConfirmed', true);
     }
     case ACTIONS.CANCEL_SUBMIT: {
-      return {
-        ...state,
-        isConfirmModalVisible: false
-      };
+      return state.set('isConfirmModalVisible', false);
     }
     case ACTIONS.SHOW_CONFIRM_MODAL: {
-      return {
-        ...state,
-        isConfirmModalVisible: true
-      };
+      return state.set('isConfirmModalVisible', true);
+    }
+    case ACTIONS.SET_DATA: {
+      return state
+        .set('appsCount', action.data.keySeq().size)
+        .set('appsData', action.data);
+    }
+    case ACTIONS.RESET: {
+      return INITIAL_STATE;
     }
     default:
       return state;
   }
 };
 
-type Props = {
-  data :Map;
-  date :string;
-  submitSurveyRS :?RequestState;
-  getAppUsageSurveyDataRS :?RequestState;
-  participantId :string;
-  studyId :UUID ;
-};
-
-const HourlyAppUsageSurvey = (props :Props) => {
-  const {
-    data,
-    date,
-    studyId,
-    participantId,
-    submitSurveyRS,
-    getAppUsageSurveyDataRS,
-  } = props;
+const HourlyAppUsageSurvey = ({
+  date,
+  participantId,
+  studyId,
+}) => {
 
   const storeDispatch = useDispatch();
+  const [surveyDate, setSurveyDate] = useState();
 
-  const [state, dispatch] = useReducer(reducer, {
-    ...initialState,
-    appsData: data,
-    appsCount: data.keySeq().size
-  });
+  const data = useSelector(selectAppUsageSurveyData());
+  const getAppUsageSurveyDataRS = useRequestState([APP_USAGE_SURVEY, GET_APP_USAGE_SURVEY_DATA]);
+  const submitRS = useRequestState([APP_USAGE_SURVEY, SUBMIT_APP_USAGE_SURVEY]);
 
-  const {
-    step,
-    surveyStep,
-    childOnlyApps,
-    isConfirmModalVisible,
-    initialTimeRangeSelections,
-    otherTimeRangeSelections,
-    isSubmissionConfirmed,
-    isInstructionsModalVisible,
-  } = state;
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const childOnlyApps = state.get('childOnlyApps');
+  const initialTimeRangeSelections = state.get('initialTimeRangeSelections');
+  const isConfirmModalVisible = state.get('isConfirmModalVisible');
+  const isInstructionsModalVisible = state.get('isInstructionsModalVisible');
+  const isSubmissionConfirmed = state.get('isSubmissionConfirmed');
+  const otherTimeRangeSelections = state.get('otherTimeRangeSelections');
+  const step = state.get('step');
+  const surveyStep = state.get('surveyStep');
+
+  useEffect(() => {
+    if (typeof date === 'string') {
+      const maybeDate = DateTime.fromFormat(date, 'yyyy-MM-dd');
+      if (maybeDate.isValid) {
+        setSurveyDate(maybeDate.toISODate());
+      }
+    }
+  }, [date]);
+
+  useEffect(() => {
+    if (isSuccess(getAppUsageSurveyDataRS)) {
+      dispatch({ data, type: ACTIONS.SET_DATA });
+    }
+  }, [data, getAppUsageSurveyDataRS]);
+
+  useEffect(() => {
+    if (typeof surveyDate === 'string') {
+      dispatch({ type: ACTIONS.RESET });
+      storeDispatch(
+        getAppUsageSurveyData({
+          appUsageFreqType: AppUsageFreqTypes.HOURLY,
+          date: surveyDate,
+          participantId,
+          studyId,
+        })
+      );
+    }
+  }, [
+    participantId,
+    storeDispatch,
+    studyId,
+    surveyDate,
+  ]);
 
   useEffect(() => {
     if (isSubmissionConfirmed) {
@@ -302,25 +294,28 @@ const HourlyAppUsageSurvey = (props :Props) => {
     data,
     initialTimeRangeSelections,
     isSubmissionConfirmed,
-    participantId,
     otherTimeRangeSelections,
+    participantId,
     storeDispatch,
     studyId,
   ]);
 
-  const hasSubmitted = isSuccess(submitSurveyRS) || isFailure(submitSurveyRS);
-
-  const isSubmitting = isPending(submitSurveyRS);
-
-  const SubmissionCompleted = () => (
-    <>
-      {
-        isSuccess(submitSurveyRS)
-          ? <SubmissionSuccessful />
-          : <BasicErrorComponent />
-      }
-    </>
-  );
+  if (isSuccess(submitRS) || isFailure(submitRS)) {
+    return (
+      <HourlySurveyDispatch.Provider value={dispatch}>
+        <AppContainerWrapper>
+          <HourlyUsageSurveyAppBar step={step} />
+          <AppContentWrapper>
+            {
+              isSuccess(submitRS)
+                ? <SubmissionSuccessful />
+                : <BasicErrorComponent />
+            }
+          </AppContentWrapper>
+        </AppContainerWrapper>
+      </HourlySurveyDispatch.Provider>
+    );
+  }
 
   return (
     <HourlySurveyDispatch.Provider value={dispatch}>
@@ -329,18 +324,39 @@ const HourlyAppUsageSurvey = (props :Props) => {
         <AppContentWrapper>
           <Card>
             <CardSegment noBleed>
-              {
-                hasSubmitted
-                  ? <SubmissionCompleted />
-                  : (
-                    <HourlySurvey
-                        data={data}
-                        getAppUsageSurveyDataRS={getAppUsageSurveyDataRS}
-                        isSubmitting={isSubmitting}
-                        state={state} />
-                  )
-              }
+              <Box mb="32px">{SELECT_DATE_TEXT}</Box>
+              <Box maxWidth="300px">
+                <DatePicker
+                    onChange={(value) => setSurveyDate(value)}
+                    value={surveyDate} />
+              </Box>
             </CardSegment>
+            {
+              typeof surveyDate === 'string' && (
+                <CardSegment noBleed>
+                  {
+                    isPending(getAppUsageSurveyDataRS) && (
+                      <Spinner size="2x" />
+                    )
+                  }
+                  {
+                    isSuccess(getAppUsageSurveyDataRS) && (
+                      <HourlySurvey
+                          data={data}
+                          isSubmitting={isPending(submitRS)}
+                          state={state} />
+                    )
+                  }
+                  {
+                    isFailure(getAppUsageSurveyDataRS) && (
+                      <Box textAlign="center">
+                        Sorry, something went wrong. Please try refreshing the page, or contact support.
+                      </Box>
+                    )
+                  }
+                </CardSegment>
+              )
+            }
           </Card>
         </AppContentWrapper>
       </AppContainerWrapper>
