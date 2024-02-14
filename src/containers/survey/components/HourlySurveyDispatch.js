@@ -1,7 +1,6 @@
-// @flow
 import { createContext } from 'react';
 
-const HourlySurveyDispatch :any = createContext(null);
+const HourlySurveyDispatch = createContext(null);
 
 export const ACTIONS = {
   ASSIGN_USER: 'assign_user',
@@ -11,7 +10,9 @@ export const ACTIONS = {
   NEXT_STEP: 'next_step',
   OTHER_CHILD_SELECT_TIME: 'other_child_select_time',
   PREV_STEP: 'prev_step',
+  RESET: 'reset',
   SELECT_TIME_RANGE: 'select_time_range',
+  SET_DATA: 'set_data',
   SHOW_CONFIRM_MODAL: 'show_confirm_modal',
   TOGGLE_INSTRUCTIONS_MODAL: 'toggle_instructions_modal',
 };

@@ -13,11 +13,9 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
+import { APP_USAGE_SURVEY, AppUsageFreqTypes } from '../../common/constants';
 import {
-  APP_USAGE_SURVEY,
-  AppUsageFreqTypes
-} from '../../common/constants';
-import {
+  isFailure,
   isPending,
   isSuccess,
   useRequestState
@@ -57,7 +55,7 @@ const DailyAppUsageSurvey = ({
     }
   }, [date]);
 
-  const appUsageSurveyData = useSelector(selectAppUsageSurveyData());
+  const data = useSelector(selectAppUsageSurveyData());
   const getAppUsageSurveyDataRS = useRequestState([APP_USAGE_SURVEY, GET_APP_USAGE_SURVEY_DATA]);
   const submitRS = useRequestState([APP_USAGE_SURVEY, SUBMIT_APP_USAGE_SURVEY]);
 
@@ -95,14 +93,13 @@ const DailyAppUsageSurvey = ({
       <AppHeaderWrapper appIcon={OpenLatticeIconSVG} appTitle="Chronicle" />
       <AppContentWrapper>
         <Box fontSize="20px" mb="32px">
-          Apps Usage Survey
+          App Usage Survey
         </Box>
         <Card>
           <CardSegment noBleed>
             <Box mb="32px">{SELECT_DATE_TEXT}</Box>
             <Box maxWidth="300px">
               <DatePicker
-                  closeOnSelect
                   onChange={(value) => setSurveyDate(value)}
                   value={surveyDate} />
             </Box>
@@ -116,20 +113,27 @@ const DailyAppUsageSurvey = ({
                   )
                 }
                 {
-                  isSuccess(getAppUsageSurveyDataRS) && appUsageSurveyData.isEmpty() && (
+                  isSuccess(getAppUsageSurveyDataRS) && data.isEmpty() && (
                     <div>{NO_APPS_TEXT}</div>
                   )
                 }
                 {
-                  isSuccess(getAppUsageSurveyDataRS) && !appUsageSurveyData.isEmpty() && (
+                  isSuccess(getAppUsageSurveyDataRS) && !data.isEmpty() && (
                     <>
                       <Box mb="16px">{INSTRUCTIONS_TEXT}</Box>
                       <SurveyForm
-                          data={appUsageSurveyData}
+                          data={data}
                           participantId={participantId}
                           studyId={studyId}
                           submitSurveyRS={submitRS} />
                     </>
+                  )
+                }
+                {
+                  isFailure(getAppUsageSurveyDataRS) && (
+                    <Box textAlign="center">
+                      Sorry, something went wrong. Please try refreshing the page, or contact support.
+                    </Box>
                   )
                 }
               </CardSegment>
