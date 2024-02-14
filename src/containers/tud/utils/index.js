@@ -1,6 +1,4 @@
-// @flow
-
-import { get, getIn, Map } from 'immutable';
+import { get, getIn } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
 import _set from 'lodash/set';
 import { DateTime } from 'luxon';
@@ -13,6 +11,7 @@ import {
   ACTIVITY_DAY,
   ACTIVITY_END_TIME,
   ACTIVITY_NAME,
+  ACTIVITY_SELECT_PAGE,
   ACTIVITY_START_TIME,
   BED_TIME_BEFORE_ACTIVITY_DAY,
   CLOCK_FORMAT,
@@ -37,52 +36,58 @@ import * as NightTimeActivitySchema from '../schemas/NightTimeActivitySchema';
 import * as PreSurveySchema from '../schemas/PreSurveySchema';
 import * as PrimaryActivitySchema from '../schemas/PrimaryActivitySchema';
 import * as SurveyIntroSchema from '../schemas/SurveyIntroSchema';
+import * as WakeUpPageSchema from '../schemas/WakeUpPageSchema';
 import getDateTimeFromData from './getDateTimeFromData';
+import getEnableChangesForOhioStateUniversity from './getEnableChangesForOhioStateUniversity';
 import getFirstActivityPage from './getFirstActivityPage';
 import isDaySpanPage from './isDaySpanPage';
 import isFirstActivityPage from './isFirstActivityPage';
 import isIntroPage from './isIntroPage';
 import isNightActivityPage from './isNightActivityPage';
 import isPreSurveyPage from './isPreSurveyPage';
+import isWakeUpPage from './isWakeUpPage';
 import pageHasFollowUpQuestions from './pageHasFollowUpQuestions';
 
 export { default as getDateTimeFromData } from './getDateTimeFromData';
+export { default as getEnableChangesForOhioStateUniversity } from './getEnableChangesForOhioStateUniversity';
 export { default as getFirstActivityPage } from './getFirstActivityPage';
+export { default as isDayActivityPage } from './isDayActivityPage';
 export { default as isFirstActivityPage } from './isFirstActivityPage';
-export { default as isNightActivityPage } from './isNightActivityPage';
 export { default as isIntroPage } from './isIntroPage';
+export { default as isNightActivityPage } from './isNightActivityPage';
 export { default as isSummaryPage } from './isSummaryPage';
+export { default as isWakeUpPage } from './isWakeUpPage';
 export { default as pageHasFollowUpQuestions } from './pageHasFollowUpQuestions';
 
 const { READING, MEDIA_USE } = PRIMARY_ACTIVITIES;
 
 const { getPageSectionKey, parsePageSectionKey } = DataProcessingUtils;
 
-const selectPrimaryActivityByPage = (pageNum :number, formData :Object) :string => {
+const selectPrimaryActivityByPage = (pageNum, formData) => {
   const psk = getPageSectionKey(pageNum, 0);
 
   const activityName = getIn(formData, [psk, ACTIVITY_NAME]);
   return activityName;
 };
 
-const getIs12HourFormatSelected = (formData :Object) :boolean => getIn(
+const getIs12HourFormatSelected = (formData) => getIn(
   formData, [getPageSectionKey(INTRO_PAGE, 0), CLOCK_FORMAT]
 ) === 12;
 
-const getSecondaryReadingSelected = (formData :Object, page :number) => getIn(
+const getSecondaryReadingSelected = (formData, page) => getIn(
   formData, [getPageSectionKey(page, 0), SECONDARY_ACTIVITY], []
 ).includes(READING);
 
-const getSecondaryMediaSelected = (formData :Object, page :number) => getIn(
+const getSecondaryMediaSelected = (formData, page) => getIn(
   formData, [getPageSectionKey(page, 0), SECONDARY_ACTIVITY], []
 ).includes(MEDIA_USE);
 
 const createFormSchema = (
-  formData :Object,
-  pageNum :number,
-  trans :TranslationFunction,
-  studySettings :Map,
-  activityDay :string,
+  formData,
+  pageNum,
+  trans,
+  studySettings,
+  activityDay,
 ) => {
 
   const is12hourFormat = getIs12HourFormatSelected(formData);
@@ -92,6 +97,8 @@ const createFormSchema = (
 
   const enableChangesForSherbrookeUniversity = studySettings
     .getIn(['TimeUseDiary', 'enableChangesForSherbrookeUniversity']) || false;
+
+  const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
 
   if (isIntroPage(pageNum)) {
     return {
@@ -109,15 +116,22 @@ const createFormSchema = (
 
   if (isDaySpanPage(pageNum)) {
     return {
-      schema: DaySpanSchema.createSchema(trans, activityDay),
+      schema: DaySpanSchema.createSchema(trans, activityDay, enableChangesForOSU),
       uiSchema: DaySpanSchema.createUiSchema(is12hourFormat)
     };
   }
 
-  if (isNightActivityPage(pageNum, activityDay, formData)) {
+  if (isNightActivityPage(pageNum, formData, activityDay)) {
     return {
-      schema: NightTimeActivitySchema.createSchema(pageNum, trans, studySettings),
+      schema: NightTimeActivitySchema.createSchema(pageNum, trans, studySettings, activityDay),
       uiSchema: NightTimeActivitySchema.createUiSchema(pageNum, trans),
+    };
+  }
+
+  if (isWakeUpPage(pageNum, formData, activityDay, enableChangesForOSU)) {
+    return {
+      schema: WakeUpPageSchema.createSchema(pageNum, trans, studySettings),
+      uiSchema: WakeUpPageSchema.createUiSchema(pageNum, trans),
     };
   }
 
@@ -152,9 +166,15 @@ const createFormSchema = (
       isSecondaryReadingSelected,
       isSecondaryMediaSelected,
       trans,
-      studySettings
+      studySettings,
+      activityDay,
     );
-    uiSchema = ContextualSchema.createUiSchema(pageNum, trans);
+    uiSchema = ContextualSchema.createUiSchema(
+      pageNum,
+      trans,
+      studySettings,
+      activityDay,
+    );
   }
   else {
     schema = PrimaryActivitySchema.createSchema(
@@ -175,15 +195,33 @@ const createFormSchema = (
   };
 };
 
-const createTimeUseSummary = (formData :Object, trans :TranslationFunction, activityDay :string) => {
+const createTimeUseSummary = (formData, trans, activityDay, studySettings) => {
 
   const summary = [];
 
+  const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
   const is12hourFormat = getIs12HourFormatSelected(formData);
 
+  const pages = Object.keys(formData).sort((psk1, psk2) => {
+    const { page: pageStr1 } = parsePageSectionKey(psk1);
+    const p1 = parseInt(pageStr1, 10);
+    const { page: pageStr2 } = parsePageSectionKey(psk2);
+    const p2 = parseInt(pageStr2, 10);
+    return p1 - p2;
+  });
+
+  let wakeUpPage = -1;
+  pages.forEach((key) => {
+    const { page: pageStr } = parsePageSectionKey(key);
+    const page = parseInt(pageStr, 10);
+    if (isWakeUpPage(page, formData, activityDay, enableChangesForOSU)) {
+      wakeUpPage = page;
+    }
+  });
+
   // get day duration (start and end)
-  const dayStartTime :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_START_TIME, formData);
-  const dayEndTime :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, formData);
+  const dayStartTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_START_TIME, formData);
+  const dayEndTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, formData);
 
   const formattedDayStartTime = is12hourFormat
     ? dayStartTime.toLocaleString(DateTime.TIME_SIMPLE)
@@ -193,12 +231,19 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
     ? dayEndTime.toLocaleString(DateTime.TIME_SIMPLE)
     : dayEndTime.toLocaleString(DateTime.TIME_24_SIMPLE);
 
-  const btbad :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, BED_TIME_BEFORE_ACTIVITY_DAY, formData);
+  const btbad = getDateTimeFromData(DAY_SPAN_PAGE, BED_TIME_BEFORE_ACTIVITY_DAY, formData);
   const formattedBTBAD = is12hourFormat
     ? btbad.toLocaleString(DateTime.TIME_SIMPLE)
     : btbad.toLocaleString(DateTime.TIME_24_SIMPLE);
 
-  const wutaad :DateTime = getDateTimeFromData(DAY_SPAN_PAGE, WAKE_UP_TIME_AFTER_ACTIVITY_DAY, formData);
+  let wutaad;
+  if (enableChangesForOSU) {
+    wutaad = getDateTimeFromData(wakeUpPage, WAKE_UP_TIME_AFTER_ACTIVITY_DAY, formData);
+  }
+  else {
+    wutaad = getDateTimeFromData(DAY_SPAN_PAGE, WAKE_UP_TIME_AFTER_ACTIVITY_DAY, formData);
+  }
+
   const formattedWUTAAD = is12hourFormat
     ? wutaad.toLocaleString(DateTime.TIME_SIMPLE)
     : wutaad.toLocaleString(DateTime.TIME_24_SIMPLE);
@@ -224,14 +269,6 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
     time: formattedDayStartTime,
   });
 
-  const pages = Object.keys(formData).sort((psk1, psk2) => {
-    const { page: pageStr1 } = parsePageSectionKey(psk1);
-    const p1 = parseInt(pageStr1, 10);
-    const { page: pageStr2 } = parsePageSectionKey(psk2);
-    const p2 = parseInt(pageStr2, 10);
-    return p1 - p2;
-  });
-
   pages.forEach((key) => {
     const { page: pageStr } = parsePageSectionKey(key);
     const page = parseInt(pageStr, 10);
@@ -241,6 +278,7 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
       page === INTRO_PAGE
       || page === PRE_SURVEY_PAGE
       || page === DAY_SPAN_PAGE
+      || isWakeUpPage(page, formData, activityDay, enableChangesForOSU)
       || pageHasFollowUpQuestions(page, formData)
     ) {
       return;
@@ -248,7 +286,7 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
 
     // only add entry for night activity page if activity day is "yesterday"
     // (i.e. original logic before "yesterday"/"today" was introduced)
-    if (isNightActivityPage(page, activityDay, formData)) {
+    if (isNightActivityPage(page, formData, activityDay)) {
       if (activityDay === YESTERDAY) {
         summary.push({
           description: trans(TranslationKeys.SLEEPING),
@@ -294,13 +332,13 @@ const createTimeUseSummary = (formData :Object, trans :TranslationFunction, acti
   return summary;
 };
 
-const formatTime = (time :DateTime) => time.toLocaleString(DateTime.TIME_SIMPLE);
+const formatTime = (time) => time.toLocaleString(DateTime.TIME_SIMPLE);
 
 const applyCustomValidation = (
-  formData :Object,
-  errors :Object,
-  pageNum :number,
-  trans :TranslationFunction
+  formData,
+  errors,
+  pageNum,
+  trans,
 ) => {
   const psk = getPageSectionKey(pageNum, 0);
 
@@ -329,7 +367,7 @@ const applyCustomValidation = (
   return errors;
 };
 
-const stringifyValue = (value :any) => {
+const stringifyValue = (value) => {
   if (typeof value === 'boolean') {
     if (value) {
       return 'true';
@@ -341,11 +379,11 @@ const stringifyValue = (value :any) => {
 
 // TODO: omit first page (clock format select) from form
 const createSubmitRequestBody = (
-  formData :Object,
-  familyId :?string,
-  waveId :?string,
-  language :string,
-  translationData :Object
+  formData,
+  familyId,
+  waveId,
+  language,
+  translationData
 ) => {
   let result = [];
 
@@ -363,17 +401,24 @@ const createSubmitRequestBody = (
     response: [activityDay],
   });
 
-  const activityDateTime :DateTime = DateTime.fromISO(activityDate);
+  const activityDateTime = DateTime.fromISO(activityDate);
 
   // create english translation lookup
   const englishTranslationLookup = createEnglishTranslationLookup(translationData, language);
 
-  const entriesToOmit = [ACTIVITY_START_TIME, ACTIVITY_END_TIME, HAS_FOLLOWUP_QUESTIONS, OTHER_ACTIVITY, CLOCK_FORMAT];
+  const entriesToOmit = [
+    ACTIVITY_END_TIME,
+    ACTIVITY_SELECT_PAGE,
+    ACTIVITY_START_TIME,
+    CLOCK_FORMAT,
+    HAS_FOLLOWUP_QUESTIONS,
+    OTHER_ACTIVITY,
+  ];
 
-  Object.entries(formData).forEach(([psk :string, pageData :Object]) => {
+  Object.entries(formData).forEach(([psk, pageData]) => {
 
-    const parsed :Object = parsePageSectionKey(psk);
-    const { page } :{ page :string } = parsed;
+    const parsed = parsePageSectionKey(psk);
+    const { page } = parsed;
 
     if (parseInt(page, 10) !== INTRO_PAGE) {
 
@@ -601,7 +646,7 @@ const createSubmitRequestBody = (
 //   return prefix;
 // };
 
-const updateActivityDateAndDay = (formData :Object, activityDay :string) => {
+const updateActivityDateAndDay = (formData, activityDay) => {
   const psk = getPageSectionKey(0, 0);
   const activityDate = activityDay === TODAY
     ? DateTime.local().toISODate()
@@ -618,5 +663,5 @@ export {
   formatTime,
   getIs12HourFormatSelected,
   selectPrimaryActivityByPage,
-  updateActivityDateAndDay,
+  updateActivityDateAndDay
 };

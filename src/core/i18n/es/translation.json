@@ -83,6 +83,13 @@
     "Hermano",
     "Otro niño"
   ],
+  "collaborator": "¿Con quién (si  hubo alguien) habló o interactuó con su hijo durante esta actividad?",
+  "collaborator_options": [
+    "Nadie, participando  independiente",
+    "Un padre u otro cuidador/adulto",
+    "Un hermano u otro compañero/niño",
+    "Los dos,adultos y niños"
+  ],
   "bg_tv_day": "¿Había televisión de fondo mientras su hijo estaba {{activity}}? Por ejemplo, tal vez uno de los padres estaba viendo la televisión mientras su hijo hacía otra cosa en la habitación.",
   "bg_audio_day": "¿Había audio de fondo (p. ej., música, podcast) mientras su hijo estaba {{activity}}? Por ejemplo, tal vez uno de los padres estaba escuchando música mientras su hijo hacía otra cosa en la habitación.",
   "adult_media": "¿Estaba algún adulto usando un dispositivo móvil (teléfono, tableta, computadora portátil) mientras su hijo estaba {{activity}}? Por ejemplo, tal vez un padre estaba enviando mensajes de texto con el móvil mientras su hijo hacía otra cosa en la habitación.",
@@ -111,7 +118,7 @@
   ],
   "media_activity_options": [
     "Veía contenido de vídeos (TV, películas, YouTube, etc.)",
-    "Veía contenido de vídeos (TV, películas, YouTube, etc.)",
+    "Juegos (aplicación, juego de consola, etc.)",
     "Videollamadas (Facetime, Zoom, etc.)",
     "Se comunicó con otros de otra manera (habló por teléfono, ayudó a escribir un mensaje de texto, etc.)",
     "Creó contenido (grabó un vídeo, tomó fotos, etc.)",
@@ -121,6 +128,28 @@
     "Libro impreso (de papel, cartón, etc.)",
     "Libro electrónico (eBook)",
     "Audiolibro"
+  ],
+"device_type": "¿Qué dispositivo o dispositivos estaba usando el niño?",
+"device_type_options": [
+    "TV (incluido el uso de servicios de streaming vieron en una pantalla de TV)",
+    "Tableta",
+    "Teléfono",
+    "Computadora",
+    "Dispositivo de juego"
+  ],
+  "media_language_non_english": "¿Estaban los medios completamente en un idioma distinto al inglés?",
+  "book_language_non_english": "¿Estaban los libros completamente en un idioma distinto al inglés?",
+  "language": "¿Qué idioma(s)?",
+  "language_options": [
+    "Español",
+    "Somalí",
+    "Nepalí",
+    "Arábica",
+    "Francés",
+    "Hindi",
+    "telgu",
+    "Chino",
+    "Alemán"
   ],
   "no_one": "Ninguno",
   "bg_tv_night": "¿Estaba la televisión encendidad en la habitación mientras su hijo dormía por la noche?",
@@ -170,6 +199,6 @@
   "submission_success": "Gracias por completar la encuesta del Diario de Uso del Tiempo. Sus respuestas han sido registradas.",
   "submission_success_title": "Su encuesta se ha enviado correctamente!",
   "nighttime_activity_title": "Actividad Nocturna",
-  "error_invalid_url": "An error occurred while loading the Time Use Diary. Please try again later.",
-  "scroll_activities": "Please scroll to view more options."
+  "error_invalid_url": "Se produjo un error al cargar el Diario de uso del tiempo. Vuelva a intentarlo más tarde.",
+  "scroll_activities": "Desplácese para ver más opciones."
 }

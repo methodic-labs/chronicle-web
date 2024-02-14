@@ -27,14 +27,14 @@ import SubmissionSuccessful from './components/SubmissionSuccessful';
 import SUPPORTED_LANGUAGES from './constants/SupportedLanguages';
 import TranslationKeys from './constants/TranslationKeys';
 import {
+  isDayActivityPage as _isDayActivityPage,
+  isSummaryPage as _isSummaryPage,
   createFormSchema,
   getDateTimeFromData,
-  getFirstActivityPage,
+  getEnableChangesForOhioStateUniversity,
   getIs12HourFormatSelected,
   isIntroPage,
-  isNightActivityPage,
-  isSummaryPage,
-  updateActivityDateAndDay,
+  updateActivityDateAndDay
 } from './utils';
 
 import { BasicErrorComponent } from '../../common/components';
@@ -47,8 +47,8 @@ import {
   LanguageCodes,
   PARTICIPANT_ID,
   STUDIES,
-  StudySettingTypes,
   STUDY_ID,
+  StudySettingTypes,
   TIME_USE_DIARY,
   TODAY,
   YESTERDAY,
@@ -56,14 +56,12 @@ import {
 import { isFailure, isPending, useRequestState } from '../../common/utils';
 import { selectStudySettings } from '../../core/redux/selectors';
 import {
-  getStudySettings,
   GET_STUDY_SETTINGS,
-  verifyParticipant,
   VERIFY_PARTICIPANT,
+  getStudySettings,
+  verifyParticipant,
 } from '../study/actions';
 import { DAY_SPAN_PAGE, INTRO_PAGE } from './constants';
-
-import type { LanguageCode } from '../../common/types';
 
 const TimeUseDiaryContainer = () => {
   const location = useLocation();
@@ -114,6 +112,11 @@ const TimeUseDiaryContainer = () => {
   const initFormSchema = createFormSchema({}, 0, t, studySettings, activityDay);
   const [formSchema, setFormSchema] = useState(initFormSchema); // {schema, uiSchema}
 
+  const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
+  const is12hourFormat = getIs12HourFormatSelected(formData);
+  const isSummaryPage = _isSummaryPage(page, formData, activityDay, enableChangesForOSU);
+  const isDayActivityPage = _isDayActivityPage(page, formData, activityDay, enableChangesForOSU);
+
   useEffect(() => {
     dispatch(
       verifyParticipant({
@@ -141,7 +144,7 @@ const TimeUseDiaryContainer = () => {
     }
   };
 
-  const configuredLanguageCode :LanguageCode = studySettings.getIn(
+  const configuredLanguageCode = studySettings.getIn(
     [StudySettingTypes.TIME_USE_DIARY, LANGUAGE]
   ) || LanguageCodes.ENGLISH;
 
@@ -167,9 +170,11 @@ const TimeUseDiaryContainer = () => {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    const newSchema = createFormSchema(formData, page, t, studySettings, activityDay);
-    setFormSchema(newSchema);
-  }, [page, selectedLanguage?.value, t, activityDay]);
+    if (!isSummaryPage) {
+      const newSchema = createFormSchema(formData, page, t, studySettings, activityDay);
+      setFormSchema(newSchema);
+    }
+  }, [page, selectedLanguage?.value, t, activityDay, isSummaryPage]);
   /* eslint-enable */
 
   const refreshProgress = (currFormData) => {
@@ -231,12 +236,6 @@ const TimeUseDiaryContainer = () => {
     setFormData({});
     setShouldReset(false);
   };
-
-  const is12hourFormat = getIs12HourFormatSelected(formData);
-  const isSummPage = isSummaryPage(page, activityDay, formData);
-  const isDayActivityPage = page >= getFirstActivityPage(activityDay)
-    && !isSummPage
-    && !isNightActivityPage(page, activityDay, formData);
 
   if (isPending(verifyParticipantRS) || isPending(getStudySettingsRS)) {
     return (
@@ -300,7 +299,7 @@ const TimeUseDiaryContainer = () => {
                             familyId={familyId}
                             formSchema={formSchema}
                             initialFormData={formData}
-                            isSummaryPage={isSummPage}
+                            isSummaryPage={isSummaryPage}
                             language={i18n.language}
                             organizationId={organizationId}
                             pagedProps={pagedProps}
