@@ -1,31 +1,19 @@
-// @flow
-import { useContext, useEffect, useState } from 'react';
-
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  // $FlowFixMe
   AppBar,
-  // $FlowFixMe
   Box,
   Colors,
   IconButton,
-  // $FlowFixMe
   Menu,
-  // $FlowFixMe
   MenuItem,
-  // $FlowFixMe
   Toolbar,
 } from 'lattice-ui-kit';
+import { useContext, useEffect, useState } from 'react';
 
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 
-type Props = {
-  step :number;
-  date :string
-}
-
-const HourlyUsageSurveyAppBar = ({ date, step } :Props) => {
+const HourlyUsageSurveyAppBar = ({ step }) => {
   const [title, setTitle] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -33,12 +21,12 @@ const HourlyUsageSurveyAppBar = ({ date, step } :Props) => {
 
   useEffect(() => {
     if (step === 0) {
-      setTitle(`Survey ${date}`);
+      setTitle('App Usage Survey');
     }
     else {
       setTitle(`Step-${step}`);
     }
-  }, [step, date]);
+  }, [step]);
 
   const handleOnClick = (event) => {
     setAnchorEl(event.currentTarget);

@@ -1,18 +1,12 @@
-// @flow
-
-import { useMemo } from 'react';
-
 import { Map } from 'immutable';
 import { Box } from 'lattice-ui-kit';
-import type { RequestState } from 'redux-reqseq';
+import { useMemo } from 'react';
 
+import { SURVEY_STEPS } from '../constants';
 import HourlySurveyInstructions from './HourlySurveyInstructions';
 import SelectAppUsageTimeSlots from './SelectAppUsageTimeSlots';
 import SelectAppsByUser from './SelectAppsByUser';
 import SurveyButtons from './SurveyButtons';
-
-import { isFailure } from '../../../common/utils';
-import { SURVEY_STEPS } from '../constants';
 
 const {
   SELECT_CHILD_APPS,
@@ -22,31 +16,19 @@ const {
   INTRO
 } = SURVEY_STEPS;
 
-type Props = {
-  data :Map;
-  isSubmitting :boolean;
-  state :Object;
-  getAppUsageSurveyDataRS :?RequestState
-};
+const HourlySurvey = ({
+  data,
+  isSubmitting,
+  state,
+}) => {
 
-const HourlySurvey = (props :Props) => {
-
-  const {
-    data,
-    getAppUsageSurveyDataRS,
-    isSubmitting,
-    state,
-  } = props;
-
-  const {
-    childOnlyApps,
-    initialTimeRangeSelections,
-    isFinalStep,
-    otherTimeRangeSelections,
-    sharedApps,
-    step,
-    surveyStep
-  } = state;
+  const childOnlyApps = state.get('childOnlyApps');
+  const initialTimeRangeSelections = state.get('initialTimeRangeSelections');
+  const isFinalStep = state.get('isFinalStep');
+  const otherTimeRangeSelections = state.get('otherTimeRangeSelections');
+  const sharedApps = state.get('sharedApps');
+  const step = state.get('step');
+  const surveyStep = state.get('surveyStep');
 
   const getInstructionText = () => {
     switch (surveyStep) {
@@ -71,16 +53,6 @@ const HourlySurvey = (props :Props) => {
 
   const sharedAppsData = data.filterNot((val, key) => childOnlyApps.has(key));
   const timeRangeOptions = data.filter((val, key) => sharedApps.has(key));
-
-  // const childAppsOtherOptions = getChildApppsOtherOptions();
-
-  if (isFailure(getAppUsageSurveyDataRS)) {
-    return (
-      <Box textAlign="center">
-        Sorry, something went wrong. Please try refreshing the page, or contact support.
-      </Box>
-    );
-  }
 
   if (step === 0) {
     return (

@@ -1,27 +1,12 @@
-// @flow
-
+import { Checkbox, ChoiceGroup, Grid } from 'lattice-ui-kit';
 import { useContext } from 'react';
-
-import { Map, Set } from 'immutable';
-import {
-  Checkbox,
-  ChoiceGroup,
-  Grid,
-} from 'lattice-ui-kit';
 
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 
-type Props = {
-  appsData :Map;
-  selected :Set<string>
-};
-
-const SelectAppsByUser = (props :Props) => {
-  const { appsData, selected } = props;
-
+const SelectAppsByUser = ({ appsData, selected }) => {
   const dispatch = useContext(HourlySurveyDispatch);
 
-  const handleOnChange = (appName :string) => {
+  const handleOnChange = (appName) => {
     dispatch({ type: ACTIONS.ASSIGN_USER, appName });
   };
 
