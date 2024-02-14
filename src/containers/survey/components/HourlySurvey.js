@@ -2,13 +2,11 @@ import { Map } from 'immutable';
 import { Box } from 'lattice-ui-kit';
 import { useMemo } from 'react';
 
+import { SURVEY_STEPS } from '../constants';
 import HourlySurveyInstructions from './HourlySurveyInstructions';
 import SelectAppUsageTimeSlots from './SelectAppUsageTimeSlots';
 import SelectAppsByUser from './SelectAppsByUser';
 import SurveyButtons from './SurveyButtons';
-
-import { isFailure } from '../../../common/utils';
-import { SURVEY_STEPS } from '../constants';
 
 const {
   SELECT_CHILD_APPS,
