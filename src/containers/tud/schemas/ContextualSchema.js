@@ -57,6 +57,7 @@ const createSchema = (
   const secondaryActivitySchema = SecondaryActivitySchema.createSchema(selectedActivity, translate, studySettings);
 
   const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
+  const primaryActivities = translate(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
 
   let schema;
   if (enableChangesForOSU) {
@@ -104,6 +105,13 @@ const createSchema = (
       title: '',
       type: 'object',
     };
+    if (selectedActivity === primaryActivities.childcare || selectedActivity === primaryActivities.napping) {
+      delete schema.properties[psk].properties[COLLABORATOR];
+      schema.properties[psk].required = [
+        ...followupSchema.required,
+        ...secondaryActivitySchema.required,
+      ];
+    }
   }
   else {
     schema = {
