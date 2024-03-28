@@ -50,7 +50,8 @@ import {
   getDateTimeFromData,
   isFirstActivityPage,
   selectPrimaryActivityByPage,
-  updateActivityDateAndDay
+  updateActivityDateAndDay,
+  updateDayEndTime,
 } from '../utils';
 import isIntroPage from '../utils/isIntroPage';
 import isPreSurveyPage from '../utils/isPreSurveyPage';
@@ -352,6 +353,7 @@ const QuestionnaireForm = ({
     }
 
     updateActivityDateAndDay(formData, activityDay);
+    updateDayEndTime(formData);
     updateSurveyProgress(formData);
   };
 
