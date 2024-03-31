@@ -1,5 +1,6 @@
 import { get, getIn } from 'immutable';
 import { DataProcessingUtils } from 'lattice-fabricate';
+import _get from 'lodash/get';
 import _set from 'lodash/set';
 import { DateTime } from 'luxon';
 
@@ -655,6 +656,14 @@ const updateActivityDateAndDay = (formData, activityDay) => {
   _set(formData, [psk, ACTIVITY_DAY], activityDay);
 };
 
+const updateDayEndTime = (formData) => {
+  const psk = getPageSectionKey(DAY_SPAN_PAGE, 0);
+  const dayEndTime = _get(formData, [psk, DAY_END_TIME]);
+  if (typeof dayEndTime === 'string' && dayEndTime.startsWith('24:')) {
+    _set(formData, [psk, DAY_END_TIME], dayEndTime.replace('24:', '00:'));
+  }
+};
+
 export {
   applyCustomValidation,
   createFormSchema,
@@ -663,5 +672,6 @@ export {
   formatTime,
   getIs12HourFormatSelected,
   selectPrimaryActivityByPage,
-  updateActivityDateAndDay
+  updateActivityDateAndDay,
+  updateDayEndTime,
 };
