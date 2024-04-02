@@ -1,6 +1,3 @@
-// @flow
-
-import styled from 'styled-components';
 import { faCopy } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -14,11 +11,10 @@ import {
   Typography
 } from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
+import styled from 'styled-components';
 
-import { AppFeatures } from '../../../common/constants';
+import { AppFeatures, IOSSensorTypes } from '../../../common/constants';
 import { copyToClipboard, formatDateTime, isNonEmptyString } from '../../../common/utils';
-
-import type { Study } from '../../../common/types';
 
 const { NEUTRAL } = Colors;
 
@@ -26,7 +22,7 @@ const StyledTag = styled(Tag)`
   margin-left: 0;
 `;
 
-const getValue = (input :?string) => {
+const getValue = (input) => {
   if (isNonEmptyString(input)) {
     return input;
   }
@@ -40,13 +36,6 @@ const StudyDetails = ({
   hasTimeUseDiary,
   limits,
   study,
-} :{
-  hasAndroidDataCollection :boolean;
-  hasIOSSensorDataCollection :boolean;
-  hasQuestionnaires :boolean;
-  hasTimeUseDiary :boolean;
-  limits :Object;
-  study :Study;
 }) => {
   const features = [];
   if (hasAndroidDataCollection) {
@@ -89,6 +78,14 @@ const StudyDetails = ({
     { label: 'Group', value: getValue(study.group) },
     { label: 'Version', value: getValue(study.version) },
   ];
+
+  let iosSensors = [];
+  if (hasIOSSensorDataCollection) {
+    const sensors = study?.settings?.Sensor?.[1];
+    if (Array.isArray(sensors)) {
+      iosSensors = sensors;
+    }
+  }
 
   return (
     <Box>
@@ -134,7 +131,7 @@ const StudyDetails = ({
         <Box mt={1} />
         <Grid container spacing={2}>
           {
-            Object.values(AppFeatures).map((feature :any) => (
+            Object.values(AppFeatures).map((feature) => (
               <Grid item key={feature}>
                 <Chip label={feature} color={features.includes(feature) ? 'primary' : 'default'} />
               </Grid>
@@ -142,6 +139,27 @@ const StudyDetails = ({
           }
         </Grid>
       </Box>
+      {
+        hasIOSSensorDataCollection && (
+          <>
+            <Box mt={2}>
+              <Typography style={{ color: NEUTRAL.N500 }} variant="subtitle1">
+                IOS SENSORS
+              </Typography>
+            </Box>
+            <Box mt={1} />
+            <Grid container spacing={2}>
+              {
+                Object.values(IOSSensorTypes).map((st) => (
+                  <Grid item key={st}>
+                    <Chip label={st} color={iosSensors.includes(st) ? 'primary' : 'default'} />
+                  </Grid>
+                ))
+              }
+            </Grid>
+          </>
+        )
+      }
     </Box>
   );
 };
