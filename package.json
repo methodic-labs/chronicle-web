@@ -37,7 +37,7 @@
     "@fortawesome/react-fontawesome": "~0.2.0",
     "@nivo/core": "~0.83.0",
     "@nivo/line": "~0.83.0",
-    "@nivo/tooltip": "~0.83.0",
+    "@nivo/tooltip": "~0.87.0",
     "@redux-saga/core": "~1.2.0",
     "auth0-lock": "~11.33.3",
     "axios": "~0.26.0",
