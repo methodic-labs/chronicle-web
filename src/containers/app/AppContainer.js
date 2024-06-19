@@ -4,7 +4,7 @@
 
 import { useEffect } from 'react';
 
-import { faPenField } from '@fortawesome/pro-light-svg-icons';
+import { faRectangleTerminal } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _isFunction from 'lodash/isFunction';
 import {
@@ -47,10 +47,6 @@ const CopyTokenWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin: 0 0 0 30px;
-
-  svg {
-    margin-top: -4px;
-  }
 `;
 
 const AppContainer = () => {
@@ -122,7 +118,7 @@ const AppContainer = () => {
           { isAdmin() && <NavLink to={Routes.DASHBOARD}>Dashboard</NavLink>}
           <CopyTokenWrapper>
             <IconButton onClick={() => copyToClipboard(getAuthToken())} title="copy auth0 token">
-              <FontAwesomeIcon icon={faPenField} />
+              <FontAwesomeIcon icon={faRectangleTerminal} />
             </IconButton>
           </CopyTokenWrapper>
         </AppNavigationWrapper>
