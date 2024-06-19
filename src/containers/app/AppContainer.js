@@ -4,12 +4,15 @@
 
 import { useEffect } from 'react';
 
+import { faRectangleTerminal } from '@fortawesome/pro-light-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _isFunction from 'lodash/isFunction';
 import {
   AppContainerWrapper,
   AppContentWrapper,
   AppHeaderWrapper,
   AppNavigationWrapper,
+  IconButton,
   Spinner,
 } from 'lattice-ui-kit';
 import { useDispatch } from 'react-redux';
@@ -20,6 +23,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
+import styled from 'styled-components';
 import type { RequestState } from 'redux-reqseq';
 
 import { INITIALIZE_APPLICATION, initializeApplication } from './actions';
@@ -31,12 +35,19 @@ import StudyRouter from '../study/StudyRouter';
 import * as Routes from '../../core/router/Routes';
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import { BasicErrorComponent, ContactSupportButton } from '../../common/components';
-import { isNonEmptyString, useRequestState } from '../../common/utils';
+import { copyToClipboard, isNonEmptyString, useRequestState } from '../../common/utils';
 import { logout } from '../../core/auth/actions';
-import { getUserInfo, isAdmin } from '../../core/auth/utils';
+import { getAuthToken, getUserInfo, isAdmin } from '../../core/auth/utils';
 import { GOOGLE_MEASUREMENT_ID } from '../../core/tracking/google/GoogleAnalytics';
 
 declare var gtag :?Function;
+
+const CopyTokenWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 0 0 0 30px;
+`;
 
 const AppContainer = () => {
   const dispatch = useDispatch();
@@ -105,6 +116,11 @@ const AppContainer = () => {
           <NavLink to={Routes.STUDIES} />
           <NavLink to={Routes.STUDIES}> Studies </NavLink>
           { isAdmin() && <NavLink to={Routes.DASHBOARD}>Dashboard</NavLink>}
+          <CopyTokenWrapper>
+            <IconButton onClick={() => copyToClipboard(getAuthToken())} title="copy auth0 token">
+              <FontAwesomeIcon icon={faRectangleTerminal} />
+            </IconButton>
+          </CopyTokenWrapper>
         </AppNavigationWrapper>
       </AppHeaderWrapper>
       <AppContentWrapper>
