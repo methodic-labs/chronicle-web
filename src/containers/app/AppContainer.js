@@ -46,7 +46,7 @@ const CopyTokenWrapper = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
-  margin: 0px 0px 0px 30px;
+  margin: 0 0 0 30px;
 
   svg {
     margin-top: -4px;
