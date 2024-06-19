@@ -121,7 +121,7 @@ const AppContainer = () => {
           <NavLink to={Routes.STUDIES}> Studies </NavLink>
           { isAdmin() && <NavLink to={Routes.DASHBOARD}>Dashboard</NavLink>}
           <CopyTokenWrapper>
-            <IconButton onClick={() => copyToClipboard(getAuthToken())}>
+            <IconButton onClick={() => copyToClipboard(getAuthToken())} title="copy auth0 token">
               <FontAwesomeIcon icon={faPenField} />
             </IconButton>
           </CopyTokenWrapper>
