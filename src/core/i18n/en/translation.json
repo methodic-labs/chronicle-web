@@ -206,5 +206,41 @@
   "submission_success_title": "Submission successful!",
   "nighttime_activity_title": "Nighttime Activity",
   "error_invalid_url": "An error occurred while loading the Time Use Diary. Please try again later.",
-  "scroll_activities": "Please scroll to view more options."
+  "scroll_activities": "Please scroll to view more options.",
+  "hourly_survey": {
+    "title": "App Usage Survey",
+    "select_date_text": "Thank you for taking the time to complete this survey! Please select a date for which to view app usage records.",
+    "instructions_intro": "Please complete this short survey to let us know which of the apps used on the selected date were used by the child enrolled in our study. The survey will refer to this child as \"your child\".",
+    "instructions_help": "For instructions at each step please click on 3 dots to the top-right of the app.",
+    "no_apps_today": "There is no recorded app usage without a known user today. Thank you for your participation, the survey is not needed today.",
+    "error_loading": "Sorry, something went wrong. Please try refreshing the page, or contact support.",
+    "step_title": "Step-{{step}}",
+    "instructions": {
+      "title": "Step-{{step}} Instructions",
+      "select_child_apps": "Select the apps that were used ONLY by your child",
+      "select_shared_apps": "Select the apps that were used by both your child and others",
+      "resolve_shared_apps": "Select the time(s) when your child was the primary user (at least 90% of the time)",
+      "resolve_other_apps": "For the remaining times, select the times your child used the app at all",
+      "click_submit": "Click on \"submit\" button once done.",
+      "note_optional": "Note- an option does not have to be selected to continue."
+    },
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "submit": "Submit",
+      "begin_survey": "Begin Survey",
+      "close": "Close",
+      "instructions": "Instructions"
+    },
+    "confirm_modal": {
+      "title": "Confirm Submit",
+      "message": "Are you sure you want to submit survey responses?",
+      "submit": "Submit",
+      "close": "Close"
+    },
+    "success": {
+      "title": "Submission Successful!",
+      "message": "Thank you for participating in chronicle user awareness survey"
+    }
+  }
 }

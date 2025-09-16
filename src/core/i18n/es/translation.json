@@ -200,5 +200,41 @@
   "submission_success_title": "Su encuesta se ha enviado correctamente!",
   "nighttime_activity_title": "Actividad Nocturna",
   "error_invalid_url": "Se produjo un error al cargar el Diario de uso del tiempo. Vuelva a intentarlo más tarde.",
-  "scroll_activities": "Desplácese para ver más opciones."
+  "scroll_activities": "Desplácese para ver más opciones.",
+  "hourly_survey": {
+    "title": "Encuesta de uso de las Apps",
+    "select_date_text": "¡Gracias por tomarse el tiempo de completar esta encuesta! Por favor, seleccione una fecha para ver los registros de uso de las apps.",
+    "instructions_intro": "Por favor complete esta breve encuesta para que sepamos que Apps usadas en la fecha seleccionada, fueron usadas por el niño inscrito en el estudio. La encuesta se referirá a este niño como \"su hijo\".",
+    "instructions_help": "Para ver las instrucciones en cada paso, por favor de clic en el menú de 3 puntos en la esquina superior derecha de la página.",
+    "no_apps_today": "No hay uso de aplicaciones registrado sin un usuario conocido hoy. Gracias por su participación, la encuesta no es necesaria hoy.",
+    "error_loading": "Lo siento, algo salió mal. Por favor intente actualizar la página o contacte al soporte.",
+    "step_title": "Paso-{{step}}",
+    "instructions": {
+      "title": "Paso-{{step}} Instrucciones",
+      "select_child_apps": "Selecciona las apps que fueron usadas ÚNICAMENTE por su hijo",
+      "select_shared_apps": "Selecciona las apps que fueron utilizadas tanto por tu hijo y por otras personas",
+      "resolve_shared_apps": "Selecciona las horas en las que su hijo fue el usuario principal (al menos el 90% del tiempo)",
+      "resolve_other_apps": "Para el resto de los horarios, seleccione las horas en que su hijo utilizó la aplicación en algún momento",
+      "click_submit": "Haz clic en \"enviar\" cuando termines.",
+      "note_optional": "Nota- no es necesario seleccionar una opción para continuar."
+    },
+    "buttons": {
+      "back": "Regresar",
+      "next": "Siguiente",
+      "submit": "Enviar",
+      "begin_survey": "Comenzar encuesta",
+      "close": "Cerrar",
+      "instructions": "Instrucciones"
+    },
+    "confirm_modal": {
+      "title": "Confirmar envío",
+      "message": "¿Estás seguro de que deseas enviar las respuestas de la encuesta?",
+      "submit": "Enviar",
+      "close": "Cerrar"
+    },
+    "success": {
+      "title": "¡Envío exitoso!",
+      "message": "Gracias por participar en la encuesta de conocimiento del usuario de chronicle"
+    }
+  }
 }
