@@ -2,7 +2,7 @@
 
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck } from '@fortawesome/free-regular-svg-icons';
+import { faCheckCircle } from '@fortawesome/pro-regular-svg-icons';
 import { useTranslation } from 'react-i18next';
 import {
   Colors,
@@ -40,7 +40,7 @@ const SubmissionSuccessfulI18n = () => {
 
   return (
     <Wrapper>
-      <FontAwesomeIcon color={GREEN.G300} icon={faCircleCheck} size="3x" />
+      <FontAwesomeIcon color={GREEN.G300} icon={faCheckCircle} size="3x" />
       <h3>{t(HourlySurveyTranslationKeys.SUCCESS_TITLE)}</h3>
       <p>{t(HourlySurveyTranslationKeys.SUCCESS_MESSAGE)}</p>
     </Wrapper>

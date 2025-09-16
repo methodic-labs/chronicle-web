@@ -1,4 +1,4 @@
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   AppBar,
@@ -59,7 +59,7 @@ const HourlyUsageSurveyAppBarI18n = ({ step }) => {
                   onClick={handleOnClick}>
                 <FontAwesomeIcon
                     color={Colors.WHITE}
-                    icon={faEllipsisVertical} />
+                    icon={faEllipsisV} />
               </IconButton>
             )
           }
