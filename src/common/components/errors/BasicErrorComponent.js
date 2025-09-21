@@ -1,13 +1,5 @@
-/*
- * @flow
- */
-
-import type { Node } from 'react';
-
-import styled from 'styled-components';
 import { Typography } from 'lattice-ui-kit';
-
-import type { SagaError } from '../../types';
+import styled from 'styled-components';
 
 const Error = styled.div`
   align-items: center;
@@ -31,13 +23,7 @@ const Error = styled.div`
   }
 `;
 
-type Props = {
-  children ?:Node;
-  error :?SagaError;
-  // message :?string;
-};
-
-const BasicErrorComponent = ({ children, error } :Props) => {
+const BasicErrorComponent = ({ children, error }) => {
 
   let errorMessage = children;
   if (error && (error.status === 401 || error.status === 403)) {
@@ -62,7 +48,6 @@ const BasicErrorComponent = ({ children, error } :Props) => {
 BasicErrorComponent.defaultProps = {
   children: undefined,
   error: undefined,
-  // message: undefined,
 };
 
 export default BasicErrorComponent;

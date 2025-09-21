@@ -10,6 +10,7 @@ import {
 } from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
 import { useEffect, useReducer, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { BasicErrorComponent } from '../../common/components';
@@ -33,11 +34,8 @@ import HourlySurveyDispatch, { ACTIONS } from './components/HourlySurveyDispatch
 import HourlyUsageSurveyAppBar from './components/HourlyUsageSurveyAppBar';
 import InstructionsModal from './components/InstructionsModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
-import { SURVEY_STEPS } from './constants';
+import { SURVEY_STEPS, TranslationKeys } from './constants';
 import { createHourlySurveySubmissionData } from './utils';
-
-const SELECT_DATE_TEXT = 'Thank you for taking the time to complete this survey! Please select a date'
-  + ' for which to view app usage records.';
 
 const {
   SELECT_CHILD_APPS,
@@ -222,6 +220,7 @@ const HourlyAppUsageSurvey = ({
 
   const storeDispatch = useDispatch();
   const [surveyDate, setSurveyDate] = useState();
+  const { t } = useTranslation();
 
   const data = useSelector(selectAppUsageSurveyData());
   const getAppUsageSurveyDataRS = useRequestState([APP_USAGE_SURVEY, GET_APP_USAGE_SURVEY_DATA]);
@@ -324,7 +323,7 @@ const HourlyAppUsageSurvey = ({
         <AppContentWrapper>
           <Card>
             <CardSegment noBleed>
-              <Box mb="32px">{SELECT_DATE_TEXT}</Box>
+              <Box mb="32px">{t(TranslationKeys.SELECT_DATE_TEXT)}</Box>
               <Box maxWidth="300px">
                 <DatePicker
                     onChange={(value) => setSurveyDate(value)}
@@ -350,7 +349,7 @@ const HourlyAppUsageSurvey = ({
                   {
                     isFailure(getAppUsageSurveyDataRS) && (
                       <Box textAlign="center">
-                        Sorry, something went wrong. Please try refreshing the page, or contact support.
+                        {t(TranslationKeys.ERROR_GENERIC)}
                       </Box>
                     )
                   }
