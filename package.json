@@ -80,7 +80,7 @@
     "@babel/preset-flow": "~7.22.15",
     "@babel/preset-react": "~7.22.15",
     "babel-eslint": "~10.1.0",
-    "babel-jest": "~27.5.0",
+    "babel-jest": "~30.2.0",
     "babel-loader": "~8.3.0",
     "babel-plugin-styled-components": "~2.1.0",
     "babel-plugin-transform-imports": "~2.0.0",
