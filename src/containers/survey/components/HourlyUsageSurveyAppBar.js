@@ -1,13 +1,10 @@
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Cookies from 'js-cookie';
 import {
-  Box,
   Colors,
   IconButton,
   Menu,
   MenuItem,
-  Select,
   StyleUtils,
   Typography,
 } from 'lattice-ui-kit';
@@ -15,7 +12,6 @@ import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import { DEFAULT_LANGUAGE, LanguageCodes } from '../../../common/constants';
 import { TranslationKeys } from '../constants';
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 
@@ -63,30 +59,11 @@ const Wrapper = styled.div`
   `}
 `;
 
-const SUPPORTED_LANGUAGES = [
-  {
-    language: 'English',
-    code: LanguageCodes.ENGLISH,
-  },
-  {
-    language: 'Spanish',
-    code: LanguageCodes.SPANISH
-  },
-];
-
-const LANGUAGE_OPTIONS = SUPPORTED_LANGUAGES.map((lng) => ({ label: lng.language, value: lng.code }));
-
 const HourlyUsageSurveyAppBar = ({ step }) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedLanguage, setSelectedLanguage] = useState(() => {
-    const defaultLanguageCookie = Cookies.get(DEFAULT_LANGUAGE);
-    const defaultLanguage = SUPPORTED_LANGUAGES.find(({ code }) => code === defaultLanguageCookie);
-    const defaultLanguageCode = defaultLanguage?.code || LanguageCodes.ENGLISH;
-    return LANGUAGE_OPTIONS.find(({ value }) => value === defaultLanguageCode);
-  });
 
   const dispatch = useContext(HourlySurveyDispatch);
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
 
   const handleOnClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -99,17 +76,6 @@ const HourlyUsageSurveyAppBar = ({ step }) => {
   const handleOnClickMenuItem = () => {
     dispatch({ type: ACTIONS.TOGGLE_INSTRUCTIONS_MODAL, visible: true });
     handleOnCloseMenu();
-  };
-
-  const onChangeLanguage = (language) => {
-    if (language.value === i18n.language) {
-      return;
-    }
-    if (language !== null) {
-      i18n.changeLanguage(language.value);
-      Cookies.set(DEFAULT_LANGUAGE, language.value, {});
-      setSelectedLanguage(language);
-    }
   };
 
   return (
@@ -135,12 +101,6 @@ const HourlyUsageSurveyAppBar = ({ step }) => {
             </IconButton>
           )
         }
-        <Box minWidth="200px">
-          <Select
-              onChange={onChangeLanguage}
-              options={LANGUAGE_OPTIONS}
-              value={selectedLanguage} />
-        </Box>
         <Menu
             id="app_bar_menu"
             anchorEl={anchorEl}

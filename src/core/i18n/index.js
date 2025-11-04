@@ -29,4 +29,5 @@ i18n
     },
     fallbackLng: LanguageCodes.ENGLISH,
     debug: __ENV_DEV__
-  });
+  })
+  .then(() => i18n.loadLanguages(Object.keys(translations)));

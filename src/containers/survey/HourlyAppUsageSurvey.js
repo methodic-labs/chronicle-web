@@ -6,15 +6,21 @@ import {
   Card,
   CardSegment,
   DatePicker,
+  Radio,
   Spinner,
 } from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
 import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 
 import { BasicErrorComponent } from '../../common/components';
-import { APP_USAGE_SURVEY, AppUsageFreqTypes } from '../../common/constants';
+import {
+  APP_USAGE_SURVEY,
+  AppUsageFreqTypes,
+  LanguageCodes,
+} from '../../common/constants';
 import {
   isFailure,
   isPending,
@@ -36,6 +42,11 @@ import InstructionsModal from './components/InstructionsModal';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import { SURVEY_STEPS, TranslationKeys } from './constants';
 import { createHourlySurveySubmissionData } from './utils';
+
+const ChangeLanguageGroup = styled.div`
+  display: flex;
+  gap: 16px;
+`;
 
 const {
   SELECT_CHILD_APPS,
@@ -220,7 +231,7 @@ const HourlyAppUsageSurvey = ({
 
   const storeDispatch = useDispatch();
   const [surveyDate, setSurveyDate] = useState();
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const data = useSelector(selectAppUsageSurveyData());
   const getAppUsageSurveyDataRS = useRequestState([APP_USAGE_SURVEY, GET_APP_USAGE_SURVEY_DATA]);
@@ -235,6 +246,10 @@ const HourlyAppUsageSurvey = ({
   const otherTimeRangeSelections = state.get('otherTimeRangeSelections');
   const step = state.get('step');
   const surveyStep = state.get('surveyStep');
+
+  const onChangeLanguage = (e) => {
+    i18n.changeLanguage(e.target.value);
+  };
 
   useEffect(() => {
     if (typeof date === 'string') {
@@ -316,6 +331,38 @@ const HourlyAppUsageSurvey = ({
     );
   }
 
+  let changeLanguageElement = null;
+  if (studyId === '000c0000-0000-0000-8000-000000000003') {
+    const english = t(TranslationKeys.LANGUAGE_ENGLISH, { lng: LanguageCodes.ENGLISH });
+    const spanish = t(TranslationKeys.LANGUAGE_SPANISH, { lng: LanguageCodes.ENGLISH });
+    const ingles = t(TranslationKeys.LANGUAGE_ENGLISH, { lng: LanguageCodes.SPANISH });
+    const espanol = t(TranslationKeys.LANGUAGE_SPANISH, { lng: LanguageCodes.SPANISH });
+    changeLanguageElement = (
+      <Box mb="32px">
+        <Box>
+          {t(TranslationKeys.CHANGE_LANGUAGE, { lng: LanguageCodes.ENGLISH })}
+          /
+          {t(TranslationKeys.CHANGE_LANGUAGE, { lng: LanguageCodes.SPANISH })}
+        </Box>
+        <ChangeLanguageGroup>
+          <Radio
+              defaultChecked
+              id="english"
+              label={`${english}/${ingles}`}
+              name="language"
+              onChange={onChangeLanguage}
+              value={LanguageCodes.ENGLISH} />
+          <Radio
+              id="spanish"
+              label={`${spanish}/${espanol}`}
+              name="language"
+              onChange={onChangeLanguage}
+              value={LanguageCodes.SPANISH} />
+        </ChangeLanguageGroup>
+      </Box>
+    );
+  }
+
   return (
     <HourlySurveyDispatch.Provider value={dispatch}>
       <AppContainerWrapper>
@@ -323,6 +370,7 @@ const HourlyAppUsageSurvey = ({
         <AppContentWrapper>
           <Card>
             <CardSegment noBleed>
+              {changeLanguageElement}
               <Box mb="32px">{t(TranslationKeys.SELECT_DATE_TEXT)}</Box>
               <Box maxWidth="300px">
                 <DatePicker
