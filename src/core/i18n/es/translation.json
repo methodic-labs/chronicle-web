@@ -151,6 +151,8 @@
     "Chino",
     "Alemán"
   ],
+  "language_english": "Inglés",
+  "language_spanish": "Español",
   "no_one": "Ninguno",
   "bg_tv_night": "¿Estaba la televisión encendidad en la habitación mientras su hijo dormía por la noche?",
   "bg_audio_night": "¿Había música sonando u otro tipo de audio en la habitación mientras su hijo dormía?",
@@ -200,5 +202,32 @@
   "submission_success_title": "Su encuesta se ha enviado correctamente!",
   "nighttime_activity_title": "Actividad Nocturna",
   "error_invalid_url": "Se produjo un error al cargar el Diario de uso del tiempo. Vuelva a intentarlo más tarde.",
-  "scroll_activities": "Desplácese para ver más opciones."
+  "scroll_activities": "Desplácese para ver más opciones.",
+  "error_generic": "Lo siento, algo salió mal. Por favor intente actualizar la página o contacte al soporte.",
+  "instructions": "Instrucciones",
+  "app_usage_survey": {
+    "begin_survey": "Comenzar encuesta",
+    "confirm_modal": {
+      "message": "¿Estás seguro de que deseas enviar las respuestas de la encuesta?",
+      "title": "Confirmar envío"
+    },
+    "error_submit": "An error occurred while submitting survey. Please try again later, or contact support.",
+    "instructions": {
+      "click_submit": "Haz clic en \"enviar\" cuando termines.",
+      "note_optional": "Nota - no es necesario seleccionar una opción para continuar.",
+      "resolve_other_apps": "Para el resto de los horarios, seleccione las horas en que su hijo utilizó la aplicación en algún momento",
+      "resolve_shared_apps": "Selecciona las horas en las que su hijo fue el usuario principal (al menos el 90% del tiempo)",
+      "select_child_apps": "Selecciona las apps que fueron usadas ÚNICAMENTE por su hijo",
+      "select_shared_apps": "Selecciona las apps que fueron utilizadas tanto por tu hijo y por otras personas",
+      "title": "Paso-{{step}} Instrucciones"
+    },
+    "instructions_help": "Para ver las instrucciones en cada paso, por favor de clic en el menú de 3 puntos en la esquina superior derecha de la página.",
+    "instructions_intro": "Por favor complete esta breve encuesta para que sepamos que Apps usadas en la fecha seleccionada, fueron usadas por el niño inscrito en el estudio. La encuesta se referirá a este niño como \"su hijo\".",
+    "no_apps_today": "No hay uso de aplicaciones registrado sin un usuario conocido hoy. Gracias por su participación, la encuesta no es necesaria hoy.",
+    "select_date_text": "¡Gracias por tomarse el tiempo de completar esta encuesta! Por favor, seleccione una fecha para ver los registros de uso de las apps.",
+    "step_title": "Paso-{{step}}",
+    "submission_successful": "¡Envío exitoso!",
+    "thank_you_for_participating": "Gracias por participar en la encuesta de conocimiento del usuario de chronicle.",
+    "title": "Encuesta de uso de las Apps"
+  }
 }

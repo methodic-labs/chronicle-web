@@ -1,11 +1,10 @@
-// @flow
-
-import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/pro-regular-svg-icons';
-import {
-  Colors,
-} from 'lattice-ui-kit';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Colors } from 'lattice-ui-kit';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+
+import { TranslationKeys } from '../constants';
 
 const { NEUTRAL, GREEN } = Colors;
 const Wrapper = styled.div`
@@ -32,12 +31,16 @@ const Wrapper = styled.div`
     padding: 0;
   }
 `;
-const SubmissionSuccessful = () => (
-  <Wrapper>
-    <FontAwesomeIcon color={GREEN.G300} icon={faCheckCircle} size="3x" />
-    <h3> Submission Successful! </h3>
-    <p> Thank you for participating in chronicle user awareness survey </p>
-  </Wrapper>
-);
+
+const SubmissionSuccessful = () => {
+  const { t } = useTranslation();
+  return (
+    <Wrapper>
+      <FontAwesomeIcon color={GREEN.G300} icon={faCheckCircle} size="3x" />
+      <h3>{t(TranslationKeys.SUBMISSION_SUCCESSFUL)}</h3>
+      <p>{t(TranslationKeys.THANK_YOU_FOR_PARTICIPATING)}</p>
+    </Wrapper>
+  );
+};
 
 export default SubmissionSuccessful;
