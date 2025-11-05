@@ -332,7 +332,7 @@ const HourlyAppUsageSurvey = ({
   }
 
   let changeLanguageElement = null;
-  if (studyId === '000c0000-0000-0000-8000-000000000003') {
+  if (studyId === '00030000-0000-0000-8000-000000000c17') {
     const english = t(TranslationKeys.LANGUAGE_ENGLISH, { lng: LanguageCodes.ENGLISH });
     const spanish = t(TranslationKeys.LANGUAGE_SPANISH, { lng: LanguageCodes.ENGLISH });
     const ingles = t(TranslationKeys.LANGUAGE_ENGLISH, { lng: LanguageCodes.SPANISH });
