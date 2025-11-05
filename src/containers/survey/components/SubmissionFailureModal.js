@@ -1,19 +1,15 @@
-// @flow
-
 import { Modal } from 'lattice-ui-kit';
-
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { TranslationKeys } from '../constants';
 
 const ModalBody = styled.div`
   max-width: 400px;
 `;
 
-type Props ={
-  handleOnClose :() => void;
-  isVisible :boolean;
-}
-const SubmissionFailureModal = (props :Props) => {
-  const { handleOnClose, isVisible } = props;
+const SubmissionFailureModal = ({ handleOnClose, isVisible }) => {
+  const { t } = useTranslation();
+  // TODO - translate modal title
   return (
     <Modal
         isVisible={isVisible}
@@ -21,9 +17,7 @@ const SubmissionFailureModal = (props :Props) => {
         textSecondary="Close"
         textTitle="Submission Failure">
       <ModalBody>
-        <p>
-          An error occurred while submitting. Please try again later or contact support.
-        </p>
+        <p>{t(TranslationKeys.ERROR_SUBMIT)}</p>
       </ModalBody>
     </Modal>
   );

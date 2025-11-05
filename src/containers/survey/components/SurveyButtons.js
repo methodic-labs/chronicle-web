@@ -1,28 +1,19 @@
-// @flow
-import { useContext } from 'react';
-
-// $FlowFixMe
 import { Box, Button } from 'lattice-ui-kit';
+import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { TranslationKeys } from '../constants';
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 
-type Props ={
-  isFinalStep :boolean;
-  isNextButtonDisabled :boolean;
-  isSubmitting :boolean;
-  nextButtonText :string;
-  step :number;
-}
-const SurveyButtons = (props :Props) => {
-  const {
-    isFinalStep,
-    isNextButtonDisabled,
-    isSubmitting,
-    nextButtonText,
-    step,
-  } = props;
-
+const SurveyButtons = ({
+  isFinalStep,
+  isNextButtonDisabled,
+  isSubmitting,
+  nextButtonText,
+  step,
+}) => {
   const dispatch = useContext(HourlySurveyDispatch);
+  const { t } = useTranslation();
 
   const handleOnSubmit = () => {
     if (!isFinalStep) {
@@ -37,7 +28,7 @@ const SurveyButtons = (props :Props) => {
       <Button
           disabled={step === 0 || isSubmitting}
           onClick={() => dispatch({ type: ACTIONS.PREV_STEP })}>
-        Back
+        {t(TranslationKeys.BACK)}
       </Button>
       <Button disabled={isNextButtonDisabled} color="primary" onClick={handleOnSubmit} isLoading={isSubmitting}>
         {nextButtonText}

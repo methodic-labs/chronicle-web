@@ -1,16 +1,13 @@
-// @flow
+import { Box, Modal } from 'lattice-ui-kit';
 import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import {
-  // $FlowFixMe
-  Box,
-  Modal
-} from 'lattice-ui-kit';
-
+import { TranslationKeys } from '../constants';
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 
 const ConfirmSurveySubmissionModal = () => {
   const dispatch = useContext(HourlySurveyDispatch);
+  const { t } = useTranslation();
   return (
     <Modal
         isVisible
@@ -18,11 +15,11 @@ const ConfirmSurveySubmissionModal = () => {
         onClose={() => dispatch({ type: ACTIONS.CANCEL_SUBMIT })}
         shouldCloseOnEscape={false}
         shouldCloseOnOutsideClick={false}
-        textPrimary="Submit"
-        textSecondary="Close"
-        textTitle="Confirm Submit">
+        textPrimary={t(TranslationKeys.SUBMIT)}
+        textSecondary={t(TranslationKeys.CLOSE)}
+        textTitle={t(TranslationKeys.CONFIRM_MODAL_TITLE)}>
       <Box maxWidth="500px">
-        Are you sure you want to submit survey responses?
+        {t(TranslationKeys.CONFIRM_MODAL_MESSAGE)}
       </Box>
     </Modal>
   );

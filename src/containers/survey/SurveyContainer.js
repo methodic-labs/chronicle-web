@@ -11,11 +11,9 @@ import {
   Spinner
 } from 'lattice-ui-kit';
 import qs from 'qs';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-
-import DailyAppUsageSurvey from './DailyAppUsageSurvey';
-import HourlyAppUsageSurvey from './HourlyAppUsageSurvey';
 
 import { OpenLatticeIconSVG } from '../../assets/svg/icons';
 import {
@@ -32,10 +30,14 @@ import {
 } from '../../common/utils';
 import { selectStudySettings } from '../../core/redux/selectors';
 import { GET_STUDY_SETTINGS, getStudySettings } from '../study/actions';
+import DailyAppUsageSurvey from './DailyAppUsageSurvey';
+import HourlyAppUsageSurvey from './HourlyAppUsageSurvey';
+import { TranslationKeys } from './constants';
 
 const SurveyContainer = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const queryParams = qs.parse(location.search, { ignoreQueryPrefix: true });
 
@@ -71,7 +73,7 @@ const SurveyContainer = () => {
           <Card>
             <CardSegment>
               <Alert severity="error">
-                Sorry, An error occurred when fetching survey data. Please try again later.
+                {t(TranslationKeys.ERROR_GENERIC)}
               </Alert>
             </CardSegment>
           </Card>
