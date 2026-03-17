@@ -7,7 +7,7 @@ import TranslationKeys from '../constants/TranslationKeys';
 
 const { getPageSectionKey } = DataProcessingUtils;
 
-const createSchema = (trans :TranslationFunction) => ({
+const createSchema = (trans :TranslationFunction, defaultClockFormat :number = 12) => ({
   type: 'object',
   title: '',
   properties: {
@@ -26,7 +26,7 @@ const createSchema = (trans :TranslationFunction) => ({
           type: 'number',
           enum: [12, 24],
           enumNames: trans(TranslationKeys.CLOCK_FORMATS, { returnObjects: true }),
-          default: 12
+          default: defaultClockFormat
         },
       },
       required: [CLOCK_FORMAT]

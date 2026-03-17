@@ -22,6 +22,7 @@ import {
   HAS_FOLLOWUP_QUESTIONS,
   OTHER_ACTIVITY,
   SECONDARY_ACTIVITY,
+  StudySettingTypes,
   TODAY,
   WAKE_UP_TIME_AFTER_ACTIVITY_DAY,
   WAVE_ID,
@@ -99,11 +100,14 @@ const createFormSchema = (
   const enableChangesForSherbrookeUniversity = studySettings
     .getIn(['TimeUseDiary', 'enableChangesForSherbrookeUniversity']) || false;
 
+  const defaultClockFormat = studySettings
+    .getIn([StudySettingTypes.TIME_USE_DIARY, 'clockFormat']) || 12;
+
   const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
 
   if (isIntroPage(pageNum)) {
     return {
-      schema: SurveyIntroSchema.createSchema(trans),
+      schema: SurveyIntroSchema.createSchema(trans, defaultClockFormat),
       uiSchema: SurveyIntroSchema.uiSchema
     };
   }
