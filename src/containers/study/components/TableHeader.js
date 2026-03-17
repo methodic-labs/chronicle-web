@@ -1,11 +1,8 @@
-// @flow
-
 import { useContext } from 'react';
 
-import styled from 'styled-components';
-import { faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Grid, SearchInput } from 'lattice-ui-kit';
+import { PlusIcon } from 'lucide-react';
+import styled from 'styled-components';
 
 import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 
@@ -29,10 +26,6 @@ const TableHeader = ({
   handleOnChange,
   // selectedParticipants,
   // filteredParticipants
-} :{
-  handleOnChange :(SyntheticInputEvent<HTMLInputElement>) => void;
-  // selectedParticipants :number;
-  // filteredParticipants :Map;
 }) => {
   const dispatch = useContext(ParticipantsTableDispatch);
 
@@ -89,7 +82,7 @@ const TableHeader = ({
             fullWidth
             onClick={() => dispatch({ type: TOGGLE_ADD_PARTICIPANT_MODAL, isModalOpen: true })}
             color="primary"
-            startIcon={<FontAwesomeIcon icon={faPlus} />}>
+            startIcon={<PlusIcon />}>
           Add Participant
         </AddParticipantsButton>
       </Grid>

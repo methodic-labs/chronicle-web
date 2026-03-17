@@ -1,24 +1,17 @@
-// @flow
-
-import { faCheckCircle } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  // $FlowFixMe
   Box,
   Colors,
   Typography
 } from 'lattice-ui-kit';
+import { CircleCheckIcon } from 'lucide-react';
 
 import TranslationKeys from '../constants/TranslationKeys';
 
 const { GREEN } = Colors;
 
-type Props = {
-  trans :TranslationFunction;
-}
-const SubmissionSuccessful = ({ trans } :Props) => (
+const SubmissionSuccessful = ({ trans }) => (
   <Box textAlign="center" mt="30px">
-    <FontAwesomeIcon color={GREEN.G300} icon={faCheckCircle} size="3x" />
+    <CircleCheckIcon stroke={GREEN.G300} size={32} />
     <Box mt="5px" mb="5px" fontWeight={500} fontSize="20px">
       {trans(TranslationKeys.SUBMISSION_SUCCESS_TITLE)}
     </Box>

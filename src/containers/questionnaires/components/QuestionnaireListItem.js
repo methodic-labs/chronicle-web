@@ -1,8 +1,4 @@
-// @flow
-
 // import styled from 'styled-components';
-// import { faToggleOn } from '@fortawesome/pro-regular-svg-icons';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { Colors, Tag } from 'lattice-ui-kit';
 //
 // import { LIST_ITEM_ACTIONS, LIST_ITEM_ICONS } from '../constants/constants';

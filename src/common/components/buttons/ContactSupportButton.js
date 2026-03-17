@@ -1,11 +1,6 @@
-// @flow
-
+import { Button } from 'lattice-ui-kit';
+import { CircleQuestionMarkIcon } from 'lucide-react';
 import styled from 'styled-components';
-import { faQuestionCircle } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Colors } from 'lattice-ui-kit';
-
-const { NEUTRAL } = Colors;
 
 const ButtonWrapper = styled(Button)`
   bottom: 16px;
@@ -16,14 +11,10 @@ const ButtonWrapper = styled(Button)`
   z-index: 500;
 `;
 
-const StyledIcon = styled(FontAwesomeIcon)`
-  font-size: 15px;
-`;
-
 const ContactSupportButton = () => (
   <ButtonWrapper
       href="mailto:support@getmethodic.com"
-      startIcon={<StyledIcon color={NEUTRAL.N900} fixedWidth icon={faQuestionCircle} />}
+      startIcon={<CircleQuestionMarkIcon size={20} />}
       target="_blank"
       variant="outlined">
     Contact Support

@@ -1,8 +1,4 @@
-// @flow
-
 import styled from 'styled-components';
-import { faCopy } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Box,
   IconButton,
@@ -10,6 +6,7 @@ import {
   Tooltip,
   Typography
 } from 'lattice-ui-kit';
+import { CopyIcon } from 'lucide-react';
 
 import { copyToClipboard } from '../../../common/utils';
 import { getAppUsageLink, getParticipantLoginLink, getTimeUseDiaryLink } from '../utils';
@@ -22,16 +19,6 @@ const Grid = styled.div`
   grid-template-columns: 1fr auto;
 `;
 
-type Props = {
-  handleOnClose :() => void;
-  hasAndroidDataCollection :boolean;
-  hasIOSSensorDataCollection :boolean;
-  hasTimeUseDiary :boolean;
-  isVisible :boolean;
-  participantId :UUID;
-  studyId :UUID;
-}
-
 const ParticipantInfoModal = ({
   handleOnClose,
   hasAndroidDataCollection,
@@ -40,7 +27,7 @@ const ParticipantInfoModal = ({
   isVisible,
   participantId,
   studyId,
-} :Props) => {
+}) => {
 
   const renderParticipantInfo = () => {
     const enrollmentLink = getParticipantLoginLink(studyId, participantId);
@@ -95,7 +82,7 @@ const ParticipantInfoModal = ({
                   <IconButton
                       aria-label={`Copy ${detail.name}`}
                       onClick={() => copyToClipboard(detail.value)}>
-                    <FontAwesomeIcon icon={faCopy} />
+                    <CopyIcon size={16} />
                   </IconButton>
                 </Tooltip>
               </Grid>

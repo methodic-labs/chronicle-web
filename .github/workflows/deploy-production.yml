@@ -19,13 +19,6 @@ jobs:
           cache: npm
           node-version: latest
 
-      - name: npm config
-        env:
-          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-        run: |
-          npm config set "@fortawesome:registry" https://npm.fontawesome.com/
-          npm config set "//npm.fontawesome.com/:_authToken" "$FONTAWESOME_NPM_AUTH_TOKEN"
-
       - name: npm ci
         run: npm ci
 

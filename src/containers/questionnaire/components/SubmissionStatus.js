@@ -1,10 +1,6 @@
-// @flow
-
 // import { useState } from 'react';
 //
 // import styled from 'styled-components';
-// import { faCheckCircle } from '@fortawesome/pro-regular-svg-icons';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { Colors, Modal } from 'lattice-ui-kit';
 // import { useDispatch } from 'react-redux';
 //

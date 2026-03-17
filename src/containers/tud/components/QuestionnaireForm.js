@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { faExclamationCircle } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getIn, merge, setIn } from 'immutable';
 import { DataProcessingUtils, Form } from 'lattice-fabricate';
 import { Button } from 'lattice-ui-kit';
@@ -9,6 +7,7 @@ import _get from 'lodash/get';
 import _has from 'lodash/has';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
+import { CircleAlertIcon } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
@@ -435,7 +434,7 @@ const QuestionnaireForm = ({
         <NextButtonWrapper>
           {
             hasErrors && (
-              <FontAwesomeIcon color="#ff3c5d" icon={faExclamationCircle} size="lg" />
+              <CircleAlertIcon stroke="#ff3c5d" />
             )
           }
           <Button

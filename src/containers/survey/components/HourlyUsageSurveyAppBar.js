@@ -1,5 +1,3 @@
-import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Colors,
   IconButton,
@@ -8,6 +6,7 @@ import {
   StyleUtils,
   Typography,
 } from 'lattice-ui-kit';
+import { EllipsisVerticalIcon } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -95,9 +94,7 @@ const HourlyUsageSurveyAppBar = ({ step }) => {
                 aria-haspopup="true"
                 className="menu-button"
                 onClick={handleOnClick}>
-              <FontAwesomeIcon
-                  color={NEUTRAL.N700}
-                  icon={faEllipsisV} />
+              <EllipsisVerticalIcon size={16} />
             </IconButton>
           )
         }

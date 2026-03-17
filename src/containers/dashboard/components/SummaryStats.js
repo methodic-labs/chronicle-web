@@ -1,8 +1,4 @@
-// @flow
 import styled from 'styled-components';
-import { faBook, faUniversity, faUsers } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Map } from 'immutable';
 import {
   // $FlowFixMe
   Avatar,
@@ -12,6 +8,9 @@ import {
   // $FlowFixMe
   Grid,
 } from 'lattice-ui-kit';
+import {
+  BookTextIcon, LandmarkIcon, UsersIcon
+} from 'lucide-react';
 
 import StatCard from './StatCard';
 
@@ -29,31 +28,26 @@ const StyledAvatar = styled(Avatar)`
 
 const OrganizationAvatar = () => (
   <StyledAvatar $backgroundColor={PURPLE.P200}>
-    <FontAwesomeIcon icon={faUniversity} fixedWidth />
+    <LandmarkIcon />
   </StyledAvatar>
 );
 
 const StudiesAvatar = () => (
   <StyledAvatar $backgroundColor={BLUE.B200}>
-    <FontAwesomeIcon icon={faBook} fixedWidth />
+    <BookTextIcon />
   </StyledAvatar>
 );
 
 const ParticipantsAvatar = () => (
   <StyledAvatar $backgroundColor={TEAL.T200}>
-    <FontAwesomeIcon icon={faUsers} fixedWidth />
+    <UsersIcon />
   </StyledAvatar>
 );
-
-type SummaryStatsProps = {
-  data :Map;
-  loading :boolean;
-};
 
 const SummaryStats = ({
   data,
   loading
-} :SummaryStatsProps) => (
+}) => (
   <Box>
     <Grid container spacing={2}>
       <Grid item xs={12} sm={4}>

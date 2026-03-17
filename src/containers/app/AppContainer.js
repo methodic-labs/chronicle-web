@@ -1,11 +1,5 @@
-/*
- * @flow
- */
-
 import { useEffect } from 'react';
 
-import { faRectangleTerminal } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _isFunction from 'lodash/isFunction';
 import {
   AppContainerWrapper,
@@ -15,6 +9,7 @@ import {
   IconButton,
   Spinner,
 } from 'lattice-ui-kit';
+import { TerminalIcon } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import {
   NavLink,
@@ -24,7 +19,6 @@ import {
 } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
 import styled from 'styled-components';
-import type { RequestState } from 'redux-reqseq';
 
 import { INITIALIZE_APPLICATION, initializeApplication } from './actions';
 
@@ -40,8 +34,6 @@ import { logout } from '../../core/auth/actions';
 import { getAuthToken, getUserInfo, isAdmin } from '../../core/auth/utils';
 import { GOOGLE_MEASUREMENT_ID } from '../../core/tracking/google/GoogleAnalytics';
 
-declare var gtag :?Function;
-
 const CopyTokenWrapper = styled.div`
   align-items: center;
   display: flex;
@@ -52,7 +44,7 @@ const CopyTokenWrapper = styled.div`
 const AppContainer = () => {
   const dispatch = useDispatch();
 
-  const initializeApplicationRS :?RequestState = useRequestState(['app', INITIALIZE_APPLICATION]);
+  const initializeApplicationRS = useRequestState(['app', INITIALIZE_APPLICATION]);
 
   useEffect(() => {
     dispatch(initializeApplication());
@@ -60,7 +52,9 @@ const AppContainer = () => {
 
   const onLogout = () => {
     dispatch(logout());
+    // eslint-disable-next-line no-undef
     if (_isFunction(gtag)) {
+      // eslint-disable-next-line no-undef
       gtag('config', GOOGLE_MEASUREMENT_ID, { user_id: undefined, send_page_view: false });
     }
   };
@@ -118,7 +112,7 @@ const AppContainer = () => {
           { isAdmin() && <NavLink to={Routes.DASHBOARD}>Dashboard</NavLink>}
           <CopyTokenWrapper>
             <IconButton onClick={() => copyToClipboard(getAuthToken())} title="copy auth0 token">
-              <FontAwesomeIcon icon={faRectangleTerminal} />
+              <TerminalIcon size={16} />
             </IconButton>
           </CopyTokenWrapper>
         </AppNavigationWrapper>

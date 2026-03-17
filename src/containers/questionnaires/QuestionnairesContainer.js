@@ -1,9 +1,5 @@
-// @flow
-
 // import { useEffect, useState } from 'react';
 //
-// import { faPlus } from '@fortawesome/pro-solid-svg-icons';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { Map } from 'immutable';
 // import {
 //   Box,
