@@ -1,3 +1,8 @@
+import { EllipsisVerticalIcon } from 'lucide-react';
+import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+
 import {
   Colors,
   IconButton,
@@ -5,12 +10,7 @@ import {
   MenuItem,
   StyleUtils,
   Typography,
-} from 'lattice-ui-kit';
-import { EllipsisVerticalIcon } from 'lucide-react';
-import { useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-
+} from '../../../lattice-ui-kit';
 import { TranslationKeys } from '../constants';
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 

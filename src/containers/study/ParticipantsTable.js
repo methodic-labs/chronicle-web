@@ -1,11 +1,8 @@
-// @flow
-
+import { List } from 'immutable';
 import { memo } from 'react';
-
 import styled from 'styled-components';
-import { List, Map, Set } from 'immutable';
-import { Table } from 'lattice-ui-kit';
 
+import { Table } from '../../lattice-ui-kit';
 import ParticipantRow from './components/ParticipantRow';
 import getHeaders from './constants/tableHeaders';
 
@@ -23,7 +20,6 @@ import {
   TUD_LAST_DATE,
   TUD_UNIQUE_DATES
 } from '../../common/constants';
-import type { Participant, ParticipantStats } from '../../common/types';
 
 const TableWrapper = styled.div`
   > div:nth-child(1) {
@@ -101,14 +97,6 @@ const ParticipantsTable = ({
   participants,
   participantStats,
   selectedParticipants
-} :{
-  hasDeletePermission :boolean;
-  hasAndroidDataCollection :boolean;
-  hasTimeUseDiary :boolean;
-  hasIOSSensorDataCollection :boolean;
-  participants :Map<UUID, Participant>;
-  participantStats :{ [string] :ParticipantStats };
-  selectedParticipants :Set;
 }) => {
 
   const tableData = List().withMutations((mutableList) => {
@@ -130,7 +118,7 @@ const ParticipantsTable = ({
   );
 
   const components = {
-    Row: ({ data: rowData } :any) => (
+    Row: ({ data: rowData }) => (
       <ParticipantRow
           hasDeletePermission={hasDeletePermission}
           hasAndroidDataCollection={hasAndroidDataCollection}

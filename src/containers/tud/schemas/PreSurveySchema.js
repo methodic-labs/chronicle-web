@@ -1,14 +1,11 @@
-// @flow
-
-import { DataProcessingUtils } from 'lattice-fabricate';
 import { DAY_OF_WEEK, NON_TYPICAL_DAY_REASON, TYPICAL_DAY_FLAG } from '../../../common/constants';
-
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 import { PRE_SURVEY_PAGE } from '../constants';
 import TranslationKeys from '../constants/TranslationKeys';
 
 const { getPageSectionKey } = DataProcessingUtils;
 
-const createSchema = (trans :TranslationFunction, activityDay :string) => ({
+const createSchema = (trans, activityDay) => ({
   type: 'object',
   title: '',
   properties: {
@@ -72,7 +69,7 @@ const createSchema = (trans :TranslationFunction, activityDay :string) => ({
   }
 });
 
-const createUiSchema = (trans :TranslationFunction) => ({
+const createUiSchema = (trans) => ({
   [getPageSectionKey(PRE_SURVEY_PAGE, 0)]: {
     classNames: 'column-span-12 grid-container',
     [DAY_OF_WEEK]: {

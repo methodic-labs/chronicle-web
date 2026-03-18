@@ -1,20 +1,11 @@
-/*
- * @flow
- */
-
 import { useEffect, useMemo } from 'react';
-
-import { Box } from 'lattice-ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import type { RequestState } from 'redux-reqseq';
 
 import StudyContainer from './StudyContainer';
 import StudyParticipantsContainer from './StudyParticipantsContainer';
 import { INITIALIZE_STUDY, initializeStudy } from './actions';
 
-import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
-import * as Routes from '../../core/router/Routes';
 import { BasicErrorComponent, Spinner, TabLink } from '../../common/components';
 import { AppComponents, STUDIES } from '../../common/constants';
 import {
@@ -27,13 +18,15 @@ import {
 } from '../../common/utils';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectStudy } from '../../core/redux/selectors';
-import type { Study, UUID } from '../../common/types';
+import * as Routes from '../../core/router/Routes';
+import { Box } from '../../lattice-ui-kit';
+import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
 
 const StudyRouter = () => {
 
   const dispatch = useDispatch();
 
-  let studyId :?UUID;
+  let studyId;
 
   const matchStudy = useRouteMatch(Routes.STUDY);
 
@@ -42,9 +35,9 @@ const StudyRouter = () => {
     studyId = getParamFromMatch(matchStudy, Routes.STUDY_ID_PARAM);
   }
 
-  const study :?Study = useSelector(selectStudy(studyId));
+  const study = useSelector(selectStudy(studyId));
 
-  const initializeStudyRS :?RequestState = useRequestState([STUDIES, INITIALIZE_STUDY]);
+  const initializeStudyRS = useRequestState([STUDIES, INITIALIZE_STUDY]);
 
   useEffect(() => {
     dispatch(resetRequestStates([INITIALIZE_STUDY]));

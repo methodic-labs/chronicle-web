@@ -1,13 +1,4 @@
-// @flow
-
-import {
-  Box,
-  Modal,
-  ModalFooter,
-  Typography,
-} from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
-import type { RequestState } from 'redux-reqseq';
 
 import {
   isFailure,
@@ -15,6 +6,12 @@ import {
   isStandby,
   isSuccess,
 } from '../../../common/utils';
+import {
+  Box,
+  Modal,
+  ModalFooter,
+  Typography,
+} from '../../../lattice-ui-kit';
 
 const DeleteParticipantModal = ({
   handleOnClose,
@@ -22,12 +19,6 @@ const DeleteParticipantModal = ({
   isVisible,
   participantId,
   requestState,
-} :{
-  handleOnClose :() => void;
-  handleOnDeleteParticipant :() => void;
-  isVisible :boolean;
-  participantId :UUID;
-  requestState :?RequestState;
 }) => {
 
   const textPrimary = 'Delete';

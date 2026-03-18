@@ -1,16 +1,16 @@
+import { CopyIcon } from 'lucide-react';
 import styled from 'styled-components';
+
+import { TODAY, YESTERDAY } from '../../../common/constants';
+import { copyToClipboard } from '../../../common/utils';
 import {
   Box,
   IconButton,
   Modal,
   Tooltip,
   Typography
-} from 'lattice-ui-kit';
-import { CopyIcon } from 'lucide-react';
-
-import { copyToClipboard } from '../../../common/utils';
+} from '../../../lattice-ui-kit';
 import { getAppUsageLink, getParticipantLoginLink, getTimeUseDiaryLink } from '../utils';
-import { TODAY, YESTERDAY } from '../../../common/constants';
 
 const Grid = styled.div`
   align-items: center;

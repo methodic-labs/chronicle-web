@@ -1,5 +1,4 @@
 // import styled from 'styled-components';
-// import { Colors, Tag } from 'lattice-ui-kit';
 //
 // import { LIST_ITEM_ACTIONS, LIST_ITEM_ICONS } from '../constants/constants';
 //
@@ -51,14 +50,6 @@
 //   }
 // `;
 //
-// const StyledFontAwesome = styled(FontAwesomeIcon)`
-//   font-size: 16px;
-//
-//   :hover {
-//     cursor: pointer;
-//   }
-// `;
-//
 // type Props = {
 //   active :boolean;
 //   description :string;
@@ -91,7 +82,7 @@
 //     <IconGrid>
 //       {
 //         LIST_ITEM_ICONS.map((icon) => (
-//           <StyledFontAwesome
+//           <StyledIcon
 //               data-action-id={icon.action}
 //               data-questionnaire-id={questionnaireEKID}
 //               onClick={handleOnClick}

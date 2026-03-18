@@ -1,6 +1,7 @@
-import { Button } from 'lattice-ui-kit';
 import { CircleQuestionMarkIcon } from 'lucide-react';
 import styled from 'styled-components';
+
+import { Button } from '../../../lattice-ui-kit';
 
 const ButtonWrapper = styled(Button)`
   bottom: 16px;

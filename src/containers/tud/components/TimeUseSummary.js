@@ -1,8 +1,8 @@
-import { Button, Colors } from 'lattice-ui-kit';
 import { PencilIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
+import { Button, Colors } from '../../../lattice-ui-kit';
 import TranslationKeys from '../constants/TranslationKeys';
 import { createTimeUseSummary } from '../utils';
 

@@ -1,0 +1,63 @@
+/*
+ * @flow
+ */
+
+import _capitalize from 'lodash/capitalize';
+import toJson from 'enzyme-to-json';
+import { mount } from 'enzyme';
+import { CodeIcon } from 'lucide-react';
+
+import IconButton from './IconButton';
+
+import Spinner from '../../../spinner';
+
+const intentColors = ['primary', 'secondary', 'error', 'info', 'success', 'warning'];
+
+describe('IconButton', () => {
+
+  describe('snapshots', () => {
+
+    test('default', () => {
+      const wrapper = mount(<IconButton><CodeIcon /></IconButton>);
+      expect(toJson(wrapper)).toMatchSnapshot();
+      const button = wrapper.find('button');
+      expect(button).toHaveLength(1);
+    });
+
+    test('spinner', () => {
+      const wrapper = mount(<IconButton isLoading><CodeIcon /></IconButton>);
+      expect(toJson(wrapper)).toMatchSnapshot();
+      const button = wrapper.find('button');
+      expect(button).toHaveLength(1);
+    });
+
+  });
+
+  describe('props', () => {
+
+    test('color', () => {
+      intentColors.forEach((color) => {
+        const wrapper = mount(<IconButton color={color}><CodeIcon /></IconButton>);
+        const button = wrapper.find('button');
+        expect(button.prop('className')).toEqual(expect.stringMatching(`makeStyles-text${_capitalize(color)}`));
+      });
+    });
+
+    test('disabled', () => {
+      const wrapper = mount(<IconButton disabled><CodeIcon /></IconButton>);
+      const button = wrapper.find('button');
+      expect(button.prop('disabled')).toEqual(true);
+      expect(button.prop('className')).toEqual(expect.stringMatching('Mui-disabled'));
+    });
+
+    test('isLoading', () => {
+      const wrapper = mount(<IconButton isLoading><CodeIcon /></IconButton>);
+      const button = wrapper.find('button');
+      expect(button.prop('disabled')).toEqual(true);
+      expect(button.prop('className')).toEqual(expect.stringMatching('Mui-disabled'));
+      expect(wrapper.find(Spinner)).toHaveLength(1);
+    });
+
+  });
+
+});

@@ -1,3 +1,9 @@
+import { CopyIcon } from 'lucide-react';
+import { DateTime } from 'luxon';
+import styled from 'styled-components';
+
+import { AppFeatures, IOSSensorTypes } from '../../../common/constants';
+import { copyToClipboard, formatDateTime, isNonEmptyString } from '../../../common/utils';
 import {
   Box,
   Chip,
@@ -7,13 +13,7 @@ import {
   Tag,
   Tooltip,
   Typography
-} from 'lattice-ui-kit';
-import { CopyIcon } from 'lucide-react';
-import { DateTime } from 'luxon';
-import styled from 'styled-components';
-
-import { AppFeatures, IOSSensorTypes } from '../../../common/constants';
-import { copyToClipboard, formatDateTime, isNonEmptyString } from '../../../common/utils';
+} from '../../../lattice-ui-kit';
 
 const { NEUTRAL } = Colors;
 

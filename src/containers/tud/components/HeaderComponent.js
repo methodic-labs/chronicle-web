@@ -1,16 +1,14 @@
-// @flow
-
 import styled from 'styled-components';
+
+import { OpenLatticeIconSVG } from '../../../assets/svg/icons';
 import {
   Box,
   Colors,
   Select,
   StyleUtils,
   Typography
-} from 'lattice-ui-kit';
-
+} from '../../../lattice-ui-kit';
 import SUPPORTED_LANGUAGES from '../constants/SupportedLanguages';
-import { OpenLatticeIconSVG } from '../../../assets/svg/icons';
 
 const languageOptions = SUPPORTED_LANGUAGES.map((lng) => ({ value: lng.code, label: lng.language }));
 
@@ -50,15 +48,10 @@ const Wrapper = styled.div`
   `}
 `;
 
-type Props = {
-  onChangeLanguage :(lng :SelectLanguageOption) => void;
-  selectedLanguage :?SelectLanguageOption;
-};
-
 const HeaderComponent = ({
   onChangeLanguage,
   selectedLanguage,
-} :Props) => (
+}) => (
   <Wrapper>
     <nav>
       <a href={window.location.href}>

@@ -1,7 +1,7 @@
-import { Box, Button } from 'lattice-ui-kit';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Box, Button } from '../../../lattice-ui-kit';
 import { TranslationKeys } from '../constants';
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 

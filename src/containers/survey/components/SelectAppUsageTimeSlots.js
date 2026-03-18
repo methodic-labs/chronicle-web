@@ -1,4 +1,6 @@
 import { Set } from 'immutable';
+import { useContext } from 'react';
+
 import {
   Box,
   Card,
@@ -6,9 +8,7 @@ import {
   CardSegment,
   Checkbox,
   Grid
-} from 'lattice-ui-kit';
-import { useContext } from 'react';
-
+} from '../../../lattice-ui-kit';
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 
 const SelectAppUsageTimeSlots = ({

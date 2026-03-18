@@ -1,15 +1,6 @@
 // import { useEffect, useState } from 'react';
 //
 // import { Map } from 'immutable';
-// import {
-//   Box,
-//   Button,
-//   Card,
-//   CardSegment,
-//   Grid,
-//   Select,
-//   Spinner,
-// } from 'lattice-ui-kit';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { RequestStates } from 'redux-reqseq';
 // import type { RequestState } from 'redux-reqseq';
@@ -117,7 +108,6 @@
 //                         disabled={isEditing}
 //                         color="primary"
 //                         fullWidth
-//                         startIcon={<FontAwesomeIcon icon={faPlus} />}
 //                         onClick={() => setIsEditing(true)}>
 //                       New Questionnaire
 //                     </Button>

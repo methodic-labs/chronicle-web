@@ -1,13 +1,10 @@
-// @flow
-
-import { DataProcessingUtils } from 'lattice-fabricate';
-
 import { ACTIVITY_DATE, ACTIVITY_DAY, CLOCK_FORMAT } from '../../../common/constants';
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 import TranslationKeys from '../constants/TranslationKeys';
 
 const { getPageSectionKey } = DataProcessingUtils;
 
-const createSchema = (trans :TranslationFunction) => ({
+const createSchema = (trans) => ({
   type: 'object',
   title: '',
   properties: {

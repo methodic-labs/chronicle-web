@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
 import { getIn, merge, setIn } from 'immutable';
-import { DataProcessingUtils, Form } from 'lattice-fabricate';
-import { Button } from 'lattice-ui-kit';
 import _get from 'lodash/get';
 import _has from 'lodash/has';
 import _set from 'lodash/set';
@@ -40,6 +38,8 @@ import {
   WAVE_ID,
 } from '../../../common/constants';
 import { isNonEmptyString } from '../../../common/utils';
+import { DataProcessingUtils, Form } from '../../../lattice-fabricate';
+import { Button } from '../../../lattice-ui-kit';
 import { submitTimeUseDiary } from '../actions';
 import { DAY_SPAN_PAGE } from '../constants';
 import TranslationKeys from '../constants/TranslationKeys';

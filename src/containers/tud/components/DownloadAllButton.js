@@ -1,21 +1,13 @@
-// @flow
-
 import { useState } from 'react';
 
-import { Button, Menu, MenuItem } from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
-
+import { Button, Menu, MenuItem } from '../../../lattice-ui-kit';
 import DataTypes from '../constants/DataTypes';
-import type { DataType } from '../constants/DataTypes';
 
 // actions
 const DOWNLOAD_DATA = 'downloadData';
 const TOGGLE_MENU = 'toggleMenu';
 
-type Props = {
-  onDownloadData :(date :?DateTime, dataType :DataType) => void;
-}
-const DownloadAllButton = ({ onDownloadData } :Props) => {
+const DownloadAllButton = ({ onDownloadData }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClose = () => {

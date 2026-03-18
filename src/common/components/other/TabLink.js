@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { Colors, StyleUtils } from 'lattice-ui-kit';
 import { NavLink } from 'react-router-dom';
+
+import { Colors, StyleUtils } from '../../../lattice-ui-kit';
 
 const { NEUTRAL, PURPLE } = Colors;
 const { media } = StyleUtils;

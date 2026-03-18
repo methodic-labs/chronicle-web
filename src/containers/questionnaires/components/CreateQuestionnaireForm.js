@@ -3,8 +3,6 @@
 // import { useEffect, useState } from 'react';
 //
 // import styled from 'styled-components';
-// import { Form, Paged } from 'lattice-fabricate';
-// import { Button, CardSegment, Modal } from 'lattice-ui-kit';
 // import { useDispatch } from 'react-redux';
 // import { RequestStates } from 'redux-reqseq';
 // import type { RequestState } from 'redux-reqseq';

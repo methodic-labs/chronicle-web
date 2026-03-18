@@ -1,8 +1,8 @@
-import { Colors } from 'lattice-ui-kit';
 import { CircleCheckIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
+import { Colors } from '../../../lattice-ui-kit';
 import { TranslationKeys } from '../constants';
 
 const { NEUTRAL, GREEN } = Colors;

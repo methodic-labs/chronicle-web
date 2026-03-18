@@ -1,7 +1,7 @@
-import { DataProcessingUtils } from 'lattice-fabricate';
 import merge from 'lodash/merge';
 import { DateTime } from 'luxon';
 
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 import * as FollowupSchema from './FollowupSchema';
 import * as SecondaryActivitySchema from './SecondaryActivitySchema';
 import * as SecondaryFollowUpSchema from './SecondaryFollowUpSchema';

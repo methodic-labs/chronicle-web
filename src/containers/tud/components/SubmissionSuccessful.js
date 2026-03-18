@@ -1,10 +1,10 @@
+import { CircleCheckIcon } from 'lucide-react';
+
 import {
   Box,
   Colors,
   Typography
-} from 'lattice-ui-kit';
-import { CircleCheckIcon } from 'lucide-react';
-
+} from '../../../lattice-ui-kit';
 import TranslationKeys from '../constants/TranslationKeys';
 
 const { GREEN } = Colors;

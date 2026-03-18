@@ -1,5 +1,6 @@
-import { Typography } from 'lattice-ui-kit';
 import styled from 'styled-components';
+
+import { Typography } from '../../../lattice-ui-kit';
 
 const Error = styled.div`
   align-items: center;

@@ -1,4 +1,3 @@
-import { DataProcessingUtils } from 'lattice-fabricate';
 import { DateTime } from 'luxon';
 
 import {
@@ -7,6 +6,7 @@ import {
   ACTIVITY_SELECT_PAGE,
   ACTIVITY_START_TIME,
 } from '../../../common/constants';
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 import { DAY_SPAN_PAGE } from '../constants';
 import TranslationKeys from '../constants/TranslationKeys';
 import isFirstActivityPage from '../utils/isFirstActivityPage';

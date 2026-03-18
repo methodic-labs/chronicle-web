@@ -1,23 +1,14 @@
-/*
- * @flow
- */
-
 import { forwardRef, memo } from 'react';
-
-import { Form } from 'lattice-fabricate';
 import { useDispatch } from 'react-redux';
 
-import { createSchema, createUiSchema } from './CreateStudySchemas';
-
 import { FEATURES, ID, STUDY } from '../../../common/constants';
+import { Form } from '../../../lattice-fabricate';
 import { createStudy, updateStudy } from '../actions';
 import { createFormDataFromStudyEntity } from '../utils';
-import type { Study } from '../../../common/types';
+import { createSchema, createUiSchema } from './CreateStudySchemas';
 
 const CreateStudyForm = ({
   study,
-} :{
-  study ?:Study;
 }, ref) => {
 
   const dispatch = useDispatch();
@@ -27,7 +18,7 @@ const CreateStudyForm = ({
 
   const initialFormData = study ? createFormDataFromStudyEntity(schema, study) : {};
 
-  const getStudyFeatures = (features :[]) => {
+  const getStudyFeatures = (features) => {
     const result = features.reduce((obj, feature) => ({
       ...obj,
       [feature]: study?.modules[feature] ?? {}
@@ -35,7 +26,7 @@ const CreateStudyForm = ({
     return result;
   };
 
-  const handleSubmit = ({ formData } :Object) => {
+  const handleSubmit = ({ formData }) => {
     if (study) {
       const { features, ...rest } = formData.page1section1;
 
@@ -74,7 +65,6 @@ CreateStudyForm.defaultProps = {
   study: undefined
 };
 
-// $FlowFixMe
 export default memo(
   forwardRef(CreateStudyForm)
 );

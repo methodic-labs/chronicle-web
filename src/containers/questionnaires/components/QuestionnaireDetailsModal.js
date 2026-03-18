@@ -2,8 +2,6 @@
 
 // import styled from 'styled-components';
 // import { List } from 'immutable';
-// import { Form } from 'lattice-fabricate';
-// import { Colors, Modal } from 'lattice-ui-kit';
 // import { useSelector } from 'react-redux';
 //
 // import { QUESTIONNAIRE_REDUX_CONSTANTS } from '../../../utils/constants/ReduxConstants';

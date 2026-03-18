@@ -1,14 +1,6 @@
 import { useEffect } from 'react';
 
 import _isFunction from 'lodash/isFunction';
-import {
-  AppContainerWrapper,
-  AppContentWrapper,
-  AppHeaderWrapper,
-  AppNavigationWrapper,
-  IconButton,
-  Spinner,
-} from 'lattice-ui-kit';
 import { TerminalIcon } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import {
@@ -33,6 +25,14 @@ import { copyToClipboard, isNonEmptyString, useRequestState } from '../../common
 import { logout } from '../../core/auth/actions';
 import { getAuthToken, getUserInfo, isAdmin } from '../../core/auth/utils';
 import { GOOGLE_MEASUREMENT_ID } from '../../core/tracking/google/GoogleAnalytics';
+import {
+  AppContainerWrapper,
+  AppContentWrapper,
+  AppHeaderWrapper,
+  AppNavigationWrapper,
+  IconButton,
+  Spinner,
+} from '../../lattice-ui-kit';
 
 const CopyTokenWrapper = styled.div`
   align-items: center;

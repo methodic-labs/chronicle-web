@@ -1,4 +1,4 @@
-import { IconSplash, Spinner } from 'lattice-ui-kit';
+import { IconSplash, Spinner } from '../../lattice-ui-kit';
 
 const NOT_AUTHORIZED = 'You are not authorized to view this content. Please contact an administrator for access.';
 

@@ -1,21 +1,20 @@
+import { EllipsisVerticalIcon } from 'lucide-react';
+import { DateTime } from 'luxon';
 import { useContext, useMemo, useState } from 'react';
-
 import styled from 'styled-components';
+
+import ParticipantsTableDispatch from './ParticipantsTableDispatch';
+
+import { EnrollmentStatuses } from '../../../common/constants';
+import { formatDateTime } from '../../../common/utils';
 import {
   Colors,
   IconButton,
   Menu,
   MenuItem,
   Tag
-} from 'lattice-ui-kit';
-import { EllipsisVerticalIcon } from 'lucide-react';
-import { DateTime } from 'luxon';
-
-import ParticipantsTableDispatch from './ParticipantsTableDispatch';
-
+} from '../../../lattice-ui-kit';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
-import { EnrollmentStatuses } from '../../../common/constants';
-import { formatDateTime } from '../../../common/utils';
 
 const { NEUTRAL } = Colors;
 

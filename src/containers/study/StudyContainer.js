@@ -1,6 +1,17 @@
-import { useState } from 'react';
-
 import { List } from 'immutable';
+import { EllipsisVerticalIcon } from 'lucide-react';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { RequestStates } from 'redux-reqseq';
+
+import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from './actions';
+import { DeleteStudyModal, StudyDetails, StudyDetailsModal } from './components';
+
+import { useBoolean, useRequestState } from '../../common/utils';
+import { resetRequestStates } from '../../core/redux/actions';
+import { selectMyKeys, selectStudyLimits } from '../../core/redux/selectors';
+import * as Routes from '../../core/router/Routes';
 import {
   Box,
   Card,
@@ -9,19 +20,7 @@ import {
   Menu,
   MenuItem,
   Typography
-} from 'lattice-ui-kit';
-import { EllipsisVerticalIcon } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { RequestStates } from 'redux-reqseq';
-
-import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from './actions';
-import { DeleteStudyModal, StudyDetails, StudyDetailsModal } from './components';
-
-import * as Routes from '../../core/router/Routes';
-import { useBoolean, useRequestState } from '../../common/utils';
-import { resetRequestStates } from '../../core/redux/actions';
-import { selectMyKeys, selectStudyLimits } from '../../core/redux/selectors';
+} from '../../lattice-ui-kit';
 
 const StudyDetailsItem = ({
   label,

@@ -1,18 +1,14 @@
+import { BookTextIcon, LandmarkIcon, UsersIcon } from 'lucide-react';
 import styled from 'styled-components';
-import {
-  // $FlowFixMe
-  Avatar,
-  // $FlowFixMe
-  Box,
-  Colors,
-  // $FlowFixMe
-  Grid,
-} from 'lattice-ui-kit';
-import {
-  BookTextIcon, LandmarkIcon, UsersIcon
-} from 'lucide-react';
 
 import StatCard from './StatCard';
+
+import {
+  Avatar,
+  Box,
+  Colors,
+  Grid,
+} from '../../../lattice-ui-kit';
 
 const {
   NEUTRAL,
