@@ -3,18 +3,18 @@ import styled from 'styled-components';
 const MarkdownWrapper = styled.div`
   word-break: break-word;
   code {
-    background-color: rgba(27,31,35,.05);
+    background-color: rgba(27,31,35,0.05);
     border-radius: 3px;
     font-size: 85%;
     margin: 0;
-    padding: .2em .4em;
+    padding: 0.2em 0.4em;
   }
   .hljs {
     background: #f8f8f8;
     color: #333;
     display: block;
     overflow-x: auto;
-    padding: .5em;
+    padding: 0.5em;
   }
   .hljs-comment, .hljs-quote {
     color: #998;
@@ -22,7 +22,7 @@ const MarkdownWrapper = styled.div`
   }
   .hljs-keyword, .hljs-selector-tag, .hljs-subst {
     color: #333;
-    font-weight: 700
+    font-weight: 700;
   }
   .hljs-literal, .hljs-number, .hljs-tag .hljs-attr, .hljs-template-variable, .hljs-variable {
     color: teal;
@@ -54,20 +54,20 @@ const MarkdownWrapper = styled.div`
   .hljs-built_in, .hljs-builtin-name {
     color: #0086b3;
   }
-  .hljs-meta{
+  .hljs-meta {
     color: #999;
     font-weight: 700;
   }
   .hljs-deletion {
     background: #fdd;
   }
-  .hljs-addition{
+  .hljs-addition {
     background: #dfd;
   }
   .hljs-emphasis {
     font-style: italic;
   }
-  .hljs-strong{
+  .hljs-strong {
     font-weight: 700;
   }
   table {
