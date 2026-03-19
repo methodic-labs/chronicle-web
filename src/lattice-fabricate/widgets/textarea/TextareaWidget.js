@@ -64,7 +64,7 @@ class TextareaWidget extends Component<WidgetProps> {
           onFocus={this.onFocus}
           readOnly={readonly}
           rows={options.rows || 3}
-          rowsMax={options.rowsMax || Infinity}
+          rowsMax={options.rowsMax || 12}
           value={value} />
     );
     /* eslint-enable */
