@@ -1,16 +1,5 @@
-import { useEffect } from 'react';
-
-import {
-  Alert,
-  AppContainerWrapper,
-  AppContentWrapper,
-  AppHeaderWrapper,
-  Box,
-  Card,
-  CardSegment,
-  Spinner
-} from 'lattice-ui-kit';
 import qs from 'qs';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -29,6 +18,16 @@ import {
   useRequestState,
 } from '../../common/utils';
 import { selectStudySettings } from '../../core/redux/selectors';
+import {
+  Alert,
+  AppContainerWrapper,
+  AppContentWrapper,
+  AppHeaderWrapper,
+  Box,
+  Card,
+  CardSegment,
+  Spinner
+} from '../../lattice-ui-kit';
 import { GET_STUDY_SETTINGS, getStudySettings } from '../study/actions';
 import DailyAppUsageSurvey from './DailyAppUsageSurvey';
 import HourlyAppUsageSurvey from './HourlyAppUsageSurvey';

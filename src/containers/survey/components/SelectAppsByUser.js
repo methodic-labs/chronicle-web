@@ -1,6 +1,6 @@
-import { Checkbox, ChoiceGroup, Grid } from 'lattice-ui-kit';
 import { useContext } from 'react';
 
+import { Checkbox, ChoiceGroup, Grid } from '../../../lattice-ui-kit';
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 
 const SelectAppsByUser = ({ appsData, selected }) => {

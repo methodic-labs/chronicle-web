@@ -1,7 +1,6 @@
 // @flow
 
 // import styled from 'styled-components';
-// import { ActionModal } from 'lattice-ui-kit';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { RequestStates } from 'redux-reqseq';
 // import type { RequestState } from 'redux-reqseq';

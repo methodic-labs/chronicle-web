@@ -1,6 +1,7 @@
 import _get from 'lodash/get';
-import { DataProcessingUtils } from 'lattice-fabricate';
 import { DateTime } from 'luxon';
+
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 
 const { getPageSectionKey } = DataProcessingUtils;
 

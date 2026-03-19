@@ -1,12 +1,7 @@
-// @flow
-
 import styled from 'styled-components';
-import { Colors, Typography } from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
 
+import { Colors, Typography } from '../../../lattice-ui-kit';
 import DownloadAllButton from './DownloadAllButton';
-
-import type { DataType } from '../constants/DataTypes';
 
 const { NEUTRAL } = Colors;
 
@@ -24,11 +19,7 @@ const Wrapper = styled.div`
   z-index: 1;
 `;
 
-type Props = {
-  onDownloadData :(date :?DateTime, dataType :DataType) => void;
-}
-
-const SummaryHeader = ({ onDownloadData } :Props) => (
+const SummaryHeader = ({ onDownloadData }) => (
   <Wrapper>
     <Typography variant="overline" display="block">
       Date

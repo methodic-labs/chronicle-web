@@ -1,14 +1,14 @@
-// @flow
 import styled from 'styled-components';
+
+import { STUDIES_TABLE_HEADERS } from './constants';
+
 import {
   Card,
   CardSegment,
   Colors,
   Table,
   Typography,
-} from 'lattice-ui-kit';
-
-import { STUDIES_TABLE_HEADERS } from './constants';
+} from '../../../lattice-ui-kit';
 
 const { NEUTRAL } = Colors;
 
@@ -68,11 +68,7 @@ const StyledTableCard = styled(Card)`
   }
 `;
 
-type StudiesTableProps = {
-  data :Object[];
-};
-
-const StudiesTable = ({ data } :StudiesTableProps) => (
+const StudiesTable = ({ data }) => (
   <StyledTableCard>
     <CardSegment padding="16px" borderless>
       <Typography variant="h2">Studies</Typography>

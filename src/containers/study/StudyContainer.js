@@ -1,22 +1,6 @@
-/*
- * @flow
- */
-
+import { List } from 'immutable';
+import { EllipsisVerticalIcon } from 'lucide-react';
 import { useState } from 'react';
-
-import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { List, Set } from 'immutable';
-import {
-  Box,
-  Card,
-  CardSegment,
-  Colors,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography
-} from 'lattice-ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
@@ -24,24 +8,25 @@ import { RequestStates } from 'redux-reqseq';
 import { DELETE_STUDY, UPDATE_STUDY, removeStudyOnDelete } from './actions';
 import { DeleteStudyModal, StudyDetails, StudyDetailsModal } from './components';
 
-import * as Routes from '../../core/router/Routes';
 import { useBoolean, useRequestState } from '../../common/utils';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectMyKeys, selectStudyLimits } from '../../core/redux/selectors';
-import type { Study, UUID } from '../../common/types';
-
-const { NEUTRAL } = Colors;
+import * as Routes from '../../core/router/Routes';
+import {
+  Box,
+  Card,
+  CardSegment,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography
+} from '../../lattice-ui-kit';
 
 const StudyDetailsItem = ({
   label,
   missingValue,
   placeholder,
   value,
-} :{
-  label :string;
-  missingValue ?:boolean;
-  placeholder ?:string;
-  value :string;
 }) => {
 
   const detailValue = missingValue ? placeholder : value;
@@ -79,12 +64,6 @@ const StudyContainer = ({
   hasQuestionnaires,
   hasTimeUseDiary,
   study,
-} :{
-  hasAndroidDataCollection :boolean;
-  hasIOSSensorDataCollection :boolean;
-  hasQuestionnaires :boolean;
-  hasTimeUseDiary :boolean;
-  study :Study;
 }) => {
 
   const dispatch = useDispatch();
@@ -96,8 +75,8 @@ const StudyContainer = ({
 
   const deleteStudyRS = useRequestState(['studies', DELETE_STUDY]);
 
-  const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
-  const isOwner :boolean = myKeys.has(List([study.id]));
+  const myKeys = useSelector(selectMyKeys());
+  const isOwner = myKeys.has(List([study.id]));
 
   const limits = useSelector(selectStudyLimits(study.id));
 
@@ -143,9 +122,7 @@ const StudyContainer = ({
           <IconButton
               aria-controls="actions_menu"
               onClick={handleOnClick}>
-            <FontAwesomeIcon
-                color={NEUTRAL.N800}
-                icon={faEllipsisV} />
+            <EllipsisVerticalIcon size={16} />
           </IconButton>
           <Menu
               id="actions_menu"

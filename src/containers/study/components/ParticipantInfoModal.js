@@ -1,19 +1,16 @@
-// @flow
-
+import { CopyIcon } from 'lucide-react';
 import styled from 'styled-components';
-import { faCopy } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { TODAY, YESTERDAY } from '../../../common/constants';
+import { copyToClipboard } from '../../../common/utils';
 import {
   Box,
   IconButton,
   Modal,
   Tooltip,
   Typography
-} from 'lattice-ui-kit';
-
-import { copyToClipboard } from '../../../common/utils';
+} from '../../../lattice-ui-kit';
 import { getAppUsageLink, getParticipantLoginLink, getTimeUseDiaryLink } from '../utils';
-import { TODAY, YESTERDAY } from '../../../common/constants';
 
 const Grid = styled.div`
   align-items: center;
@@ -21,16 +18,6 @@ const Grid = styled.div`
   grid-gap: 20px;
   grid-template-columns: 1fr auto;
 `;
-
-type Props = {
-  handleOnClose :() => void;
-  hasAndroidDataCollection :boolean;
-  hasIOSSensorDataCollection :boolean;
-  hasTimeUseDiary :boolean;
-  isVisible :boolean;
-  participantId :UUID;
-  studyId :UUID;
-}
 
 const ParticipantInfoModal = ({
   handleOnClose,
@@ -40,7 +27,7 @@ const ParticipantInfoModal = ({
   isVisible,
   participantId,
   studyId,
-} :Props) => {
+}) => {
 
   const renderParticipantInfo = () => {
     const enrollmentLink = getParticipantLoginLink(studyId, participantId);
@@ -95,7 +82,7 @@ const ParticipantInfoModal = ({
                   <IconButton
                       aria-label={`Copy ${detail.name}`}
                       onClick={() => copyToClipboard(detail.value)}>
-                    <FontAwesomeIcon icon={faCopy} />
+                    <CopyIcon size={16} />
                   </IconButton>
                 </Tooltip>
               </Grid>

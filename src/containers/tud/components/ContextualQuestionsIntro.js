@@ -1,18 +1,10 @@
-// @flow
-
-import { Typography } from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
 
+import { Typography } from '../../../lattice-ui-kit';
 import TranslationKeys from '../constants/TranslationKeys';
 
 // selected activity -> map to key -> get the corresponding str
-type Props = {
-  selectedActivity :string;
-  time :DateTime;
-  trans :(string, ?Object) => Object;
-};
-
-const ContextualQuestionsIntro = ({ selectedActivity, time, trans } :Props) => {
+const ContextualQuestionsIntro = ({ selectedActivity, time, trans }) => {
   const activities = trans(TranslationKeys.PRIMARY_ACTIVITIES, { returnObjects: true });
   const activity = Object.values(activities).find((val) => val === selectedActivity);
   if (!activity) return null;

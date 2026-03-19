@@ -1,17 +1,13 @@
-// @flow
-
 import { useEffect, useState } from 'react';
+import { DateTime } from 'luxon';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   Card,
   CardSegment,
   Spinner,
   Typography
-} from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
-import { useDispatch, useSelector } from 'react-redux';
-import type { RequestState } from 'redux-reqseq';
-
+} from '../../lattice-ui-kit';
 import SearchPanel from './components/SearchPanel';
 import SummaryHeader from './components/SummaryHeader';
 import SummaryListComponent from './components/SummaryListComponent';
@@ -20,8 +16,6 @@ import {
   GET_TUD_SUBMISSIONS_BY_DATE_RANGE,
   getTimeUseDiarySubmissionsByDateRange,
 } from './actions';
-import type { DataType } from './constants/DataTypes';
-
 import { BasicErrorComponent } from '../../common/components';
 import {
   END_DATE,
@@ -39,12 +33,9 @@ import {
 } from '../../common/utils';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectTimeUseDiarySubmissions } from '../../core/redux/selectors';
-import type { Study } from '../../common/types';
 
 const TimeUseDiaryDashboard = ({
   study,
-} :{
-  study :Study;
 }) => {
 
   const dispatch = useDispatch();
@@ -55,7 +46,7 @@ const TimeUseDiaryDashboard = ({
   });
 
   // selectors
-  const getSubmissionsRS :?RequestState = useRequestState([TIME_USE_DIARY, GET_TUD_SUBMISSIONS_BY_DATE_RANGE]);
+  const getSubmissionsRS = useRequestState([TIME_USE_DIARY, GET_TUD_SUBMISSIONS_BY_DATE_RANGE]);
   const timeUseDiarySubmissions = useSelector(selectTimeUseDiarySubmissions());
 
   // reset state on dismount
@@ -63,7 +54,7 @@ const TimeUseDiaryDashboard = ({
     dispatch(resetRequestStates([GET_TUD_SUBMISSIONS_BY_DATE_RANGE]));
   }, [dispatch]);
 
-  const onSetDate = (name :string, value :string) => {
+  const onSetDate = (name, value) => {
     setDates({
       ...dates,
       [name]: value,
@@ -84,7 +75,7 @@ const TimeUseDiaryDashboard = ({
     }
   };
 
-  const handleDownload = (date :?DateTime, dataType :DataType) => {
+  const handleDownload = (date, dataType) => {
     const { selectedStartDate, selectedEndDate } = dates;
 
     // $FlowFixMe
@@ -147,7 +138,7 @@ const TimeUseDiaryDashboard = ({
                         <div>
                           {
                             timeUseDiarySubmissions
-                              .entrySeq().map(([key :DateTime, submissionIds]) => (
+                              .entrySeq().map(([key, submissionIds]) => (
                                 <SummaryListComponent
                                     key={formatAsDate(key)}
                                     date={key}

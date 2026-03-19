@@ -1,35 +1,22 @@
-/*
- * @flow
- */
-
 import { Component } from 'react';
-
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
+
+import * as Routes from '../../../core/router/Routes';
+import { goToRoute } from '../../../core/router/RoutingActions';
 import {
   Card,
   CardSegment,
   Typography
-} from 'lattice-ui-kit';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import type { RequestSequence } from 'redux-reqseq';
-
-import * as Routes from '../../../core/router/Routes';
-import { goToRoute } from '../../../core/router/RoutingActions';
+} from '../../../lattice-ui-kit';
 
 const StyledCard = styled(Card)`
   height: 100%;
 `;
 
-type Props = {
-  study :Object;
-  actions:{
-    goToRoute :RequestSequence
-  };
-}
-
-class StudyCard extends Component<Props> {
-  handleCardClick = (event :SyntheticEvent<HTMLElement>) => {
+class StudyCard extends Component {
+  handleCardClick = (event) => {
     const { actions } = this.props;
     const { currentTarget } = event;
     const { dataset } = currentTarget;
@@ -55,11 +42,10 @@ class StudyCard extends Component<Props> {
   }
 }
 
-const mapDispatchToProps = (dispatch :() => void) => ({
+const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
     goToRoute
   }, dispatch)
 });
 
-// $FlowFixMe
 export default connect(null, mapDispatchToProps)(StudyCard);

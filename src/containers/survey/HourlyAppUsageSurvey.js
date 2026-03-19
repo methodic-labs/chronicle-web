@@ -1,14 +1,4 @@
 import { Set, fromJS } from 'immutable';
-import {
-  AppContainerWrapper,
-  AppContentWrapper,
-  Box,
-  Card,
-  CardSegment,
-  DatePicker,
-  Radio,
-  Spinner,
-} from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
 import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +18,16 @@ import {
   useRequestState
 } from '../../common/utils';
 import { selectAppUsageSurveyData } from '../../core/redux/selectors';
+import {
+  AppContainerWrapper,
+  AppContentWrapper,
+  Box,
+  Card,
+  CardSegment,
+  DatePicker,
+  Radio,
+  Spinner,
+} from '../../lattice-ui-kit';
 import {
   GET_APP_USAGE_SURVEY_DATA,
   SUBMIT_APP_USAGE_SURVEY,

@@ -1,9 +1,8 @@
-import { faPencilAlt } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Colors } from 'lattice-ui-kit';
+import { PencilIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
+import { Button, Colors } from '../../../lattice-ui-kit';
 import TranslationKeys from '../constants/TranslationKeys';
 import { createTimeUseSummary } from '../utils';
 
@@ -40,10 +39,6 @@ const Wrapper = styled.div`
   padding: 20px 0;
 `;
 
-const EditIcon = (
-  <FontAwesomeIcon icon={faPencilAlt} />
-);
-
 const TimeUseSummary = ({
   activityDay,
   formData,
@@ -70,7 +65,7 @@ const TimeUseSummary = ({
             </ItemSummary>
             <StyledButton
                 onClick={() => goToPage(item.pageNum)}
-                startIcon={EditIcon}>
+                startIcon={<PencilIcon size={16} />}>
               {t(TranslationKeys.BTN_EDIT)}
             </StyledButton>
           </Wrapper>

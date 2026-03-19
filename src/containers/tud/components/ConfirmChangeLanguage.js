@@ -1,22 +1,12 @@
-// @flow
-
-// $FlowFixMe
-import { Box, Modal, Typography } from 'lattice-ui-kit';
-
+import { Box, Modal, Typography } from '../../../lattice-ui-kit';
 import TranslationKeys from '../constants/TranslationKeys';
 
-type Props = {
-  handleOnClose :() => void;
-  handleOnConfirmChange :() => void;
-  isVisible :boolean;
-  trans :(string, ?Object) => string;
-}
 const ConfirmChangeLanguage = ({
   handleOnClose,
   handleOnConfirmChange,
   isVisible,
   trans,
-} :Props) => (
+}) => (
   <Modal
       isVisible={isVisible}
       onClose={handleOnClose}

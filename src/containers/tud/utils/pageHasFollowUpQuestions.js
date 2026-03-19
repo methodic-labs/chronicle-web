@@ -1,7 +1,7 @@
-import { DataProcessingUtils } from 'lattice-fabricate';
 import _get from 'lodash/get';
 
 import { HAS_FOLLOWUP_QUESTIONS } from '../../../common/constants';
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 
 const { getPageSectionKey } = DataProcessingUtils;
 

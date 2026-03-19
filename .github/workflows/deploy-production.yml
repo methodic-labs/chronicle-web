@@ -13,18 +13,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: node 16
+      - name: node
         uses: actions/setup-node@v3
         with:
           cache: npm
-          node-version: latest
-
-      - name: npm config
-        env:
-          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-        run: |
-          npm config set "@fortawesome:registry" https://npm.fontawesome.com/
-          npm config set "//npm.fontawesome.com/:_authToken" "$FONTAWESOME_NPM_AUTH_TOKEN"
+          node-version: 24
 
       - name: npm ci
         run: npm ci

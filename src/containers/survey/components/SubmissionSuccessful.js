@@ -1,9 +1,8 @@
-import { faCheckCircle } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Colors } from 'lattice-ui-kit';
+import { CircleCheckIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
+import { Colors } from '../../../lattice-ui-kit';
 import { TranslationKeys } from '../constants';
 
 const { NEUTRAL, GREEN } = Colors;
@@ -36,7 +35,7 @@ const SubmissionSuccessful = () => {
   const { t } = useTranslation();
   return (
     <Wrapper>
-      <FontAwesomeIcon color={GREEN.G300} icon={faCheckCircle} size="3x" />
+      <CircleCheckIcon size={32} stroke={GREEN.G300} />
       <h3>{t(TranslationKeys.SUBMISSION_SUCCESSFUL)}</h3>
       <p>{t(TranslationKeys.THANK_YOU_FOR_PARTICIPATING)}</p>
     </Wrapper>

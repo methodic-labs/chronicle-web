@@ -157,6 +157,8 @@
     "Chinese",
     "German"
   ],
+  "language_english": "",
+  "language_spanish": "",
   "no_one": "Niemand",
   "bg_tv_night": "Lief der Fernseher im Hintergrund, während Ihr Kind in der Nacht schlief?",
   "bg_audio_night": "Gab es Ton im Raum (z.B. Musik, Podcast), während Ihr Kind in der Nacht schlief?",
@@ -206,5 +208,8 @@
   "submission_success_title": "Einreichen erfolgreich!",
   "nighttime_activity_title": "Aktivität in der Nacht",
   "error_invalid_url": "Beim Laden des Zeittagebuchs trat ein Fehler auf. Bitte versuchen Sie es später nochmal.",
-  "scroll_activities": "Bitte scrollen Sie, um mehr Optionen zu sehen."
+  "scroll_activities": "Bitte scrollen Sie, um mehr Optionen zu sehen.",
+  "error_generic": "",
+  "instructions": "",
+  "app_usage_survey": {}
 }
