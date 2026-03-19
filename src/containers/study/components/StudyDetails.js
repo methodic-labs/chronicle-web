@@ -1,5 +1,9 @@
-import { faCopy } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { CopyIcon } from 'lucide-react';
+import { DateTime } from 'luxon';
+import styled from 'styled-components';
+
+import { AppFeatures, IOSSensorTypes } from '../../../common/constants';
+import { copyToClipboard, formatDateTime, isNonEmptyString } from '../../../common/utils';
 import {
   Box,
   Chip,
@@ -9,12 +13,7 @@ import {
   Tag,
   Tooltip,
   Typography
-} from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
-import styled from 'styled-components';
-
-import { AppFeatures, IOSSensorTypes } from '../../../common/constants';
-import { copyToClipboard, formatDateTime, isNonEmptyString } from '../../../common/utils';
+} from '../../../lattice-ui-kit';
 
 const { NEUTRAL } = Colors;
 
@@ -107,7 +106,7 @@ const StudyDetails = ({
                       <IconButton
                           aria-label={`Copy ${detail.label}`}
                           onClick={() => copyToClipboard(detail.value)}>
-                        <FontAwesomeIcon icon={faCopy} />
+                        <CopyIcon size={16} />
                       </IconButton>
                     </Tooltip>
                   </Box>

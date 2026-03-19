@@ -1,6 +1,6 @@
-import { Box } from 'lattice-ui-kit';
 import { useTranslation } from 'react-i18next';
 
+import { Box } from '../../../lattice-ui-kit';
 import { TranslationKeys } from '../constants';
 import SurveyButtons from './SurveyButtons';
 

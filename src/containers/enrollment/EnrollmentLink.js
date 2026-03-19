@@ -2,7 +2,7 @@ import {
   Card,
   CardHeader,
   CardSegment,
-} from 'lattice-ui-kit';
+} from '../../lattice-ui-kit';
 
 const EnrollmentLink = () => (
   <>

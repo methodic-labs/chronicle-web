@@ -1,12 +1,11 @@
-// @flow
 import styled from 'styled-components';
+
 import {
   Card,
   CardHeader,
-  // $FlowFixMe
   Skeleton,
   Typography,
-} from 'lattice-ui-kit';
+} from '../../../lattice-ui-kit';
 
 const StyledHeader = styled(CardHeader)`
   align-items: center;
@@ -16,19 +15,12 @@ const StyledContent = styled.div`
   padding: 0 16px 16px;
 `;
 
-type StatCardProps = {
-  avatar :React$Node;
-  loading :boolean;
-  title :string;
-  value :number | string;
-};
-
 const StatCard = ({
   avatar,
   loading = false,
   title,
   value = '---',
-} :StatCardProps) => {
+}) => {
   const formattedValue = typeof value === 'number' ? value.toLocaleString() : value;
   return (
     <Card>

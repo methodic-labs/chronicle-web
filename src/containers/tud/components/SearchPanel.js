@@ -1,16 +1,12 @@
-// @flow
-
 import styled from 'styled-components';
+
+import { isPending } from '../../../common/utils';
 import {
   Button,
   DatePicker,
   Label,
   Typography
-} from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
-import type { RequestState } from 'redux-reqseq';
-
-import { isPending } from '../../../common/utils';
+} from '../../../lattice-ui-kit';
 
 const SearchGrid = styled.div`
   align-items: end;
@@ -19,14 +15,7 @@ const SearchGrid = styled.div`
   grid-template-columns: auto auto 1fr 200px;
 `;
 
-type Props = {
-  endDate :?DateTime;
-  getSubmissionsRS :?RequestState;
-  onGetSubmissions :() => void;
-  onSetDate :(name :string, date :any) => void;
-  startDate :?DateTime;
-}
-const SearchPanel = (props :Props) => {
+const SearchPanel = (props) => {
   const {
     endDate,
     getSubmissionsRS,

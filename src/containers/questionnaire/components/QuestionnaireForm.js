@@ -2,12 +2,6 @@
 
 // import styled from 'styled-components';
 // import { List } from 'immutable';
-// import { Form } from 'lattice-fabricate';
-// import {
-//   Card,
-//   CardSegment,
-//   StyleUtils
-// } from 'lattice-ui-kit';
 // import { useDispatch } from 'react-redux';
 // import { RequestStates } from 'redux-reqseq';
 // import type { RequestState } from 'redux-reqseq';

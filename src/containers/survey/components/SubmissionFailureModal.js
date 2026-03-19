@@ -1,6 +1,7 @@
-import { Modal } from 'lattice-ui-kit';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+
+import { Modal } from '../../../lattice-ui-kit';
 import { TranslationKeys } from '../constants';
 
 const ModalBody = styled.div`

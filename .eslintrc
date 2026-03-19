@@ -111,7 +111,7 @@
         "groups": ["builtin", "external", "internal", ["parent", "sibling"], "index"]
       }
     ],
-    "import/prefer-default-export": "warn",
+    "import/prefer-default-export": "off",
 
     "jest/no-disabled-tests": "error",
     "jest/no-focused-tests": "error",
@@ -149,7 +149,7 @@
     "react/jsx-uses-react": "off",
     "react/no-did-update-set-state": "warn",
     "react/prefer-stateless-function": "warn",
-    "react/prop-types": "warn",
+    "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": [
       "error",

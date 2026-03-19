@@ -1,5 +1,3 @@
-// @flow
-
 import isArray from 'lodash/isArray';
 import isPlainObject from 'lodash/isPlainObject';
 import matchAll from 'match-all';
@@ -11,7 +9,7 @@ import SupportedLanguages from '../../containers/tud/constants/SupportedLanguage
 import TranslationKeys from '../../containers/tud/constants/TranslationKeys';
 import { LanguageCodes } from '../../common/constants';
 
-const getArrayValueSizes = (obj :Object) => {
+const getArrayValueSizes = (obj) => {
   const sizes = {};
   Object.entries(obj).forEach(([key, val]) => {
     if (isArray(val)) {
@@ -21,11 +19,11 @@ const getArrayValueSizes = (obj :Object) => {
   return sizes;
 };
 
-const getInterpolationValues = (obj :Object, exclude :string[]) => {
+const getInterpolationValues = (obj, exclude) => {
   const lookup = {};
   const regexp = /\{\{(.*?)\}\}/g;
 
-  Object.entries(obj).forEach(([key :string, value :string | Array | Object]) => {
+  Object.entries(obj).forEach(([key, value]) => {
     if (typeof value === 'string') {
       let matches = matchAll(value, regexp).toArray();
       if (exclude.length > 0) {
@@ -61,7 +59,7 @@ describe('Translation files structure', () => {
     const { en, ...others } = Translations;
     const enSizes = getArrayValueSizes(en);
 
-    Object.values(others).forEach((lng :Object) => {
+    Object.values(others).forEach((lng) => {
       const testSizes = getArrayValueSizes(lng);
       expect(testSizes).toStrictEqual(enSizes);
     });
@@ -71,7 +69,7 @@ describe('Translation files structure', () => {
     const { en, ...others } = Translations;
     const engKeys = Object.keys(en);
 
-    Object.values(others).forEach((lng :Object) => {
+    Object.values(others).forEach((lng) => {
       expect(engKeys).toStrictEqual(Object.keys(lng));
     });
   });
@@ -85,7 +83,7 @@ describe('Translation files structure', () => {
 
     // verify structure
     const keys = Object.keys(primaryActivities);
-    Object.values(others).forEach((lng :Object) => {
+    Object.values(others).forEach((lng) => {
       const testActivities = lng.primary_activities;
       expect(testActivities).toBeDefined();
       expect(isPlainObject(testActivities)).toBeTruthy();
@@ -96,7 +94,7 @@ describe('Translation files structure', () => {
   test('all keys in translation files should be defined in KeyMap', () => {
     const translationKeys = Object.values(TranslationKeys);
 
-    Object.values(Translations).forEach((lng :Object) => {
+    Object.values(Translations).forEach((lng) => {
       Object.keys(lng).forEach((key) => {
         expect(translationKeys).toContain(key);
       });

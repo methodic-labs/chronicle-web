@@ -1,41 +1,10 @@
-import { useEffect, useState } from 'react';
-
 import Cookies from 'js-cookie';
-import { Paged } from 'lattice-fabricate';
-import {
-  AppContainerWrapper,
-  AppContentWrapper,
-  Box,
-  Card,
-  CardSegment,
-  Spinner,
-  Typography,
-} from 'lattice-ui-kit';
 import qs from 'qs';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
-
-import { SUBMIT_TIME_USE_DIARY } from './actions';
-import ConfirmChangeLanguage from './components/ConfirmChangeLanguage';
-import HeaderComponent from './components/HeaderComponent';
-import ProgressBar from './components/ProgressBar';
-import QuestionnaireForm from './components/QuestionnaireForm';
-import SubmissionErrorModal from './components/SubmissionErrorModal';
-import SubmissionSuccessful from './components/SubmissionSuccessful';
-import SUPPORTED_LANGUAGES from './constants/SupportedLanguages';
-import TranslationKeys from './constants/TranslationKeys';
-import {
-  isDayActivityPage as _isDayActivityPage,
-  isSummaryPage as _isSummaryPage,
-  createFormSchema,
-  getDateTimeFromData,
-  getEnableChangesForOhioStateUniversity,
-  getIs12HourFormatSelected,
-  isIntroPage,
-  updateActivityDateAndDay
-} from './utils';
 
 import { BasicErrorComponent } from '../../common/components';
 import {
@@ -55,13 +24,42 @@ import {
 } from '../../common/constants';
 import { isFailure, isPending, useRequestState } from '../../common/utils';
 import { selectStudySettings } from '../../core/redux/selectors';
+import { Paged } from '../../lattice-fabricate';
+import {
+  AppContainerWrapper,
+  AppContentWrapper,
+  Box,
+  Card,
+  CardSegment,
+  Spinner,
+  Typography,
+} from '../../lattice-ui-kit';
 import {
   GET_STUDY_SETTINGS,
   VERIFY_PARTICIPANT,
   getStudySettings,
   verifyParticipant,
 } from '../study/actions';
+import { SUBMIT_TIME_USE_DIARY } from './actions';
+import ConfirmChangeLanguage from './components/ConfirmChangeLanguage';
+import HeaderComponent from './components/HeaderComponent';
+import ProgressBar from './components/ProgressBar';
+import QuestionnaireForm from './components/QuestionnaireForm';
+import SubmissionErrorModal from './components/SubmissionErrorModal';
+import SubmissionSuccessful from './components/SubmissionSuccessful';
 import { DAY_SPAN_PAGE, INTRO_PAGE } from './constants';
+import SUPPORTED_LANGUAGES from './constants/SupportedLanguages';
+import TranslationKeys from './constants/TranslationKeys';
+import {
+  isDayActivityPage as _isDayActivityPage,
+  isSummaryPage as _isSummaryPage,
+  createFormSchema,
+  getDateTimeFromData,
+  getEnableChangesForOhioStateUniversity,
+  getIs12HourFormatSelected,
+  isIntroPage,
+  updateActivityDateAndDay
+} from './utils';
 
 const TimeUseDiaryContainer = () => {
   const location = useLocation();

@@ -1,7 +1,3 @@
-// @flow
-
-// import { faToggleOff, faTrashAlt } from '@fortawesome/pro-regular-svg-icons';
-//
 // import QuestionnaireStatuses from './questionnaireStatus';
 //
 // const { ACTIVE, NOT_ACTIVE } = QuestionnaireStatuses;

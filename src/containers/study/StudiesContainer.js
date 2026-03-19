@@ -1,36 +1,30 @@
-/*
- * @flow
- */
-
 import { useState } from 'react';
-
-import {
-  Box,
-  Button,
-  Grid,
-  Spinner,
-  Typography,
-} from 'lattice-ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
-import type { RequestState } from 'redux-reqseq';
 
+import { CREATE_STUDY, GET_ORG_STUDIES } from './actions';
 import StudyCard from './components/StudyCard';
 import StudyDetailsModal from './components/StudyDetailsModal';
-import { CREATE_STUDY, GET_ORG_STUDIES } from './actions';
 
 import { BasicErrorComponent } from '../../common/components';
 import { STUDIES } from '../../common/constants';
 import { useRequestState } from '../../common/utils';
 import { resetRequestStates } from '../../core/redux/actions';
 import { selectStudies } from '../../core/redux/selectors';
+import {
+  Box,
+  Button,
+  Grid,
+  Spinner,
+  Typography,
+} from '../../lattice-ui-kit';
 
 const StudiesContainer = () => {
 
   const dispatch = useDispatch();
   const [createStudyModalVisible, setCreateStudyModalVisible] = useState(false);
 
-  const getStudiesRS :?RequestState = useRequestState([STUDIES, GET_ORG_STUDIES]);
+  const getStudiesRS = useRequestState([STUDIES, GET_ORG_STUDIES]);
 
   const studies = useSelector(selectStudies());
 

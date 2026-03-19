@@ -2,6 +2,7 @@
 
 export default {
   ACTIVITY_END_TIME: 'activity_end_time',
+  APP_USAGE_SURVEY: 'app_usage_survey',
   ADULT_MEDIA: 'adult_media',
   BED_TIME_BEFORE_ACTIVITY_DAY: 'bed_time_before_activity_day',
   BED_TIME_LAST_NIGHT: 'bed_time_last_night',
@@ -46,6 +47,7 @@ export default {
   DEVICE_TYPE: 'device_type',
   DEVICE_TYPE_OPTIONS: 'device_type_options',
   DONT_KNOW: 'dont_know',
+  ERROR_GENERIC: 'error_generic',
   ERROR_END_PAST_BEDTIME: 'error_end_past_bedtime',
   ERROR_INVALID_BED_TIME: 'error_invalid_bedtime',
   ERROR_INVALID_END_TIME: 'error_invalid_end',
@@ -55,8 +57,11 @@ export default {
   ERROR_SUBMIT: 'error_submit',
   INTRO_TEXT_CTX: 'intro_text_ctx',
   INTRO_TEXT: 'intro_text',
+  INSTRUCTIONS: 'instructions',
   LANGUAGE: 'language',
+  LANGUAGE_ENGLISH: 'language_english',
   LANGUAGE_OPTIONS: 'language_options',
+  LANGUAGE_SPANISH: 'language_spanish',
   MEDIA_ACTIVITY: 'media_activity',
   MEDIA_ACTIVITY_OPTIONS: 'media_activity_options',
   MEDIA_AGE: 'media_age',

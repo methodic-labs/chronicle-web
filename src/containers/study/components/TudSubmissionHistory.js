@@ -1,6 +1,7 @@
-// @flow
+import { DateTime } from 'luxon';
+import { useSelector } from 'react-redux';
 
-import { OrderedSet } from 'immutable';
+import { formatDateTime } from '../../../common/utils';
 import {
   Box,
   List,
@@ -9,27 +10,16 @@ import {
   ListSubheader,
   Modal,
   Typography
-} from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
-import { useSelector } from 'react-redux';
-
-import { formatDateTime } from '../../../common/utils';
+} from '../../../lattice-ui-kit';
 import { selectTudSubmissionDates } from '../../tud/TimeUseDiarySelectors';
-
-type Props = {
-  handleOnClose :() => void;
-  isVisible :boolean;
-  candidateId :UUID;
-  participantId :UUID;
-}
 
 const TudSubmissionHistory = ({
   handleOnClose,
   isVisible,
   candidateId,
   participantId
-} :Props) => {
-  const data :OrderedSet = useSelector(selectTudSubmissionDates(candidateId));
+}) => {
+  const data = useSelector(selectTudSubmissionDates(candidateId));
 
   return (
     <Modal

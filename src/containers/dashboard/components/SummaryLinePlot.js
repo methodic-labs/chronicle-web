@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { ResponsiveLine } from '@nivo/line';
-import { Card, Colors } from 'lattice-ui-kit';
 
 import SummaryLineTooltip from './SummaryLineTooltip';
 
+import { Card, Colors } from '../../../lattice-ui-kit';
 import generateLineData from '../utils/generateLineData';
 
 const {

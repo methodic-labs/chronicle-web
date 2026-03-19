@@ -1,8 +1,8 @@
 import { Map } from 'immutable';
-import { Box } from 'lattice-ui-kit';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Box } from '../../../lattice-ui-kit';
 import { SURVEY_STEPS, TranslationKeys } from '../constants';
 import HourlySurveyInstructions from './HourlySurveyInstructions';
 import SelectAppUsageTimeSlots from './SelectAppUsageTimeSlots';

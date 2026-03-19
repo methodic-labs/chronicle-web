@@ -1,34 +1,23 @@
-// @flow
-
 import { useRef } from 'react';
-
-import { Map } from 'immutable';
-import { ActionModal } from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
-import type { RequestState } from 'redux-reqseq';
 
 import AddParticipantForm from './AddParticipantForm';
 
 import { STUDIES } from '../../../common/constants';
 import { useRequestState } from '../../../common/utils';
+import { ActionModal } from '../../../lattice-ui-kit';
 import { REGISTER_PARTICIPANT } from '../actions';
-import type { Study } from '../../../common/types';
 
 const AddParticipantModal = ({
   isVisible,
   onCloseModal,
   participants,
   study,
-} :{
-  isVisible :boolean;
-  onCloseModal :() => void;
-  participants :Map;
-  study :Study;
 }) => {
 
   const formRef = useRef();
 
-  const addParticipantRS :?RequestState = useRequestState([STUDIES, REGISTER_PARTICIPANT]);
+  const addParticipantRS = useRequestState([STUDIES, REGISTER_PARTICIPANT]);
 
   const requestStateComponents = {
     [RequestStates.STANDBY]: (

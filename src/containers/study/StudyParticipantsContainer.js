@@ -1,28 +1,7 @@
-/*
- * @flow
- */
-
-import { useEffect, useReducer, useState } from 'react';
-
 import { List, Map, Set } from 'immutable';
-import {
-  Box,
-  Card,
-  CardSegment,
-} from 'lattice-ui-kit';
+import { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import type { RequestState } from 'redux-reqseq';
 
-import AddParticipantModal from './components/AddParticipantModal';
-import ChangeEnrollmentModal from './components/ChangeEnrollmentModal';
-import DeleteParticipantModal from './components/DeleteParticipantModal';
-import DownloadParticipantDataModal from './components/DownloadParticipantDataModal';
-import ParticipantInfoModal from './components/ParticipantInfoModal';
-import ParticipantsTable from './ParticipantsTable';
-import ParticipantsTableActions from './constants/ParticipantsTableActions';
-import ParticipantsTableDispatch from './components/ParticipantsTableDispatch';
-import TableHeader from './components/TableHeader';
-import TudSubmissionHistory from './components/TudSubmissionHistory';
 import {
   CHANGE_ENROLLMENT_STATUS,
   DELETE_STUDY_PARTICIPANTS,
@@ -30,6 +9,16 @@ import {
   changeEnrollmentStatus,
   deleteStudyParticipants
 } from './actions';
+import AddParticipantModal from './components/AddParticipantModal';
+import ChangeEnrollmentModal from './components/ChangeEnrollmentModal';
+import DeleteParticipantModal from './components/DeleteParticipantModal';
+import DownloadParticipantDataModal from './components/DownloadParticipantDataModal';
+import ParticipantInfoModal from './components/ParticipantInfoModal';
+import ParticipantsTableDispatch from './components/ParticipantsTableDispatch';
+import TableHeader from './components/TableHeader';
+import TudSubmissionHistory from './components/TudSubmissionHistory';
+import ParticipantsTableActions from './constants/ParticipantsTableActions';
+import ParticipantsTable from './ParticipantsTable';
 
 import {
   CANDIDATE_ID,
@@ -46,7 +35,11 @@ import {
   selectParticipantStats,
   selectStudyParticipants,
 } from '../../core/redux/selectors';
-import type { Participant, ParticipationStatus, Study } from '../../common/types';
+import {
+  Box,
+  Card,
+  CardSegment,
+} from '../../lattice-ui-kit';
 
 const {
   SELECT_CANDIDATE_IDS,
@@ -70,7 +63,7 @@ const initialState = {
   selectedParticipants: Set()
 };
 
-const reducer = (state :Object, action :Object) => {
+const reducer = (state, action) => {
   switch (action.type) {
     case SELECT_CANDIDATE_IDS: {
       const { ids, all = false } = action;
@@ -89,7 +82,7 @@ const reducer = (state :Object, action :Object) => {
         };
       }
 
-      const updated = selectedParticipants.withMutations((mutableSet :Set) => {
+      const updated = selectedParticipants.withMutations((mutableSet) => {
         ids.forEach((id) => {
           if (selectedParticipants.has(id)) {
             mutableSet.delete(id);
@@ -156,11 +149,6 @@ const StudyParticipantsContainer = ({
   hasAndroidDataCollection,
   hasIOSSensorDataCollection,
   hasTimeUseDiary
-} :{
-  hasAndroidDataCollection :boolean;
-  hasIOSSensorDataCollection :boolean;
-  hasTimeUseDiary :boolean;
-  study :Study;
 }) => {
 
   const storeDispatch = useDispatch();
@@ -181,14 +169,14 @@ const StudyParticipantsContainer = ({
   const [filteredParticipants, setFilteredParticipants] = useState(Map());
 
   // selectors
-  const participants :Map<UUID, Participant> = useSelector(selectStudyParticipants(study.id));
+  const participants = useSelector(selectStudyParticipants(study.id));
   const participantStats = useSelector(selectParticipantStats(study.id));
 
-  const myKeys :Set<List<UUID>> = useSelector(selectMyKeys());
-  const isOwner :boolean = myKeys.has(List([study.id]));
+  const myKeys = useSelector(selectMyKeys());
+  const isOwner = myKeys.has(List([study.id]));
 
-  const changeEnrollmentStatusRS :?RequestState = useRequestState([STUDIES, CHANGE_ENROLLMENT_STATUS]);
-  const deleteParticipantRS :?RequestState = useRequestState([STUDIES, DELETE_STUDY_PARTICIPANTS]);
+  const changeEnrollmentStatusRS = useRequestState([STUDIES, CHANGE_ENROLLMENT_STATUS]);
+  const deleteParticipantRS = useRequestState([STUDIES, DELETE_STUDY_PARTICIPANTS]);
 
   useEffect(() => {
     setFilteredParticipants(participants);
@@ -206,12 +194,12 @@ const StudyParticipantsContainer = ({
     storeDispatch(resetRequestStates([REGISTER_PARTICIPANT]));
   }, [isAddParticipantModalOpen, storeDispatch]);
 
-  const handleOnChange = (event :SyntheticInputEvent<HTMLInputElement>) => {
+  const handleOnChange = (event) => {
     const { currentTarget } = event;
     const { value } = currentTarget;
 
     const matchingResults = participants
-      .filter((participant :Participant) => participant[PARTICIPANT_ID].toLowerCase().includes(value.toLowerCase()));
+      .filter((participant) => participant[PARTICIPANT_ID].toLowerCase().includes(value.toLowerCase()));
     setFilteredParticipants(matchingResults);
   };
 
@@ -224,7 +212,7 @@ const StudyParticipantsContainer = ({
     );
   };
 
-  const handleOnChangeEnrollment = (status :ParticipationStatus) => {
+  const handleOnChangeEnrollment = (status) => {
     storeDispatch(changeEnrollmentStatus({
       [CANDIDATE_ID]: candidateId,
       [STUDY_ID]: study.id,

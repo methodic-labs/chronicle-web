@@ -1,7 +1,7 @@
-import { Box, Modal } from 'lattice-ui-kit';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Box, Modal } from '../../../lattice-ui-kit';
 import { SURVEY_STEPS, TranslationKeys } from '../constants';
 import HourlySurveyDispatch, { ACTIONS } from './HourlySurveyDispatch';
 

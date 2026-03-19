@@ -6,7 +6,6 @@
 //   getIn,
 //   setIn
 // } from 'immutable';
-// import { DataProcessingUtils } from 'lattice-fabricate';
 //
 // import { OPENLATTICE_ID_FQN, QUESTION } from '../../../common/constants';
 //

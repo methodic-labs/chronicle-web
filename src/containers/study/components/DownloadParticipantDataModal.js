@@ -1,9 +1,6 @@
-/*
- * @flow
- */
-
 import { useEffect, useMemo, useState } from 'react';
 
+import { ParticipantDataTypes, TimeUseDiaryDataTypes } from '../../../common/constants';
 import {
   Box,
   Button,
@@ -12,10 +9,8 @@ import {
   Modal,
   Select,
   Typography
-} from 'lattice-ui-kit';
-
+} from '../../../lattice-ui-kit';
 import getParticipantDataDownloadUrl from '../utils/getParticipantDataDownloadUrl';
-import { ParticipantDataTypes, TimeUseDiaryDataTypes } from '../../../common/constants';
 
 const {
   USAGE_EVENTS,
@@ -54,17 +49,7 @@ const timeUseDiaryDataTypeOptions = [
   }
 ];
 
-type Props = {
-  handleOnClose :() => void;
-  hasAndroidDataCollection :boolean;
-  hasIOSSensorDataCollection :boolean;
-  hasTimeUseDiary :boolean;
-  isVisible :boolean;
-  participantId :string;
-  studyId :UUID;
-}
-
-const DownloadParticipantDataModal = (props :Props) => {
+const DownloadParticipantDataModal = (props) => {
   const {
     handleOnClose,
     hasAndroidDataCollection,
@@ -124,7 +109,7 @@ const DownloadParticipantDataModal = (props :Props) => {
     window.open(url, '_blank');
   };
 
-  const handleOnChange = (event :SyntheticInputEvent<HTMLInputElement>) => {
+  const handleOnChange = (event) => {
     const { currentTarget } = event;
     const { value } = currentTarget;
     setFilename(value);

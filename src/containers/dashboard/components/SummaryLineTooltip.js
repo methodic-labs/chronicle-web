@@ -1,21 +1,10 @@
-// @flow
+import { BasicTooltip } from '@nivo/tooltip';
+import { DateTime } from 'luxon';
 import { memo } from 'react';
 
-import { BasicTooltip } from '@nivo/tooltip';
-import { Typography } from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
+import { Typography } from '../../../lattice-ui-kit';
 
-type LinePointTooltipProps = {
-  point :{
-    data :{
-      x :Date;
-      y :number;
-    },
-    serieColor :string;
-  };
-};
-
-const LinePointTooltip = ({ point } :LinePointTooltipProps) => {
+const LinePointTooltip = ({ point }) => {
 
   const { data, serieColor } = point;
   const date = DateTime.fromJSDate(data.x);
@@ -34,4 +23,4 @@ const LinePointTooltip = ({ point } :LinePointTooltipProps) => {
   );
 };
 
-export default memo<LinePointTooltipProps>(LinePointTooltip);
+export default memo(LinePointTooltip);
