@@ -151,6 +151,8 @@
     "Chinese",
     "German"
   ],
+  "language_english": "",
+  "language_spanish": "",
   "no_one": "ingen",
   "bg_tv_night": "Var TV:n på i samma rum som barnet sover i på kvällen/natten?",
   "bg_audio_night": "Var det musik eller annat ljud på i samma rum som barnet sover i för kvällen/natten?",
@@ -200,5 +202,8 @@
   "submission_success_title": "Dagboken är inskickad!",
   "nighttime_activity_title": "Nattetid",
   "error_invalid_url": "Något blev fel när dagboken skulle laddas. Försök lite senare igen.",
-  "scroll_activities": "Om du skrollar ner finns det fler aktiviteter."
+  "scroll_activities": "Om du skrollar ner finns det fler aktiviteter.",
+  "error_generic": "",
+  "instructions": "",
+  "app_usage_survey": {}
 }

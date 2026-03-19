@@ -38,8 +38,8 @@ jobs:
       # - name: npm run flow
       #   run: npm run flow
 
-      # - name: npm run test
-      #   run: npm run test
+      - name: npm run test
+        run: npm run test
 
       - name: npm run build:prod
         run: npm run build:prod
