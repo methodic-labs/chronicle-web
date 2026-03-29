@@ -1,3 +1,5 @@
+// @flow
+
 import { ACTIVITY_DATE, ACTIVITY_DAY, CLOCK_FORMAT } from '../../../common/constants';
 import { DataProcessingUtils } from '../../../lattice-fabricate';
 import TranslationKeys from '../constants/TranslationKeys';
