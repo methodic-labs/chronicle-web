@@ -24,6 +24,7 @@ import {
   SLEEP_PATTERN,
   TYPICAL_DAY_FLAG,
 } from '../../../common/constants';
+import ARRAY_ORDER_PERMUTATIONS from '../constants/ArrayOrderPermutations';
 import JSONKEY_ID_LOOKUP from '../constants/JsonKeyAnswerIdMapping';
 import TranslationKeys from '../constants/TranslationKeys';
 
@@ -36,8 +37,10 @@ const createEnglishTranslationLookup = (translationData :Object, language :strin
 
   Object.entries(srcLanguage).forEach(([key, value]) => {
     if (Array.isArray(value)) {
+      const permutation = ARRAY_ORDER_PERMUTATIONS[language]?.[key];
       value.forEach((val, index) => {
-        const translation = getIn(english, [key, index], val);
+        const englishIndex = permutation ? permutation[index] : index;
+        const translation = getIn(english, [key, englishIndex], val);
         // $FlowFixMe
         set(result, [JSONKEY_ID_LOOKUP[key], val], translation);
       });
