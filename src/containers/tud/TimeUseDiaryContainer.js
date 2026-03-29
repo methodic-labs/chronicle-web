@@ -23,6 +23,7 @@ import {
   YESTERDAY,
 } from '../../common/constants';
 import { isFailure, isPending, useRequestState } from '../../common/utils';
+import { getBaseLanguageCode, resolveLanguageCode } from '../../core/i18n/GenderedLanguages';
 import { selectStudySettings } from '../../core/redux/selectors';
 import { Paged } from '../../lattice-fabricate';
 import {
@@ -68,6 +69,7 @@ const TimeUseDiaryContainer = () => {
   const {
     day,
     familyId,
+    gender,
     organizationId,
     participantId,
     studyId,
@@ -136,9 +138,11 @@ const TimeUseDiaryContainer = () => {
 
   const changeLanguage = (lng) => {
     if (lng !== null) {
-      i18n.changeLanguage(lng.value);
-      Cookies.set(DEFAULT_LANGUAGE, lng.value, {});
+      const effectiveCode = resolveLanguageCode(lng.value, gender);
+      i18n.changeLanguage(effectiveCode);
+      Cookies.set(DEFAULT_LANGUAGE, effectiveCode, {});
       setSelectedLanguage(lng);
+      document.documentElement.dir = effectiveCode.startsWith('he') ? 'rtl' : 'ltr';
     }
   };
 
@@ -149,8 +153,10 @@ const TimeUseDiaryContainer = () => {
   // select default language
   useEffect(() => {
     const defaultLanguageCookie = Cookies.get(DEFAULT_LANGUAGE);
-    let defaultLanguage = SUPPORTED_LANGUAGES.find((lng) => lng.code === defaultLanguageCookie);
-    const defaultLanguageCode = defaultLanguage?.code || configuredLanguageCode;
+    const baseCookieCode = defaultLanguageCookie ? getBaseLanguageCode(defaultLanguageCookie) : undefined;
+    let defaultLanguage = SUPPORTED_LANGUAGES.find((lng) => lng.code === baseCookieCode);
+    const baseConfiguredCode = getBaseLanguageCode(configuredLanguageCode);
+    const defaultLanguageCode = defaultLanguage?.code || baseConfiguredCode;
     defaultLanguage = SUPPORTED_LANGUAGES.find((lng) => lng.code === defaultLanguageCode);
     if (defaultLanguage) {
       setSelectedLanguage({
@@ -206,7 +212,7 @@ const TimeUseDiaryContainer = () => {
   };
 
   const onChangeLanguage = (lng) => {
-    if (lng.value === i18n.language) return;
+    if (resolveLanguageCode(lng.value, gender) === i18n.language) return;
 
     if (isIntroPage(page)) {
       changeLanguage(lng);
