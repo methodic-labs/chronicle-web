@@ -4,7 +4,6 @@
 //
 // import styled from 'styled-components';
 // import { get } from 'immutable';
-// import { Badge, Button, Colors } from 'lattice-ui-kit';
 //
 // import QuestionnairePreview from './QuestionnairePreview';
 //

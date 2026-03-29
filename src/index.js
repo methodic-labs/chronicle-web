@@ -8,6 +8,11 @@ import ReactDOM from 'react-dom';
 import { Suspense } from 'react';
 
 import { ConnectedRouter } from 'connected-react-router/immutable';
+import { normalize } from 'polished';
+import { Provider } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+import { createGlobalStyle } from 'styled-components';
+
 import {
   Colors,
   LatticeLuxonUtils,
@@ -15,12 +20,7 @@ import {
   StylesProvider,
   ThemeProvider,
   lightTheme,
-} from 'lattice-ui-kit';
-import { normalize } from 'polished';
-import { Provider } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
-import { createGlobalStyle } from 'styled-components';
-
+} from './lattice-ui-kit';
 import AppContainer from './containers/app/AppContainer';
 import AuthRoute from './core/router/AuthRoute';
 import EnrollmentLink from './containers/enrollment/EnrollmentLink';

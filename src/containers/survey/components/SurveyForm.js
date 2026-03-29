@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
-
-import { Form } from 'lattice-fabricate';
 import { useDispatch } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 
-import SubmissionFailureModal from './SubmissionFailureModal';
-
 import { resetRequestStates } from '../../../core/redux/actions';
+import { Form } from '../../../lattice-fabricate';
 import { SUBMIT_APP_USAGE_SURVEY, submitAppUsageSurvey } from '../actions';
 import { createSubmissionData, createSurveyFormSchema } from '../utils';
+import SubmissionFailureModal from './SubmissionFailureModal';
 
 const SurveyForm = ({
   data,

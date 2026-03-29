@@ -1,8 +1,7 @@
-// @flow
 import {
   CardStack,
   Typography,
-} from 'lattice-ui-kit';
+} from '../../lattice-ui-kit';
 
 import AllStudiesContainer from './AllStudiesContainer';
 import SummaryStatsContainer from './SummaryStatsContainer';

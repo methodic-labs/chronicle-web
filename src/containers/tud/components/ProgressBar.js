@@ -1,13 +1,9 @@
-// @flow
-
+import { withStyles } from '@material-ui/core/styles';
+import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
-
 import styled from 'styled-components';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { withStyles } from '@material-ui/core/styles';
-import { Colors, Typography, LinearProgress } from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
+import { Colors, LinearProgress, Typography } from '../../../lattice-ui-kit';
 
 const { NEUTRAL } = Colors;
 
@@ -50,19 +46,11 @@ const ProgressLabelWrapper = styled.div`
   }
 `;
 
-const validateDateTimes = (dateTimes :Array<?DateTime>) => (
-  dateTimes.every((dateTime :?DateTime) => dateTime && dateTime.isValid)
+const validateDateTimes = (dateTimes) => (
+  dateTimes.every((dateTime) => dateTime && dateTime.isValid)
 );
 
-type Props = {
-  currentTime :?DateTime;
-  dayEndTime :?DateTime;
-  dayStartTime :?DateTime;
-  is12hourFormat :boolean;
-  isDayActivityPage :boolean;
-}
-
-const ProgressBar = (props :Props) => {
+const ProgressBar = (props) => {
 
   const {
     currentTime,
@@ -76,10 +64,8 @@ const ProgressBar = (props :Props) => {
 
   useEffect(() => {
     if (validateDateTimes([dayStartTime, dayEndTime, currentTime])) {
-      // $FlowFixMe
-      const totalTimeDiff :number = dayEndTime.diff(dayStartTime).toObject().milliseconds;
-      // $FlowFixMe
-      const completed :number = currentTime.diff(dayStartTime).toObject().milliseconds;
+      const totalTimeDiff = dayEndTime.diff(dayStartTime).toObject().milliseconds;
+      const completed = currentTime.diff(dayStartTime).toObject().milliseconds;
 
       let ratio = [
         completed / totalTimeDiff,
@@ -97,13 +83,11 @@ const ProgressBar = (props :Props) => {
     return null;
   }
 
-  const formatTime = (input :?DateTime) => {
+  const formatTime = (input) => {
     if (!validateDateTimes([input])) return null;
 
     return is12hourFormat
-      // $FlowFixMe
       ? input.toLocaleString(DateTime.TIME_SIMPLE)
-      // $FlowFixMe
       : input.toLocaleString(DateTime.TIME_24_SIMPLE);
   };
 

@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [latest]
+        node-version: ['24.x']
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -28,13 +28,6 @@ jobs:
           cache: npm
           node-version: ${{ matrix.node-version }}
 
-      - name: npm config
-        env:
-          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-        run: |
-          npm config set "@fortawesome:registry" https://npm.fontawesome.com/
-          npm config set "//npm.fontawesome.com/:_authToken" "$FONTAWESOME_NPM_AUTH_TOKEN"
-
       # https://docs.npmjs.com/cli/v6/commands/npm-ci
       - name: npm ci
         run: npm ci
@@ -42,11 +35,11 @@ jobs:
       - name: npm run lint
         run: npm run lint
 
-      - name: npm run flow
-        run: npm run flow
+      # - name: npm run flow
+      #   run: npm run flow
 
-      # - name: npm run test
-      #   run: npm run test
+      - name: npm run test
+        run: npm run test
 
       - name: npm run build:prod
         run: npm run build:prod

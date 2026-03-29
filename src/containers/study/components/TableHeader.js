@@ -1,15 +1,10 @@
-// @flow
-
+import { PlusIcon } from 'lucide-react';
 import { useContext } from 'react';
-
 import styled from 'styled-components';
-import { faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Grid, SearchInput } from 'lattice-ui-kit';
 
-import ParticipantsTableDispatch from './ParticipantsTableDispatch';
-
+import { Button, Grid, SearchInput } from '../../../lattice-ui-kit';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
+import ParticipantsTableDispatch from './ParticipantsTableDispatch';
 
 const {
   // SELECT_CANDIDATE_IDS,
@@ -29,10 +24,6 @@ const TableHeader = ({
   handleOnChange,
   // selectedParticipants,
   // filteredParticipants
-} :{
-  handleOnChange :(SyntheticInputEvent<HTMLInputElement>) => void;
-  // selectedParticipants :number;
-  // filteredParticipants :Map;
 }) => {
   const dispatch = useContext(ParticipantsTableDispatch);
 
@@ -55,7 +46,6 @@ const TableHeader = ({
             <BulkActionsButton
                 aria-controls="bulk-actions-menu"
                 disabled={selectedParticipants === 0}
-                endIcon={<FontAwesomeIcon icon={faAngleDown} />}
                 onClick={(event) => setAnchorEl(event.currentTarget)}>
               Bulk Actions
             </BulkActionsButton>
@@ -89,7 +79,7 @@ const TableHeader = ({
             fullWidth
             onClick={() => dispatch({ type: TOGGLE_ADD_PARTICIPANT_MODAL, isModalOpen: true })}
             color="primary"
-            startIcon={<FontAwesomeIcon icon={faPlus} />}>
+            startIcon={<PlusIcon />}>
           Add Participant
         </AddParticipantsButton>
       </Grid>

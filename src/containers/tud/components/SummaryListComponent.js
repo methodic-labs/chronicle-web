@@ -1,18 +1,13 @@
-// @flow
-
 import styled from 'styled-components';
-import { List } from 'immutable';
+
+import { formatAsDate } from '../../../common/utils';
 import {
   Button,
   Colors,
   Grid,
   Typography
-} from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
-
+} from '../../../lattice-ui-kit';
 import DataTypes from '../constants/DataTypes';
-import { formatAsDate } from '../../../common/utils';
-import type { DataType } from '../constants/DataTypes';
 
 const { NEUTRAL } = Colors;
 
@@ -35,19 +30,11 @@ const ButtonWrapper = styled(Button)`
   padding-right: 8px;
 `;
 
-type Props = {
-  date :DateTime;
-  submissionIds :List<UUID>;
-  onDownloadData :(date :DateTime, dataType :DataType) => void;
-}
-
-const SummaryListComponent = (
-  {
-    date,
-    submissionIds,
-    onDownloadData,
-  } :Props
-) => (
+const SummaryListComponent = ({
+  date,
+  submissionIds,
+  onDownloadData,
+}) => (
   <Wrapper>
     <Grid container spacing={3}>
       <Grid item>

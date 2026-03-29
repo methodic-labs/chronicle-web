@@ -1,6 +1,5 @@
-import { DataProcessingUtils } from 'lattice-fabricate';
-
 import { WAKE_UP_TIME_AFTER_ACTIVITY_DAY } from '../../../common/constants';
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 import TranslationKeys from '../constants/TranslationKeys';
 
 const { getPageSectionKey } = DataProcessingUtils;
@@ -41,5 +40,5 @@ const createUiSchema = (page, is12hourFormat) => ({
 
 export {
   createSchema,
-  createUiSchema,
+  createUiSchema
 };

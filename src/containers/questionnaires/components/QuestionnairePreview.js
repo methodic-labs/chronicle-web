@@ -1,8 +1,6 @@
 // @flow
 
 // import styled from 'styled-components';
-// import { Form } from 'lattice-fabricate';
-// import { Button, Modal } from 'lattice-ui-kit';
 //
 // import { createSchema, getSchemaProperties, getUiSchemaOptions } from '../../questionnaire/utils';
 // import { createPreviewQuestionEntities } from '../utils';

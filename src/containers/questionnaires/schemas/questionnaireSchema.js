@@ -1,6 +1,5 @@
 // @flow
 
-// import { DataProcessingUtils } from 'lattice-fabricate';
 // import { Info } from 'luxon';
 //
 // import QuestionTypes from '../constants/questionTypes';

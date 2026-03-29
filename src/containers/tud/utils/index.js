@@ -1,9 +1,9 @@
 import { get, getIn } from 'immutable';
-import { DataProcessingUtils } from 'lattice-fabricate';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import { DateTime } from 'luxon';
 
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 import createEnglishTranslationLookup from './createEnglishTranslationLookup';
 import translateToEnglish from './translateToEnglish';
 
@@ -677,5 +677,5 @@ export {
   getIs12HourFormatSelected,
   selectPrimaryActivityByPage,
   updateActivityDateAndDay,
-  updateDayEndTime,
+  updateDayEndTime
 };

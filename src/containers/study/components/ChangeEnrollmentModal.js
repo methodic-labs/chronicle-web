@@ -1,28 +1,14 @@
-// @flow
-
 import { useEffect, useState } from 'react';
-
-import { ActionModal, Colors } from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
-import type { RequestState } from 'redux-reqseq';
 
 import { ParticipationStatuses } from '../../../common/constants';
-import type { ParticipationStatus } from '../../../common/types';
+import { ActionModal, Colors } from '../../../lattice-ui-kit';
 
 const {
   ENROLLED,
   NOT_ENROLLED,
 } = ParticipationStatuses;
 const { NEUTRAL } = Colors;
-
-type Props = {
-  enrollmentStatus :string;
-  handleOnChangeEnrollment :(status :ParticipationStatus) => void;
-  handleOnClose :() => void;
-  isVisible :boolean;
-  participantId :UUID;
-  requestState :?RequestState;
-}
 
 const ChangeEnrollment = ({
   enrollmentStatus,
@@ -31,7 +17,7 @@ const ChangeEnrollment = ({
   isVisible,
   participantId,
   requestState
-} :Props) => {
+}) => {
 
   const [action, setAction] = useState('pause');
 

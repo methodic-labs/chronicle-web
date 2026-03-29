@@ -1,5 +1,3 @@
-import { DataProcessingUtils } from 'lattice-fabricate';
-
 import {
   BED_TIME_BEFORE_ACTIVITY_DAY,
   DAY_END_TIME,
@@ -7,6 +5,7 @@ import {
   TODAY,
   WAKE_UP_TIME_AFTER_ACTIVITY_DAY
 } from '../../../common/constants';
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 import { DAY_SPAN_PAGE } from '../constants';
 import TranslationKeys from '../constants/TranslationKeys';
 

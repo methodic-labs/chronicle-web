@@ -1,33 +1,24 @@
-// @flow
-
 import { forwardRef } from 'react';
-
-import { Map } from 'immutable';
-import { Form } from 'lattice-fabricate';
 import { useDispatch } from 'react-redux';
-
-import { dataSchema, uiSchema } from './AddParticipantSchema';
 
 import {
   PAGE_1_SECTION_1,
   PARTICIPANT_ID,
   STUDY_ID,
 } from '../../../common/constants';
+import { Form } from '../../../lattice-fabricate';
 import { registerParticipant } from '../actions';
 import { validateAddParticipantForm } from '../utils';
-import type { Study } from '../../../common/types';
+import { dataSchema, uiSchema } from './AddParticipantSchema';
 
 const AddParticipantForm = ({
   participants,
   study,
-} :{
-  participants :Map;
-  study :Study;
 }, ref) => {
 
   const dispatch = useDispatch();
 
-  const handleSubmit = ({ formData } :Object) => {
+  const handleSubmit = ({ formData }) => {
     dispatch(
       registerParticipant({
         [PARTICIPANT_ID]: formData[PAGE_1_SECTION_1][PARTICIPANT_ID],
@@ -52,5 +43,4 @@ const AddParticipantForm = ({
   );
 };
 
-// $FlowFixMe
 export default forwardRef(AddParticipantForm);

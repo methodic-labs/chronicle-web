@@ -1,13 +1,3 @@
-import {
-  AppContainerWrapper,
-  AppContentWrapper,
-  AppHeaderWrapper,
-  Box,
-  Card,
-  CardSegment,
-  DatePicker,
-  Spinner
-} from 'lattice-ui-kit';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,6 +11,16 @@ import {
   useRequestState
 } from '../../common/utils';
 import { selectAppUsageSurveyData } from '../../core/redux/selectors';
+import {
+  AppContainerWrapper,
+  AppContentWrapper,
+  AppHeaderWrapper,
+  Box,
+  Card,
+  CardSegment,
+  DatePicker,
+  Spinner
+} from '../../lattice-ui-kit';
 import { GET_APP_USAGE_SURVEY_DATA, SUBMIT_APP_USAGE_SURVEY, getAppUsageSurveyData } from './actions';
 import SubmissionSuccessful from './components/SubmissionSuccessful';
 import SurveyForm from './components/SurveyForm';

@@ -1,20 +1,11 @@
-// @flow
-
-// $FlowFixMe
-import { Box, Modal, Typography } from 'lattice-ui-kit';
-
+import { Box, Modal, Typography } from '../../../lattice-ui-kit';
 import TranslationKeys from '../constants/TranslationKeys';
 
-type Props = {
-  handleOnClose :() => void;
-  isVisible :boolean;
-  trans :(string, ?Object) => string;
-}
 const SubmissionErrorModal = ({
   handleOnClose,
   isVisible,
   trans,
-} :Props) => (
+}) => (
   <Modal
       isVisible={isVisible}
       onClose={handleOnClose}

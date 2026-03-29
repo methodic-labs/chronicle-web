@@ -1,6 +1,6 @@
-// @flow
-
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { RequestStates } from 'redux-reqseq';
 
 import {
   Box,
@@ -9,32 +9,22 @@ import {
   Modal,
   Spinner,
   Typography,
-} from 'lattice-ui-kit';
-import { useDispatch } from 'react-redux';
-import { RequestStates } from 'redux-reqseq';
-import type { RequestState } from 'redux-reqseq';
-
+} from '../../../lattice-ui-kit';
 import { STUDY_ID } from '../../../common/constants';
 import { deleteStudy } from '../actions';
-import type { Study } from '../../../common/types';
 
 const DeleteStudyModal = ({
   isVisible,
   onClose,
   requestState,
   study
-} :{|
-  isVisible :boolean;
-  onClose :() => void;
-  requestState :RequestState;
-  study :Study
-|}) => {
+}) => {
   const dispatch = useDispatch();
 
   const [studyTitle, setStudyName] = useState('');
   const [isInputError, setInputError] = useState(false);
 
-  const handleOnChange = (event :SyntheticInputEvent<HTMLInputElement>) => {
+  const handleOnChange = (event) => {
     const { currentTarget } = event;
     const { value } = currentTarget;
     setStudyName(value);

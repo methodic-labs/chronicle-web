@@ -1,25 +1,20 @@
-// @flow
-
+import { EllipsisVerticalIcon } from 'lucide-react';
+import { DateTime } from 'luxon';
 import { useContext, useMemo, useState } from 'react';
-
 import styled from 'styled-components';
-import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import ParticipantsTableDispatch from './ParticipantsTableDispatch';
+
+import { EnrollmentStatuses } from '../../../common/constants';
+import { formatDateTime } from '../../../common/utils';
 import {
   Colors,
   IconButton,
   Menu,
   MenuItem,
   Tag
-} from 'lattice-ui-kit';
-import { DateTime } from 'luxon';
-
-import ParticipantsTableDispatch from './ParticipantsTableDispatch';
-
+} from '../../../lattice-ui-kit';
 import ParticipantsTableActions from '../constants/ParticipantsTableActions';
-import { EnrollmentStatuses } from '../../../common/constants';
-import { formatDateTime } from '../../../common/utils';
-import type { Participant, ParticipantStats } from '../../../common/types';
 
 const { NEUTRAL } = Colors;
 
@@ -42,12 +37,6 @@ const RowWrapper = styled.tr.attrs(() => ({ tabIndex: '1' }))`
   }
 `;
 
-const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
-  :hover {
-    cursor: pointer;
-  }
-`;
-
 const StyledTag = styled(Tag)`
   margin-left: 0;
 `;
@@ -67,14 +56,6 @@ const ParticipantRow = ({
   // isSelected,
   participant,
   stats = {},
-} :{
-  hasAndroidDataCollection :boolean;
-  hasDeletePermission :boolean;
-  hasTimeUseDiary :boolean;
-  hasIOSSensorDataCollection :boolean;
-  // isSelected :boolean;
-  participant :Participant;
-  stats ?:ParticipantStats;
 }) => {
 
   const dispatch = useContext(ParticipantsTableDispatch);
@@ -166,9 +147,7 @@ const ParticipantRow = ({
               aria-controls="table_actions_menu"
               aria-haspopup="true"
               onClick={handleOnClick}>
-            <StyledFontAwesomeIcon
-                color={NEUTRAL.N800}
-                icon={faEllipsisV} />
+            <EllipsisVerticalIcon size={16} />
           </IconButton>
           <Menu
               id="table_actions_menu"

@@ -1,5 +1,3 @@
-import { DataProcessingUtils } from 'lattice-fabricate';
-
 import {
   BG_AUDIO_NIGHT,
   BG_TV_NIGHT,
@@ -8,6 +6,7 @@ import {
   SLEEP_PATTERN,
   WAKE_UP_COUNT,
 } from '../../../common/constants';
+import { DataProcessingUtils } from '../../../lattice-fabricate';
 import TranslationKeys from '../constants/TranslationKeys';
 import getEnableChangesForOhioStateUniversity from '../utils/getEnableChangesForOhioStateUniversity';
 
@@ -174,5 +173,5 @@ const createUiSchema = (pageNum, translate) => ({
 
 export {
   createSchema,
-  createUiSchema,
+  createUiSchema
 };

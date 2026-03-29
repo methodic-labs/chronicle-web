@@ -1,14 +1,11 @@
-// @flow
-
+import { OpenLatticeIconSVG } from '../../assets/svg/icons';
+import { BasicErrorComponent } from '../../common/components';
 import {
   AppContainerWrapper,
   AppContentWrapper,
   AppHeaderWrapper,
   Typography,
-} from 'lattice-ui-kit';
-
-import { OpenLatticeIconSVG } from '../../assets/svg/icons';
-import { BasicErrorComponent } from '../../common/components';
+} from '../../lattice-ui-kit';
 
 const QuestionnaireContainer = () => (
   <AppContainerWrapper>
