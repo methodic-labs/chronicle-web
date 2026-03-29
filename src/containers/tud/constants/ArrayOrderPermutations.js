@@ -14,7 +14,7 @@ import { LanguageCodes } from '../../../common/constants';
  *   [6, 0, 1, 2, 3, 4, 5]
  */
 
-const ARRAY_ORDER_PERMUTATIONS :{[string]: {[string]: number[]}} = {
+const ARRAY_ORDER_PERMUTATIONS :{[string] :{[string] :number[]}} = {
   [LanguageCodes.HEBREW_FEMALE]: {
     weekday_options: [6, 0, 1, 2, 3, 4, 5],
   },
