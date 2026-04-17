@@ -75,7 +75,7 @@
     "redux-immutable": "4.0.0",
     "redux-reqseq": "~0.7.0",
     "rehype-highlight": "~4.1.0",
-    "remark-gfm": "~1.0.0",
+    "remark-gfm": "~4.0.1",
     "reselect": "~4.0.0",
     "rrule": "~2.6.0",
     "styled-components": "~5.3.0",
