@@ -12,6 +12,10 @@ export default [
     code: LanguageCodes.GERMAN
   },
   {
+    language: '\u05E2\u05D1\u05E8\u05D9\u05EA',
+    code: 'he'
+  },
+  {
     language: 'Swedish',
     code: LanguageCodes.SWEDISH
   },

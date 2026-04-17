@@ -57,6 +57,8 @@ export type IOSSensorType = {|
 export type LanguageCodesEnum = {|
   ENGLISH :'en';
   GERMAN :'de';
+  HEBREW_FEMALE :'he-female';
+  HEBREW_MALE :'he-male';
   SPANISH :'es';
   SWEDISH :'sv';
 |};

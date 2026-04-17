@@ -1,10 +1,12 @@
+// @flow
+
 import { ACTIVITY_DATE, ACTIVITY_DAY, CLOCK_FORMAT } from '../../../common/constants';
 import { DataProcessingUtils } from '../../../lattice-fabricate';
 import TranslationKeys from '../constants/TranslationKeys';
 
 const { getPageSectionKey } = DataProcessingUtils;
 
-const createSchema = (trans) => ({
+const createSchema = (trans :TranslationFunction, defaultClockFormat :number = 12) => ({
   type: 'object',
   title: '',
   properties: {
@@ -23,7 +25,7 @@ const createSchema = (trans) => ({
           type: 'number',
           enum: [12, 24],
           enumNames: trans(TranslationKeys.CLOCK_FORMATS, { returnObjects: true }),
-          default: 12
+          default: defaultClockFormat
         },
       },
       required: [CLOCK_FORMAT]

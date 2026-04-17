@@ -8,6 +8,7 @@ import Translations from './translations';
 import SupportedLanguages from '../../containers/tud/constants/SupportedLanguages';
 import TranslationKeys from '../../containers/tud/constants/TranslationKeys';
 import { LanguageCodes } from '../../common/constants';
+import { GENDERED_LANGUAGES, isGenderedLanguage } from './GenderedLanguages';
 
 const getArrayValueSizes = (obj) => {
   const sizes = {};
@@ -51,7 +52,14 @@ describe('Translation files structure', () => {
   test('translation files should include all supported languages', () => {
     const languages = Object.keys(Translations);
     SupportedLanguages.forEach((lng) => {
-      expect(languages).toContain(lng.code);
+      if (isGenderedLanguage(lng.code)) {
+        Object.values(GENDERED_LANGUAGES[lng.code]).forEach((code) => {
+          expect(languages).toContain(code);
+        });
+      }
+      else {
+        expect(languages).toContain(lng.code);
+      }
     });
   });
 
@@ -116,6 +124,16 @@ describe('Translation files structure', () => {
     // 2023-02-16 - activityDay is english-, german-only for now
     test(LanguageCodes.SWEDISH, () => {
       expect(getInterpolationValues(Translations[LanguageCodes.SWEDISH], ['activityDay']))
+        .toStrictEqual(getInterpolationValues(Translations[LanguageCodes.ENGLISH], ['activityDay']));
+    });
+
+    test(LanguageCodes.HEBREW_MALE, () => {
+      expect(getInterpolationValues(Translations[LanguageCodes.HEBREW_MALE], ['activityDay']))
+        .toStrictEqual(getInterpolationValues(Translations[LanguageCodes.ENGLISH], ['activityDay']));
+    });
+
+    test(LanguageCodes.HEBREW_FEMALE, () => {
+      expect(getInterpolationValues(Translations[LanguageCodes.HEBREW_FEMALE], ['activityDay']))
         .toStrictEqual(getInterpolationValues(Translations[LanguageCodes.ENGLISH], ['activityDay']));
     });
   });

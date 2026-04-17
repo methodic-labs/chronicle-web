@@ -66,6 +66,8 @@ export const IOSSensorTypes :{| ...IOSSensorType |} = Object.freeze({
 export const LanguageCodes :{| ...LanguageCodesEnum |} = Object.freeze({
   ENGLISH: 'en',
   GERMAN: 'de',
+  HEBREW_FEMALE: 'he-female',
+  HEBREW_MALE: 'he-male',
   SPANISH: 'es',
   SWEDISH: 'sv',
 });
