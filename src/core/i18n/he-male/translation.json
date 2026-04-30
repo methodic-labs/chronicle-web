@@ -78,9 +78,9 @@
     "outdoors": "ביצוע פעילויות אחרות מחוץ לבית (סידורים, נסיעות וכו')"
   },
   "primary_activity": "מה ילדך התחיל לעשות בשעה {{time}}?",
-  "next_activity": "מה ילדך התחיל לעשות בשעה {{time}} לאחר שסיים פעילות זו?",
+  "next_activity": "מה ילדך התחיל לעשות בשעה {{time}} לאחר שסיים את {{activity}}?",
   "default_end_time": "מתי הפעילות שנבחרה הסתיימה?",
-  "activity_end_time": "מתי ילדך הפסיק פעילות זו?",
+  "activity_end_time": "מתי ילדך הפסיק את {{activity}}?",
   "contextual_text": "כעת, בואי נדבר על מה שילדך עשה בזמן {{activity}} בשעה {{time}}.",
   "caregiver": "מי היה עם ילדך בזמן שהוא עסק ב-{{activity}}?",
   "caregiver_options": [

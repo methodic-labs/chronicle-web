@@ -10,10 +10,20 @@ import TranslationKeys from '../../containers/tud/constants/TranslationKeys';
 import { LanguageCodes } from '../../common/constants';
 import { GENDERED_LANGUAGES, isGenderedLanguage } from './GenderedLanguages';
 
+// Array-valued keys whose contents are intentionally locale-specific — the set
+// of options a Hebrew respondent sees ("which non-Hebrew language?") is
+// different from the set an English respondent sees ("which non-English
+// language?"). Submissions for these keys are stored under form fields not
+// covered by JSONKEY_ID_LOOKUP, so they are not canonicalized to English at
+// submission time; researchers running a given locale's study see that
+// locale's values in their CSV. Skip cross-locale size/interpolation parity
+// for these keys.
+const LOCALE_SPECIFIC_ARRAY_KEYS = ['language_options'];
+
 const getArrayValueSizes = (obj) => {
   const sizes = {};
   Object.entries(obj).forEach(([key, val]) => {
-    if (isArray(val)) {
+    if (isArray(val) && !LOCALE_SPECIFIC_ARRAY_KEYS.includes(key)) {
       set(sizes, key, val.length);
     }
   });
@@ -25,6 +35,7 @@ const getInterpolationValues = (obj, exclude) => {
   const regexp = /\{\{(.*?)\}\}/g;
 
   Object.entries(obj).forEach(([key, value]) => {
+    if (LOCALE_SPECIFIC_ARRAY_KEYS.includes(key)) return;
     if (typeof value === 'string') {
       let matches = matchAll(value, regexp).toArray();
       if (exclude.length > 0) {
