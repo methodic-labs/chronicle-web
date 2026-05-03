@@ -49,7 +49,7 @@
     "history": "~4.10.0",
     "i18next": "~20.2.2",
     "i18next-browser-languagedetector": "~6.1.0",
-    "i18next-http-backend": "~1.2.1",
+    "i18next-http-backend": "~3.0.6",
     "immutable": "4.0.0-rc.10",
     "js-cookie": "~2.2.1",
     "lodash": "~4.17.21",
