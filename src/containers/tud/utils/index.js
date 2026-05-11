@@ -103,12 +103,15 @@ const createFormSchema = (
   const defaultClockFormat = studySettings
     .getIn([StudySettingTypes.TIME_USE_DIARY, 'clockFormat']) || 12;
 
+  const clockFormatLocked = studySettings
+    .getIn([StudySettingTypes.TIME_USE_DIARY, 'clockFormatLocked']) || false;
+
   const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
 
   if (isIntroPage(pageNum)) {
     return {
       schema: SurveyIntroSchema.createSchema(trans, defaultClockFormat),
-      uiSchema: SurveyIntroSchema.uiSchema
+      uiSchema: SurveyIntroSchema.createUiSchema(clockFormatLocked)
     };
   }
 
