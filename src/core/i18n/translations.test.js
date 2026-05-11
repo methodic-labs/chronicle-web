@@ -8,11 +8,22 @@ import Translations from './translations';
 import SupportedLanguages from '../../containers/tud/constants/SupportedLanguages';
 import TranslationKeys from '../../containers/tud/constants/TranslationKeys';
 import { LanguageCodes } from '../../common/constants';
+import { GENDERED_LANGUAGES, isGenderedLanguage } from './GenderedLanguages';
+
+// Array-valued keys whose contents are intentionally locale-specific — the set
+// of options a Hebrew respondent sees ("which non-Hebrew language?") is
+// different from the set an English respondent sees ("which non-English
+// language?"). Submissions for these keys are stored under form fields not
+// covered by JSONKEY_ID_LOOKUP, so they are not canonicalized to English at
+// submission time; researchers running a given locale's study see that
+// locale's values in their CSV. Skip cross-locale size/interpolation parity
+// for these keys.
+const LOCALE_SPECIFIC_ARRAY_KEYS = ['language_options'];
 
 const getArrayValueSizes = (obj) => {
   const sizes = {};
   Object.entries(obj).forEach(([key, val]) => {
-    if (isArray(val)) {
+    if (isArray(val) && !LOCALE_SPECIFIC_ARRAY_KEYS.includes(key)) {
       set(sizes, key, val.length);
     }
   });
@@ -24,6 +35,7 @@ const getInterpolationValues = (obj, exclude) => {
   const regexp = /\{\{(.*?)\}\}/g;
 
   Object.entries(obj).forEach(([key, value]) => {
+    if (LOCALE_SPECIFIC_ARRAY_KEYS.includes(key)) return;
     if (typeof value === 'string') {
       let matches = matchAll(value, regexp).toArray();
       if (exclude.length > 0) {
@@ -51,7 +63,14 @@ describe('Translation files structure', () => {
   test('translation files should include all supported languages', () => {
     const languages = Object.keys(Translations);
     SupportedLanguages.forEach((lng) => {
-      expect(languages).toContain(lng.code);
+      if (isGenderedLanguage(lng.code)) {
+        Object.values(GENDERED_LANGUAGES[lng.code]).forEach((code) => {
+          expect(languages).toContain(code);
+        });
+      }
+      else {
+        expect(languages).toContain(lng.code);
+      }
     });
   });
 
@@ -116,6 +135,16 @@ describe('Translation files structure', () => {
     // 2023-02-16 - activityDay is english-, german-only for now
     test(LanguageCodes.SWEDISH, () => {
       expect(getInterpolationValues(Translations[LanguageCodes.SWEDISH], ['activityDay']))
+        .toStrictEqual(getInterpolationValues(Translations[LanguageCodes.ENGLISH], ['activityDay']));
+    });
+
+    test(LanguageCodes.HEBREW_MALE, () => {
+      expect(getInterpolationValues(Translations[LanguageCodes.HEBREW_MALE], ['activityDay']))
+        .toStrictEqual(getInterpolationValues(Translations[LanguageCodes.ENGLISH], ['activityDay']));
+    });
+
+    test(LanguageCodes.HEBREW_FEMALE, () => {
+      expect(getInterpolationValues(Translations[LanguageCodes.HEBREW_FEMALE], ['activityDay']))
         .toStrictEqual(getInterpolationValues(Translations[LanguageCodes.ENGLISH], ['activityDay']));
     });
   });
