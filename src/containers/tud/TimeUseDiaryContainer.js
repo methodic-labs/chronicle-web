@@ -67,10 +67,12 @@ const TimeUseDiaryContainer = () => {
   const queryParams = qs.parse(location.search, { ignoreQueryPrefix: true });
 
   const {
+    clockFormat: urlClockFormatParam,
     day,
     familyId,
     gender,
     lang: urlLangParam,
+    lockClockFormat: urlLockClockFormatParam,
     organizationId,
     participantId,
     studyId,
@@ -81,6 +83,19 @@ const TimeUseDiaryContainer = () => {
     ? urlLangParam
     : null;
   const isLanguageLocked = urlBaseLang !== null;
+
+  let urlClockFormatOverride;
+  if (urlClockFormatParam === '12') urlClockFormatOverride = 12;
+  else if (urlClockFormatParam === '24') urlClockFormatOverride = 24;
+
+  let urlClockFormatLockedOverride;
+  if (urlLockClockFormatParam === 'true') urlClockFormatLockedOverride = true;
+  else if (urlLockClockFormatParam === 'false') urlClockFormatLockedOverride = false;
+
+  const studySettingsOverrides = {
+    clockFormat: urlClockFormatOverride,
+    clockFormatLocked: urlClockFormatLockedOverride,
+  };
 
   const dispatch = useDispatch();
 
@@ -115,7 +130,7 @@ const TimeUseDiaryContainer = () => {
     activityDay = YESTERDAY;
   }
 
-  const initFormSchema = createFormSchema({}, 0, t, studySettings, activityDay);
+  const initFormSchema = createFormSchema({}, 0, t, studySettings, activityDay, studySettingsOverrides);
   const [formSchema, setFormSchema] = useState(initFormSchema); // {schema, uiSchema}
 
   const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
@@ -190,7 +205,7 @@ const TimeUseDiaryContainer = () => {
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (!isSummaryPage) {
-      const newSchema = createFormSchema(formData, page, t, studySettings, activityDay);
+      const newSchema = createFormSchema(formData, page, t, studySettings, activityDay, studySettingsOverrides);
       setFormSchema(newSchema);
     }
   }, [page, selectedLanguage?.value, t, activityDay, isSummaryPage]);
