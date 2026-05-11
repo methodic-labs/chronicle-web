@@ -52,6 +52,7 @@ export default function* sagas() :Generator<*, *, *> {
     fork(StudySagas.verifyParticipantWatcher),
     // fork(StudiesSagas.deleteStudyWatcher),
     fork(StudySagas.updateStudyWatcher),
+    fork(StudySagas.updateStudySettingsWatcher),
 
     // apps usage survey
     fork(SurveySagas.getAppUsageSurveyDataWatcher),
