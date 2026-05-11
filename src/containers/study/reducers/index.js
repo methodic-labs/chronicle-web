@@ -17,6 +17,7 @@ import getStudySettingsReducer from './getStudySettingsReducer';
 import initializeStudyReducer from './initializeStudyReducer';
 import registerParticipantReducer from './registerParticipantReducer';
 import updateStudyReducer from './updateStudyReducer';
+import updateStudySettingsReducer from './updateStudySettingsReducer';
 import verifyParticipantReducer from './verifyParticipantReducer';
 
 import {
@@ -43,6 +44,7 @@ import {
   REGISTER_PARTICIPANT,
   REMOVE_STUDY_ON_DELETE,
   UPDATE_STUDY,
+  UPDATE_STUDY_SETTINGS,
   VERIFY_PARTICIPANT,
   changeEnrollmentStatus,
   createStudy,
@@ -57,6 +59,7 @@ import {
   initializeStudy,
   registerParticipant,
   updateStudy,
+  updateStudySettings,
   verifyParticipant
 } from '../actions';
 
@@ -75,6 +78,7 @@ const INITIAL_STATE :Map = fromJS({
   [INITIALIZE_STUDY]: RS_INITIAL_STATE,
   [REGISTER_PARTICIPANT]: RS_INITIAL_STATE,
   [UPDATE_STUDY]: RS_INITIAL_STATE,
+  [UPDATE_STUDY_SETTINGS]: RS_INITIAL_STATE,
   [VERIFY_PARTICIPANT]: RS_INITIAL_STATE,
   // data
   [PARTICIPANTS]: Map(),
@@ -146,6 +150,10 @@ export default function reducer(state :Map = INITIAL_STATE, action :Object) {
 
     case updateStudy.case(action.type): {
       return updateStudyReducer(state, action);
+    }
+
+    case updateStudySettings.case(action.type): {
+      return updateStudySettingsReducer(state, action);
     }
 
     case verifyParticipant.case(action.type): {

@@ -67,14 +67,35 @@ const TimeUseDiaryContainer = () => {
   const queryParams = qs.parse(location.search, { ignoreQueryPrefix: true });
 
   const {
+    clockFormat: urlClockFormatParam,
     day,
     familyId,
     gender,
+    lang: urlLangParam,
+    lockClockFormat: urlLockClockFormatParam,
     organizationId,
     participantId,
     studyId,
     waveId,
   } = queryParams;
+
+  const urlBaseLang = SUPPORTED_LANGUAGES.some((lng) => lng.code === urlLangParam)
+    ? urlLangParam
+    : null;
+  const isLanguageLocked = urlBaseLang !== null;
+
+  let urlClockFormatOverride;
+  if (urlClockFormatParam === '12') urlClockFormatOverride = 12;
+  else if (urlClockFormatParam === '24') urlClockFormatOverride = 24;
+
+  let urlClockFormatLockedOverride;
+  if (urlLockClockFormatParam === 'true') urlClockFormatLockedOverride = true;
+  else if (urlLockClockFormatParam === 'false') urlClockFormatLockedOverride = false;
+
+  const studySettingsOverrides = {
+    clockFormat: urlClockFormatOverride,
+    clockFormatLocked: urlClockFormatLockedOverride,
+  };
 
   const dispatch = useDispatch();
 
@@ -109,7 +130,7 @@ const TimeUseDiaryContainer = () => {
     activityDay = YESTERDAY;
   }
 
-  const initFormSchema = createFormSchema({}, 0, t, studySettings, activityDay);
+  const initFormSchema = createFormSchema({}, 0, t, studySettings, activityDay, studySettingsOverrides);
   const [formSchema, setFormSchema] = useState(initFormSchema); // {schema, uiSchema}
 
   const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
@@ -150,8 +171,17 @@ const TimeUseDiaryContainer = () => {
     [StudySettingTypes.TIME_USE_DIARY, LANGUAGE]
   ) || LanguageCodes.ENGLISH;
 
-  // select default language
+  // select default language: URL ?lang= > cookie > study setting
   useEffect(() => {
+    if (urlBaseLang) {
+      const fromUrl = SUPPORTED_LANGUAGES.find((lng) => lng.code === urlBaseLang);
+      if (fromUrl) {
+        const choice = { label: fromUrl.language, value: fromUrl.code };
+        setSelectedLanguage(choice);
+        changeLanguage(choice);
+        return;
+      }
+    }
     const defaultLanguageCookie = Cookies.get(DEFAULT_LANGUAGE);
     const baseCookieCode = defaultLanguageCookie ? getBaseLanguageCode(defaultLanguageCookie) : undefined;
     let defaultLanguage = SUPPORTED_LANGUAGES.find((lng) => lng.code === baseCookieCode);
@@ -170,12 +200,12 @@ const TimeUseDiaryContainer = () => {
         });
       }
     }
-  }, [configuredLanguageCode]);
+  }, [configuredLanguageCode, urlBaseLang]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (!isSummaryPage) {
-      const newSchema = createFormSchema(formData, page, t, studySettings, activityDay);
+      const newSchema = createFormSchema(formData, page, t, studySettings, activityDay, studySettingsOverrides);
       setFormSchema(newSchema);
     }
   }, [page, selectedLanguage?.value, t, activityDay, isSummaryPage]);
@@ -244,7 +274,10 @@ const TimeUseDiaryContainer = () => {
   if (isPending(verifyParticipantRS) || isPending(getStudySettingsRS)) {
     return (
       <AppContainerWrapper>
-        <HeaderComponent onChangeLanguage={onChangeLanguage} selectedLanguage={selectedLanguage} />
+        <HeaderComponent
+            isLanguageLocked={isLanguageLocked}
+            onChangeLanguage={onChangeLanguage}
+            selectedLanguage={selectedLanguage} />
         <Box textAlign="center" mt="30px">
           <Spinner size="2x" />
         </Box>
@@ -255,7 +288,10 @@ const TimeUseDiaryContainer = () => {
   if (isFailure(verifyParticipantRS)) {
     return (
       <AppContainerWrapper>
-        <HeaderComponent onChangeLanguage={onChangeLanguage} selectedLanguage={selectedLanguage} />
+        <HeaderComponent
+            isLanguageLocked={isLanguageLocked}
+            onChangeLanguage={onChangeLanguage}
+            selectedLanguage={selectedLanguage} />
         <BasicErrorComponent>
           <Typography>
             {t(TranslationKeys.ERROR_INVALID_URL)}
@@ -267,7 +303,10 @@ const TimeUseDiaryContainer = () => {
 
   return (
     <AppContainerWrapper>
-      <HeaderComponent onChangeLanguage={onChangeLanguage} selectedLanguage={selectedLanguage} />
+      <HeaderComponent
+          isLanguageLocked={isLanguageLocked}
+          onChangeLanguage={onChangeLanguage}
+          selectedLanguage={selectedLanguage} />
       <AppContentWrapper>
         <ConfirmChangeLanguage
             handleOnClose={() => setChangeLanguageModalVisible(false)}

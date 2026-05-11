@@ -1,8 +1,11 @@
 import { CopyIcon } from 'lucide-react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { TODAY, YESTERDAY } from '../../../common/constants';
+import { StudySettingTypes, TODAY, YESTERDAY } from '../../../common/constants';
 import { copyToClipboard } from '../../../common/utils';
+import { isGenderedLanguage } from '../../../core/i18n/GenderedLanguages';
+import { selectStudySettings } from '../../../core/redux/selectors';
 import {
   Box,
   IconButton,
@@ -29,6 +32,10 @@ const ParticipantInfoModal = ({
   studyId,
 }) => {
 
+  const studySettings = useSelector(selectStudySettings(studyId));
+  const tudLanguage = studySettings.getIn([StudySettingTypes.TIME_USE_DIARY, 'language']);
+  const isGendered = tudLanguage && isGenderedLanguage(tudLanguage);
+
   const renderParticipantInfo = () => {
     const enrollmentLink = getParticipantLoginLink(studyId, participantId);
     const appUsageLink = getAppUsageLink(studyId, participantId);
@@ -39,14 +46,34 @@ const ParticipantInfoModal = ({
     ];
 
     if (hasTimeUseDiary) {
-      participantDetails.push({
-        name: 'Morning Time Use Diary Link (Activities Yesterday)',
-        value: getTimeUseDiaryLink(studyId, participantId, YESTERDAY),
-      });
-      participantDetails.push({
-        name: 'Evening Time Use Diary Link (Activities Today)',
-        value: getTimeUseDiaryLink(studyId, participantId, TODAY),
-      });
+      if (isGendered) {
+        participantDetails.push({
+          name: 'Morning Time Use Diary Link (Activities Yesterday, Male)',
+          value: getTimeUseDiaryLink(studyId, participantId, YESTERDAY, studySettings, 'male'),
+        });
+        participantDetails.push({
+          name: 'Morning Time Use Diary Link (Activities Yesterday, Female)',
+          value: getTimeUseDiaryLink(studyId, participantId, YESTERDAY, studySettings, 'female'),
+        });
+        participantDetails.push({
+          name: 'Evening Time Use Diary Link (Activities Today, Male)',
+          value: getTimeUseDiaryLink(studyId, participantId, TODAY, studySettings, 'male'),
+        });
+        participantDetails.push({
+          name: 'Evening Time Use Diary Link (Activities Today, Female)',
+          value: getTimeUseDiaryLink(studyId, participantId, TODAY, studySettings, 'female'),
+        });
+      }
+      else {
+        participantDetails.push({
+          name: 'Morning Time Use Diary Link (Activities Yesterday)',
+          value: getTimeUseDiaryLink(studyId, participantId, YESTERDAY, studySettings),
+        });
+        participantDetails.push({
+          name: 'Evening Time Use Diary Link (Activities Today)',
+          value: getTimeUseDiaryLink(studyId, participantId, TODAY, studySettings),
+        });
+      }
     }
 
     if (hasAndroidDataCollection || hasIOSSensorDataCollection) {

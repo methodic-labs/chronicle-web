@@ -16,3 +16,4 @@ export * from './registerParticipant';
 export * from './verifyParticipant';
 export * from './changeEnrollmentStatus';
 export * from './updateStudy';
+export * from './updateStudySettings';
