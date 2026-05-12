@@ -7,12 +7,30 @@ import { initReactI18next } from 'react-i18next';
 import translations from './translations';
 
 import { DEFAULT_LANGUAGE, LanguageCodes } from '../../common/constants';
+import { resolveLanguageCode } from './GenderedLanguages';
+
+const SUPPORTED_BASE_CODES = new Set(
+  Object.values(LanguageCodes).map((code) => code.split('-')[0])
+);
+
+const getUrlLanguageCode = () => {
+  if (typeof window === 'undefined' || !window.location) return undefined;
+  const params = new URLSearchParams(window.location.search);
+  const lang = params.get('lang');
+  if (!lang || !SUPPORTED_BASE_CODES.has(lang)) return undefined;
+  const gender = params.get('gender') || undefined;
+  return resolveLanguageCode(lang, gender);
+};
 
 let defaultLanguageCookie = Cookies.get(DEFAULT_LANGUAGE);
 if (!defaultLanguageCookie || defaultLanguageCookie === 'null' || defaultLanguageCookie === 'undefined') {
   defaultLanguageCookie = undefined;
 }
-const defaultLanguageCode = defaultLanguageCookie || LanguageCodes.ENGLISH;
+const defaultLanguageCode = getUrlLanguageCode() || defaultLanguageCookie || LanguageCodes.ENGLISH;
+
+if (typeof document !== 'undefined' && document.documentElement) {
+  document.documentElement.dir = defaultLanguageCode.startsWith('he') ? 'rtl' : 'ltr';
+}
 
 i18n
   .use(initReactI18next)

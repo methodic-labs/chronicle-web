@@ -49,6 +49,7 @@ const Wrapper = styled.div`
 `;
 
 const HeaderComponent = ({
+  isLanguageLocked,
   onChangeLanguage,
   selectedLanguage,
 }) => (
@@ -59,12 +60,14 @@ const HeaderComponent = ({
         <Typography variant="h1"> Chronicle </Typography>
       </a>
     </nav>
-    <Box minWidth="200px">
-      <Select
-          onChange={onChangeLanguage}
-          options={languageOptions}
-          value={selectedLanguage} />
-    </Box>
+    {!isLanguageLocked && (
+      <Box minWidth="200px">
+        <Select
+            onChange={onChangeLanguage}
+            options={languageOptions}
+            value={selectedLanguage} />
+      </Box>
+    )}
   </Wrapper>
 );
 

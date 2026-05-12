@@ -90,6 +90,7 @@ const createFormSchema = (
   trans,
   studySettings,
   activityDay,
+  overrides = {},
 ) => {
 
   const is12hourFormat = getIs12HourFormatSelected(formData);
@@ -100,15 +101,20 @@ const createFormSchema = (
   const enableChangesForSherbrookeUniversity = studySettings
     .getIn(['TimeUseDiary', 'enableChangesForSherbrookeUniversity']) || false;
 
-  const defaultClockFormat = studySettings
-    .getIn([StudySettingTypes.TIME_USE_DIARY, 'clockFormat']) || 12;
+  const defaultClockFormat = overrides.clockFormat !== undefined
+    ? overrides.clockFormat
+    : (studySettings.getIn([StudySettingTypes.TIME_USE_DIARY, 'clockFormat']) || 12);
+
+  const clockFormatLocked = overrides.clockFormatLocked !== undefined
+    ? overrides.clockFormatLocked
+    : (studySettings.getIn([StudySettingTypes.TIME_USE_DIARY, 'clockFormatLocked']) || false);
 
   const enableChangesForOSU = getEnableChangesForOhioStateUniversity(studySettings, activityDay);
 
   if (isIntroPage(pageNum)) {
     return {
       schema: SurveyIntroSchema.createSchema(trans, defaultClockFormat),
-      uiSchema: SurveyIntroSchema.uiSchema
+      uiSchema: SurveyIntroSchema.createUiSchema(clockFormatLocked)
     };
   }
 

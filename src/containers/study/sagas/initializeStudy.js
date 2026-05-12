@@ -15,6 +15,7 @@ import { getParticipantStatsWorker } from './getParticipantStats';
 import { getStudyWorker } from './getStudy';
 import { getStudyLimitsWorker } from './getStudyLimits';
 import { getStudyParticipantsWorker } from './getStudyParticipants';
+import { getStudySettingsWorker } from './getStudySettings';
 
 import {
   IS_OWNER,
@@ -31,6 +32,7 @@ import {
   getStudy,
   getStudyLimits,
   getStudyParticipants,
+  getStudySettings,
   initializeStudy,
 } from '../actions';
 import type { AuthorizationObject, UUID, WorkerResponse } from '../../../common/types';
@@ -50,6 +52,7 @@ function* initializeStudyWorker(action :SequenceAction) :Saga<*> {
     const getStudyLimitsCall = call(getStudyLimitsWorker, getStudyLimits(studyId));
     const getStudyParticipantsCall = call(getStudyParticipantsWorker, getStudyParticipants(studyId));
     const getParticipantStatsCall = call(getParticipantStatsWorker, getParticipantStats(studyId));
+    const getStudySettingsCall = call(getStudySettingsWorker, getStudySettings(studyId));
     const getAuthorizationsCall = call(getAuthorizationsWorker, getAuthorizations([{
       aclKey: [studyId],
       permissions: [PermissionTypes.OWNER]
@@ -60,12 +63,14 @@ function* initializeStudyWorker(action :SequenceAction) :Saga<*> {
       getStudyLimitsResponse,
       getStudyParticipantsResponse,
       getParticipantStatsResponse,
+      getStudySettingsResponse,
       getAuthorizationsResponse,
     ] :Array<WorkerResponse> = yield all([
       getStudyCall,
       getStudyLimitsCall,
       getStudyParticipantsCall,
       getParticipantStatsCall,
+      getStudySettingsCall,
       getAuthorizationsCall,
     ]);
 
@@ -73,6 +78,7 @@ function* initializeStudyWorker(action :SequenceAction) :Saga<*> {
     if (getStudyLimitsResponse.error) throw getStudyLimitsResponse.error;
     if (getStudyParticipantsResponse.error) throw getStudyParticipantsResponse.error;
     if (getParticipantStatsResponse.error) throw getParticipantStatsResponse.error;
+    if (getStudySettingsResponse.error) throw getStudySettingsResponse.error;
     if (getAuthorizationsResponse.error) throw getAuthorizationsResponse.error;
 
     const authorizations :AuthorizationObject[] = getAuthorizationsResponse.data;

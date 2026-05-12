@@ -42,6 +42,7 @@ export const CANDIDATE_IDS :'candidateIds' = 'candidateIds';
 export const CAREGIVER :'careGiver' = 'careGiver';
 export const CHRONICLE :'chronicle' = 'chronicle';
 export const CLOCK_FORMAT :'clockFormat' = 'clockFormat';
+export const CLOCK_FORMAT_LOCKED :'clockFormatLocked' = 'clockFormatLocked';
 export const COLLABORATOR :'collaborator' = 'collaborator';
 export const COMPONENTS :'components' = 'components';
 export const CONTACT :'contact' = 'contact';

@@ -33,7 +33,7 @@ const createSchema = (trans :TranslationFunction, defaultClockFormat :number = 1
   }
 });
 
-const uiSchema = {
+const createUiSchema = (clockFormatLocked :boolean = false) => ({
   [getPageSectionKey(0, 0)]: {
     classNames: 'column-span-12 grid-container',
     [ACTIVITY_DATE]: {
@@ -43,12 +43,12 @@ const uiSchema = {
       classNames: 'hidden',
     },
     [CLOCK_FORMAT]: {
-      classNames: 'column-span-12',
+      classNames: clockFormatLocked ? 'hidden' : 'column-span-12',
     },
   }
-};
+});
 
 export {
   createSchema,
-  uiSchema
+  createUiSchema,
 };
