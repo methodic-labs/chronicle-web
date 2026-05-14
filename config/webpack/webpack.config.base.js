@@ -85,20 +85,6 @@ module.exports = (env) => {
       rules: [
         BABEL_LOADER,
         {
-          test: /translation\.json$/,
-          type: 'javascript/auto',
-          use: [{
-            loader: 'file-loader',
-            options: {
-              name: (filePath) => {
-                // filePath = "/path/to/src/core/i18n/en/translation.json"
-                const [language] = filePath.split('i18n/')[1].split('/');
-                return `static/i18n/${language}/[name].[contenthash].json`;
-              },
-            },
-          }],
-        },
-        {
           generator: {
             filename: (
               env.production
