@@ -50,6 +50,14 @@ const AppContainer = () => {
     dispatch(initializeApplication());
   }, [dispatch]);
 
+  // The operator UI is always LTR. Reset in case a prior participant
+  // session (TUD in Hebrew) flipped <html dir> on this tab.
+  useEffect(() => {
+    if (document && document.documentElement) {
+      document.documentElement.dir = 'ltr';
+    }
+  }, []);
+
   const onLogout = () => {
     dispatch(logout());
     // eslint-disable-next-line no-undef
