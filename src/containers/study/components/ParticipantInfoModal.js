@@ -19,7 +19,12 @@ const Grid = styled.div`
   align-items: center;
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
+`;
+
+const LinkValue = styled(Typography)`
+  overflow-wrap: anywhere;
+  word-break: break-all;
 `;
 
 const ParticipantInfoModal = ({
@@ -99,9 +104,9 @@ const ParticipantInfoModal = ({
                 {detail.name}
               </Typography>
               <Grid>
-                <Typography variant="body1">
+                <LinkValue variant="body1">
                   { detail.value }
-                </Typography>
+                </LinkValue>
                 <Tooltip
                     arrow
                     placement="top"
