@@ -46,7 +46,10 @@ const TimePicker = (props :typeof KeyboardTimePicker) => {
         setLastValidDate(null);
       }
       if (date && date.isValid) {
-        const timeIso = date.toLocaleString(DateTime.TIME_24_SIMPLE);
+        // Persist a locale-independent ISO time ("HH:mm"). toLocaleString is locale dependent
+        // (e.g. "13.05" in fi/da, native digits in some locales) and would not parse back via
+        // DateTime.fromISO, surfacing as "Invalid DateTime" and breaking submission.
+        const timeIso = date.toISOTime({ suppressSeconds: true, suppressMilliseconds: true, includeOffset: false });
         onChange(timeIso);
         setLastValidDate(date);
       }
@@ -72,6 +75,7 @@ const TimePicker = (props :typeof KeyboardTimePicker) => {
         placeholder={placeholder || defaultPlaceholder}
         value={selectedDate}
         variant="inline"
+        PopoverProps={{ dir: 'ltr' }}
         {...other} />
   );
 };

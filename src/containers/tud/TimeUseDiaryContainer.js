@@ -125,8 +125,13 @@ const TimeUseDiaryContainer = () => {
     activityDay = YESTERDAY;
   }
 
-  // 2022-10-14 - today/yesterday is only enabled for english, german
-  if (selectedLanguage?.value !== LanguageCodes.ENGLISH && selectedLanguage?.value !== LanguageCodes.GERMAN) {
+  // today/yesterday is enabled for English, German, and Hebrew (base SupportedLanguages code 'he');
+  // all other languages always use "yesterday".
+  if (
+    selectedLanguage?.value !== LanguageCodes.ENGLISH
+    && selectedLanguage?.value !== LanguageCodes.GERMAN
+    && selectedLanguage?.value !== 'he'
+  ) {
     activityDay = YESTERDAY;
   }
 
@@ -208,7 +213,9 @@ const TimeUseDiaryContainer = () => {
       const newSchema = createFormSchema(formData, page, t, studySettings, activityDay, studySettingsOverrides);
       setFormSchema(newSchema);
     }
-  }, [page, selectedLanguage?.value, t, activityDay, isSummaryPage]);
+    // studySettings is included so the schema rebuilds once settings load from the API — otherwise
+    // the clock-format default (and other settings-derived schema) keep their pre-load fallback.
+  }, [page, selectedLanguage?.value, t, activityDay, isSummaryPage, studySettings]);
   /* eslint-enable */
 
   const refreshProgress = (currFormData) => {

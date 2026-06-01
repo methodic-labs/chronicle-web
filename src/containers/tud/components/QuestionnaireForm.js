@@ -47,6 +47,7 @@ import * as SecondaryFollowUpSchema from '../schemas/SecondaryFollowUpSchema';
 import {
   applyCustomValidation,
   getDateTimeFromData,
+  getIs12HourFormatSelected,
   isFirstActivityPage,
   selectPrimaryActivityByPage,
   updateActivityDateAndDay,
@@ -402,6 +403,7 @@ const QuestionnaireForm = ({
             {
               schemaHasFollowup && (
                 <ContextualQuestionsIntro
+                    is12hourFormat={getIs12HourFormatSelected(pagedData)}
                     selectedActivity={prevActivity}
                     time={prevEndTime}
                     trans={trans} />
