@@ -1,10 +1,10 @@
 import merge from 'lodash/merge';
-import { DateTime } from 'luxon';
 
 import { DataProcessingUtils } from '../../../lattice-fabricate';
 import * as FollowupSchema from './FollowupSchema';
 import * as SecondaryActivitySchema from './SecondaryActivitySchema';
 import * as SecondaryFollowUpSchema from './SecondaryFollowUpSchema';
+import toStoredTime from '../utils/toStoredTime';
 
 import {
   ACTIVITY_END_TIME,
@@ -78,11 +78,11 @@ const createSchema = (
               type: 'string',
             },
             [ACTIVITY_START_TIME]: {
-              default: prevStartTime.toLocaleString(DateTime.TIME_24_SIMPLE),
+              default: toStoredTime(prevStartTime),
               type: 'string',
             },
             [ACTIVITY_END_TIME]: {
-              default: prevEndTime.toLocaleString(DateTime.TIME_24_SIMPLE),
+              default: toStoredTime(prevEndTime),
               type: 'string',
             },
             [COLLABORATOR]: {
@@ -130,11 +130,11 @@ const createSchema = (
               type: 'string',
             },
             [ACTIVITY_START_TIME]: {
-              default: prevStartTime.toLocaleString(DateTime.TIME_24_SIMPLE),
+              default: toStoredTime(prevStartTime),
               type: 'string',
             },
             [ACTIVITY_END_TIME]: {
-              default: prevEndTime.toLocaleString(DateTime.TIME_24_SIMPLE),
+              default: toStoredTime(prevEndTime),
               type: 'string',
             },
             [CAREGIVER]: {

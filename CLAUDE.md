@@ -77,7 +77,7 @@ Components reference keys via these constants rather than raw strings.
 4. On other pages: `ConfirmChangeLanguage` modal warns that progress will be lost, then resets the form
 5. Selected language is persisted back to the `defaultLanguage` cookie
 
-**Known limitation:** Today/yesterday day selection is only available for English and German. Spanish, Swedish, and Hebrew surveys always use "yesterday".
+**Known limitation:** Today/yesterday day selection is only available for English, German, and Hebrew. Spanish and Swedish surveys always use "yesterday".
 
 ### Submission Data Normalization
 

@@ -10,6 +10,7 @@ import { DataProcessingUtils } from '../../../lattice-fabricate';
 import { DAY_SPAN_PAGE } from '../constants';
 import TranslationKeys from '../constants/TranslationKeys';
 import isFirstActivityPage from '../utils/isFirstActivityPage';
+import toStoredTime from '../utils/toStoredTime';
 
 const { getPageSectionKey } = DataProcessingUtils;
 
@@ -35,10 +36,13 @@ const createSchema = (
         },
         [ACTIVITY_NAME]: {
           type: 'string',
+          // display title times in the study's clock format, not the browser locale
           title: (isFirstActivityPage(pageNum, activityDay)
-            ? trans(TranslationKeys.PRIMARY_ACTIVITY, { time: prevEndTime.toLocaleString(DateTime.TIME_SIMPLE) })
+            ? trans(TranslationKeys.PRIMARY_ACTIVITY, {
+              time: prevEndTime.toLocaleString(is12hourFormat ? DateTime.TIME_SIMPLE : DateTime.TIME_24_SIMPLE)
+            })
             : trans(TranslationKeys.NEXT_ACTIVITY, {
-              time: prevEndTime.toLocaleString(DateTime.TIME_SIMPLE),
+              time: prevEndTime.toLocaleString(is12hourFormat ? DateTime.TIME_SIMPLE : DateTime.TIME_24_SIMPLE),
               activity: prevActivity,
               interpolation: { escapeValue: false }
             })),
@@ -48,7 +52,7 @@ const createSchema = (
         [ACTIVITY_START_TIME]: {
           type: 'string',
           title: '',
-          default: prevEndTime.toLocaleString(DateTime.TIME_24_SIMPLE)
+          default: toStoredTime(prevEndTime)
         },
         [ACTIVITY_END_TIME]: {
           id: 'end_time',
@@ -59,7 +63,7 @@ const createSchema = (
             )
             : trans(TranslationKeys.DEFAULT_END_TIME),
           description: trans(TranslationKeys.DEFAULT_TIME),
-          default: prevEndTime.toLocaleString(DateTime.TIME_24_SIMPLE)
+          default: toStoredTime(prevEndTime)
         },
       },
       required: [ACTIVITY_NAME, ACTIVITY_END_TIME]

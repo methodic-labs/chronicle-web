@@ -59,5 +59,9 @@ i18n
     lng: defaultLanguageCode,
     resources,
     fallbackLng: LanguageCodes.ENGLISH,
+    // Without this, i18next normalizes "he-male" to "he-MALE" per BCP-47
+    // (region/script subtags are uppercased) and then fails to match our
+    // lowercase resource keys, falling through to English.
+    lowerCaseLng: true,
     debug: __ENV_DEV__, // eslint-disable-line no-undef
   });

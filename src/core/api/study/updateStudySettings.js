@@ -10,7 +10,7 @@ export default function updateStudySettings(
 ) :Promise<*> {
 
   return getApiAxiosInstance(STUDY_API)
-    .patch(`/${studyId}/${SETTINGS}/${settingType}`, settings)
+    .patch(`/${studyId}/${SETTINGS}/type/${settingType}`, settings)
     .then((axiosResponse) => axiosResponse.data)
     .catch((error :Error) => Promise.reject(error));
 }
