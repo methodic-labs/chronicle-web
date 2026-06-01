@@ -60,6 +60,7 @@ export { default as isNightActivityPage } from './isNightActivityPage';
 export { default as isSummaryPage } from './isSummaryPage';
 export { default as isWakeUpPage } from './isWakeUpPage';
 export { default as pageHasFollowUpQuestions } from './pageHasFollowUpQuestions';
+export { default as toStoredTime } from './toStoredTime';
 
 const { READING, MEDIA_USE } = PRIMARY_ACTIVITIES;
 
@@ -343,8 +344,6 @@ const createTimeUseSummary = (formData, trans, activityDay, studySettings) => {
   return summary;
 };
 
-const formatTime = (time) => time.toLocaleString(DateTime.TIME_SIMPLE);
-
 const applyCustomValidation = (
   formData,
   errors,
@@ -352,6 +351,14 @@ const applyCustomValidation = (
   trans,
 ) => {
   const psk = getPageSectionKey(pageNum, 0);
+
+  // format error message times according to the study's clock format setting, not the browser locale
+  const is12hourFormat = getIs12HourFormatSelected(formData);
+  const formatErrorTime = (time) => (
+    is12hourFormat
+      ? time.toLocaleString(DateTime.TIME_SIMPLE)
+      : time.toLocaleString(DateTime.TIME_24_SIMPLE)
+  );
 
   // For each activity, end date should greater than start date
   const startTimeKey = pageNum === DAY_SPAN_PAGE ? DAY_START_TIME : ACTIVITY_START_TIME;
@@ -362,8 +369,8 @@ const applyCustomValidation = (
   const dayEndTime = getDateTimeFromData(DAY_SPAN_PAGE, DAY_END_TIME, formData);
 
   const errorMsg = pageNum === DAY_SPAN_PAGE
-    ? trans(TranslationKeys.ERROR_INVALID_BED_TIME, { time: formatTime(currentStartTime) })
-    : trans(TranslationKeys.ERROR_INVALID_END_TIME, { time: formatTime(currentStartTime) });
+    ? trans(TranslationKeys.ERROR_INVALID_BED_TIME, { time: formatErrorTime(currentStartTime) })
+    : trans(TranslationKeys.ERROR_INVALID_END_TIME, { time: formatErrorTime(currentStartTime) });
 
   if (currentStartTime.isValid && currentEndTime.isValid) {
     if (currentEndTime.valueOf() <= currentStartTime.valueOf()) {
@@ -371,7 +378,9 @@ const applyCustomValidation = (
     }
     // the last activity of the day should end at the time the child went to bed
     if (currentEndTime.valueOf() > dayEndTime.valueOf()) {
-      errors[psk][endTimeKey].addError(trans(TranslationKeys.ERROR_END_PAST_BEDTIME, { time: formatTime(dayEndTime) }));
+      errors[psk][endTimeKey].addError(
+        trans(TranslationKeys.ERROR_END_PAST_BEDTIME, { time: formatErrorTime(dayEndTime) })
+      );
     }
   }
 
@@ -679,7 +688,6 @@ export {
   createFormSchema,
   createSubmitRequestBody,
   createTimeUseSummary,
-  formatTime,
   getIs12HourFormatSelected,
   selectPrimaryActivityByPage,
   updateActivityDateAndDay,

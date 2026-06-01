@@ -28,6 +28,9 @@ const Grid = styled.div`
 
 const Wrapper = styled.div`
   background: white;
+
+  /* the progress bar is a left-to-right timeline (start -> end); keep it LTR even in RTL languages */
+  direction: ltr;
   margin-bottom: 10px;
   padding: 20px 0;
   position: sticky;
