@@ -37,7 +37,7 @@
     "@nivo/core": "~0.83.0",
     "@nivo/line": "~0.83.0",
     "@nivo/tooltip": "~0.83.0",
-    "@redux-saga/core": "~1.2.0",
+    "@redux-saga/core": "~1.4.3",
     "@rjsf/core": "~3.1.0",
     "@xstate/react": "~1.6.0",
     "auth0-lock": "~14.3.0",
