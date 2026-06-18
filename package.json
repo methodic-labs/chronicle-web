@@ -70,7 +70,7 @@
     "react-select": "~4.3.1",
     "react-signature-canvas": "~1.0.3",
     "react-transition-group": "~4.4.2",
-    "redux": "~4.2.0",
+    "redux": "~5.0.1",
     "redux-immutable": "4.0.0",
     "redux-reqseq": "~0.7.0",
     "rehype-highlight": "~4.1.0",
