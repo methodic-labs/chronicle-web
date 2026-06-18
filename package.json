@@ -41,7 +41,7 @@
     "@rjsf/core": "~3.1.0",
     "@xstate/react": "~1.6.0",
     "auth0-lock": "~14.3.0",
-    "axios": "~0.26.0",
+    "axios": "~1.16.0",
     "clsx": "~1.1.1",
     "connected-react-router": "~6.9.1",
     "jwt-decode": "~3.1.0",
