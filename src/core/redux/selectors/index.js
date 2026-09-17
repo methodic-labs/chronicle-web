@@ -11,5 +11,7 @@ export { default as selectStudies } from './selectStudies';
 export { default as selectStudy } from './selectStudy';
 export { default as selectStudyLimits } from './selectStudyLimits';
 export { default as selectStudyParticipants } from './selectStudyParticipants';
+export { default as selectStudyPermissions } from './selectStudyPermissions';
 export { default as selectStudySettings } from './selectStudySettings';
 export { default as selectTimeUseDiarySubmissions } from './selectTimeUseDiarySubmissions';
+export { default as selectUserSearchResults } from './selectUserSearchResults';
