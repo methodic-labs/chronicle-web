@@ -17,6 +17,7 @@ import {
   revokeAccessUpdate,
   setAccessLevelUpdate,
 } from './constants/studyAccess';
+import { withoutInternalAccounts } from './utils';
 
 import { BasicErrorComponent, Spinner } from '../../common/components';
 import {
@@ -35,6 +36,7 @@ import {
   isStandby,
   useRequestState,
 } from '../../common/utils';
+import { getUserInfo } from '../../core/auth/utils';
 import { selectMyKeys, selectStudyPermissions } from '../../core/redux/selectors';
 import {
   Box,
@@ -69,9 +71,14 @@ const StudyAccessContainer = ({ study }) => {
     }
   }, [dispatch, isOwner, studyId]);
 
+  // Our own staff accounts are hidden from customer admins -- see withoutInternalAccounts. This is display only:
+  // a hidden account keeps whatever access it holds, and the server still counts it.
+  const viewerEmail = (getUserInfo() || {}).email;
+
   const people = useMemo(() => LEVELS_IN_ORDER.flatMap(({ key, level }) => (
-    (permissions.get(key) || List()).toJS().map((user) => ({ level, user }))
-  )), [permissions]);
+    withoutInternalAccounts((permissions.get(key) || List()).toJS(), viewerEmail)
+      .map((user) => ({ level, user }))
+  )), [permissions, viewerEmail]);
 
   const existingUserIds = useMemo(
     () => new Set(people.map(({ user }) => user.principal.id)),
