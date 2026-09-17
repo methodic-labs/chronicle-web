@@ -15,9 +15,11 @@ import type {
   EnrollmentStatusEnum,
   IOSSensorType,
   LanguageCodesEnum,
+  LoginTypesEnum,
   ParticipantDataType,
   ParticipationStatusesEnum,
   PermissionTypesEnum,
+  StudyAccessLevelsEnum,
   StudySettingTypesEnum,
   TimeUseDiaryDataType,
   UpdateTypesEnum,
@@ -85,6 +87,25 @@ export const ParticipantDataTypes :{| ...ParticipantDataType |} = Object.freeze(
   PREPROCESSED: 'Preprocessed',
   APP_USAGE_SURVEY: 'AppUsageSurvey',
   TIME_USE_DIARY: 'TimeUseDiary',
+});
+
+export const LoginTypes :{| ...LoginTypesEnum |} = Object.freeze({
+  ENTERPRISE: 'ENTERPRISE',
+  OAUTH: 'OAUTH',
+  PASSWORDLESS: 'PASSWORDLESS',
+  UNKNOWN: 'UNKNOWN',
+  USERNAME_PASSWORD: 'USERNAME_PASSWORD',
+});
+
+/*
+ * How a study's access levels are named in the UI and in StudyPermissionsUpdate. Owners are study admins: they hold
+ * every permission on the study and are the only ones who can change who else has access. Managers can run the study
+ * but not hand out access. Viewers can only read.
+ */
+export const StudyAccessLevels :{| ...StudyAccessLevelsEnum |} = Object.freeze({
+  MANAGER: 'manager',
+  OWNER: 'owner',
+  VIEWER: 'viewer',
 });
 
 export const PermissionTypes :{| ...PermissionTypesEnum |} = Object.freeze({

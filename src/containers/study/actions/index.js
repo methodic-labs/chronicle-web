@@ -35,6 +35,20 @@ const getStudyLimits :RequestSequence = newRequestSequence(GET_STUDY_LIMITS);
 const GET_STUDY_PARTICIPANTS :'GET_STUDY_PARTICIPANTS' = 'GET_STUDY_PARTICIPANTS';
 const getStudyParticipants :RequestSequence = newRequestSequence(GET_STUDY_PARTICIPANTS);
 
+const CLEAR_USER_SEARCH_RESULTS :'CLEAR_USER_SEARCH_RESULTS' = 'CLEAR_USER_SEARCH_RESULTS';
+const clearUserSearchResults = () => ({
+  type: CLEAR_USER_SEARCH_RESULTS,
+});
+
+const GET_STUDY_PERMISSIONS :'GET_STUDY_PERMISSIONS' = 'GET_STUDY_PERMISSIONS';
+const getStudyPermissions :RequestSequence = newRequestSequence(GET_STUDY_PERMISSIONS);
+
+const SEARCH_STUDY_USERS :'SEARCH_STUDY_USERS' = 'SEARCH_STUDY_USERS';
+const searchStudyUsers :RequestSequence = newRequestSequence(SEARCH_STUDY_USERS);
+
+const UPDATE_STUDY_PERMISSIONS :'UPDATE_STUDY_PERMISSIONS' = 'UPDATE_STUDY_PERMISSIONS';
+const updateStudyPermissions :RequestSequence = newRequestSequence(UPDATE_STUDY_PERMISSIONS);
+
 const GET_STUDY_SETTINGS :'GET_STUDY_SETTINGS' = 'GET_STUDY_SETTINGS';
 const getStudySettings :RequestSequence = newRequestSequence(GET_STUDY_SETTINGS);
 
@@ -61,6 +75,7 @@ const verifyParticipant :RequestSequence = newRequestSequence(VERIFY_PARTICIPANT
 
 export {
   CHANGE_ENROLLMENT_STATUS,
+  CLEAR_USER_SEARCH_RESULTS,
   CREATE_STUDY,
   DELETE_STUDY,
   DELETE_STUDY_PARTICIPANTS,
@@ -70,14 +85,18 @@ export {
   GET_STUDY,
   GET_STUDY_LIMITS,
   GET_STUDY_PARTICIPANTS,
+  GET_STUDY_PERMISSIONS,
   GET_STUDY_SETTINGS,
   INITIALIZE_STUDY,
   REGISTER_PARTICIPANT,
   REMOVE_STUDY_ON_DELETE,
+  SEARCH_STUDY_USERS,
   UPDATE_STUDY,
+  UPDATE_STUDY_PERMISSIONS,
   UPDATE_STUDY_SETTINGS,
   VERIFY_PARTICIPANT,
   changeEnrollmentStatus,
+  clearUserSearchResults,
   createStudy,
   deleteStudy,
   deleteStudyParticipants,
@@ -87,11 +106,14 @@ export {
   getStudy,
   getStudyLimits,
   getStudyParticipants,
+  getStudyPermissions,
   getStudySettings,
   initializeStudy,
   registerParticipant,
   removeStudyOnDelete,
+  searchStudyUsers,
   updateStudy,
+  updateStudyPermissions,
   updateStudySettings,
   verifyParticipant,
 };
