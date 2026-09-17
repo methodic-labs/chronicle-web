@@ -82,6 +82,41 @@ export type ParticipationStatusesEnum = {|
 
 export type ParticipationStatus = $Values<ParticipationStatusesEnum>;
 
+export type LoginTypesEnum = {|
+  ENTERPRISE :'ENTERPRISE';
+  OAUTH :'OAUTH';
+  PASSWORDLESS :'PASSWORDLESS';
+  UNKNOWN :'UNKNOWN';
+  USERNAME_PASSWORD :'USERNAME_PASSWORD';
+|};
+
+export type LoginType = $Values<LoginTypesEnum>;
+
+/* A directory entry for someone who has, or could be given, access to a study. */
+export type ChronicleUser = {|
+  connections :string[];
+  email :?string;
+  emailVerified :boolean;
+  loginType :LoginType;
+  name :?string;
+  picture :?string;
+  principal :{| id :string; type :string |};
+|};
+
+export type StudyAccessLevelsEnum = {|
+  MANAGER :'manager';
+  OWNER :'owner';
+  VIEWER :'viewer';
+|};
+
+export type StudyAccessLevel = $Values<StudyAccessLevelsEnum>;
+
+export type StudyPermissions = {|
+  managers :ChronicleUser[];
+  owners :ChronicleUser[];
+  viewers :ChronicleUser[];
+|};
+
 export type PermissionTypesEnum = {|
   DISCOVER :'DISCOVER';
   INTEGRATE :'INTEGRATE';

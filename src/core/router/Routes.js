@@ -24,6 +24,9 @@ const STUDY :'/studies/:studyId' = `${STUDIES}/${STUDY_ID_PARAM}`;
 const PARTICIPANTS :'/studies/:studyId/participants' = `${STUDY}/participants`;
 
 // $FlowFixMe - ignoring flow because I prefer the code hints to show the value
+const STUDY_ACCESS :'/studies/:studyId/access' = `${STUDY}/access`;
+
+// $FlowFixMe - ignoring flow because I prefer the code hints to show the value
 const QUESTIONNAIRES :'/studies/:studyId/questionnaires' = `${STUDY}/questionnaires`;
 
 // $FlowFixMe - ignoring flow because I prefer the code hints to show the value
@@ -39,6 +42,7 @@ export {
   ROOT,
   STUDIES,
   STUDY,
+  STUDY_ACCESS,
   STUDY_TUD,
   SURVEY,
   TUD,

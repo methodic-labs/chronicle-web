@@ -1,7 +1,9 @@
+import { List } from 'immutable';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
+import StudyAccessContainer from './StudyAccessContainer';
 import StudyContainer from './StudyContainer';
 import StudyParticipantsContainer from './StudyParticipantsContainer';
 import { INITIALIZE_STUDY, initializeStudy } from './actions';
@@ -17,7 +19,7 @@ import {
   useRequestState,
 } from '../../common/utils';
 import { resetRequestStates } from '../../core/redux/actions';
-import { selectStudy } from '../../core/redux/selectors';
+import { selectMyKeys, selectStudy } from '../../core/redux/selectors';
 import * as Routes from '../../core/router/Routes';
 import { Box } from '../../lattice-ui-kit';
 import TimeUseDiaryDashboard from '../tud/TimeUseDiaryDashboard';
@@ -36,6 +38,11 @@ const StudyRouter = () => {
   }
 
   const study = useSelector(selectStudy(studyId));
+
+  // Only study owners can read or change the acl, so the tab is hidden for everyone else. The container refuses
+  // directly navigated requests too -- this just keeps a dead end off the screen.
+  const myKeys = useSelector(selectMyKeys());
+  const isOwner = myKeys.has(List([studyId]));
 
   const initializeStudyRS = useRequestState([STUDIES, INITIALIZE_STUDY]);
 
@@ -64,6 +71,12 @@ const StudyRouter = () => {
   //     ? Routes.QUESTIONNAIRES.replace(Routes.STUDY_ID_PARAM, studyId)
   //     : Routes.NO_ROUTE
   // ), [studyId]);
+
+  const accessRoute = useMemo(() => (
+    studyId
+      ? Routes.STUDY_ACCESS.replace(Routes.STUDY_ID_PARAM, studyId)
+      : Routes.NO_ROUTE
+  ), [studyId]);
 
   const timeUseDiaryRoute = useMemo(() => (
     studyId
@@ -117,6 +130,12 @@ const StudyRouter = () => {
         : null
     );
 
+    const renderStudyAccessContainer = () => (
+      (study)
+        ? <StudyAccessContainer study={study} />
+        : null
+    );
+
     const renderTimeUseDiary = () => (
       (study)
         ? <TimeUseDiaryDashboard study={study} />
@@ -147,8 +166,16 @@ const StudyRouter = () => {
               </TabLink>
             )
           }
+          {
+            isOwner && (
+              <TabLink exact to={accessRoute}>
+                Access
+              </TabLink>
+            )
+          }
         </Box>
         <Switch>
+          <Route path={Routes.STUDY_ACCESS} render={renderStudyAccessContainer} />
           <Route path={Routes.PARTICIPANTS} render={renderStudyParticipantsContainer} />
           <Route path={Routes.STUDY_TUD} render={renderTimeUseDiary} />
           <Route path={Routes.STUDY} render={renderStudyContainer} />
