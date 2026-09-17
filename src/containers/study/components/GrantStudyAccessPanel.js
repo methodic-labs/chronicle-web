@@ -13,6 +13,7 @@ import {
   StudyAccessLevels,
 } from '../../../common/constants';
 import { isFailure, isPending, useRequestState } from '../../../common/utils';
+import { getUserInfo } from '../../../core/auth/utils';
 import { selectUserSearchResults } from '../../../core/redux/selectors';
 import {
   Box,
@@ -22,6 +23,7 @@ import {
   Typography,
 } from '../../../lattice-ui-kit';
 import { SEARCH_STUDY_USERS, clearUserSearchResults, searchStudyUsers } from '../actions';
+import { withoutInternalAccounts } from '../utils';
 
 /*
  * The server refuses a search shorter than this, so there is no point issuing one -- and a one character prefix would
@@ -59,7 +61,9 @@ const GrantStudyAccessPanel = ({
     dispatch(clearUserSearchResults());
   }, [dispatch]);
 
-  const users = results.toJS();
+  // Our own staff accounts are hidden from customer admins -- see withoutInternalAccounts.
+  const viewerEmail = (getUserInfo() || {}).email;
+  const users = withoutInternalAccounts(results.toJS(), viewerEmail);
   const hasQuery = query.trim().length >= MIN_SEARCH_LENGTH;
 
   return (
@@ -69,15 +73,17 @@ const GrantStudyAccessPanel = ({
         Search for someone by email address. Matching is on the start of the address, so &quot;jane&quot; finds
         jane@example.com.
       </Typography>
-      <Box alignItems="flex-start" display="flex" flexWrap="wrap" mt={2}>
-        <Box flex="1 1 320px" pr={2}>
+      {/* flex-end so the search box and the level select line up along their bottom edge, since only the select
+          carries a label above it. */}
+      <Box alignItems="flex-end" display="flex" flexWrap="wrap" mt={2}>
+        <Box flex="1 1 320px" pb={0.5} pr={2}>
           <SearchInput
               disabled={disabled}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search users by email"
               value={query} />
         </Box>
-        <Box flex="0 0 auto" pt={0.5}>
+        <Box flex="0 0 auto" pb={0.5}>
           <StudyAccessLevelSelect
               disabled={disabled}
               id="grant-access-level"
